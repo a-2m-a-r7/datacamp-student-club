@@ -443,10 +443,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toast.success('تم إنشاء الحساب وحفظه في قاعدة البيانات بنجاح!');
       return { needsVerification: true };
     } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        try {
+          // If user exists in Auth but had their Firestore profile removed, auto-heal and restore it
+          const cred = await signInWithEmailAndPassword(auth, cleanEmail, password);
+          if (cleanName) {
+            await updateProfile(cred.user, { displayName: cleanName });
+          }
+          const healedProfile = await ensureProfile(cred.user, cleanName);
+          if (healedProfile) {
+            setProfile(healedProfile);
+          }
+          toast.success('تم التعرف على الحساب ومزامنته في قاعدة البيانات السحابية بنجاح!');
+          return { needsVerification: false };
+        } catch (signInErr: any) {
+          toast.error('هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول بكلمة المرور الصحيحة.');
+          throw error;
+        }
+      }
+
       const messages: Record<string, string> = {
-        'auth/email-already-in-use': 'هذا البريد الإلكتروني مسجل بالفعل. يمكنك تسجيل الدخول مباشرة.',
-        'auth/invalid-email':         'صيغة البريد الإلكتروني غير صحيحة.',
-        'auth/weak-password':         'كلمة المرور يجب أن لا تقل عن 6 أحرف.',
+        'auth/invalid-email': 'صيغة البريد الإلكتروني غير صحيحة.',
+        'auth/weak-password': 'كلمة المرور يجب أن لا تقل عن 6 أحرف.',
       };
       toast.error(messages[error.code] ?? error.message ?? 'فشل إنشاء الحساب.');
       throw error;

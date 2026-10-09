@@ -8,7 +8,7 @@ import { Input } from '../../components/ui/Input';
 import { 
   Search, Filter, Download, Upload, MoreVertical, 
   CheckCircle, XCircle, UserPlus, FileSpreadsheet, Trash2, ShieldAlert, Eye, Calendar,
-  Shield, Key, Sparkles, Crown
+  Shield, Key, Sparkles, Crown, RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
@@ -59,6 +59,40 @@ const UserManagement = () => {
     status: 'active'
   });
 
+  const getTime = (val: any) => {
+    if (!val) return 0;
+    if (typeof val === 'string') return new Date(val).getTime() || 0;
+    if (typeof val === 'number') return val;
+    if (val?.toMillis) return val.toMillis();
+    if (val?.seconds) return val.seconds * 1000;
+    return 0;
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleManualRefresh = async () => {
+    setRefreshing(true);
+    if (!isFirebaseReady) {
+      setUsers([...demoUsers]);
+      setRefreshing(false);
+      toast.success(isArabic ? 'تم تحديث البيانات التجريبية' : 'Demo data refreshed');
+      return;
+    }
+    try {
+      const { getDocs } = await import('firebase/firestore');
+      const snap = await getDocs(collection(db, 'users'));
+      const freshUsers = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      freshUsers.sort((a: any, b: any) => getTime(b.createdAt) - getTime(a.createdAt));
+      setUsers(freshUsers);
+      toast.success(isArabic ? `تمت مزامنة ${freshUsers.length} عضو من قاعدة البيانات السحابية ⚡` : `Synced ${freshUsers.length} members from cloud DB ⚡`);
+    } catch (err: any) {
+      console.error('Refresh error:', err);
+      toast.error(isArabic ? 'حدث خطأ أثناء المزامنة' : 'Failed to refresh members');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
     if (!isFirebaseReady) {
       setUsers(demoUsers);
@@ -69,7 +103,7 @@ const UserManagement = () => {
     const q = query(collection(db, 'users'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const usersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      usersData.sort((a: any, b: any) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      usersData.sort((a: any, b: any) => getTime(b.createdAt) - getTime(a.createdAt));
       setUsers(usersData);
       setLoading(false);
     }, (error) => {
@@ -286,9 +320,11 @@ const UserManagement = () => {
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.memberId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const fullName = String(user.fullName || '').toLowerCase();
+    const memberId = String(user.memberId || '').toLowerCase();
+    const email = String(user.email || '').toLowerCase();
+    const q = searchTerm.toLowerCase();
+    const matchesSearch = fullName.includes(q) || memberId.includes(q) || email.includes(q);
     const matchesFilter = filterRole === 'all' || user.role === filterRole;
     return matchesSearch && matchesFilter;
   });
@@ -306,7 +342,17 @@ const UserManagement = () => {
               : 'Manage club members, role clearances, and operational permissions.'}
           </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 flex-wrap">
+          <Button 
+            variant="outline" 
+            onClick={handleManualRefresh}
+            disabled={refreshing}
+            className="border-primary/40 text-primary hover:bg-primary/10 gap-2 font-cyber text-xs shadow-sm hover:scale-105 transition-all"
+            title={isArabic ? 'مزامنة وتحديث فوري لقائمة الأعضاء من قاعدة البيانات السحابية' : 'Force Sync & Refresh from Cloud'}
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            <span>{isArabic ? 'مزامنة السحابة ⚡' : 'SYNC CLOUD ⚡'}</span>
+          </Button>
           <Button variant="outline" onClick={handleExport} className="border-primary/30">
             <Download className="w-4 h-4 mr-2" />
             {isArabic ? 'تصدير إكسيل' : 'EXPORT_EXCEL'}
