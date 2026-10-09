@@ -1,0 +1,204 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isSuperAdmin() {
+      return isAuthenticated() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin';
+    }
+
+    function isAdmin() {
+      return isSuperAdmin();
+    }
+
+    function isEventManager() {
+      return isSuperAdmin();
+    }
+
+    function isContentManager() {
+      return isSuperAdmin();
+    }
+
+    // ─── USERS ─────────────────────────────────────────────────────────────
+    // Users can read directory / leaderboard
+    // Create: Users can register self as 'member' only; Admins can create any
+    // Update: Non-admins cannot alter role, memberId, status, or isVerified,
+    //         and points can only be incremented safely (<= 500 XP delta).
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && (
+        isAdmin() ||
+        (
+          isOwner(userId) &&
+          request.resource.data.role == 'member' &&
+          request.resource.data.get('isVerified', false) == false &&
+          request.resource.data.get('status', 'active') == 'active'
+        )
+      );
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        (
+          isOwner(userId) &&
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.memberId == resource.data.memberId &&
+          request.resource.data.status == resource.data.status &&
+          request.resource.data.isVerified == resource.data.isVerified &&
+          (
+            request.resource.data.get('totalPoints', resource.data.get('totalPoints', 0)) == resource.data.get('totalPoints', 0) ||
+            (
+              request.resource.data.get('totalPoints', 0) > resource.data.get('totalPoints', 0) &&
+              request.resource.data.get('totalPoints', 0) <= resource.data.get('totalPoints', 0) + 500
+            )
+          )
+        )
+      );
+      allow delete: if isAdmin();
+    }
+
+    // ─── EVENTS ────────────────────────────────────────────────────────────
+    match /events/{eventId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isAuthenticated() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['registeredCount', 'registrations']) &&
+        request.resource.data.registeredCount == resource.data.registeredCount + 1
+      );
+    }
+
+    // ─── STAFF, BLOG, PROJECTS, GALLERY ────────────────────────────────────
+    match /staff/{memberId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /gallery/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ─── SETTINGS & AUDIT LOGS ─────────────────────────────────────────────
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if false; // Append-only audit trail
+    }
+
+    // ─── OTPS (SECURE AUTHENTICATED ACCESS ONLY) ───────────────────────────
+    match /otps/{otpId} {
+      allow read, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && 
+                    resource.data.userId == request.auth.uid &&
+                    request.resource.data.userId == request.auth.uid &&
+                    request.resource.data.otp == resource.data.otp; // cannot alter the secret hash
+    }
+
+    // ─── ID COUNTERS ───────────────────────────────────────────────────────
+    match /id_counters/{counterId} {
+      allow read: if isAuthenticated();
+      allow update: if isAuthenticated() && counterId == 'global' && 
+                    request.resource.data.count == resource.data.count + 1;
+      allow create: if isAuthenticated() && counterId == 'global' && request.resource.data.count == 1;
+      allow delete: if isAdmin();
+    }
+
+    // ─── MESSAGES (CONTACT US) ─────────────────────────────────────────────
+    match /messages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ─── COURSES & CURRICULUM ──────────────────────────────────────────────
+    match /courses/{courseId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isAuthenticated() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['enrolledCount']) &&
+        request.resource.data.enrolledCount == resource.data.enrolledCount + 1
+      );
+    }
+
+    match /course_modules/{moduleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /course_lessons/{lessonId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ─── ENROLLMENTS (PROTECTED FROM IDOR) ──────────────────────────────────
+    match /enrollments/{enrollmentId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        (resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid)
+      );
+      allow delete: if isAdmin();
+    }
+
+    // ─── CERTIFICATES ──────────────────────────────────────────────────────
+    match /certificates/{certificateId} {
+      allow read: if true; // Public verification for employers / recruiters
+      allow create: if isAuthenticated() && (request.resource.data.userId == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin();
+    }
+
+    // ─── POINTS LOG & USER ACHIEVEMENTS ────────────────────────────────────
+    match /points_log/{logId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && (
+        isAdmin() ||
+        (
+          request.resource.data.userId == request.auth.uid &&
+          request.resource.data.points > 0 &&
+          request.resource.data.points <= 500
+        )
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    match /user_achievements/{achievementId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && (request.resource.data.userId == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin();
+    }
+
+    // ─── NOTIFICATIONS ─────────────────────────────────────────────────────
+    match /notifications/{userId}/items/{itemId} {
+      allow read, write: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
