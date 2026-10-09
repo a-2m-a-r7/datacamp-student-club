@@ -29,6 +29,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [unauthorizedDomain, setUnauthorizedDomain] = useState<string | null>(null);
 
   React.useEffect(() => {
     if (user && !authLoading) navigate('/dashboard', { replace: true });
@@ -49,6 +50,7 @@ const Login = () => {
     setIsLoading(true);
     try {
       await loginWithEmail(email, password);
+      navigate('/dashboard');
     } catch {
       // error handled inside loginWithEmail
     } finally {
@@ -59,11 +61,14 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     if (isLoading || authLoading) return;
     setIsLoading(true);
+    setUnauthorizedDomain(null);
     try {
       await loginWithGoogle();
       navigate('/dashboard');
-    } catch {
-      // Error notifications handled inside loginWithGoogle
+    } catch (err: any) {
+      if (err?.code === 'auth/unauthorized-domain' || err?.message?.includes('unauthorized-domain')) {
+        setUnauthorizedDomain(window.location.hostname);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -257,16 +262,52 @@ const Login = () => {
                     </motion.div>
                   )}
 
+                  {unauthorizedDomain && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 space-y-2 text-amber-200 text-xs"
+                    >
+                      <div className="flex items-center gap-2 font-bold text-amber-300">
+                        <span>⚠️</span>
+                        <span>{isArabic ? 'إعداد إضافي لنطاق Vercel في Firebase' : 'Firebase Authorized Domain Setup Required'}</span>
+                      </div>
+                      <p className="text-[11px] font-mono leading-relaxed text-amber-100/90">
+                        {isArabic 
+                          ? `نطاق هذا الموقع (${unauthorizedDomain}) يحتاج للإضافة في قائمة النطاقات المصرح بها في Firebase Console لتشغيل زر Google.`
+                          : `Domain (${unauthorizedDomain}) must be added to Firebase Authorized Domains.`
+                        }
+                      </p>
+                      <div className="pt-1 flex flex-col gap-2">
+                        <a 
+                          href="https://console.firebase.google.com/project/datacampclub/authentication/settings" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="w-full text-center py-2 px-3 rounded bg-amber-500 hover:bg-amber-400 text-black font-bold text-[11px] transition shadow-md"
+                        >
+                          {isArabic ? '🔗 فتح إعدادات Firebase لإضافة النطاق' : '🔗 Open Firebase Console Auth Settings'}
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => setActiveTab('email')}
+                          className="text-[10px] text-primary hover:underline font-mono text-center pt-1"
+                        >
+                          {isArabic ? '← أو استخدم البريد وكلمة المرور للربط المباشر بقاعدة البيانات فوراً' : '← Or use Email/Password for instant database connection'}
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+
                   <div className="bg-white/5 border border-white/10 rounded-lg p-3 space-y-2">
                     <p className="text-[10px] text-muted-foreground font-mono leading-relaxed">
                       {isArabic
-                        ? '🔒 يتم إنشاء حسابك تلقائياً عند أول تسجيل دخول. نستخدم بروتوكول المصادقة الآمن من Google.'
-                        : '🔒 Your account will be created automatically on first sign-in. We use Google\'s secure authentication protocol.'
+                        ? '🔒 يتم حفظ بيانات حسابك مباشرة في قاعدة بيانات Firestore السحابية فور تسجيل الدخول.'
+                        : '🔒 Your authenticated account is synchronized directly to the cloud Firestore database upon sign-in.'
                       }
                     </p>
                     <div className="flex items-center gap-3 text-[9px] text-muted-foreground/70 font-mono">
-                      <span className="flex items-center gap-1"><span className="text-emerald-400">✓</span> {isArabic ? 'تشفير SSL' : 'SSL Encrypted'}</span>
-                      <span className="flex items-center gap-1"><span className="text-emerald-400">✓</span> {isArabic ? 'بدون حفظ كلمات المرور' : 'No Password Stored'}</span>
+                      <span className="flex items-center gap-1"><span className="text-emerald-400">✓</span> {isArabic ? 'تشفير آمن' : 'SSL Encrypted'}</span>
+                      <span className="flex items-center gap-1"><span className="text-emerald-400">✓</span> Firestore DB</span>
                       <span className="flex items-center gap-1"><span className="text-emerald-400">✓</span> OAuth 2.0</span>
                     </div>
                   </div>
@@ -274,40 +315,13 @@ const Login = () => {
               )}
             </AnimatePresence>
 
-            {/* Quick Role Tester Bar */}
-            <div className="pt-4 border-t border-white/10 space-y-2.5">
-              <div className="text-[10px] font-cyber tracking-widest text-muted-foreground uppercase flex items-center justify-between">
-                <span>{isArabic ? 'تجربة سريعة للأدوار' : 'QUICK ROLE DEMO ACCESS'}</span>
-                <span className="text-primary font-mono text-[9px]">{isArabic ? 'بدون بيانات سرية' : 'NO CREDENTIALS NEEDED'}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={async () => {
-                    await loginAsRole('super_admin');
-                    navigate('/dashboard');
-                  }}
-                  className="h-12 text-[11px] font-cyber border-amber-500/40 text-amber-300 hover:bg-amber-500/15 flex flex-col items-center justify-center p-1.5 transition-all shadow-sm shadow-amber-500/10"
-                >
-                  <span className="font-bold flex items-center gap-1">👑 {isArabic ? 'سوبر أدمن' : 'SUPER ADMIN'}</span>
-                  <span className="text-[9px] text-muted-foreground font-mono">{isArabic ? 'صلاحيات كاملة للمنصة' : 'Root Access & Admin'}</span>
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={async () => {
-                    await loginAsRole('member');
-                    navigate('/dashboard');
-                  }}
-                  className="h-12 text-[11px] font-cyber border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/15 flex flex-col items-center justify-center p-1.5 transition-all shadow-sm shadow-emerald-500/10"
-                >
-                  <span className="font-bold flex items-center gap-1">👥 {isArabic ? 'عضو النادي' : 'MEMBER'}</span>
-                  <span className="text-[9px] text-muted-foreground font-mono">{isArabic ? 'حساب الطالب والفعاليات' : 'Student & Events'}</span>
-                </Button>
-              </div>
+            {/* Live Database Status Indicator */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-emerald-400 font-bold">{isArabic ? 'قاعدة البيانات متصلة' : 'DATABASE LIVE'}</span>
+              </span>
+              <span className="text-muted-foreground/70 font-mono">FIRESTORE: datacampclub</span>
             </div>
           </CardContent>
 

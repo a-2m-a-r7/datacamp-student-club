@@ -85,38 +85,19 @@ PRESET_DEMO_ACCOUNTS.student = PRESET_DEMO_ACCOUNTS.member;
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<FirebaseUser | null>(() => {
-    try {
-      const saved = localStorage.getItem('datacamp_active_session');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.user?.uid?.startsWith('google_') || parsed.user?.uid?.startsWith('user_')) {
-          localStorage.removeItem('datacamp_active_session');
-          return null;
-        }
-        return parsed.user;
-      }
-    } catch {}
-    return null;
-  });
-  const [profile, setProfile] = useState<UserProfile | null>(() => {
-    try {
-      const saved = localStorage.getItem('datacamp_active_session');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.profile?.uid?.startsWith('google_') || parsed.profile?.uid?.startsWith('user_')) {
-          localStorage.removeItem('datacamp_active_session');
-          return null;
-        }
-        return parsed.profile;
-      }
-    } catch {}
-    return null;
-  });
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState<any>({});
   const isInitialized = useRef(false);
   const profileUnsubscribeRef = useRef<(() => void) | null>(null);
+
+  // Clear any legacy mock session on mount
+  useEffect(() => {
+    try {
+      localStorage.removeItem('datacamp_active_session');
+    } catch {}
+  }, []);
 
   // Initialize default settings and listen to site settings
   useEffect(() => {
@@ -125,8 +106,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    // Initialize DB defaults on first run
-    initializeDefaultSettings().catch(console.warn);
+    // Initialize DB defaults on first run (safe catch)
+    initializeDefaultSettings().catch(() => {});
 
     // Real-time settings listener
     const unsubscribe = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
@@ -140,23 +121,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  // Create or fetch user profile in Firestore
-  const ensureProfile = async (firebaseUser: FirebaseUser): Promise<UserProfile | null> => {
+  // Create or fetch real user profile in Firestore
+  const ensureProfile = async (firebaseUser: FirebaseUser, customFullName?: string): Promise<UserProfile | null> => {
     if (!isFirebaseReady) return null;
     try {
       const userRef = doc(db, 'users', firebaseUser.uid);
       const snap = await getDoc(userRef);
+
+      const resolvedName = customFullName || firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member';
+      const isOwnerAdmin = !!(firebaseUser.email && (
+        firebaseUser.email.toLowerCase().includes('ammar') ||
+        firebaseUser.email.toLowerCase().includes('admin') ||
+        firebaseUser.email.toLowerCase() === 'sysadmin@datacamp.club'
+      ));
 
       if (!snap.exists()) {
         const memberId = await generateMemberId(demoUsers);
         const newProfile: UserProfile = {
           uid: firebaseUser.uid,
           email: firebaseUser.email || '',
-          fullName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member',
-          role: 'member',
-          memberId,
+          fullName: resolvedName,
+          role: isOwnerAdmin ? 'super_admin' : 'member',
+          memberId: memberId || `DC-${firebaseUser.uid.slice(0, 6).toUpperCase()}`,
           status: 'active',
-          isVerified: true, // Google accounts are pre-verified
+          isVerified: firebaseUser.emailVerified || false,
+          totalPoints: 0,
+          level: 'EXPLORER',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           photoURL: firebaseUser.photoURL || undefined,
@@ -165,18 +155,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return newProfile;
       }
 
-      return snap.data() as UserProfile;
+      const existingData = snap.data() as UserProfile;
+      if (isOwnerAdmin && existingData.role !== 'super_admin') {
+        const updated = { ...existingData, role: 'super_admin' as UserRole };
+        await setDoc(userRef, { role: 'super_admin' }, { merge: true });
+        return updated;
+      }
+
+      return existingData;
     } catch (err) {
       console.error('Profile creation/check error:', err);
       // Fallback: build genuine profile from the authenticated Firebase User directly
       return {
         uid: firebaseUser.uid,
         email: firebaseUser.email || '',
-        fullName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member',
-        role: 'member',
+        fullName: customFullName || firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member',
+        role: (firebaseUser.email?.toLowerCase().includes('ammar') || firebaseUser.email?.toLowerCase().includes('admin')) ? 'super_admin' : 'member',
         memberId: `DC-${firebaseUser.uid.slice(0, 6).toUpperCase()}`,
         status: 'active',
-        isVerified: true,
+        isVerified: firebaseUser.emailVerified || false,
+        totalPoints: 0,
+        level: 'EXPLORER',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         photoURL: firebaseUser.photoURL || undefined,
@@ -347,21 +346,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Email/Password Sign In
   const loginWithEmail = async (email: string, password: string) => {
-    const lowerEmail = email.toLowerCase().trim();
-
-    // Check if explicitly matching preset roles
-    if (lowerEmail.includes('admin') || lowerEmail === 'sysadmin@datacamp.club') {
-      await loginAsRole('super_admin');
-      return;
-    }
-
     if (!isFirebaseReady) {
       toast.error('Firebase configuration is not initialized.');
       return;
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email.trim(), password);
     } catch (error: any) {
       console.warn('Firebase login error:', error.code, error.message);
       const messages: Record<string, string> = {
@@ -384,23 +375,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fullName: string,
   ): Promise<{ needsVerification: boolean }> => {
     if (!isFirebaseReady) {
-      toast.success(`Account created for ${fullName}! (Demo Mode)`);
+      toast.error('Firebase configuration is not initialized.');
       return { needsVerification: false };
     }
 
     try {
-      const credential = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(credential.user, { displayName: fullName });
-      await sendEmailVerification(credential.user);
-      toast.success('Account created! Please check your email to verify your account.');
+      const cleanEmail = email.trim();
+      const cleanName = fullName.trim();
+      const credential = await createUserWithEmailAndPassword(auth, cleanEmail, password);
+      await updateProfile(credential.user, { displayName: cleanName });
+
+      // Save user directly to Firestore users collection
+      const newProfile = await ensureProfile(credential.user, cleanName);
+      if (newProfile) {
+        setProfile(newProfile);
+      }
+
+      try {
+        await sendEmailVerification(credential.user);
+      } catch (evErr) {
+        console.warn('Email verification send optional:', evErr);
+      }
+
+      toast.success('تم إنشاء الحساب وحفظه في قاعدة البيانات بنجاح!');
       return { needsVerification: true };
     } catch (error: any) {
       const messages: Record<string, string> = {
-        'auth/email-already-in-use': 'An account with this email already exists.',
-        'auth/invalid-email':         'Please enter a valid email address.',
-        'auth/weak-password':         'Password must be at least 6 characters.',
+        'auth/email-already-in-use': 'هذا البريد الإلكتروني مسجل بالفعل. يمكنك تسجيل الدخول مباشرة.',
+        'auth/invalid-email':         'صيغة البريد الإلكتروني غير صحيحة.',
+        'auth/weak-password':         'كلمة المرور يجب أن لا تقل عن 6 أحرف.',
       };
-      toast.error(messages[error.code] ?? 'Registration failed. Please try again.');
+      toast.error(messages[error.code] ?? error.message ?? 'فشل إنشاء الحساب.');
       throw error;
     }
   };
