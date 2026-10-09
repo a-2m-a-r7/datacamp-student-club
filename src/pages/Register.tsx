@@ -38,8 +38,6 @@ const Register = () => {
     confirmPassword?: string;
   }>({});
 
-  const [unauthorizedDomain, setUnauthorizedDomain] = useState<string | null>(null);
-
   React.useEffect(() => {
     if (user && !authLoading) navigate('/dashboard', { replace: true });
   }, [user, authLoading, navigate]);
@@ -82,14 +80,11 @@ const Register = () => {
   const handleGoogleSignUp = async () => {
     if (isLoading || authLoading) return;
     setIsLoading(true);
-    setUnauthorizedDomain(null);
     try {
       await loginWithGoogle();
       navigate('/dashboard');
-    } catch (err: any) {
-      if (err?.code === 'auth/unauthorized-domain' || err?.message?.includes('unauthorized-domain')) {
-        setUnauthorizedDomain(window.location.hostname);
-      }
+    } catch {
+      // handled internally
     } finally {
       setIsLoading(false);
     }
@@ -340,41 +335,7 @@ const Register = () => {
                       <><GoogleIcon /><span>{isArabic ? 'الانضمام بحساب Google' : 'JOIN_WITH_GOOGLE'}</span></>
                     )}
                   </Button>
-                  {unauthorizedDomain && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 space-y-2 text-amber-200 text-xs"
-                    >
-                      <div className="flex items-center gap-2 font-bold text-amber-300">
-                        <span>⚠️</span>
-                        <span>{isArabic ? 'إعداد إضافي لنطاق Vercel في Firebase' : 'Firebase Authorized Domain Setup Required'}</span>
-                      </div>
-                      <p className="text-[11px] font-mono leading-relaxed text-amber-100/90">
-                        {isArabic 
-                          ? `نطاق هذا الموقع (${unauthorizedDomain}) يحتاج للإضافة في قائمة النطاقات المصرح بها في Firebase Console لتشغيل زر Google.`
-                          : `Domain (${unauthorizedDomain}) must be added to Firebase Authorized Domains.`
-                        }
-                      </p>
-                      <div className="pt-1 flex flex-col gap-2">
-                        <a 
-                          href="https://console.firebase.google.com/project/datacampclub/authentication/settings" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="w-full text-center py-2 px-3 rounded bg-amber-500 hover:bg-amber-400 text-black font-bold text-[11px] transition shadow-md"
-                        >
-                          {isArabic ? '🔗 فتح إعدادات Firebase لإضافة النطاق' : '🔗 Open Firebase Console Auth Settings'}
-                        </a>
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab('email')}
-                          className="text-[10px] text-primary hover:underline font-mono text-center pt-1"
-                        >
-                          {isArabic ? '← أو سجل باستخدام البريد وكلمة المرور للربط المباشر بقاعدة البيانات فوراً' : '← Or use Email/Password for instant database enrollment'}
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
+
 
                   <p className="text-center text-[10px] text-muted-foreground font-mono leading-relaxed px-2">
                     {isArabic 

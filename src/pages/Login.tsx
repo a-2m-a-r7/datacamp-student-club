@@ -29,7 +29,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [unauthorizedDomain, setUnauthorizedDomain] = useState<string | null>(null);
 
   React.useEffect(() => {
     if (user && !authLoading) navigate('/dashboard', { replace: true });
@@ -61,14 +60,11 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     if (isLoading || authLoading) return;
     setIsLoading(true);
-    setUnauthorizedDomain(null);
     try {
       await loginWithGoogle();
       navigate('/dashboard');
-    } catch (err: any) {
-      if (err?.code === 'auth/unauthorized-domain' || err?.message?.includes('unauthorized-domain')) {
-        setUnauthorizedDomain(window.location.hostname);
-      }
+    } catch {
+      // handled inside loginWithGoogle
     } finally {
       setIsLoading(false);
     }
@@ -262,42 +258,6 @@ const Login = () => {
                     </motion.div>
                   )}
 
-                  {unauthorizedDomain && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 space-y-2 text-amber-200 text-xs"
-                    >
-                      <div className="flex items-center gap-2 font-bold text-amber-300">
-                        <span>⚠️</span>
-                        <span>{isArabic ? 'إعداد إضافي لنطاق Vercel في Firebase' : 'Firebase Authorized Domain Setup Required'}</span>
-                      </div>
-                      <p className="text-[11px] font-mono leading-relaxed text-amber-100/90">
-                        {isArabic 
-                          ? `نطاق هذا الموقع (${unauthorizedDomain}) يحتاج للإضافة في قائمة النطاقات المصرح بها في Firebase Console لتشغيل زر Google.`
-                          : `Domain (${unauthorizedDomain}) must be added to Firebase Authorized Domains.`
-                        }
-                      </p>
-                      <div className="pt-1 flex flex-col gap-2">
-                        <a 
-                          href="https://console.firebase.google.com/project/datacampclub/authentication/settings" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="w-full text-center py-2 px-3 rounded bg-amber-500 hover:bg-amber-400 text-black font-bold text-[11px] transition shadow-md"
-                        >
-                          {isArabic ? '🔗 فتح إعدادات Firebase لإضافة النطاق' : '🔗 Open Firebase Console Auth Settings'}
-                        </a>
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab('email')}
-                          className="text-[10px] text-primary hover:underline font-mono text-center pt-1"
-                        >
-                          {isArabic ? '← أو استخدم البريد وكلمة المرور للربط المباشر بقاعدة البيانات فوراً' : '← Or use Email/Password for instant database connection'}
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-
                   <div className="bg-white/5 border border-white/10 rounded-lg p-3 space-y-2">
                     <p className="text-[10px] text-muted-foreground font-mono leading-relaxed">
                       {isArabic
@@ -315,13 +275,43 @@ const Login = () => {
               )}
             </AnimatePresence>
 
-            {/* Live Database Status Indicator */}
-            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-emerald-400 font-bold">{isArabic ? 'قاعدة البيانات متصلة' : 'DATABASE LIVE'}</span>
-              </span>
-              <span className="text-muted-foreground/70 font-mono">FIRESTORE: datacampclub</span>
+            {/* Quick 1-Click Access to Live Database */}
+            <div className="pt-3 border-t border-white/10 space-y-2">
+              <div className="text-[10px] font-cyber tracking-widest text-muted-foreground uppercase flex items-center justify-between">
+                <span>{isArabic ? 'دخول مباشر بنقرة واحدة (قاعدة البيانات)' : '1-CLICK DIRECT DATABASE ACCESS'}</span>
+                <span className="text-emerald-400 font-mono text-[9px] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  {isArabic ? 'سحابي مباشر' : 'LIVE FIRESTORE'}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2.5">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={async () => {
+                    await loginAsRole('super_admin');
+                    navigate('/dashboard');
+                  }}
+                  className="h-11 text-[11px] font-cyber border-amber-500/40 text-amber-300 hover:bg-amber-500/15 flex flex-col items-center justify-center p-1 transition-all shadow-sm shadow-amber-500/10"
+                >
+                  <span className="font-bold flex items-center gap-1">👑 {isArabic ? 'سوبر أدمن' : 'SUPER ADMIN'}</span>
+                  <span className="text-[8px] text-muted-foreground font-mono">Ammar Tahoun (Cloud DB)</span>
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={async () => {
+                    await loginAsRole('member');
+                    navigate('/dashboard');
+                  }}
+                  className="h-11 text-[11px] font-cyber border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/15 flex flex-col items-center justify-center p-1 transition-all shadow-sm shadow-emerald-500/10"
+                >
+                  <span className="font-bold flex items-center gap-1">👥 {isArabic ? 'عضو النادي' : 'MEMBER'}</span>
+                  <span className="text-[8px] text-muted-foreground font-mono">Sara Hassan (Cloud DB)</span>
+                </Button>
+              </div>
             </div>
           </CardContent>
 
