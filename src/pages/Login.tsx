@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { analyzeEmail } from '../lib/emailUtils';
+import { GoogleAccountModal } from '../components/GoogleAccountModal';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
@@ -27,6 +28,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   React.useEffect(() => {
@@ -56,17 +58,8 @@ const Login = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    if (isLoading || authLoading) return;
-    setIsLoading(true);
-    try {
-      await loginWithGoogle();
-      navigate('/dashboard');
-    } catch {
-      // handled inside loginWithGoogle
-    } finally {
-      setIsLoading(false);
-    }
+  const handleGoogleSignIn = () => {
+    setShowGoogleModal(true);
   };
 
   if (authLoading && !isLoading) {
@@ -233,6 +226,12 @@ const Login = () => {
           </CardFooter>
         </Card>
       </motion.div>
+
+      <GoogleAccountModal
+        isOpen={showGoogleModal}
+        onClose={() => setShowGoogleModal(false)}
+        onSuccess={() => navigate('/dashboard')}
+      />
     </div>
   );
 };

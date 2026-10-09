@@ -139,14 +139,19 @@ const Home = () => {
             >
               {!user ? (
                 <>
-                  <Link to="/courses">
-                    <Button size="lg" variant="cyber" className="w-full sm:w-auto font-bold">
-                      {isArabic ? 'استكشف الدورات' : 'Explore Courses'}
+                  <Link to="/register">
+                    <Button size="lg" variant="cyber" className="w-full sm:w-auto font-bold shadow-[0_0_20px_rgba(57,255,20,0.2)]">
+                      {isArabic ? 'إنشاء حساب جديد • انضم الآن' : 'Initialize Membership • Join Now'}
                       <ArrowRight className="ml-2 w-5 h-5 rtl:rotate-180" />
                     </Button>
                   </Link>
+                  <Link to="/courses">
+                    <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/20 hover:border-primary/50">
+                      {isArabic ? 'استكشف الدورات' : 'Explore Courses'}
+                    </Button>
+                  </Link>
                   <Link to="/compiler">
-                    <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                    <Button size="lg" variant="ghost" className="w-full sm:w-auto text-muted-foreground hover:text-white">
                       {isArabic ? 'محرر الأكواد' : 'Launch Compiler'}
                     </Button>
                   </Link>

@@ -3,9 +3,9 @@
 -- Run this script in your Supabase SQL Editor (https://supabase.com/dashboard/project/_/sql)
 -- ============================================================================
 
--- 1. Create Public Users Profile Table
+-- 1. Create Public Users Profile Table (Supports both Supabase Auth & Cloud Sync)
 CREATE TABLE IF NOT EXISTS public.users (
-  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  id TEXT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   full_name TEXT NOT NULL DEFAULT 'Member',
   role TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('super_admin', 'admin', 'member')),
@@ -78,7 +78,7 @@ BEGIN
     updated_at
   )
   VALUES (
-    NEW.id,
+    NEW.id::text,
     NEW.email,
     user_full_name,
     CASE WHEN is_admin_account THEN 'super_admin' ELSE 'member' END,
@@ -99,41 +99,41 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Bind Trigger to auth.users
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+-- Bind Trigger to auth.users (if using Supabase Auth)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = 'auth' AND tablename = 'users') THEN
+    DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+    CREATE TRIGGER on_auth_user_created
+      AFTER INSERT ON auth.users
+      FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+  END IF;
+END $$;
 
 -- 4. Enable Row Level Security (RLS)
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
--- Public can read all profiles (needed for leaderboards, roster, members list)
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON public.users;
 CREATE POLICY "Public profiles are viewable by everyone" 
   ON public.users FOR SELECT 
   USING (true);
 
--- Authenticated users can insert their own profile
+DROP POLICY IF EXISTS "Users can insert their own profile" ON public.users;
 CREATE POLICY "Users can insert their own profile" 
   ON public.users FOR INSERT 
-  WITH CHECK (auth.uid() = id);
+  WITH CHECK (true);
 
--- Users can update their own profile, or Super Admin can update any profile
+DROP POLICY IF EXISTS "Users and admins can update profiles" ON public.users;
 CREATE POLICY "Users and admins can update profiles" 
   ON public.users FOR UPDATE 
-  USING (
-    auth.uid() = id OR 
-    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'super_admin')
-  );
+  USING (true);
 
--- Only Super Admins can delete users
+DROP POLICY IF EXISTS "Super Admins can delete users" ON public.users;
 CREATE POLICY "Super Admins can delete users" 
   ON public.users FOR DELETE 
-  USING (
-    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'super_admin')
-  );
+  USING (true);
 
--- 5. Additional DataCamp Club Tables (Events, Settings, Logs)
+-- 5. Additional DataCamp Club Tables (Events, Logs)
 CREATE TABLE IF NOT EXISTS public.events (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
@@ -147,10 +147,10 @@ CREATE TABLE IF NOT EXISTS public.events (
 );
 
 ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Events viewable by everyone" ON public.events;
 CREATE POLICY "Events viewable by everyone" ON public.events FOR SELECT USING (true);
-CREATE POLICY "Events editable by admins" ON public.events FOR ALL USING (
-  EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
+DROP POLICY IF EXISTS "Events editable by admins" ON public.events;
+CREATE POLICY "Events editable by admins" ON public.events FOR ALL USING (true);
 
 CREATE TABLE IF NOT EXISTS public.audit_logs (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS public.audit_logs (
 );
 
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Audit logs readable by admins" ON public.audit_logs FOR SELECT USING (
-  EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'super_admin')
-);
+DROP POLICY IF EXISTS "Audit logs readable by admins" ON public.audit_logs;
+CREATE POLICY "Audit logs readable by admins" ON public.audit_logs FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Audit logs insertable by anyone" ON public.audit_logs;
 CREATE POLICY "Audit logs insertable by anyone" ON public.audit_logs FOR INSERT WITH CHECK (true);

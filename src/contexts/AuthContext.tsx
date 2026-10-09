@@ -169,6 +169,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           photoURL: firebaseUser.photoURL || '',
         };
         await setDoc(userRef, newProfile);
+
+        // Dual-sync to Supabase if configured
+        if (isSupabaseConfigured && supabase) {
+          try {
+            await supabase.from('users').upsert({
+              id: newProfile.uid,
+              email: newProfile.email,
+              full_name: newProfile.fullName,
+              role: newProfile.role,
+              member_id: newProfile.memberId,
+              status: newProfile.status,
+              total_points: newProfile.totalPoints,
+              level: newProfile.level,
+              is_verified: newProfile.isVerified,
+              photo_url: newProfile.photoURL || '',
+              updated_at: new Date().toISOString()
+            });
+          } catch (supaErr) {
+            console.warn('Supabase dual-sync warning:', supaErr);
+          }
+        }
+
         return newProfile;
       }
 
@@ -182,6 +204,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           isVerified: true,
         };
         await setDoc(userRef, { role: 'super_admin', level: 'ARCHITECT', totalPoints: Math.max(existingData.totalPoints || 0, 10000), isVerified: true }, { merge: true });
+
+        // Dual-sync updated admin role to Supabase if configured
+        if (isSupabaseConfigured && supabase) {
+          try {
+            await supabase.from('users').upsert({
+              id: updated.uid,
+              email: updated.email,
+              full_name: updated.fullName,
+              role: updated.role,
+              member_id: updated.memberId,
+              status: updated.status,
+              total_points: updated.totalPoints,
+              level: updated.level,
+              is_verified: updated.isVerified,
+              photo_url: updated.photoURL || '',
+              updated_at: new Date().toISOString()
+            });
+          } catch (supaErr) {
+            console.warn('Supabase dual-sync warning:', supaErr);
+          }
+        }
+
         return updated;
       }
 
@@ -376,6 +420,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         provider: 'google',
         options: {
           redirectTo: window.location.origin + '/dashboard',
+          queryParams: {
+            prompt: 'select_account',
+          },
         },
       });
       if (error) {
@@ -391,6 +438,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
+      googleProvider.setCustomParameters({ prompt: 'select_account' });
       await signInWithPopup(auth, googleProvider);
       return;
     } catch (error: any) {
@@ -412,11 +460,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Firebase Google Auth error:', error.code, error.message);
 
       if (error.code === 'auth/unauthorized-domain' || error.message?.includes('unauthorized-domain')) {
-        // Seamlessly authenticate directly with the real cloud database account
-        console.warn('Google Auth popup domain not authorized on this host, seamlessly connecting with authentic admin credentials');
-        await signInWithEmailAndPassword(auth, 'admin@datacamp.club', 'DataCampClub2025!');
-        toast.success('تم تسجيل الدخول والربط بقاعدة البيانات السحابية بنجاح كـ Super Admin (Ammar Tahoun)');
-        return;
+        const domainErr = new Error('UNAUTHORIZED_DOMAIN');
+        (domainErr as any).code = 'auth/unauthorized-domain';
+        throw domainErr;
       }
 
       if (error.code === 'auth/operation-not-allowed') {

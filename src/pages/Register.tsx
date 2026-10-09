@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Eye, EyeOff, Mail, Lock, User as UserIcon, CheckCircle2, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { analyzeEmail } from '../lib/emailUtils';
+import { GoogleAccountModal } from '../components/GoogleAccountModal';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
@@ -19,7 +20,7 @@ const GoogleIcon = () => (
 );
 
 const Register = () => {
-  const { user, loading: authLoading, loginWithGoogle, registerWithEmail } = useAuth();
+  const { user, loading: authLoading, registerWithEmail } = useAuth();
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
 
@@ -29,7 +30,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [registeredSuccess, setRegisteredSuccess] = useState(false);
+  const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [errors, setErrors] = useState<{
     fullName?: string;
     email?: string;
@@ -65,10 +66,9 @@ const Register = () => {
     if (!validate() || isLoading) return;
     setIsLoading(true);
     try {
-      const res = await registerWithEmail(email, password, fullName);
-      if (res.needsVerification) {
-        setRegisteredSuccess(true);
-      }
+      await registerWithEmail(email, password, fullName);
+      toast.success(isArabic ? 'مرحباً بك! تم إنشاء حسابك وحفظه في السحابة بنجاح 🚀' : 'Welcome! Account created successfully 🚀');
+      navigate('/dashboard');
     } catch {
       // toast shown inside registerWithEmail
     } finally {
@@ -76,17 +76,8 @@ const Register = () => {
     }
   };
 
-  const handleGoogleSignUp = async () => {
-    if (isLoading || authLoading) return;
-    setIsLoading(true);
-    try {
-      await loginWithGoogle();
-      navigate('/dashboard');
-    } catch {
-      // handled internally
-    } finally {
-      setIsLoading(false);
-    }
+  const handleGoogleSignUp = () => {
+    setShowGoogleModal(true);
   };
 
   if (authLoading && !isLoading) {
@@ -95,59 +86,6 @@ const Register = () => {
         <div className="text-primary font-cyber animate-pulse text-sm tracking-widest">
           {isArabic ? 'جاري المزامنة...' : 'SYNCHRONIZING...'}
         </div>
-      </div>
-    );
-  }
-
-  if (registeredSuccess) {
-    const emailInfo = analyzeEmail(email);
-
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 gap-6">
-        <Card className="w-full max-w-md border-primary/30 bg-dark-navy/70 backdrop-blur-2xl text-center p-6 space-y-4">
-          <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center mx-auto text-primary">
-            <CheckCircle2 className="w-8 h-8" />
-          </div>
-          <CardTitle className="text-2xl font-cyber text-primary tracking-tight">
-            {isArabic ? 'تم إنشاء الحساب بنجاح' : 'INITIALIZATION_COMPLETE'}
-          </CardTitle>
-          <p className="text-muted-foreground font-mono text-xs leading-relaxed">
-            {isArabic ? (
-              <>تم إرسال رابط تأكيد وتفعيل الحساب إلى البريد: <span className="text-foreground font-bold">{email}</span>. يرجى تأكيد بريدك للتمتع بكافة الصلاحيات.</>
-            ) : (
-              <>A verification link was dispatched to <span className="text-foreground font-bold">{email}</span>. Please verify your email address to activate your clearance.</>
-            )}
-          </p>
-
-          {emailInfo.isUniversity && (
-            <div className="p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[11px] font-mono text-left">
-              🏛️ <strong>{isArabic ? 'حساب طالب جامعي معتمد:' : 'Academic Student Account:'}</strong> {emailInfo.institutionName || 'University Domain'}
-            </div>
-          )}
-
-          <div className="space-y-2.5 pt-2">
-            <a
-              href={emailInfo.webmailUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full block"
-            >
-              <Button variant="cyber" className="w-full font-cyber tracking-wider text-xs h-11 gap-2 shadow-[0_0_20px_rgba(0,255,204,0.3)]">
-                <ExternalLink className="w-4 h-4" />
-                {emailInfo.isUniversity
-                  ? (isArabic ? 'فتح بريد أوفيس 365 الجامعي' : 'OPEN OUTLOOK / OFFICE 365 (UNIVERSITY MAIL)')
-                  : emailInfo.provider === 'gmail'
-                  ? (isArabic ? 'فتح بريد GOOGLE GMAIL' : 'OPEN GOOGLE GMAIL')
-                  : (isArabic ? 'فتح صندوق البريد' : 'OPEN INBOX')
-                }
-              </Button>
-            </a>
-
-            <Button variant="outline" className="w-full font-cyber text-xs border-white/20" onClick={() => navigate('/login')}>
-              {isArabic ? 'الانتقال لتسجيل الدخول' : 'PROCEED_TO_LOGIN'}
-            </Button>
-          </div>
-        </Card>
       </div>
     );
   }
@@ -322,6 +260,12 @@ const Register = () => {
           </CardFooter>
         </Card>
       </motion.div>
+
+      <GoogleAccountModal
+        isOpen={showGoogleModal}
+        onClose={() => setShowGoogleModal(false)}
+        onSuccess={() => navigate('/dashboard')}
+      />
     </div>
   );
 };

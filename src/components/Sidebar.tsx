@@ -6,7 +6,7 @@ import {
   FileText, Users, Image as ImageIcon, Mail, 
   LayoutDashboard, LogOut, ChevronLeft, ChevronRight,
   Settings as SettingsIcon, Shield, BarChart3, X, User, Menu,
-  Trophy, Sparkles, Bell, Award
+  Trophy, Sparkles, Bell, Award, UserPlus, LogIn
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -283,17 +283,33 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
               )}
             </div>
           ) : (
-            <Button 
-              variant="cyber" 
-              className="w-full" 
-              size="sm"
-              onClick={() => {
-                navigate('/login');
-                closeOnMobile();
-              }}
-            >
-              {(!isCollapsed || !isDesktop) ? t('nav.login', 'LOGIN_SYSTEM') : <LogOut className="w-4 h-4" />}
-            </Button>
+            <div className="space-y-2">
+              <Button 
+                variant="cyber" 
+                className="w-full text-xs font-cyber font-bold tracking-wider h-10 gap-2" 
+                size="sm"
+                onClick={() => {
+                  navigate('/register');
+                  closeOnMobile();
+                }}
+              >
+                <UserPlus className="w-4 h-4 shrink-0" />
+                {(!isCollapsed || !isDesktop) && (isArabic ? 'إنشاء حساب جديد' : 'INITIALIZE_MEMBERSHIP')}
+              </Button>
+              {(!isCollapsed || !isDesktop) && (
+                <Button 
+                  variant="outline" 
+                  className="w-full text-xs font-cyber tracking-wider h-9 border-white/10 hover:border-primary/40 text-muted-foreground hover:text-white" 
+                  size="sm"
+                  onClick={() => {
+                    navigate('/login');
+                    closeOnMobile();
+                  }}
+                >
+                  {isArabic ? 'تسجيل الدخول' : 'LOGIN_SYSTEM'}
+                </Button>
+              )}
+            </div>
           )}
 
           {/* Language Switcher */}
