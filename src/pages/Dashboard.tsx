@@ -92,7 +92,7 @@ const Dashboard = () => {
           </p>
         </div>
         <div className="flex items-center flex-wrap space-x-4 gap-3">
-          {(profile.role === 'super_admin' || profile.role === 'admin' || isSuperAdmin || isAdmin) && (
+          {(profile.role === 'super_admin' || isSuperAdmin || isAdmin) && (
             <Link to="/admin/users">
               <Button
                 variant="cyber"
@@ -161,7 +161,7 @@ const Dashboard = () => {
       </Card>
 
       {/* Super Admin Quick Management Banner */}
-      {(profile.role === 'super_admin' || profile.role === 'admin' || isSuperAdmin || isAdmin) && (
+      {(profile.role === 'super_admin' || isSuperAdmin || isAdmin) && (
         <div className="bg-gradient-to-r from-amber-500/15 via-primary/10 to-transparent border border-amber-500/30 rounded-xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">

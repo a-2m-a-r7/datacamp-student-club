@@ -9,6 +9,7 @@ import { Eye, EyeOff, Mail, Lock, User as UserIcon, CheckCircle2, ExternalLink }
 import { motion, AnimatePresence } from 'motion/react';
 import { analyzeEmail } from '../lib/emailUtils';
 import { GoogleAccountModal } from '../components/GoogleAccountModal';
+import { toast } from 'sonner';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
