@@ -60,12 +60,10 @@ const Login = () => {
     if (isLoading || authLoading) return;
     setIsLoading(true);
     try {
-      await new Promise(r => setTimeout(r, 800));
       await loginWithGoogle();
-      await new Promise(r => setTimeout(r, 300));
       navigate('/dashboard');
     } catch {
-      // handled internally
+      // Error notifications handled inside loginWithGoogle
     } finally {
       setIsLoading(false);
     }

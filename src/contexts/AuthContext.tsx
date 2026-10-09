@@ -5,6 +5,7 @@ import {
   signOut,
   getRedirectResult,
   signInWithPopup,
+  signInWithRedirect,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendEmailVerification,
@@ -87,14 +88,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<FirebaseUser | null>(() => {
     try {
       const saved = localStorage.getItem('datacamp_active_session');
-      if (saved) return JSON.parse(saved).user;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.user?.uid?.startsWith('google_') || parsed.user?.uid?.startsWith('user_')) {
+          localStorage.removeItem('datacamp_active_session');
+          return null;
+        }
+        return parsed.user;
+      }
     } catch {}
     return null;
   });
   const [profile, setProfile] = useState<UserProfile | null>(() => {
     try {
       const saved = localStorage.getItem('datacamp_active_session');
-      if (saved) return JSON.parse(saved).profile;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.profile?.uid?.startsWith('google_') || parsed.profile?.uid?.startsWith('user_')) {
+          localStorage.removeItem('datacamp_active_session');
+          return null;
+        }
+        return parsed.profile;
+      }
     } catch {}
     return null;
   });
@@ -137,7 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const newProfile: UserProfile = {
           uid: firebaseUser.uid,
           email: firebaseUser.email || '',
-          fullName: firebaseUser.displayName || 'New Member',
+          fullName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member',
           role: 'member',
           memberId,
           status: 'active',
@@ -153,7 +168,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return snap.data() as UserProfile;
     } catch (err) {
       console.error('Profile creation/check error:', err);
-      return null;
+      // Fallback: build genuine profile from the authenticated Firebase User directly
+      return {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email || '',
+        fullName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member',
+        role: 'member',
+        memberId: `DC-${firebaseUser.uid.slice(0, 6).toUpperCase()}`,
+        status: 'active',
+        isVerified: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        photoURL: firebaseUser.photoURL || undefined,
+      };
     }
   };
 
@@ -252,62 +279,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  // Google Sign In (Resilient with automatic fallback)
+  // Google Sign In (Authentic Firebase Authentication - No Mock Fallbacks)
   const loginWithGoogle = async () => {
-    if (isFirebaseReady) {
-      try {
-        await signInWithPopup(auth, googleProvider);
-        return; // onAuthStateChanged will fire automatically
-      } catch (error: any) {
-        if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
-          // User closed the popup — don't fallback, just return silently
-          return;
-        }
-        console.warn('Firebase Google Auth encountered issue:', error.code, error.message);
-        // Fall through to demo session for unauthorized domains or other errors
-      }
+    if (!isFirebaseReady) {
+      toast.error('Firebase configuration is not initialized.');
+      return;
     }
 
-    // Resilient fallback: Create a realistic Google-authenticated session
-    const googleNames = [
-      'Ahmed Mohamed', 'Sara Ali', 'Omar Hassan', 'Nour Ibrahim',
-      'Youssef Mahmoud', 'Hana Khaled', 'Karim Farouk', 'Lina Abdel',
-      'Tamer Saeed', 'Dina Mostafa', 'Ali Emad', 'Mariam Nabil',
-    ];
-    const randomName = googleNames[Math.floor(Math.random() * googleNames.length)];
-    const emailName = randomName.toLowerCase().replace(' ', '.') + Math.floor(Math.random() * 99);
-    const sessionId = `google_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    try {
+      await signInWithPopup(auth, googleProvider);
+      return; // onAuthStateChanged handles the real user authentication
+    } catch (error: any) {
+      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
+        // User closed the popup window intentionally
+        return;
+      }
 
-    const googleProfile: UserProfile = {
-      uid: sessionId,
-      email: `${emailName}@gmail.com`,
-      fullName: randomName,
-      role: 'member' as UserRole,
-      memberId: `DC-G-${Math.floor(1000 + Math.random() * 9000)}`,
-      status: 'active' as UserStatus,
-      isVerified: true,
-      emailType: 'personal',
-      universityName: 'Innovation University',
-      faculty: 'Computer Science & AI',
-      totalPoints: Math.floor(100 + Math.random() * 500),
-      level: 'RECRUIT',
-      photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(randomName)}&background=00ffcc&color=0a0e1a&bold=true&size=150`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+      // If popup was blocked by browser, seamlessly fallback to redirect flow
+      if (error.code === 'auth/popup-blocked') {
+        try {
+          await signInWithRedirect(auth, googleProvider);
+          return;
+        } catch (redirectErr: any) {
+          console.error('Firebase redirect auth error:', redirectErr);
+        }
+      }
 
-    const mockUser: any = {
-      uid: googleProfile.uid,
-      email: googleProfile.email,
-      displayName: googleProfile.fullName,
-      photoURL: googleProfile.photoURL,
-      emailVerified: true,
-    };
+      console.error('Firebase Google Auth error:', error.code, error.message);
 
-    setUser(mockUser);
-    setProfile(googleProfile);
-    localStorage.setItem('datacamp_active_session', JSON.stringify({ user: mockUser, profile: googleProfile }));
-    toast.success(`Welcome, ${randomName}! Signed in with Google.`);
+      if (error.code === 'auth/unauthorized-domain') {
+        const domain = window.location.hostname;
+        toast.error(
+          `نطاق الموقع (${domain}) غير مصرح به في Firebase. يرجى إضافته في Firebase Console → Authentication → Settings → Authorized Domains.`,
+          { duration: 15000 }
+        );
+        throw error;
+      }
+
+      if (error.code === 'auth/operation-not-allowed') {
+        toast.error('تسجيل الدخول عبر Google غير مفعّل في Firebase Console. يرجى تفعيله من Authentication → Sign-in method.');
+        throw error;
+      }
+
+      toast.error(error.message || 'حدث خطأ أثناء تسجيل الدخول بحساب Google.');
+      throw error;
+    }
   };
 
   // Quick One-Click Role Login
@@ -340,44 +356,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     if (!isFirebaseReady) {
-      const memberProfile: any = {
-        ...PRESET_DEMO_ACCOUNTS.member,
-        email: lowerEmail,
-        fullName: lowerEmail.split('@')[0].replace(/[._]/g, ' ').toUpperCase(),
-      };
-      const mockUser: any = {
-        uid: `user_${Date.now()}`,
-        email: lowerEmail,
-        displayName: memberProfile.fullName,
-        emailVerified: true,
-      };
-      setUser(mockUser);
-      setProfile(memberProfile);
-      localStorage.setItem('datacamp_active_session', JSON.stringify({ user: mockUser, profile: memberProfile }));
-      toast.success(`Logged in as Member (${memberProfile.fullName})!`);
+      toast.error('Firebase configuration is not initialized.');
       return;
     }
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error: any) {
-      console.warn('Firebase login fallback triggered:', error.code);
-      // Fallback to student session so the user is never stuck
-      const studentProfile: any = {
-        ...PRESET_DEMO_ACCOUNTS.student,
-        email: lowerEmail,
-        fullName: lowerEmail.split('@')[0].replace(/[._]/g, ' ').toUpperCase(),
+      console.warn('Firebase login error:', error.code, error.message);
+      const messages: Record<string, string> = {
+        'auth/invalid-credential': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+        'auth/user-not-found': 'لم يتم العثور على حساب بهذا البريد الإلكتروني.',
+        'auth/wrong-password': 'كلمة المرور غير صحيحة.',
+        'auth/invalid-email': 'صيغة البريد الإلكتروني غير صحيحة.',
+        'auth/user-disabled': 'تم تعطيل هذا الحساب. يرجى مراجعة إدارة النادي.',
+        'auth/too-many-requests': 'تم تجاوز عدد المحاولات المسموح بها. يرجى الانتظار بضع دقائق.',
       };
-      const mockUser: any = {
-        uid: `user_${Date.now()}`,
-        email: lowerEmail,
-        displayName: studentProfile.fullName,
-        emailVerified: true,
-      };
-      setUser(mockUser);
-      setProfile(studentProfile);
-      localStorage.setItem('datacamp_active_session', JSON.stringify({ user: mockUser, profile: studentProfile }));
-      toast.success(`Connected to student session (${studentProfile.fullName})`);
+      toast.error(messages[error.code] || error.message || 'فشل تسجيل الدخول.');
+      throw error;
     }
   };
 
