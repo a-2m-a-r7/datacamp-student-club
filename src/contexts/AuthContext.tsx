@@ -18,6 +18,7 @@ import { demoUsers, demoSettings } from '../lib/demoData';
 import { toast } from 'sonner';
 import { UserProfile, UserRole, UserStatus } from '../types';
 import { initializeDefaultSettings } from '../services/dbService';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -165,7 +166,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           level: isOwnerAdmin ? 'ARCHITECT' : 'EXPLORER',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          photoURL: firebaseUser.photoURL || undefined,
+          photoURL: firebaseUser.photoURL || '',
         };
         await setDoc(userRef, newProfile);
         return newProfile;
@@ -208,7 +209,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         level: isOwnerAdmin ? 'ARCHITECT' : 'EXPLORER',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        photoURL: firebaseUser.photoURL || undefined,
+        photoURL: firebaseUser.photoURL || '',
       };
     }
   };
@@ -308,8 +309,82 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  // Google Sign In (Authentic Firebase Authentication - No Mock Fallbacks)
+  // Supabase Auth Listener (Active when VITE_SUPABASE_URL and KEY are set)
+  useEffect(() => {
+    if (isSupabaseConfigured) {
+      supabase.auth.getSession().then(async ({ data: { session } }: any) => {
+        if (session?.user) {
+          setUser(session.user as any);
+          const { data } = await supabase.from('users').select('*').eq('id', session.user.id).single();
+          if (data) {
+            setProfile({
+              uid: data.id,
+              email: data.email,
+              fullName: data.full_name,
+              role: data.role,
+              memberId: data.member_id,
+              status: data.status,
+              totalPoints: data.total_points,
+              level: data.level,
+              isVerified: data.is_verified,
+              createdAt: data.created_at,
+              updatedAt: data.updated_at,
+              photoURL: data.photo_url || ''
+            });
+          }
+        }
+        setLoading(false);
+      });
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: string, session: any) => {
+        if (session?.user) {
+          setUser(session.user as any);
+          const { data } = await supabase.from('users').select('*').eq('id', session.user.id).single();
+          if (data) {
+            setProfile({
+              uid: data.id,
+              email: data.email,
+              fullName: data.full_name,
+              role: data.role,
+              memberId: data.member_id,
+              status: data.status,
+              totalPoints: data.total_points,
+              level: data.level,
+              isVerified: data.is_verified,
+              createdAt: data.created_at,
+              updatedAt: data.updated_at,
+              photoURL: data.photo_url || ''
+            });
+          }
+        } else {
+          setUser(null);
+          setProfile(null);
+        }
+        setLoading(false);
+      });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, []);
+
+  // Google Sign In (Authentic Firebase / Supabase Authentication)
   const loginWithGoogle = async () => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/dashboard',
+        },
+      });
+      if (error) {
+        toast.error(error.message || 'فشل تسجيل الدخول بـ Google عبر Supabase');
+        throw error;
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       toast.error('Firebase configuration is not initialized.');
       return;
@@ -317,7 +392,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       await signInWithPopup(auth, googleProvider);
-      return; // onAuthStateChanged handles the real user authentication
+      return;
     } catch (error: any) {
       if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
         // User closed the popup window intentionally
@@ -372,6 +447,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Email/Password Sign In (With Seamless Auto-Enrollment)
   const loginWithEmail = async (email: string, password: string) => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (error) {
+        toast.error(error.message || 'فشل تسجيل الدخول في Supabase');
+        throw error;
+      }
+      toast.success('تم تسجيل الدخول بنجاح عبر Supabase!');
+      return;
+    }
+
     if (!isFirebaseReady) {
       toast.error('Firebase configuration is not initialized.');
       return;
@@ -417,14 +505,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     password: string,
     fullName: string,
   ): Promise<{ needsVerification: boolean }> => {
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: {
+          data: {
+            full_name: fullName.trim(),
+          },
+        },
+      });
+      if (error) {
+        toast.error(error.message || 'فشل إنشاء الحساب في Supabase');
+        throw error;
+      }
+      toast.success('تم إنشاء الحساب وحفظه في قاعدة البيانات بنجاح!');
+      return { needsVerification: !data.session };
+    }
+
     if (!isFirebaseReady) {
       toast.error('Firebase configuration is not initialized.');
       return { needsVerification: false };
     }
 
+    const cleanEmail = email.trim();
+    const cleanName = fullName.trim();
+
     try {
-      const cleanEmail = email.trim();
-      const cleanName = fullName.trim();
       const credential = await createUserWithEmailAndPassword(auth, cleanEmail, password);
       await updateProfile(credential.user, { displayName: cleanName });
 
@@ -473,6 +580,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Logout
   const logout = async () => {
+    if (isSupabaseConfigured) {
+      await supabase.auth.signOut();
+      localStorage.removeItem('datacamp_active_session');
+      setUser(null);
+      setProfile(null);
+      toast.info('Logged out from session');
+      return;
+    }
+
     try {
       if (profileUnsubscribeRef.current) {
         profileUnsubscribeRef.current();

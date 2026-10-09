@@ -22,6 +22,17 @@ import { RoleEditorModal } from '../../components/admin/RoleEditorModal';
 import { ROLE_DEFINITIONS, ROLE_LIST, ALL_PERMISSIONS } from '../../lib/roleDefinitions';
 import { UserRole } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
+
+const normalizeUser = (u: any) => ({
+  ...u,
+  fullName: u.full_name || u.fullName || 'Member',
+  memberId: u.member_id || u.memberId || 'DC-000',
+  isVerified: u.is_verified ?? u.isVerified ?? true,
+  createdAt: u.created_at || u.createdAt || new Date().toISOString(),
+  photoURL: u.photo_url || u.photoURL || '',
+  totalPoints: u.total_points ?? u.totalPoints ?? 0,
+});
 
 const UserManagement = () => {
   const { isArabic } = useLanguage();
@@ -72,6 +83,22 @@ const UserManagement = () => {
 
   const handleManualRefresh = async () => {
     setRefreshing(true);
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        const freshUsers = (data || []).map(normalizeUser);
+        setUsers(freshUsers);
+        toast.success(isArabic ? `تمت مزامنة ${freshUsers.length} عضو من Supabase ⚡` : `Synced ${freshUsers.length} members from Supabase ⚡`);
+      } catch (err: any) {
+        console.error('Supabase refresh error:', err);
+        toast.error(isArabic ? 'حدث خطأ أثناء مزامنة Supabase' : 'Failed to refresh Supabase members');
+      } finally {
+        setRefreshing(false);
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       setUsers([...demoUsers]);
       setRefreshing(false);
@@ -94,6 +121,33 @@ const UserManagement = () => {
   };
 
   useEffect(() => {
+    if (isSupabaseConfigured) {
+      const fetchSupabaseUsers = async () => {
+        try {
+          const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+          if (!error && data) {
+            setUsers(data.map(normalizeUser));
+          }
+        } catch (e) {
+          console.warn('Supabase fetch users error:', e);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchSupabaseUsers();
+
+      const channel = supabase.channel('realtime_admin_users')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
+          fetchSupabaseUsers();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+
     if (!isFirebaseReady) {
       setUsers(demoUsers);
       setLoading(false);
@@ -132,6 +186,31 @@ const UserManagement = () => {
       memberId,
       createdAt: new Date().toISOString()
     };
+
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: newUser.email.trim(),
+          password: newUserPassword || 'DataCampClub2025!',
+          options: {
+            data: {
+              full_name: newUser.fullName.trim(),
+            }
+          }
+        });
+        if (error) throw error;
+        if (data.user && newUser.role !== 'member') {
+          await supabase.from('users').update({ role: newUser.role, faculty: newUser.faculty }).eq('id', data.user.id);
+        }
+        toast.success(isArabic ? 'تمت إضافة العضو بنجاح في Supabase' : 'Operative created successfully in Supabase');
+        setShowAddModal(false);
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to create operative in Supabase');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
 
     if (!isFirebaseReady) {
       const hashedPassword = await hashPassword(newUserPassword || 'temp_pass');
@@ -260,6 +339,18 @@ const UserManagement = () => {
 
   const toggleUserStatus = async (userId: string, currentStatus: string) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from('users').update({ status: newStatus, updated_at: new Date().toISOString() }).eq('id', userId);
+        if (error) throw error;
+        setUsers(users.map(u => u.id === userId ? { ...u, status: newStatus } : u));
+        toast.success(`User status updated to ${newStatus}`);
+      } catch (error) {
+        toast.error('Failed to update status');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const newUsers = users.map(u => u.id === userId ? { ...u, status: newStatus } : u);
       updateDemoUsers(newUsers);
@@ -285,6 +376,24 @@ const UserManagement = () => {
     // Optimistic local state update
     setUsers(prev => prev.map(u => u.id === userId ? { ...u, ...updatePayload } : u));
 
+    if (isSupabaseConfigured) {
+      try {
+        const updateData: any = { role: newRole, updated_at: new Date().toISOString() };
+        if (newRole === 'super_admin') {
+          updateData.level = 'ARCHITECT';
+          updateData.is_verified = true;
+        }
+        const { error } = await supabase.from('users').update(updateData).eq('id', userId);
+        if (error) throw error;
+        await logAction('USER_ROLE_CHANGE', 'Admin', `${userId} -> ${newRole}`, 'success');
+        toast.success(isArabic ? `تمت ترقية العضو إلى ${newRole === 'super_admin' ? 'مشرف رئيسي (Super Admin)' : newRole} بنجاح 👑` : `User role updated to ${newRole} successfully 👑`);
+      } catch (error: any) {
+        console.error('Failed to update user role:', error);
+        toast.error(isArabic ? 'فشل تحديث الرتبة في Supabase' : 'Failed to update role');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const newUsers = users.map(u => u.id === userId ? { ...u, ...updatePayload } : u);
       updateDemoUsers(newUsers);
@@ -302,6 +411,20 @@ const UserManagement = () => {
   };
 
   const deleteUser = async (userId: string) => {
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from('users').delete().eq('id', userId);
+        if (error) throw error;
+        setUsers(users.filter(u => u.id !== userId));
+        await logAction('USER_DELETED', 'Admin', userId, 'warning');
+        toast.success('User removed from database');
+        setShowDeleteConfirm(null);
+      } catch (error) {
+        toast.error('Failed to delete user');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const newUsers = users.filter(u => u.id !== userId);
       updateDemoUsers(newUsers);

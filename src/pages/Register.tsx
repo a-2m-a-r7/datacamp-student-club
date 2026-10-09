@@ -23,7 +23,6 @@ const Register = () => {
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'email' | 'google'>('email');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -171,181 +170,146 @@ const Register = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-5 pt-4">
-            {/* Tab Switcher */}
-            <div className="grid grid-cols-2 gap-1 p-1 bg-white/5 rounded-lg border border-white/10">
-              {(['email', 'google'] as const).map(tab => (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => setActiveTab(tab)}
-                  className={`py-2 text-xs font-cyber tracking-widest uppercase rounded-md transition-all duration-200 ${
-                    activeTab === tab
-                      ? 'bg-primary text-black font-bold'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {tab === 'email' 
-                    ? (isArabic ? 'التسجيل بالبريد' : 'EMAIL REGISTRATION') 
-                    : (isArabic ? 'حساب GOOGLE' : 'GOOGLE OAUTH')
-                  }
-                </button>
-              ))}
+          <CardContent className="space-y-4 pt-4">
+            {/* Google Sign Up - Always Visible */}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full border-primary/40 hover:bg-primary/10 h-12 gap-3 text-xs sm:text-sm font-cyber tracking-wider hover:scale-[1.01] transition-all shadow-sm"
+              onClick={handleGoogleSignUp}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <><div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /><span>{isArabic ? 'جاري الاتصال بـ Google...' : 'CONNECTING TO GOOGLE...'}</span></>
+              ) : (
+                <><GoogleIcon /><span>{isArabic ? 'التسجيل السريع بحساب Google' : 'SIGN UP WITH GOOGLE'}</span></>
+              )}
+            </Button>
+
+            {/* Stylish Divider */}
+            <div className="relative my-3">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/10" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase font-mono tracking-widest">
+                <span className="bg-[#0b101b] px-3 text-muted-foreground/80">
+                  {isArabic ? 'أو بإنشاء حساب جديد بالبريد الإلكتروني' : 'OR CREATE ACCOUNT WITH EMAIL'}
+                </span>
+              </div>
             </div>
 
-            <AnimatePresence mode="wait">
-              {activeTab === 'email' ? (
-                <motion.form
-                  key="reg-email"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  transition={{ duration: 0.2 }}
-                  onSubmit={handleEmailRegister}
-                  className="space-y-3.5"
-                >
-                  {/* Full Name */}
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
-                      {isArabic ? 'الاسم بالكامل' : 'Full Name'}
-                    </label>
-                    <div className="relative">
-                      <UserIcon className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <Input
-                        type="text"
-                        value={fullName}
-                        onChange={e => { setFullName(e.target.value); setErrors(p => ({...p, fullName: undefined})); }}
-                        placeholder={isArabic ? 'أحمد منصور' : 'Ahmed Mansour'}
-                        className={`${isArabic ? 'pr-10 pl-3' : 'pl-10 pr-3'} ${errors.fullName ? 'border-destructive' : ''}`}
-                      />
-                    </div>
-                    {errors.fullName && <p className="text-destructive text-[10px] font-mono">{errors.fullName}</p>}
-                  </div>
+            {/* Registration Form - Always Visible */}
+            <form onSubmit={handleEmailRegister} className="space-y-3.5">
+              {/* Full Name */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
+                  {isArabic ? 'الاسم بالكامل' : 'Full Name'}
+                </label>
+                <div className="relative">
+                  <UserIcon className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
+                  <Input
+                    type="text"
+                    value={fullName}
+                    onChange={e => { setFullName(e.target.value); setErrors(p => ({...p, fullName: undefined})); }}
+                    placeholder={isArabic ? 'أحمد منصور' : 'Ahmed Mansour'}
+                    className={`${isArabic ? 'pr-10 pl-3' : 'pl-10 pr-3'} ${errors.fullName ? 'border-destructive' : ''}`}
+                  />
+                </div>
+                {errors.fullName && <p className="text-destructive text-[10px] font-mono">{errors.fullName}</p>}
+              </div>
 
-                  {/* Email */}
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest flex items-center justify-between">
-                      <span>{isArabic ? 'البريد الإلكتروني' : 'Email Address'}</span>
-                      <span className="text-[9px] font-mono text-primary/70">
-                        {isArabic ? 'جامعي أو شخصي' : 'UNIVERSITY (.EDU) OR PERSONAL'}
-                      </span>
-                    </label>
-                    <div className="relative">
-                      <Mail className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <Input
-                        type="email"
-                        value={email}
-                        onChange={e => { setEmail(e.target.value); setErrors(p => ({...p, email: undefined})); }}
-                        placeholder={isArabic ? 'student@eng.asu.edu.eg أو personal@gmail.com' : 'student@eng.asu.edu.eg or personal@gmail.com'}
-                        className={`${isArabic ? 'pr-10 pl-3' : 'pl-10 pr-3'} ${errors.email ? 'border-destructive' : ''}`}
-                      />
-                    </div>
-                    {errors.email && <p className="text-destructive text-[10px] font-mono">{errors.email}</p>}
+              {/* Email */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest flex items-center justify-between">
+                  <span>{isArabic ? 'البريد الإلكتروني' : 'Email Address'}</span>
+                  <span className="text-[9px] font-mono text-primary/70">
+                    {isArabic ? 'جامعي أو شخصي' : 'UNIVERSITY (.EDU) OR PERSONAL'}
+                  </span>
+                </label>
+                <div className="relative">
+                  <Mail className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={e => { setEmail(e.target.value); setErrors(p => ({...p, email: undefined})); }}
+                    placeholder={isArabic ? 'student@eng.asu.edu.eg أو personal@gmail.com' : 'student@eng.asu.edu.eg or personal@gmail.com'}
+                    className={`${isArabic ? 'pr-10 pl-3' : 'pl-10 pr-3'} ${errors.email ? 'border-destructive' : ''}`}
+                  />
+                </div>
+                {errors.email && <p className="text-destructive text-[10px] font-mono">{errors.email}</p>}
 
-                    {email.includes('@') && email.includes('.') && (
-                      <div className="pt-1">
-                        {analyzeEmail(email).isUniversity ? (
-                          <div className="text-[10px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-md flex items-center gap-1.5 animate-fadeIn">
-                            <span>🏛️</span>
-                            <span><strong>{isArabic ? 'هوية جامعية معتمدة:' : 'Academic Identity:'}</strong> {analyzeEmail(email).institutionName || 'University Domain'}</span>
-                          </div>
-                        ) : (
-                          <div className="text-[10px] font-mono text-muted-foreground bg-white/5 border border-white/10 px-2.5 py-1 rounded-md flex items-center gap-1.5">
-                            <span>👤</span>
-                            <span><strong>{isArabic ? 'هوية شخصية:' : 'Personal Identity:'}</strong> {analyzeEmail(email).providerLabel}</span>
-                          </div>
-                        )}
+                {email.includes('@') && email.includes('.') && (
+                  <div className="pt-1">
+                    {analyzeEmail(email).isUniversity ? (
+                      <div className="text-[10px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-md flex items-center gap-1.5 animate-fadeIn">
+                        <span>🏛️</span>
+                        <span><strong>{isArabic ? 'هوية جامعية معتمدة:' : 'Academic Identity:'}</strong> {analyzeEmail(email).institutionName || 'University Domain'}</span>
+                      </div>
+                    ) : (
+                      <div className="text-[10px] font-mono text-muted-foreground bg-white/5 border border-white/10 px-2.5 py-1 rounded-md flex items-center gap-1.5">
+                        <span>👤</span>
+                        <span><strong>{isArabic ? 'هوية شخصية:' : 'Personal Identity:'}</strong> {analyzeEmail(email).providerLabel}</span>
                       </div>
                     )}
                   </div>
+                )}
+              </div>
 
-                  {/* Password */}
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
-                      {isArabic ? 'كلمة المرور (6 أحرف على الأقل)' : 'Password (min 6 characters)'}
-                    </label>
-                    <div className="relative">
-                      <Lock className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={e => { setPassword(e.target.value); setErrors(p => ({...p, password: undefined})); }}
-                        placeholder="••••••••••••"
-                        className={`${isArabic ? 'pr-10 pl-10' : 'pl-10 pr-10'} ${errors.password ? 'border-destructive' : ''}`}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(v => !v)}
-                        className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground ${isArabic ? 'left-3' : 'right-3'}`}
-                        tabIndex={-1}
-                      >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                    </div>
-                    {errors.password && <p className="text-destructive text-[10px] font-mono">{errors.password}</p>}
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
-                      {isArabic ? 'تأكيد كلمة المرور' : 'Confirm Password'}
-                    </label>
-                    <div className="relative">
-                      <Lock className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        value={confirmPassword}
-                        onChange={e => { setConfirmPassword(e.target.value); setErrors(p => ({...p, confirmPassword: undefined})); }}
-                        placeholder="••••••••••••"
-                        className={`${isArabic ? 'pr-10 pl-10' : 'pl-10 pr-10'} ${errors.confirmPassword ? 'border-destructive' : ''}`}
-                      />
-                    </div>
-                    {errors.confirmPassword && <p className="text-destructive text-[10px] font-mono">{errors.confirmPassword}</p>}
-                  </div>
-
-                  <Button
-                    type="submit"
-                    variant="cyber"
-                    className="w-full h-12 font-cyber tracking-wider mt-2"
-                    disabled={isLoading}
+              {/* Password */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
+                  {isArabic ? 'كلمة المرور (6 أحرف على الأقل)' : 'Password (min 6 characters)'}
+                </label>
+                <div className="relative">
+                  <Lock className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={e => { setPassword(e.target.value); setErrors(p => ({...p, password: undefined})); }}
+                    placeholder="••••••••••••"
+                    className={`${isArabic ? 'pr-10 pl-10' : 'pl-10 pr-10'} ${errors.password ? 'border-destructive' : ''}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(v => !v)}
+                    className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground ${isArabic ? 'left-3' : 'right-3'}`}
+                    tabIndex={-1}
                   >
-                    {isLoading ? (
-                      <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin mr-2" /><span>{isArabic ? 'جاري التسجيل...' : 'INITIALIZING...'}</span></>
-                    ) : (isArabic ? 'تسجيل العضوية بالمنصة' : 'ENROLL_INTO_NETWORK')}
-                  </Button>
-                </motion.form>
-              ) : (
-                <motion.div
-                  key="reg-google"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-4"
-                >
-                  <Button
-                    variant="outline"
-                    className="w-full border-primary/30 hover:bg-primary/10 h-14 gap-3 text-sm font-cyber tracking-wider"
-                    onClick={handleGoogleSignUp}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <><div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /><span>{isArabic ? 'جاري الاتصال...' : 'CONNECTING...'}</span></>
-                    ) : (
-                      <><GoogleIcon /><span>{isArabic ? 'الانضمام بحساب Google' : 'JOIN_WITH_GOOGLE'}</span></>
-                    )}
-                  </Button>
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {errors.password && <p className="text-destructive text-[10px] font-mono">{errors.password}</p>}
+              </div>
 
+              {/* Confirm Password */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
+                  {isArabic ? 'تأكيد كلمة المرور' : 'Confirm Password'}
+                </label>
+                <div className="relative">
+                  <Lock className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={e => { setConfirmPassword(e.target.value); setErrors(p => ({...p, confirmPassword: undefined})); }}
+                    placeholder="••••••••••••"
+                    className={`${isArabic ? 'pr-10 pl-10' : 'pl-10 pr-10'} ${errors.confirmPassword ? 'border-destructive' : ''}`}
+                  />
+                </div>
+                {errors.confirmPassword && <p className="text-destructive text-[10px] font-mono">{errors.confirmPassword}</p>}
+              </div>
 
-                  <p className="text-center text-[10px] text-muted-foreground font-mono leading-relaxed px-2">
-                    {isArabic 
-                      ? '🔒 يتم حفظ بيانات حسابك مباشرة في قاعدة بيانات Firestore السحابية فور تسجيل الدخول.' 
-                      : '🔒 Your account is saved directly to cloud Firestore database upon enrollment.'
-                    }
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <Button
+                type="submit"
+                variant="cyber"
+                className="w-full h-12 font-cyber tracking-wider mt-2"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin mr-2" /><span>{isArabic ? 'جاري التسجيل...' : 'INITIALIZING...'}</span></>
+                ) : (isArabic ? 'تسجيل العضوية بالمنصة' : 'ENROLL_INTO_NETWORK')}
+              </Button>
+            </form>
           </CardContent>
 
           <CardFooter className="justify-center pt-0">

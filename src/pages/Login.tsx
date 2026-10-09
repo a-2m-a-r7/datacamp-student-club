@@ -23,7 +23,6 @@ const Login = () => {
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'email' | 'google'>('email');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -99,181 +98,120 @@ const Login = () => {
           </CardHeader>
 
           <CardContent className="space-y-5 pt-4">
-            {/* Tab Switcher */}
-            <div className="grid grid-cols-2 gap-1 p-1 bg-white/5 rounded-lg border border-white/10">
-              {(['email', 'google'] as const).map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`py-2 text-xs font-cyber tracking-widest uppercase rounded-md transition-all duration-200 ${
-                    activeTab === tab
-                      ? 'bg-primary text-black font-bold'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {tab === 'email' 
-                    ? (isArabic ? 'البريد / كلمة المرور' : 'EMAIL / PASS') 
-                    : (isArabic ? 'جوجل' : 'GOOGLE')
-                  }
-                </button>
-              ))}
+            {/* Google Sign In - Always Visible */}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full border-primary/40 hover:bg-primary/10 h-12 gap-3 text-xs sm:text-sm font-cyber tracking-wider hover:scale-[1.01] transition-all shadow-sm"
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <><div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /><span>{isArabic ? 'جاري الاتصال بـ Google...' : 'CONNECTING TO GOOGLE...'}</span></>
+              ) : (
+                <><GoogleIcon /><span>{isArabic ? 'المتابعة والتسجيل بحساب Google' : 'CONTINUE WITH GOOGLE'}</span></>
+              )}
+            </Button>
+
+            {/* Stylish Divider */}
+            <div className="relative my-3">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/10" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase font-mono tracking-widest">
+                <span className="bg-[#0b101b] px-3 text-muted-foreground/80">
+                  {isArabic ? 'أو بالبريد الإلكتروني وكلمة المرور' : 'OR WITH EMAIL & PASSWORD'}
+                </span>
+              </div>
             </div>
 
-            <AnimatePresence mode="wait">
-              {activeTab === 'email' ? (
-                <motion.form
-                  key="email-form"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  transition={{ duration: 0.2 }}
-                  onSubmit={handleEmailLogin}
-                  className="space-y-4"
-                >
-                  {/* Email Field */}
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest flex items-center justify-between">
-                      <span>{isArabic ? 'البريد الإلكتروني' : 'Email Address'}</span>
-                      <span className="text-[9px] font-mono text-primary/70">
-                        {isArabic ? 'جامعي أو شخصي' : 'UNIVERSITY OR PERSONAL'}
-                      </span>
-                    </label>
-                    <div className="relative">
-                      <Mail className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <Input
-                        type="email"
-                        value={email}
-                        onChange={e => { setEmail(e.target.value); setErrors(p => ({...p, email: undefined})); }}
-                        placeholder={isArabic ? 'student@eng.asu.edu.eg أو personal@gmail.com' : 'student@eng.asu.edu.eg or personal@gmail.com'}
-                        className={`${isArabic ? 'pr-10 pl-3' : 'pl-10 pr-3'} ${errors.email ? 'border-destructive' : ''}`}
-                        autoComplete="email"
-                      />
-                    </div>
-                    {errors.email && <p className="text-destructive text-[10px] font-mono">{errors.email}</p>}
+            {/* Email & Password Form - Always Visible */}
+            <form onSubmit={handleEmailLogin} className="space-y-3.5">
+              {/* Email Field */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest flex items-center justify-between">
+                  <span>{isArabic ? 'البريد الإلكتروني' : 'Email Address'}</span>
+                  <span className="text-[9px] font-mono text-primary/70">
+                    {isArabic ? 'جامعي أو شخصي' : 'UNIVERSITY OR PERSONAL'}
+                  </span>
+                </label>
+                <div className="relative">
+                  <Mail className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={e => { setEmail(e.target.value); setErrors(p => ({...p, email: undefined})); }}
+                    placeholder={isArabic ? 'student@eng.asu.edu.eg أو personal@gmail.com' : 'student@eng.asu.edu.eg or personal@gmail.com'}
+                    className={`${isArabic ? 'pr-10 pl-3' : 'pl-10 pr-3'} ${errors.email ? 'border-destructive' : ''}`}
+                    autoComplete="email"
+                  />
+                </div>
+                {errors.email && <p className="text-destructive text-[10px] font-mono">{errors.email}</p>}
 
-                    {email.includes('@') && email.includes('.') && (
-                      <div className="pt-1">
-                        {analyzeEmail(email).isUniversity ? (
-                          <div className="text-[10px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-md flex items-center gap-1.5 animate-fadeIn">
-                            <span>🏛️</span>
-                            <span><strong>{isArabic ? 'هوية جامعية معتمدة:' : 'Academic Identity:'}</strong> {analyzeEmail(email).institutionName || 'University Domain'}</span>
-                          </div>
-                        ) : (
-                          <div className="text-[10px] font-mono text-muted-foreground bg-white/5 border border-white/10 px-2.5 py-1 rounded-md flex items-center gap-1.5">
-                            <span>👤</span>
-                            <span><strong>{isArabic ? 'هوية شخصية:' : 'Personal Identity:'}</strong> {analyzeEmail(email).providerLabel}</span>
-                          </div>
-                        )}
+                {email.includes('@') && email.includes('.') && (
+                  <div className="pt-1">
+                    {analyzeEmail(email).isUniversity ? (
+                      <div className="text-[10px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-md flex items-center gap-1.5">
+                        <span>🏛️</span>
+                        <span><strong>{isArabic ? 'هوية جامعية معتمدة:' : 'Academic Identity:'}</strong> {analyzeEmail(email).institutionName || 'University Domain'}</span>
                       </div>
-                    )}
-                  </div>
-
-                  {/* Password Field */}
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
-                      {isArabic ? 'كلمة المرور' : 'Password'}
-                    </label>
-                    <div className="relative">
-                      <Lock className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={e => { setPassword(e.target.value); setErrors(p => ({...p, password: undefined})); }}
-                        placeholder="••••••••••••"
-                        className={`${isArabic ? 'pr-10 pl-10' : 'pl-10 pr-10'} ${errors.password ? 'border-destructive' : ''}`}
-                        autoComplete="current-password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(v => !v)}
-                        className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors ${isArabic ? 'left-3' : 'right-3'}`}
-                        tabIndex={-1}
-                      >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                    </div>
-                    {errors.password && <p className="text-destructive text-[10px] font-mono">{errors.password}</p>}
-                  </div>
-
-                  <div className="flex justify-end">
-                    <Link
-                      to="/forgot-password"
-                      className="text-[10px] text-primary font-mono hover:underline"
-                    >
-                      {isArabic ? 'نسيت كلمة المرور؟' : 'FORGOT_PASSWORD?'}
-                    </Link>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    variant="cyber"
-                    className="w-full h-12 font-cyber tracking-wider"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /><span>{isArabic ? 'جاري التحقق...' : 'AUTHENTICATING...'}</span></>
-                    ) : (isArabic ? 'دخول إلى المنصة' : 'CONNECT_TO_NETWORK')}
-                  </Button>
-                </motion.form>
-              ) : (
-                <motion.div
-                  key="google-form"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-4"
-                >
-                  <Button
-                    variant="outline"
-                    className="w-full border-primary/30 hover:bg-primary/10 h-14 gap-3 text-sm font-cyber tracking-wider"
-                    onClick={handleGoogleSignIn}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <><div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /><span>{isArabic ? 'جاري الاتصال بـ Google...' : 'CONNECTING TO GOOGLE...'}</span></>
                     ) : (
-                      <><GoogleIcon /><span>{isArabic ? 'المتابعة بحساب Google' : 'CONTINUE_WITH_GOOGLE'}</span></>
+                      <div className="text-[10px] font-mono text-muted-foreground bg-white/5 border border-white/10 px-2.5 py-1 rounded-md flex items-center gap-1.5">
+                        <span>👤</span>
+                        <span><strong>{isArabic ? 'هوية شخصية:' : 'Personal Identity:'}</strong> {analyzeEmail(email).providerLabel}</span>
+                      </div>
                     )}
-                  </Button>
-
-                  {isLoading && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      className="space-y-2"
-                    >
-                      <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-400">
-                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                        <span>{isArabic ? 'جاري إنشاء اتصال OAuth 2.0 آمن...' : 'Establishing secure OAuth 2.0 connection...'}</span>
-                      </div>
-                      <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full bg-gradient-to-r from-primary to-emerald-400 rounded-full"
-                          initial={{ width: '0%' }}
-                          animate={{ width: '100%' }}
-                          transition={{ duration: 1.1, ease: 'easeInOut' }}
-                        />
-                      </div>
-                    </motion.div>
-                  )}
-
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-3 space-y-2">
-                    <p className="text-[10px] text-muted-foreground font-mono leading-relaxed">
-                      {isArabic
-                        ? '🔒 يتم حفظ بيانات حسابك مباشرة في قاعدة بيانات Firestore السحابية فور تسجيل الدخول.'
-                        : '🔒 Your authenticated account is synchronized directly to the cloud Firestore database upon sign-in.'
-                      }
-                    </p>
-                    <div className="flex items-center gap-3 text-[9px] text-muted-foreground/70 font-mono">
-                      <span className="flex items-center gap-1"><span className="text-emerald-400">✓</span> {isArabic ? 'تشفير آمن' : 'SSL Encrypted'}</span>
-                      <span className="flex items-center gap-1"><span className="text-emerald-400">✓</span> Firestore DB</span>
-                      <span className="flex items-center gap-1"><span className="text-emerald-400">✓</span> OAuth 2.0</span>
-                    </div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                )}
+              </div>
+
+              {/* Password Field */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
+                  {isArabic ? 'كلمة المرور' : 'Password'}
+                </label>
+                <div className="relative">
+                  <Lock className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={e => { setPassword(e.target.value); setErrors(p => ({...p, password: undefined})); }}
+                    placeholder="••••••••••••"
+                    className={`${isArabic ? 'pr-10 pl-10' : 'pl-10 pr-10'} ${errors.password ? 'border-destructive' : ''}`}
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(v => !v)}
+                    className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors ${isArabic ? 'left-3' : 'right-3'}`}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {errors.password && <p className="text-destructive text-[10px] font-mono">{errors.password}</p>}
+              </div>
+
+              <div className="flex justify-end">
+                <Link
+                  to="/forgot-password"
+                  className="text-[10px] text-primary font-mono hover:underline"
+                >
+                  {isArabic ? 'نسيت كلمة المرور؟' : 'FORGOT_PASSWORD?'}
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                variant="cyber"
+                className="w-full h-12 font-cyber tracking-wider"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /><span>{isArabic ? 'جاري التحقق...' : 'AUTHENTICATING...'}</span></>
+                ) : (isArabic ? 'دخول إلى المنصة' : 'CONNECT_TO_NETWORK')}
+              </Button>
+            </form>
 
             {/* Live Database Security Badge */}
             <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-muted-foreground">

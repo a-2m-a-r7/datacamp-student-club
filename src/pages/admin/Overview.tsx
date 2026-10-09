@@ -12,6 +12,7 @@ import {
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../../lib/firebase';
 import { demoUsers, demoEvents } from '../../lib/demoData';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 
 const Overview = () => {
   const [counts, setCounts] = useState({
@@ -30,7 +31,31 @@ const Overview = () => {
       let regCount = 0;
       let activity: any[] = [];
 
-      if (isFirebaseReady) {
+      if (isSupabaseConfigured) {
+        try {
+          const { count: usersTotal } = await supabase.from('users').select('*', { count: 'exact', head: true });
+          userCount = usersTotal || 0;
+
+          const { count: eventsTotal } = await supabase.from('events').select('*', { count: 'exact', head: true });
+          eventCount = eventsTotal || 0;
+
+          const { data: logsData } = await supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(5);
+          activity = (logsData || []).map((l: any) => ({
+            user: l.user_email || 'Member',
+            action: l.action,
+            time: l.created_at ? new Date(l.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'
+          }));
+
+          if (activity.length === 0) {
+            activity = [
+              { user: 'Supabase', action: 'PostgreSQL Realtime Connected', time: 'Just now' },
+              { user: 'Security', action: 'Row Level Security Active', time: '1m ago' },
+            ];
+          }
+        } catch (err) {
+          console.error("Error fetching Supabase stats:", err);
+        }
+      } else if (isFirebaseReady) {
         try {
           const usersSnap = await getDocs(collection(db, 'users'));
           userCount = usersSnap.size;

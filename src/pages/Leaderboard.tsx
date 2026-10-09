@@ -4,6 +4,7 @@ import { usePoints } from '../contexts/PointsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { demoUsers } from '../lib/demoData';
 import { db, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { UserProfile, LEVEL_THRESHOLDS, getLevelFromPoints } from '../types';
 import {
@@ -48,7 +49,28 @@ const Leaderboard = () => {
       try {
         let list: LeaderboardUser[] = [];
 
-        if (isFirebaseReady) {
+        if (isSupabaseConfigured) {
+          try {
+            const { data, error } = await supabase.from('users').select('*').order('total_points', { ascending: false }).limit(50);
+            if (!error && data && data.length > 0) {
+              list = data.map((d: any) => {
+                const pts = Number(d.total_points) || 0;
+                return {
+                  uid: d.id,
+                  fullName: d.full_name || 'Operative',
+                  email: d.email || '',
+                  role: d.role || 'member',
+                  faculty: d.faculty || 'Engineering',
+                  totalPoints: pts,
+                  level: getLevelFromPoints(pts),
+                  memberId: d.member_id || 'DC-000',
+                };
+              });
+            }
+          } catch (supaErr) {
+            console.warn('Supabase leaderboard fetch error:', supaErr);
+          }
+        } else if (isFirebaseReady) {
           try {
             const q = query(collection(db, 'users'), orderBy('totalPoints', 'desc'), limit(50));
             const snap = await getDocs(q);
