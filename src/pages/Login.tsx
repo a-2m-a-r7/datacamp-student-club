@@ -19,7 +19,7 @@ const GoogleIcon = () => (
 );
 
 const Login = () => {
-  const { user, loading: authLoading, loginWithGoogle, loginWithEmail, loginAsRole } = useAuth();
+  const { user, loading: authLoading, loginWithGoogle, loginWithEmail } = useAuth();
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
 
@@ -275,43 +275,13 @@ const Login = () => {
               )}
             </AnimatePresence>
 
-            {/* Quick 1-Click Access to Live Database */}
-            <div className="pt-3 border-t border-white/10 space-y-2">
-              <div className="text-[10px] font-cyber tracking-widest text-muted-foreground uppercase flex items-center justify-between">
-                <span>{isArabic ? 'دخول مباشر بنقرة واحدة (قاعدة البيانات)' : '1-CLICK DIRECT DATABASE ACCESS'}</span>
-                <span className="text-emerald-400 font-mono text-[9px] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  {isArabic ? 'سحابي مباشر' : 'LIVE FIRESTORE'}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2.5">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={async () => {
-                    await loginAsRole('super_admin');
-                    navigate('/dashboard');
-                  }}
-                  className="h-11 text-[11px] font-cyber border-amber-500/40 text-amber-300 hover:bg-amber-500/15 flex flex-col items-center justify-center p-1 transition-all shadow-sm shadow-amber-500/10"
-                >
-                  <span className="font-bold flex items-center gap-1">👑 {isArabic ? 'سوبر أدمن' : 'SUPER ADMIN'}</span>
-                  <span className="text-[8px] text-muted-foreground font-mono">Ammar Tahoun (Cloud DB)</span>
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={async () => {
-                    await loginAsRole('member');
-                    navigate('/dashboard');
-                  }}
-                  className="h-11 text-[11px] font-cyber border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/15 flex flex-col items-center justify-center p-1 transition-all shadow-sm shadow-emerald-500/10"
-                >
-                  <span className="font-bold flex items-center gap-1">👥 {isArabic ? 'عضو النادي' : 'MEMBER'}</span>
-                  <span className="text-[8px] text-muted-foreground font-mono">Sara Hassan (Cloud DB)</span>
-                </Button>
-              </div>
+            {/* Live Database Security Badge */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-emerald-400 font-bold">{isArabic ? 'بوابة سحابية موثقة ومحمية' : 'ENCRYPTED CLOUD PORTAL'}</span>
+              </span>
+              <span className="text-muted-foreground/60 font-mono">FIRESTORE SECURE</span>
             </div>
           </CardContent>
 

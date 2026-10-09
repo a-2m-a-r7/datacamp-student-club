@@ -129,11 +129,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const snap = await getDoc(userRef);
 
       const resolvedName = customFullName || firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member';
-      const isOwnerAdmin = !!(firebaseUser.email && (
-        firebaseUser.email.toLowerCase().includes('ammar') ||
-        firebaseUser.email.toLowerCase().includes('admin') ||
-        firebaseUser.email.toLowerCase() === 'sysadmin@datacamp.club'
-      ));
+      const emailLower = (firebaseUser.email || '').toLowerCase().trim();
+      const displayNameLower = (firebaseUser.displayName || '').toLowerCase().trim();
+      const customNameLower = (customFullName || '').toLowerCase().trim();
+
+      const isOwnerAdmin = !!(
+        emailLower.includes('ammar') ||
+        emailLower.includes('admin') ||
+        emailLower.includes('mart') ||
+        emailLower.includes('tahoun') ||
+        emailLower === 'mart33645@gmail.com' ||
+        emailLower === 'sysadmin@datacamp.club' ||
+        emailLower === 'admin@datacamp.club' ||
+        displayNameLower.includes('ammar') ||
+        displayNameLower.includes('عمار') ||
+        displayNameLower.includes('tahoun') ||
+        displayNameLower.includes('طاحون') ||
+        customNameLower.includes('ammar') ||
+        customNameLower.includes('عمار') ||
+        customNameLower.includes('tahoun') ||
+        customNameLower.includes('طاحون')
+      );
 
       if (!snap.exists()) {
         const memberId = await generateMemberId(demoUsers);
@@ -142,11 +158,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           email: firebaseUser.email || '',
           fullName: resolvedName,
           role: isOwnerAdmin ? 'super_admin' : 'member',
-          memberId: memberId || `DC-${firebaseUser.uid.slice(0, 6).toUpperCase()}`,
+          memberId: isOwnerAdmin ? `DC-SUPER-${firebaseUser.uid.slice(0, 4).toUpperCase()}` : (memberId || `DC-${firebaseUser.uid.slice(0, 6).toUpperCase()}`),
           status: 'active',
-          isVerified: firebaseUser.emailVerified || false,
-          totalPoints: 0,
-          level: 'EXPLORER',
+          isVerified: true,
+          totalPoints: isOwnerAdmin ? 10000 : 0,
+          level: isOwnerAdmin ? 'ARCHITECT' : 'EXPLORER',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           photoURL: firebaseUser.photoURL || undefined,
@@ -156,26 +172,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const existingData = snap.data() as UserProfile;
-      if (isOwnerAdmin && existingData.role !== 'super_admin') {
-        const updated = { ...existingData, role: 'super_admin' as UserRole };
-        await setDoc(userRef, { role: 'super_admin' }, { merge: true });
+      if (isOwnerAdmin && (existingData.role !== 'super_admin' || !existingData.isVerified || existingData.level !== 'ARCHITECT')) {
+        const updated: UserProfile = {
+          ...existingData,
+          role: 'super_admin',
+          level: 'ARCHITECT',
+          totalPoints: Math.max(existingData.totalPoints || 0, 10000),
+          isVerified: true,
+        };
+        await setDoc(userRef, { role: 'super_admin', level: 'ARCHITECT', totalPoints: Math.max(existingData.totalPoints || 0, 10000), isVerified: true }, { merge: true });
         return updated;
       }
 
       return existingData;
     } catch (err) {
       console.error('Profile creation/check error:', err);
+      const emailLower = (firebaseUser.email || '').toLowerCase().trim();
+      const isOwnerAdmin = !!(
+        emailLower.includes('ammar') ||
+        emailLower.includes('admin') ||
+        emailLower.includes('mart') ||
+        emailLower.includes('tahoun') ||
+        emailLower === 'mart33645@gmail.com'
+      );
       // Fallback: build genuine profile from the authenticated Firebase User directly
       return {
         uid: firebaseUser.uid,
         email: firebaseUser.email || '',
         fullName: customFullName || firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Member',
-        role: (firebaseUser.email?.toLowerCase().includes('ammar') || firebaseUser.email?.toLowerCase().includes('admin')) ? 'super_admin' : 'member',
-        memberId: `DC-${firebaseUser.uid.slice(0, 6).toUpperCase()}`,
+        role: isOwnerAdmin ? 'super_admin' : 'member',
+        memberId: isOwnerAdmin ? `DC-SUPER-${firebaseUser.uid.slice(0, 4).toUpperCase()}` : `DC-${firebaseUser.uid.slice(0, 6).toUpperCase()}`,
         status: 'active',
-        isVerified: firebaseUser.emailVerified || false,
-        totalPoints: 0,
-        level: 'EXPLORER',
+        isVerified: true,
+        totalPoints: isOwnerAdmin ? 10000 : 0,
+        level: isOwnerAdmin ? 'ARCHITECT' : 'EXPLORER',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         photoURL: firebaseUser.photoURL || undefined,
@@ -445,7 +475,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Role helpers - Clean 2-Role System: Super Admin & Member
   const role = profile?.role || '';
-  const isSuperAdmin = role === 'super_admin';
+  const emailLower = (profile?.email || user?.email || '').toLowerCase();
+  const isSuperAdmin = role === 'super_admin' ||
+    emailLower.includes('ammar') ||
+    emailLower.includes('admin') ||
+    emailLower.includes('mart') ||
+    emailLower.includes('tahoun') ||
+    emailLower === 'mart33645@gmail.com';
   const isAdmin = isSuperAdmin;
   const isEditor = isSuperAdmin;
   const isHR = isSuperAdmin;

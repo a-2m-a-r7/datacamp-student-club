@@ -18,14 +18,16 @@ import {
   Download,
   Sparkles,
   BookOpen,
-  ArrowRight
+  ArrowRight,
+  Users,
+  Crown
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { isFirebaseReady } from '../lib/firebase';
 import { demoEvents } from '../lib/demoData';
 
 const Dashboard = () => {
-  const { profile } = useAuth();
+  const { profile, isSuperAdmin, isAdmin } = useAuth();
   const { isArabic } = useLanguage();
   const {
     totalPoints,
@@ -89,7 +91,18 @@ const Dashboard = () => {
             <strong className="text-primary">{level}</strong>.
           </p>
         </div>
-        <div className="flex items-center space-x-4 gap-3">
+        <div className="flex items-center flex-wrap space-x-4 gap-3">
+          {(profile.role === 'super_admin' || profile.role === 'admin' || isSuperAdmin || isAdmin) && (
+            <Link to="/admin/users">
+              <Button
+                variant="cyber"
+                className="gap-2 font-cyber tracking-wider text-xs h-11 px-4 shadow-lg shadow-primary/25 hover:scale-105 transition-all border-amber-500/40 text-amber-300 hover:text-white"
+              >
+                <Users className="w-4 h-4 text-amber-400" />
+                <span>{isArabic ? 'إدارة الأعضاء وترقية المشرفين 👑' : 'MANAGE MEMBERS & PROMOTE ADMINS 👑'}</span>
+              </Button>
+            </Link>
+          )}
           <div className="text-right hidden sm:block">
             <div className="text-xs text-muted-foreground uppercase tracking-widest">
               {isArabic ? 'مستوى الرتبة' : 'RANK LEVEL'}
@@ -146,6 +159,37 @@ const Dashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Super Admin Quick Management Banner */}
+      {(profile.role === 'super_admin' || profile.role === 'admin' || isSuperAdmin || isAdmin) && (
+        <div className="bg-gradient-to-r from-amber-500/15 via-primary/10 to-transparent border border-amber-500/30 rounded-xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+              <Crown className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="font-cyber font-bold text-amber-300 text-sm tracking-wider flex items-center gap-2">
+                <span>{isArabic ? 'لوحة تحكم المشرف العام (Super Admin)' : 'SUPER ADMIN MANAGEMENT CONSOLE'}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono">
+                  {isArabic ? 'صلاحيات كاملة' : 'ROOT ACCESS'}
+                </span>
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {isArabic ? 'يمكنك إدارة جميع الأعضاء وترقية أي مستخدم أو مشرف إلى رتبة أدمن بضغطة واحدة.' : 'Manage all members and promote operatives to Super Admin clearance with 1 click.'}
+              </p>
+            </div>
+          </div>
+          <Link to="/admin/users" className="shrink-0 w-full md:w-auto">
+            <Button
+              variant="cyber"
+              className="w-full md:w-auto gap-2 font-cyber tracking-wider text-xs h-11 px-5 shadow-lg shadow-amber-500/20 border-amber-500/50 bg-amber-500 text-black hover:bg-amber-400 hover:scale-105 transition-all"
+            >
+              <Users className="w-4 h-4" />
+              <span>{isArabic ? 'دخول إدارة الأعضاء وترقية المشرفين 👑' : 'OPEN USER MANAGEMENT & PROMOTE 👑'}</span>
+            </Button>
+          </Link>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Left Column: Stats & Profile */}

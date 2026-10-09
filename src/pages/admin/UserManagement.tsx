@@ -8,7 +8,7 @@ import { Input } from '../../components/ui/Input';
 import { 
   Search, Filter, Download, Upload, MoreVertical, 
   CheckCircle, XCircle, UserPlus, FileSpreadsheet, Trash2, ShieldAlert, Eye, Calendar,
-  Shield, Key, Sparkles
+  Shield, Key, Sparkles, Crown
 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
@@ -66,9 +66,10 @@ const UserManagement = () => {
       return;
     }
 
-    const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'users'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const usersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      usersData.sort((a: any, b: any) => (b.createdAt || '').localeCompare(a.createdAt || ''));
       setUsers(usersData);
       setLoading(false);
     }, (error) => {
@@ -241,18 +242,28 @@ const UserManagement = () => {
   };
 
   const changeUserRole = async (userId: string, newRole: string) => {
+    const updatePayload: any = { role: newRole };
+    if (newRole === 'super_admin') {
+      updatePayload.level = 'ARCHITECT';
+      updatePayload.isVerified = true;
+    }
+
+    // Optimistic local state update
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, ...updatePayload } : u));
+
     if (!isFirebaseReady) {
-      const newUsers = users.map(u => u.id === userId ? { ...u, role: newRole } : u);
+      const newUsers = users.map(u => u.id === userId ? { ...u, ...updatePayload } : u);
       updateDemoUsers(newUsers);
-      toast.success(`Role updated to ${newRole}`);
+      toast.success(isArabic ? `تمت الترقية إلى ${newRole} بنجاح 👑` : `Role updated to ${newRole} successfully 👑`);
       return;
     }
     try {
-      await updateDoc(doc(db, 'users', userId), { role: newRole });
+      await updateDoc(doc(db, 'users', userId), updatePayload);
       await logAction('USER_ROLE_CHANGE', 'Admin', `${userId} -> ${newRole}`, 'success');
-      toast.success(`Role updated to ${newRole}`);
-    } catch (error) {
-      toast.error('Failed to update role');
+      toast.success(isArabic ? `تمت ترقية العضو إلى ${newRole === 'super_admin' ? 'مشرف رئيسي (Super Admin)' : newRole} بنجاح 👑` : `User role updated to ${newRole} successfully 👑`);
+    } catch (error: any) {
+      console.error('Failed to update user role:', error);
+      toast.error(isArabic ? 'فشل تحديث الرتبة، يرجى المحاولة ثانية' : 'Failed to update role');
     }
   };
 
@@ -414,19 +425,39 @@ const UserManagement = () => {
                         </td>
                         <td className="p-4 font-mono text-neon-blue">{user.memberId}</td>
                         <td className="p-4">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {user.role === 'super_admin' ? (
+                              <span className="px-2.5 py-1 rounded-md border border-amber-500/50 bg-amber-500/15 text-amber-300 font-cyber text-[10px] font-bold flex items-center gap-1.5 shadow-sm shrink-0">
+                                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                                <span>{isArabic ? 'مشرف رئيسي (أدمن)' : 'SUPER ADMIN 👑'}</span>
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => changeUserRole(user.id, 'super_admin')}
+                                className="px-2.5 py-1 rounded-md bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 text-amber-300 border border-amber-500/50 font-cyber text-[10px] font-bold flex items-center gap-1.5 transition-all hover:scale-105 shadow-sm shrink-0 cursor-pointer"
+                                title={isArabic ? 'ترقية هذا العضو إلى أدمن فوراً بضغطة واحدة' : 'Promote this member to Super Admin immediately'}
+                              >
+                                <Crown className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                                <span>{isArabic ? 'ترقية لأدمن 👑' : 'PROMOTE TO ADMIN 👑'}</span>
+                              </button>
+                            )}
+
                             <button
+                              type="button"
                               onClick={() => setEditingRoleUser(user)}
-                              className={`px-2.5 py-1 rounded-md border text-[10px] font-cyber tracking-wider font-bold transition-all flex items-center gap-1.5 hover:scale-105 shadow-sm ${roleDef.badgeBg} ${roleDef.badgeBorder} ${roleDef.badgeColor}`}
+                              className={`px-2 py-0.5 rounded border text-[10px] font-cyber font-bold transition-all flex items-center gap-1 hover:scale-105 shadow-sm ${roleDef.badgeBg} ${roleDef.badgeBorder} ${roleDef.badgeColor}`}
                               title={isArabic ? 'فتح محرر الرولات والصلاحيات' : 'Open Role & Permissions Editor'}
                             >
                               <Shield className="w-3 h-3 shrink-0" />
                               <span>{isArabic ? roleDef.titleAr.split(' ')[0] : roleDef.tag}</span>
                             </button>
+
                             <select 
-                              className="bg-dark-navy border border-white/10 rounded px-1.5 py-1 text-[10px] font-mono text-muted-foreground outline-none focus:border-primary cursor-pointer max-w-[110px]"
+                              className="bg-dark-navy border border-white/10 rounded px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground outline-none focus:border-primary cursor-pointer max-w-[105px]"
                               value={user.role}
                               onChange={(e) => changeUserRole(user.id, e.target.value)}
+                              title={isArabic ? 'تغيير الرتبة' : 'Change Role'}
                             >
                               {ROLE_LIST.map(r => (
                                 <option key={r.id} value={r.id} className="bg-dark-navy text-white">
