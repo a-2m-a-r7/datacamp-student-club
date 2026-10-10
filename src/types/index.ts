@@ -8,6 +8,7 @@ export type UserStatus = 'active' | 'inactive' | 'pending';
 
 export interface UserProfile {
   uid: string;
+  id?: string;
   email: string;
   fullName: string;
   role: UserRole;
@@ -16,6 +17,7 @@ export interface UserProfile {
   isVerified: boolean;
   emailType?: 'university' | 'personal';
   universityName?: string;
+  university?: string;
   phoneNumber?: string;
   faculty?: string;
   academicYear?: string;

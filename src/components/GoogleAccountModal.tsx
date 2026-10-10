@@ -27,7 +27,7 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
   onClose,
   onSuccess
 }) => {
-  const { loginAsRole, loginWithEmail, loginWithGoogle } = useAuth();
+  const { loginAsRole, loginWithEmail, registerWithEmail, loginWithGoogle } = useAuth();
   const { isArabic } = useLanguage();
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
@@ -72,8 +72,8 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
       toast.success(isArabic ? 'تم تسجيل الدخول بحساب Google بنجاح 🚀' : 'Logged in with Google successfully 🚀');
       onClose();
       onSuccess?.();
-    } catch (e: any) {
-      // already caught or handled inside loginWithGoogle
+    } catch {
+      // handled inside loginWithGoogle
     } finally {
       setLoadingAction(null);
     }
@@ -88,9 +88,12 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
     setLoadingAction('custom');
     try {
       const email = customEmail.trim();
-      // Attempt login or auto-enroll with a deterministic app secret password
       const generatedPass = 'DataCampClub2025!';
-      await loginWithEmail(email, generatedPass);
+      try {
+        await loginWithEmail(email, generatedPass);
+      } catch {
+        await registerWithEmail(email, generatedPass, customName.trim() || email.split('@')[0]);
+      }
       toast.success(isArabic ? `تم تسجيل الدخول بحساب: ${email} بنجاح!` : `Logged in as ${email}!`);
       onClose();
       onSuccess?.();

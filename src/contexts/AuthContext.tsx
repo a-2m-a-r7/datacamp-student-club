@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { User as SupabaseUser, Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { isFirebaseReady } from '../lib/firebase';
 import { toast } from 'sonner';
 import { UserProfile, UserRole, UserStatus } from '../types';
 import { demoSettings } from '../lib/demoData';
@@ -175,6 +176,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const userProfile = await fetchOrCreateProfile(initialSession.user);
         setProfile(userProfile);
         startHeartbeat(initialSession.user.id);
+      } else {
+        const cached = localStorage.getItem('datacamp_active_session');
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            if (parsed && (parsed.id || parsed.uid)) {
+              setUser({ id: parsed.id || parsed.uid, email: parsed.email } as any);
+              setProfile(parsed);
+              startHeartbeat(parsed.id || parsed.uid);
+            }
+          } catch {}
+        }
       }
       setLoading(false);
     });
@@ -221,27 +234,127 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  // Google OAuth Login with ALWAYS-SELECT-ACCOUNT Prompt
+  // Google OAuth Login with ALWAYS-SELECT-ACCOUNT Prompt & Supabase Sync
   const loginWithGoogle = async () => {
-    if (!isSupabaseConfigured) {
-      toast.error('Supabase configuration is not initialized in .env.');
-      return;
+    // 1. Try Firebase Google popup (forces Google's select_account modal)
+    if (isFirebaseReady) {
+      try {
+        const { signInWithPopup } = await import('firebase/auth');
+        const { auth, googleProvider } = await import('../lib/firebase');
+        const result = await signInWithPopup(auth, googleProvider);
+        const fbUser = result.user;
+
+        if (fbUser) {
+          const emailLower = (fbUser.email || '').toLowerCase();
+          const isOwnerAdmin = !!(
+            emailLower === 'mart33645@gmail.com' ||
+            emailLower.includes('ammar') ||
+            emailLower.includes('tahoun') ||
+            emailLower === 'admin@datacamp.club'
+          );
+
+          const fullName = fbUser.displayName || emailLower.split('@')[0] || 'Club Member';
+          const memberId = isOwnerAdmin ? `DC-ADM-${fbUser.uid.slice(0, 4).toUpperCase()}` : `DC-${fbUser.uid.slice(0, 6).toUpperCase()}`;
+
+          const profileData: UserProfile = {
+            uid: fbUser.uid,
+            id: fbUser.uid,
+            email: fbUser.email || '',
+            fullName,
+            role: isOwnerAdmin ? 'super_admin' : 'member',
+            memberId,
+            status: 'active',
+            totalPoints: isOwnerAdmin ? 10000 : 50,
+            level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+            isVerified: true,
+            photoURL: fbUser.photoURL || '',
+            phoneNumber: fbUser.phoneNumber || '',
+            faculty: 'Faculty of Computer Science & AI',
+            university: 'Innovation University',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+
+          // Sync into Supabase database (profiles, users, auth_events)
+          if (isSupabaseConfigured) {
+            try {
+              await supabase.from('profiles').upsert({
+                id: fbUser.uid,
+                email: fbUser.email || '',
+                full_name: fullName,
+                avatar_url: fbUser.photoURL || '',
+                role: isOwnerAdmin ? 'admin' : 'user',
+                provider: 'google',
+                member_id: memberId,
+                total_points: isOwnerAdmin ? 10000 : 50,
+                level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+                is_verified: true,
+                last_sign_in_at: new Date().toISOString(),
+                last_seen_at: new Date().toISOString(),
+              }, { onConflict: 'id' });
+
+              await supabase.from('users').upsert({
+                id: fbUser.uid,
+                email: fbUser.email || '',
+                full_name: fullName,
+                role: isOwnerAdmin ? 'super_admin' : 'member',
+                member_id: memberId,
+                status: 'active',
+                total_points: isOwnerAdmin ? 10000 : 50,
+                level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+                is_verified: true,
+                photo_url: fbUser.photoURL || '',
+                updated_at: new Date().toISOString(),
+              }, { onConflict: 'id' });
+
+              await logAuthEvent(fbUser.uid, fbUser.email || '', 'login', 'google');
+            } catch (syncErr) {
+              console.warn('[loginWithGoogle] Supabase sync notice:', syncErr);
+            }
+          }
+
+          setUser({
+            id: fbUser.uid,
+            uid: fbUser.uid,
+            email: fbUser.email || '',
+            user_metadata: { full_name: fullName, avatar_url: fbUser.photoURL || '' },
+            app_metadata: { provider: 'google' },
+          } as any);
+          setProfile(profileData);
+          localStorage.setItem('datacamp_active_session', JSON.stringify(profileData));
+          toast.success(typeof window !== 'undefined' && document.documentElement.dir === 'rtl' ? 'تم تسجيل الدخول بحساب Google بنجاح 🚀' : 'Logged in with Google successfully 🚀');
+          return;
+        }
+      } catch (fbErr: any) {
+        if (fbErr.code === 'auth/popup-closed-by-user' || fbErr.code === 'auth/cancelled-popup-request') {
+          return;
+        }
+        console.warn('Firebase Google Auth popup notice:', fbErr);
+      }
     }
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-        queryParams: {
-          prompt: 'select_account',
-          access_type: 'offline',
-        },
-      },
-    });
+    // 2. If Firebase is not used, attempt Supabase OAuth
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: `${window.location.origin}/dashboard`,
+            queryParams: {
+              prompt: 'select_account',
+              access_type: 'offline',
+            },
+          },
+        });
 
-    if (error) {
-      toast.error(error.message || 'فشل تسجيل الدخول بحساب Google');
-      throw error;
+        if (error) {
+          toast.error(error.message || 'فشل تسجيل الدخول بحساب Google');
+          throw error;
+        }
+      } catch (err: any) {
+        toast.error(err.message || 'فشل تسجيل الدخول بحساب Google');
+        throw err;
+      }
     }
   };
 
