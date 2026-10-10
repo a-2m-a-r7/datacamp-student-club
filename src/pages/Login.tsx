@@ -215,7 +215,7 @@ const Login = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-emerald-400 font-bold">{isArabic ? 'بوابة سحابية موثقة ومحمية' : 'ENCRYPTED CLOUD PORTAL'}</span>
               </span>
-              <span className="text-muted-foreground/60 font-mono">FIRESTORE SECURE</span>
+              <span className="text-muted-foreground/60 font-mono">SUPABASE POSTGRES SECURE</span>
             </div>
           </CardContent>
 

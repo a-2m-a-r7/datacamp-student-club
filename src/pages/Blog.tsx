@@ -273,8 +273,8 @@ export const Blog = () => {
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 {isArabic
-                  ? 'قاعدة بيانات Firestore متصلة وجاهزة للمقالات. يمكن للمحررين نشر المقالات من لوحة التحكم، أو يمكنك معاينة نماذج المقالات أدناه.'
-                  : 'The Firestore database is connected and ready for articles. Club editors can publish articles from the Admin Panel, or you can preview sample articles below.'
+                  ? 'قاعدة بيانات Supabase متصلة وجاهزة للمقالات. يمكن للمحررين نشر المقالات من لوحة التحكم، أو يمكنك معاينة نماذج المقالات أدناه.'
+                  : 'The Supabase database is connected and ready for articles. Club editors can publish articles from the Admin Panel, or you can preview sample articles below.'
                 }
               </p>
             </div>
