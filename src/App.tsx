@@ -25,6 +25,7 @@ import FAQ from './pages/FAQ';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Courses from './pages/Courses';
+import MyCourses from './pages/MyCourses';
 import CourseDetail from './pages/CourseDetail';
 import CourseLearning from './pages/CourseLearning';
 import Leaderboard from './pages/Leaderboard';
@@ -49,27 +50,32 @@ import { AIMentorButton } from './components/AIMentor/AIMentorButton';
 import { Toaster } from 'sonner';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
-import { isFirebaseReady } from './lib/firebase';
 import { Button } from './components/ui/Button';
 
 const GuestRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   const { isArabic } = useLanguage();
+  const location = useLocation();
+  const redirectTo = (location.state as { from?: string } | null)?.from || '/dashboard';
   if (loading) return <div className="h-screen flex items-center justify-center font-cyber text-primary animate-pulse">{isArabic ? 'جاري المزامنة...' : 'SYNCHRONIZING...'}</div>;
-  if (user) return <Navigate to="/dashboard" />;
+  if (user) return <Navigate to={redirectTo} replace />;
   return <>{children}</>;
 };
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading } = useAuth();
   const { isArabic } = useLanguage();
+  const location = useLocation();
   
   // Wait for both auth state AND profile to be resolved before making decisions
   if (loading) return <div className="h-screen flex items-center justify-center font-cyber text-primary animate-pulse">{isArabic ? 'جاري تهيئة الجلسة...' : 'ESTABLISHING_SESSION...'}</div>;
-  if (!user) return <Navigate to="/login" />;
+  if (!user) {
+    sessionStorage.setItem('datacamp_auth_redirect', location.pathname + location.search);
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  }
   
   // If user exists but profile hasn't loaded yet, show a brief loading state
-  if (isFirebaseReady && user && !profile) {
+  if (user && !profile) {
     return <div className="h-screen flex items-center justify-center font-cyber text-primary animate-pulse">{isArabic ? 'جاري تحميل الملف الشخصي...' : 'LOADING_PROFILE...'}</div>;
   }
   
@@ -79,11 +85,15 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const ManagerRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading, isManager } = useAuth();
   const { isArabic } = useLanguage();
+  const location = useLocation();
   if (loading) return <div className="h-screen flex items-center justify-center font-cyber text-primary animate-pulse">{isArabic ? 'جاري فحص الصلاحيات...' : 'EVALUATING_PERMISSIONS...'}</div>;
-  if (!user) return <Navigate to="/login" />;
+  if (!user) {
+    sessionStorage.setItem('datacamp_auth_redirect', location.pathname + location.search);
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  }
   
   // Enforce email verification
-  if (isFirebaseReady && !user.emailVerified && !profile?.isVerified) {
+  if (!user.email_confirmed_at && !profile?.isVerified) {
     return <Navigate to="/verify-email" />;
   }
 
@@ -193,6 +203,11 @@ function AppContent() {
               <Routes location={location}>
                 <Route path="/" element={<Home />} />
                 <Route path="/courses" element={<Courses />} />
+                <Route path="/my-courses" element={
+                  <ProtectedRoute>
+                    <MyCourses />
+                  </ProtectedRoute>
+                } />
                 <Route path="/courses/:slug" element={<CourseDetail />} />
                 <Route path="/courses/:slug/learn" element={
                   <ProtectedRoute>

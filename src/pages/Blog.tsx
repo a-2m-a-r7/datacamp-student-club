@@ -14,10 +14,7 @@ import {
   PlusCircle
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { collection, onSnapshot, query } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
-import { demoBlog } from '../lib/demoData';
+import { contentService } from '../services/contentService';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
@@ -162,56 +159,24 @@ export const Blog = () => {
   ];
 
   useEffect(() => {
-    const sampleData = isArabic ? SAMPLE_ARTICLES_AR : SAMPLE_ARTICLES_EN;
-    if (isSupabaseConfigured) {
-      const fetchSupabaseBlog = async () => {
-        try {
-          const { data, error } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
-          if (!error && data && data.length > 0) {
-            setPosts(data.map((b: any) => ({
-              ...b,
-              excerpt: b.content || b.excerpt || '',
-              tag: b.category || 'Data Science',
-              readTime: '5 min read'
-            })));
-          } else {
-            setPosts(sampleData);
-          }
-        } catch {
-          setPosts(sampleData);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchSupabaseBlog();
+    let mounted = true;
+    const load = async () => {
+      try {
+        const docs = await contentService.list('blog', { orderBy: 'created_at' });
+        if (mounted) setPosts(docs);
+      } catch (error) {
+        console.warn('Blog Supabase load error:', error);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
 
-      const channel = supabase.channel('realtime_public_blog')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'blog' }, () => {
-          fetchSupabaseBlog();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setPosts(demoBlog.length > 0 ? demoBlog : sampleData);
-      setLoading(false);
-      return;
-    }
-
-    const q = query(collection(db, 'blog_posts'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetched = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setPosts(fetched);
-      setLoading(false);
-    }, (error) => {
-      console.warn("Blog posts listener error:", error);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    const unsubscribe = contentService.subscribe('blog', load);
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
   }, [isArabic]);
 
   const activeSamples = isArabic ? SAMPLE_ARTICLES_AR : SAMPLE_ARTICLES_EN;

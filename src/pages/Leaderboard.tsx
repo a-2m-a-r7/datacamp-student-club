@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { usePoints } from '../contexts/PointsContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { demoUsers } from '../lib/demoData';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
-import { UserProfile, LEVEL_THRESHOLDS, getLevelFromPoints } from '../types';
+import { getLevelFromPoints } from '../types';
+import { getLeaderboard } from '../services/pointsService';
 import {
   Trophy,
   Medal,
@@ -49,77 +46,17 @@ const Leaderboard = () => {
       try {
         let list: LeaderboardUser[] = [];
 
-        if (isSupabaseConfigured) {
-          try {
-            const { data, error } = await supabase.from('users').select('*').order('total_points', { ascending: false }).limit(50);
-            if (!error && data && data.length > 0) {
-              list = data.map((d: any) => {
-                const pts = Number(d.total_points) || 0;
-                return {
-                  uid: d.id,
-                  fullName: d.full_name || 'Operative',
-                  email: d.email || '',
-                  role: d.role || 'member',
-                  faculty: d.faculty || 'Engineering',
-                  totalPoints: pts,
-                  level: getLevelFromPoints(pts),
-                  memberId: d.member_id || 'DC-000',
-                };
-              });
-            }
-          } catch (supaErr) {
-            console.warn('Supabase leaderboard fetch error:', supaErr);
-          }
-        } else if (isFirebaseReady) {
-          try {
-            const q = query(collection(db, 'users'), orderBy('totalPoints', 'desc'), limit(50));
-            const snap = await getDocs(q);
-            if (!snap.empty) {
-              list = snap.docs.map(d => {
-                const data = d.data();
-                const pts = Number(data.totalPoints) || 0;
-                return {
-                  uid: d.id,
-                  fullName: data.fullName || 'Operative',
-                  email: data.email || '',
-                  role: data.role || 'member',
-                  faculty: data.faculty || 'Engineering',
-                  totalPoints: pts,
-                  level: getLevelFromPoints(pts),
-                  memberId: data.memberId || 'DC-000',
-                };
-              });
-            }
-          } catch (fbErr) {
-            console.warn('Firestore /users query restricted, using fallback demo leaders:', fbErr);
-          }
-        }
-
-        // If firebase is empty or demo mode, generate rich leaderboard from demoUsers + current user
-        if (list.length === 0) {
-          list = demoUsers.map((u: any, idx: number) => {
-            const pts = (5 - idx) * 450 + 150;
-            return {
-              uid: u.uid || `demo-${idx}`,
-              fullName: u.fullName,
-              email: u.email,
-              role: u.role,
-              faculty: u.faculty || (idx % 2 === 0 ? 'Computer Science' : 'Engineering'),
-              totalPoints: pts,
-              level: getLevelFromPoints(pts),
-              memberId: u.memberId,
-            };
-          });
-
-          // Add extra simulated students to create an impressive leaderboard
-          list.push(
-            { uid: 's1', fullName: 'Nour El-Din Hassan', email: 'nour@club.edu', role: 'member', faculty: 'Computer Science', totalPoints: 2850, level: 'ENGINEER', memberId: 'DC-019' },
-            { uid: 's2', fullName: 'Mariam Khaled', email: 'mariam@club.edu', role: 'member', faculty: 'Artificial Intelligence', totalPoints: 1980, level: 'ANALYST', memberId: 'DC-024' },
-            { uid: 's3', fullName: 'Ziad Al-Ghamdi', email: 'ziad@club.edu', role: 'member', faculty: 'Engineering', totalPoints: 1420, level: 'ANALYST', memberId: 'DC-031' },
-            { uid: 's4', fullName: 'Salma Tarek', email: 'salma@club.edu', role: 'member', faculty: 'Business Informatics', totalPoints: 920, level: 'SPECIALIST', memberId: 'DC-042' },
-            { uid: 's5', fullName: 'Omar Farouk', email: 'omar@club.edu', role: 'member', faculty: 'Science', totalPoints: 780, level: 'SPECIALIST', memberId: 'DC-055' }
-          );
-        }
+        const leaderboardRows = await getLeaderboard(50);
+        list = leaderboardRows.map((entry: any) => ({
+          uid: entry.userId,
+          fullName: entry.fullName || 'Operative',
+          email: entry.email || '',
+          role: entry.role || 'member',
+          faculty: entry.faculty || 'Engineering',
+          totalPoints: Number(entry.totalPoints) || 0,
+          level: entry.level || getLevelFromPoints(Number(entry.totalPoints) || 0),
+          memberId: entry.memberId || entry.userId?.slice(0, 8) || 'DC-000',
+        }));
 
         // Merge current user's real live points if logged in
         if (user && profile) {

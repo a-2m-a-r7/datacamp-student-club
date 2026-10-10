@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { collection, onSnapshot, query, orderBy, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { auth, db, isFirebaseReady } from '../../lib/firebase';
 import { logAction } from '../../lib/logger';
 import { useAuth } from '../../contexts/AuthContext';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
@@ -16,7 +14,8 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { toast } from 'sonner';
 import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
-import { demoUsers, demoEvents, setDemoEvents } from '../../lib/demoData';
+import { demoUsers, demoEvents } from '../../lib/demoData';
+import { contentService } from '../../services/contentService';
 
 const EventManagement = () => {
   const { profile, isHR, isSuperAdmin } = useAuth();
@@ -35,52 +34,34 @@ const EventManagement = () => {
   const canScan = isSuperAdmin;
 
   useEffect(() => {
-    if (!isFirebaseReady) {
+    if (!isSupabaseConfigured) {
       setUsers(demoUsers);
       return;
     }
-    const q = query(collection(db, 'users'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => {
-      console.warn("Users listener error in EventManagement:", error);
+    supabase.from('profiles').select('*').then(({ data, error }) => {
+      if (error) console.warn('Users listener error in EventManagement:', error);
+      if (data) setUsers(data);
     });
-    return () => unsubscribe();
   }, []);
 
   const onScanSuccess = React.useCallback(async (decodedText: string) => {
     toast.info(`Verifying identity: ${decodedText}`);
     
-    if (!isFirebaseReady) {
-      const user = demoUsers.find((u: any) => u.email === decodedText || u.memberId === decodedText);
-      
-      if (user) {
-        toast.success(`Access Granted: ${user.fullName}`);
-        await logAction('EVENT_CHECKIN', profile?.fullName || 'Admin', `${user.fullName} checked into ${selectedEvent?.title}`, 'success');
-      } else {
-        toast.error('Identity not found in database');
-      }
-      return;
-    }
+    const matchedUser = users.find((candidate: any) =>
+      candidate.email === decodedText ||
+      candidate.memberId === decodedText ||
+      candidate.member_id === decodedText ||
+      candidate.id === decodedText
+    );
 
-    try {
-      // In a real app, you'd check a 'registrations' collection
-      // For now, we'll just verify the user exists
-      const { getDocs } = await import('firebase/firestore');
-      const q = query(collection(db, 'users'));
-      const snap = await getDocs(q);
-      const user = snap.docs.find(d => d.data().email === decodedText || d.data().memberId === decodedText);
-      
-      if (user) {
-        toast.success(`Access Granted: ${user.data().fullName}`);
-        await logAction('EVENT_CHECKIN', profile?.fullName || 'Admin', `${user.data().fullName} checked into ${selectedEvent?.title}`, 'success');
-      } else {
-        toast.error('Identity not found in database');
-      }
-    } catch (error) {
-      toast.error('Verification failed');
+    if (matchedUser) {
+      const displayName = matchedUser.fullName || matchedUser.full_name || matchedUser.email || matchedUser.id;
+      toast.success(`Access Granted: ${displayName}`);
+      await logAction('EVENT_CHECKIN', profile?.fullName || 'Admin', `${displayName} checked into ${selectedEvent?.title}`, 'success');
+    } else {
+      toast.error('Identity not found in database');
     }
-  }, [profile, selectedEvent]);
+  }, [profile, selectedEvent, users]);
 
   const onScanError = React.useCallback((err: any) => {
     // console.warn(err);
@@ -98,36 +79,10 @@ const EventManagement = () => {
 
   const handleUpdateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('events').update({
-          title: editingEvent.title,
-          description: editingEvent.description,
-          date: editingEvent.date,
-          location: editingEvent.location,
-          capacity: Number(editingEvent.capacity) || 50,
-          status: editingEvent.status || 'published'
-        }).eq('id', editingEvent.id);
-        if (error) throw error;
-        toast.success('Event updated in Supabase');
-        setEditingEvent(null);
-        const { data } = await supabase.from('events').select('*').order('created_at', { ascending: false });
-        if (data) setEvents(data.map((ev: any) => ({ ...ev, registeredCount: ev.registered_count ?? 0 })));
-      } catch {
-        toast.error('Update failed');
-      }
-      return;
-    }
-    if (!isFirebaseReady) {
-      const newEvents = events.map(ev => ev.id === editingEvent.id ? editingEvent : ev);
-      updateDemoEvents(newEvents);
-      toast.success('Event updated (Demo Mode)');
-      setEditingEvent(null);
-      return;
-    }
     try {
-      await updateDoc(doc(db, 'events', editingEvent.id), editingEvent);
-      toast.success('Event updated');
+      const updated = await contentService.update('events', editingEvent.id, editingEvent);
+      setEvents(prev => prev.map(ev => ev.id === editingEvent.id ? updated : ev));
+      toast.success('Event updated in Supabase');
       setEditingEvent(null);
     } catch (error) {
       toast.error('Update failed');
@@ -140,17 +95,10 @@ const EventManagement = () => {
     const organizerLabel = identityType === 'email' ? organizerValue : `ID: ${organizerValue}`;
     const updatedOrganizers = [...(selectedEvent.organizers || []), organizerLabel];
     
-    if (!isFirebaseReady) {
-      const newEvents = events.map(ev => ev.id === selectedEvent.id ? { ...ev, organizers: updatedOrganizers } : ev);
-      updateDemoEvents(newEvents);
-      setSelectedEvent({ ...selectedEvent, organizers: updatedOrganizers });
-      setOrganizerValue('');
-      toast.success('Organizer added (Demo Mode)');
-      return;
-    }
-
     try {
-      await updateDoc(doc(db, 'events', selectedEvent.id), { organizers: updatedOrganizers });
+      const updatedEvent = { ...selectedEvent, organizers: updatedOrganizers };
+      await contentService.update('events', selectedEvent.id, updatedEvent);
+      setEvents(prev => prev.map(ev => ev.id === selectedEvent.id ? updatedEvent : ev));
       setSelectedEvent({ ...selectedEvent, organizers: updatedOrganizers });
       setOrganizerValue('');
       toast.success('Organizer added');
@@ -168,59 +116,21 @@ const EventManagement = () => {
   });
 
   useEffect(() => {
-    if (isSupabaseConfigured) {
-      const fetchSupabaseEvents = async () => {
-        try {
-          const { data, error } = await supabase.from('events').select('*').order('created_at', { ascending: false });
-          if (!error && data) {
-            setEvents(data.map((ev: any) => ({
-              ...ev,
-              registeredCount: ev.registered_count ?? 0,
-            })));
-          }
-        } catch {} finally {
-          setLoading(false);
-        }
-      };
-      fetchSupabaseEvents();
+    const loadEvents = async () => {
+      try {
+        const rows = await contentService.list('events', { orderBy: 'created_at', includeDrafts: true });
+        setEvents(rows.length > 0 ? rows : demoEvents);
+      } catch (error) {
+        console.warn('Events listener error in EventManagement:', error);
+        setEvents(demoEvents);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      const channel = supabase.channel('realtime_admin_events')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, () => {
-          fetchSupabaseEvents();
-        })
-        .subscribe();
-
-      supabase.from('profiles').select('*').then(({ data }) => {
-        if (data) setUsers(data);
-      });
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setEvents(demoEvents);
-      setLoading(false);
-      return;
-    }
-
-    const q = query(collection(db, 'events'), orderBy('date', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const eventsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setEvents(eventsData);
-      setLoading(false);
-    }, (error) => {
-      console.warn("Events listener error in EventManagement:", error);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    loadEvents();
+    return contentService.subscribe('events', loadEvents);
   }, []);
-
-  const updateDemoEvents = (newEvents: any[]) => {
-    setDemoEvents(newEvents);
-    setEvents(newEvents);
-  };
 
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -230,73 +140,24 @@ const EventManagement = () => {
       createdAt: new Date().toISOString()
     };
 
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('events').insert({
-          title: newEvent.title,
-          description: newEvent.description,
-          date: newEvent.date,
-          location: newEvent.location,
-          capacity: Number(newEvent.capacity) || 50,
-          status: newEvent.status || 'published',
-          registered_count: 0
-        });
-        if (error) throw error;
-        await logAction('EVENT_CREATED', profile?.fullName || 'Admin', newEvent.title, 'success');
-        toast.success('Event published successfully to Supabase');
-        setShowAddModal(false);
-        const { data } = await supabase.from('events').select('*').order('created_at', { ascending: false });
-        if (data) setEvents(data.map((ev: any) => ({ ...ev, registeredCount: ev.registered_count ?? 0 })));
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to create event');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const newEvents = [{ id: 'demo_' + Date.now(), ...eventData }, ...events];
-      updateDemoEvents(newEvents);
-      toast.success('Event published successfully (Demo Mode)');
-      setShowAddModal(false);
-      return;
-    }
-
     try {
-      await addDoc(collection(db, 'events'), eventData);
+      const created = await contentService.create('events', eventData);
       await logAction('EVENT_CREATED', profile?.fullName || 'Admin', eventData.title, 'success');
-      toast.success('Event published successfully');
+      setEvents(prev => [created, ...prev]);
+      toast.success('Event published successfully to Supabase');
       setShowAddModal(false);
-    } catch (error) {
-      toast.error('Failed to create event');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to create event');
     }
   };
 
   const handleDeleteEvent = async (id: string) => {
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('events').delete().eq('id', id);
-        toast.success('Event deleted from Supabase');
-        setDeleteConfirmId(null);
-        setEvents(prev => prev.filter(e => e.id !== id));
-      } catch {
-        toast.error('Failed to delete event');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const newEvents = events.filter(e => e.id !== id);
-      updateDemoEvents(newEvents);
-      toast.success('Event deleted (Demo Mode)');
-      setDeleteConfirmId(null);
-      return;
-    }
-
     try {
-      await deleteDoc(doc(db, 'events', id));
+      await contentService.remove('events', id);
       await logAction('EVENT_DELETED', profile?.fullName || 'Admin', id, 'warning');
-      toast.success('Event deleted');
+      toast.success('Event deleted from Supabase');
       setDeleteConfirmId(null);
+      setEvents(prev => prev.filter(e => e.id !== id));
     } catch (error) {
       toast.error('Failed to delete event');
     }
@@ -538,14 +399,10 @@ const EventManagement = () => {
                         className="h-6 w-6 text-destructive"
                         onClick={async () => {
                           const updated = selectedEvent.organizers.filter((_: any, index: number) => index !== i);
-                          if (!isFirebaseReady) {
-                            const newEvents = events.map(e => e.id === selectedEvent.id ? { ...e, organizers: updated } : e);
-                            updateDemoEvents(newEvents);
-                            setSelectedEvent({ ...selectedEvent, organizers: updated });
-                            return;
-                          }
-                          await updateDoc(doc(db, 'events', selectedEvent.id), { organizers: updated });
-                          setSelectedEvent({ ...selectedEvent, organizers: updated });
+                          const updatedEvent = { ...selectedEvent, organizers: updated };
+                          await contentService.update('events', selectedEvent.id, updatedEvent);
+                          setEvents(prev => prev.map(e => e.id === selectedEvent.id ? updatedEvent : e));
+                          setSelectedEvent(updatedEvent);
                         }}
                       >
                         <Trash2 className="w-3 h-3" />

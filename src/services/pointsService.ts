@@ -1,25 +1,9 @@
 /**
  * pointsService.ts
- * Handles all points operations: awarding, deducting, fetching logs.
- * Works in both Firebase and Demo modes.
+ * Supabase-backed points, leaderboard, and achievements operations.
  */
 
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-  doc,
-  updateDoc,
-  increment,
-  serverTimestamp,
-  onSnapshot,
-  Unsubscribe,
-} from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import {
   PointAction,
   PointsLog,
@@ -30,21 +14,43 @@ import {
   Achievement,
 } from '../types';
 
-// ─── In-memory demo store ────────────────────────────────────────────────────
+type Unsubscribe = () => void;
+
 const demoPointsLog: PointsLog[] = [];
 const demoAchievements: Achievement[] = [];
 const demoUserPoints: Record<string, number> = {};
-
-// ─── Award Points ────────────────────────────────────────────────────────────
 
 export interface AwardPointsOptions {
   userId: string;
   action: PointAction;
   description: string;
-  customPoints?: number; // override for ADMIN_BONUS / ADMIN_DEDUCT
+  customPoints?: number;
   referenceId?: string;
   referenceType?: PointsLog['referenceType'];
 }
+
+const mapPointsLog = (row: any): PointsLog => ({
+  id: row.id,
+  userId: row.user_id,
+  points: row.points,
+  action: row.action,
+  description: row.description,
+  referenceId: row.reference_id || undefined,
+  referenceType: row.reference_type || undefined,
+  createdAt: row.created_at,
+});
+
+const mapAchievement = (row: any): Achievement => ({
+  id: row.id,
+  userId: row.user_id,
+  badgeId: row.badge_id,
+  badgeName: row.badge_name,
+  badgeIcon: row.badge_icon,
+  badgeColor: row.badge_color,
+  description: row.description,
+  unlockedAt: row.unlocked_at,
+  isNew: Boolean(row.is_new),
+});
 
 export const awardPoints = async (opts: AwardPointsOptions): Promise<{ points: number; newTotal: number }> => {
   const { userId, action, description, customPoints, referenceId, referenceType } = opts;
@@ -53,8 +59,7 @@ export const awardPoints = async (opts: AwardPointsOptions): Promise<{ points: n
     ? (customPoints ?? 0)
     : POINT_VALUES[action];
 
-  if (!isFirebaseReady) {
-    // Demo mode
+  if (!isSupabaseConfigured) {
     demoUserPoints[userId] = (demoUserPoints[userId] ?? 0) + points;
     demoPointsLog.push({
       userId,
@@ -68,106 +73,106 @@ export const awardPoints = async (opts: AwardPointsOptions): Promise<{ points: n
     return { points, newTotal: demoUserPoints[userId] };
   }
 
-  try {
-    // 1. Add points log entry
-    await addDoc(collection(db, 'points_log'), {
-      userId,
-      points,
-      action,
-      description,
-      referenceId: referenceId ?? null,
-      referenceType: referenceType ?? null,
-      createdAt: serverTimestamp(),
-    });
+  const { error: logError } = await supabase.from('points_log').insert({
+    user_id: userId,
+    points,
+    action,
+    description,
+    reference_id: referenceId ?? null,
+    reference_type: referenceType ?? null,
+  });
 
-    // 2. Update user's totalPoints field atomically
-    const userRef = doc(db, 'users', userId);
-    await updateDoc(userRef, {
-      totalPoints: increment(points),
-    });
+  if (logError) throw logError;
 
-    // 3. Get new total to return (optimistic: current + awarded)
-    // The real total will come from the Firestore listener
-    const newTotal = points; // caller can get real total from PointsContext
-    return { points, newTotal };
-  } catch (err) {
-    console.error('awardPoints error:', err);
-    throw err;
-  }
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('total_points, xp')
+    .eq('id', userId)
+    .maybeSingle();
+
+  const currentTotal = Number((profile as any)?.total_points ?? (profile as any)?.xp ?? 0);
+  const newTotal = currentTotal + points;
+  const nextLevel = getLevelFromPoints(newTotal);
+
+  const updatePayload = {
+    total_points: newTotal,
+    xp: newTotal,
+    level: nextLevel,
+    updated_at: new Date().toISOString(),
+  };
+
+  await Promise.all([
+    supabase.from('profiles').update(updatePayload as any).eq('id', userId),
+    supabase.from('users').update(updatePayload as any).eq('id', userId),
+  ]);
+
+  return { points, newTotal };
 };
-
-// ─── Get Points Log ──────────────────────────────────────────────────────────
 
 export const getUserPointsLog = async (userId: string, limitCount = 20): Promise<PointsLog[]> => {
-  if (!isFirebaseReady) {
-    return demoPointsLog
-      .filter(l => l.userId === userId)
-      .slice(-limitCount)
-      .reverse();
+  if (!isSupabaseConfigured) {
+    return demoPointsLog.filter(l => l.userId === userId).slice(-limitCount).reverse();
   }
 
-  const q = query(
-    collection(db, 'points_log'),
-    where('userId', '==', userId),
-    orderBy('createdAt', 'desc'),
-    limit(limitCount),
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as PointsLog));
-};
+  const { data, error } = await supabase
+    .from('points_log')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(limitCount);
 
-// ─── Real-time Points Log subscription ──────────────────────────────────────
+  if (error) throw error;
+  return (data || []).map(mapPointsLog);
+};
 
 export const subscribeToPointsLog = (
   userId: string,
   callback: (logs: PointsLog[]) => void,
   limitCount = 10,
 ): Unsubscribe => {
-  if (!isFirebaseReady) {
-    callback(demoPointsLog.filter(l => l.userId === userId).slice(-limitCount).reverse());
-    return () => {};
-  }
+  getUserPointsLog(userId, limitCount).then(callback).catch(console.error);
+  if (!isSupabaseConfigured) return () => {};
 
-  const q = query(
-    collection(db, 'points_log'),
-    where('userId', '==', userId),
-    orderBy('createdAt', 'desc'),
-    limit(limitCount),
-  );
+  const channel = supabase
+    .channel(`points_log_${userId}`)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'points_log', filter: `user_id=eq.${userId}` }, () => {
+      getUserPointsLog(userId, limitCount).then(callback).catch(console.error);
+    })
+    .subscribe();
 
-  return onSnapshot(q, snap => {
-    callback(snap.docs.map(d => ({ id: d.id, ...d.data() } as PointsLog)));
-  });
+  return () => {
+    supabase.removeChannel(channel);
+  };
 };
 
-// ─── Leaderboard ─────────────────────────────────────────────────────────────
-
 export const getLeaderboard = async (limitCount = 20) => {
-  if (!isFirebaseReady) {
+  if (!isSupabaseConfigured) {
     return Object.entries(demoUserPoints)
       .map(([userId, totalPoints], i) => ({ userId, totalPoints, rank: i + 1, fullName: userId, level: getLevelFromPoints(totalPoints) }))
       .sort((a, b) => b.totalPoints - a.totalPoints)
       .slice(0, limitCount);
   }
 
-  const { getDocs: gd, collection: col, orderBy: ob, limit: lim, query: qry } = await import('firebase/firestore');
-  const q = qry(col(db, 'users'), ob('totalPoints', 'desc'), lim(limitCount));
-  const snap = await gd(q);
-  return snap.docs.map((d, i) => {
-    const data = d.data();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, full_name, photo_url, avatar_url, faculty, total_points, xp')
+    .order('total_points', { ascending: false })
+    .limit(limitCount);
+
+  if (error) throw error;
+  return (data || []).map((row: any, i: number) => {
+    const totalPoints = row.total_points ?? row.xp ?? 0;
     return {
-      userId: d.id,
-      fullName: data.fullName,
-      photoURL: data.photoURL,
-      faculty: data.faculty,
-      totalPoints: data.totalPoints ?? 0,
-      level: getLevelFromPoints(data.totalPoints ?? 0),
+      userId: row.id,
+      fullName: row.full_name || 'Member',
+      photoURL: row.photo_url || row.avatar_url,
+      faculty: row.faculty,
+      totalPoints,
+      level: getLevelFromPoints(totalPoints),
       rank: i + 1,
     };
   });
 };
-
-// ─── Achievements ────────────────────────────────────────────────────────────
 
 export const checkAndAwardBadges = async (
   userId: string,
@@ -175,32 +180,8 @@ export const checkAndAwardBadges = async (
 ): Promise<Achievement[]> => {
   const newlyUnlocked: Achievement[] = [];
 
-  if (!isFirebaseReady) {
-    for (const badge of BADGES_CATALOG) {
-      const alreadyHas = demoAchievements.some(a => a.userId === userId && a.badgeId === badge.id);
-      if (!alreadyHas && badge.condition(stats)) {
-        const achievement: Achievement = {
-          userId,
-          badgeId: badge.id,
-          badgeName: badge.name,
-          badgeIcon: badge.icon,
-          badgeColor: badge.color,
-          description: badge.description,
-          unlockedAt: new Date().toISOString(),
-          isNew: true,
-        };
-        demoAchievements.push(achievement);
-        newlyUnlocked.push(achievement);
-      }
-    }
-    return newlyUnlocked;
-  }
-
-  // Get already earned badges
-  const existing = await getDocs(
-    query(collection(db, 'user_achievements'), where('userId', '==', userId)),
-  );
-  const earnedIds = new Set(existing.docs.map(d => d.data().badgeId as string));
+  const existing = await getUserAchievements(userId);
+  const earnedIds = new Set(existing.map(item => item.badgeId));
 
   for (const badge of BADGES_CATALOG) {
     if (!earnedIds.has(badge.id) && badge.condition(stats)) {
@@ -214,10 +195,22 @@ export const checkAndAwardBadges = async (
         unlockedAt: new Date().toISOString(),
         isNew: true,
       };
-      await addDoc(collection(db, 'user_achievements'), {
-        ...achievement,
-        unlockedAt: serverTimestamp(),
-      });
+
+      if (isSupabaseConfigured) {
+        const { error } = await supabase.from('user_achievements').insert({
+          user_id: userId,
+          badge_id: badge.id,
+          badge_name: badge.name,
+          badge_icon: badge.icon,
+          badge_color: badge.color,
+          description: badge.description,
+          is_new: true,
+        });
+        if (error) throw error;
+      } else {
+        demoAchievements.push(achievement);
+      }
+
       newlyUnlocked.push(achievement);
     }
   }
@@ -226,26 +219,33 @@ export const checkAndAwardBadges = async (
 };
 
 export const getUserAchievements = async (userId: string): Promise<Achievement[]> => {
-  if (!isFirebaseReady) {
-    return demoAchievements.filter(a => a.userId === userId);
-  }
+  if (!isSupabaseConfigured) return demoAchievements.filter(a => a.userId === userId);
 
-  const q = query(collection(db, 'user_achievements'), where('userId', '==', userId));
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as Achievement));
+  const { data, error } = await supabase
+    .from('user_achievements')
+    .select('*')
+    .eq('user_id', userId)
+    .order('unlocked_at', { ascending: false });
+
+  if (error) throw error;
+  return (data || []).map(mapAchievement);
 };
 
 export const subscribeToAchievements = (
   userId: string,
   callback: (achievements: Achievement[]) => void,
 ): Unsubscribe => {
-  if (!isFirebaseReady) {
-    callback(demoAchievements.filter(a => a.userId === userId));
-    return () => {};
-  }
+  getUserAchievements(userId).then(callback).catch(console.error);
+  if (!isSupabaseConfigured) return () => {};
 
-  const q = query(collection(db, 'user_achievements'), where('userId', '==', userId));
-  return onSnapshot(q, snap => {
-    callback(snap.docs.map(d => ({ id: d.id, ...d.data() } as Achievement)));
-  });
+  const channel = supabase
+    .channel(`achievements_${userId}`)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'user_achievements', filter: `user_id=eq.${userId}` }, () => {
+      getUserAchievements(userId).then(callback).catch(console.error);
+    })
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
 };

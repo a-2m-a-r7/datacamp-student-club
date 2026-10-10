@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { collection, onSnapshot, query, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
 import { logAction } from '../../lib/logger';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -12,7 +10,6 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
-import { demoUsers, setDemoUsers, demoEvents, demoStaff } from '../../lib/demoData';
 import { generateMemberId } from '../../lib/memberUtils';
 import { RoleEditorModal } from '../../components/admin/RoleEditorModal';
 import { ROLE_DEFINITIONS, ROLE_LIST, ALL_PERMISSIONS } from '../../lib/roleDefinitions';
@@ -29,6 +26,18 @@ interface AuthEventItem {
   user_id?: string;
 }
 
+const toUiRole = (role: string | null | undefined): UserRole => {
+  return role === 'admin' || role === 'super_admin' ? 'super_admin' : 'member';
+};
+
+const toDatabaseRole = (role: string | null | undefined): 'user' | 'admin' => {
+  return role === 'admin' || role === 'super_admin' ? 'admin' : 'user';
+};
+
+const toUsersMirrorRole = (role: string | null | undefined): 'member' | 'admin' => {
+  return toDatabaseRole(role) === 'admin' ? 'admin' : 'member';
+};
+
 const normalizeUser = (u: any) => ({
   ...u,
   id: u.id || u.uid,
@@ -42,7 +51,8 @@ const normalizeUser = (u: any) => ({
   photoURL: u.avatar_url || u.photo_url || u.photoURL || '',
   totalPoints: u.total_points ?? u.totalPoints ?? 0,
   faculty: u.faculty || 'Engineering',
-  role: u.role || 'user',
+  role: toUiRole(u.role),
+  databaseRole: toDatabaseRole(u.role),
   status: u.status || 'active'
 });
 
@@ -70,7 +80,6 @@ const formatTimeAgo = (dateStr: string | null | undefined, isArabic: boolean): s
 const UserManagement = () => {
   const { isArabic } = useLanguage();
   const [users, setUsers] = useState<any[]>([]);
-  const [events, setEvents] = useState<any[]>([]);
   const [enrollmentCounts, setEnrollmentCounts] = useState<Record<string, number>>({});
   const [authEvents, setAuthEvents] = useState<AuthEventItem[]>([]);
   const [showActivityFeed, setShowActivityFeed] = useState(true);
@@ -100,7 +109,7 @@ const UserManagement = () => {
     fullName: '',
     email: '',
     password: '',
-    role: 'user',
+    role: 'member',
     faculty: 'Engineering',
     status: 'active'
   });
@@ -150,23 +159,10 @@ const UserManagement = () => {
       return;
     }
 
-    if (!isFirebaseReady) {
-      setUsers([...demoUsers].map(normalizeUser));
-      setEvents(demoEvents);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const { getDocs } = await import('firebase/firestore');
-      const snap = await getDocs(collection(db, 'users'));
-      const freshUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      setUsers(freshUsers.map(normalizeUser));
-    } catch {
-      setUsers([...demoUsers].map(normalizeUser));
-    } finally {
-      setLoading(false);
-    }
+    setUsers([]);
+    setAuthEvents([]);
+    setEnrollmentCounts({});
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -196,19 +192,6 @@ const UserManagement = () => {
         supabase.removeChannel(authEventsChannel);
         supabase.removeChannel(profilesChannel);
       };
-    }
-  }, [isFirebaseReady]);
-
-  // Load events
-  useEffect(() => {
-    if (!isFirebaseReady) {
-      setEvents(demoEvents);
-    } else {
-      const q = query(collection(db, 'events'));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        setEvents(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
-      }, () => {});
-      return () => unsubscribe();
     }
   }, []);
 
@@ -323,15 +306,17 @@ const UserManagement = () => {
 
     if (isSupabaseConfigured) {
       try {
-        const updateData: any = { role: newRole };
-        if (newRole === 'super_admin' || newRole === 'admin') {
+        const dbRole = toDatabaseRole(newRole);
+        const usersMirrorRole = toUsersMirrorRole(newRole);
+        const updateData: any = { role: dbRole };
+        if (dbRole === 'admin') {
           updateData.level = 'ARCHITECT';
           updateData.is_verified = true;
         }
         // Update profiles table
         const { error: profileErr } = await supabase.from('profiles').update(updateData).eq('id', user.id);
         // Also update users table for consistency
-        await supabase.from('users').update(updateData).eq('id', user.id);
+        await supabase.from('users').update({ ...updateData, role: usersMirrorRole }).eq('id', user.id);
 
         if (profileErr) throw profileErr;
         await logAction('USER_ROLE_CHANGE', 'Admin', `${user.email} -> ${newRole}`, 'success');
@@ -344,20 +329,7 @@ const UserManagement = () => {
       return;
     }
 
-    if (!isFirebaseReady) {
-      const newUsers = users.map(u => u.id === user.id ? { ...u, ...updatePayload } : u);
-      setDemoUsers(newUsers);
-      toast.success(isArabic ? `تم التحديث بنجاح (وضع تجريبي)` : `Role updated to ${newRole} (Demo Mode)`);
-      return;
-    }
-
-    try {
-      await updateDoc(doc(db, 'users', user.id), updatePayload);
-      await logAction('USER_ROLE_CHANGE', 'Admin', `${user.id} -> ${newRole}`, 'success');
-      toast.success(isArabic ? `تمت ترقية العضو بنجاح 👑` : `Role updated successfully 👑`);
-    } catch {
-      toast.error('Failed to update role');
-    }
+    toast.error(isArabic ? 'Supabase غير مفعّل، لا يمكن حفظ تغيير الرول.' : 'Supabase is not configured; role changes cannot be saved.');
   };
 
   // Toggle user active / inactive status
@@ -376,16 +348,7 @@ const UserManagement = () => {
       return;
     }
 
-    if (!isFirebaseReady) {
-      toast.success(`Status updated to ${newStatus}`);
-      return;
-    }
-    try {
-      await updateDoc(doc(db, 'users', userId), { status: newStatus });
-      toast.success(`Status updated to ${newStatus}`);
-    } catch {
-      toast.error('Failed to update status');
-    }
+    toast.error(isArabic ? 'Supabase غير مفعّل، لا يمكن حفظ حالة الحساب.' : 'Supabase is not configured; status changes cannot be saved.');
   };
 
   // Delete user confirmation
@@ -406,17 +369,7 @@ const UserManagement = () => {
       return;
     }
 
-    if (!isFirebaseReady) {
-      setDemoUsers(users.filter(u => u.id !== userId));
-      toast.success('User removed from database');
-      return;
-    }
-    try {
-      await deleteDoc(doc(db, 'users', userId));
-      toast.success('User removed from database');
-    } catch {
-      toast.error('Failed to delete user');
-    }
+    toast.error(isArabic ? 'Supabase غير مفعّل، لا يمكن حذف المستخدم.' : 'Supabase is not configured; user deletion cannot be saved.');
   };
 
   // Add new user operative
@@ -440,14 +393,15 @@ const UserManagement = () => {
         });
         if (error) throw error;
         if (data.user) {
+          const dbRole = toDatabaseRole(newUser.role);
           // Update profile attributes
           await supabase.from('profiles').update({
-            role: newUser.role,
+            role: dbRole,
             faculty: newUser.faculty,
             member_id: memberId,
           }).eq('id', data.user.id);
           await supabase.from('users').update({
-            role: newUser.role,
+            role: toUsersMirrorRole(newUser.role),
             faculty: newUser.faculty,
             member_id: memberId,
           }).eq('id', data.user.id);
@@ -463,16 +417,8 @@ const UserManagement = () => {
       return;
     }
 
-    const mockUser = {
-      id: 'mock_' + Date.now(),
-      ...newUser,
-      memberId,
-      createdAt: new Date().toISOString()
-    };
-    setUsers([mockUser, ...users]);
-    setShowAddModal(false);
     setLoading(false);
-    toast.success('Operative added (Demo Mode)');
+    toast.error(isArabic ? 'Supabase غير مفعّل، لا يمكن إنشاء مستخدم جديد.' : 'Supabase is not configured; new users cannot be created.');
   };
 
   // Export to Excel
@@ -796,9 +742,6 @@ const UserManagement = () => {
                   <option value="all" className="bg-dark-navy text-white">
                     {isArabic ? 'الكل (ALL)' : 'ALL'}
                   </option>
-                  <option value="user" className="bg-dark-navy text-white">User / Member</option>
-                  <option value="admin" className="bg-dark-navy text-white">Admin</option>
-                  <option value="super_admin" className="bg-dark-navy text-white">Super Admin</option>
                   {ROLE_LIST.map(r => (
                     <option key={r.id} value={r.id} className="bg-dark-navy text-white">
                       {isArabic ? `${r.titleAr} (${r.tag})` : `${r.titleEn} (${r.tag})`}
@@ -994,7 +937,7 @@ const UserManagement = () => {
                             ) : (
                               <button
                                 type="button"
-                                onClick={() => setPendingRoleChange({ user, newRole: 'admin' })}
+                                onClick={() => setPendingRoleChange({ user, newRole: 'super_admin' })}
                                 className="px-2 py-0.5 rounded-md bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 font-cyber text-[10px] font-bold flex items-center gap-1 transition-all hover:scale-105 shrink-0 cursor-pointer"
                                 title={isArabic ? 'ترقية العضو إلى أدمن' : 'Promote to Admin'}
                               >
@@ -1014,9 +957,6 @@ const UserManagement = () => {
                               }}
                               title={isArabic ? 'تغيير الرتبة' : 'Change Role'}
                             >
-                              <option value="user" className="bg-dark-navy text-white">user</option>
-                              <option value="admin" className="bg-dark-navy text-amber-400">admin</option>
-                              <option value="super_admin" className="bg-dark-navy text-amber-400">super_admin</option>
                               {ROLE_LIST.map(r => (
                                 <option key={r.id} value={r.id} className="bg-dark-navy text-white">
                                   {r.id}
@@ -1349,9 +1289,8 @@ const UserManagement = () => {
                       value={newUser.role}
                       onChange={(e) => setNewUser({...newUser, role: e.target.value})}
                     >
-                      <option value="user" className="bg-dark-navy">User / Member</option>
-                      <option value="admin" className="bg-dark-navy text-primary">Admin</option>
-                      <option value="super_admin" className="bg-dark-navy text-primary">Super Admin</option>
+                      <option value="member" className="bg-dark-navy">Member</option>
+                      <option value="super_admin" className="bg-dark-navy text-primary">Admin</option>
                     </select>
                   </div>
                   <div className="space-y-1.5">

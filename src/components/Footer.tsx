@@ -4,29 +4,23 @@ import Logo from './Logo';
 import { Github, Twitter, Linkedin, Facebook, Mail, Phone, MapPin, Instagram, Link as LinkIcon } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
-
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { demoSettings } from '../lib/demoData';
+import { contentService } from '../services/contentService';
 
 const Footer = () => {
   const { isArabic, t } = useLanguage();
   const [settings, setSettings] = useState<any>(null);
 
   useEffect(() => {
-    if (!isFirebaseReady) {
-      setSettings(demoSettings);
-      return;
-    }
-
-    const unsubscribe = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
-      if (snapshot.exists()) {
-        setSettings(snapshot.data());
+    const loadSettings = async () => {
+      try {
+        setSettings(await contentService.getSetting('site'));
+      } catch (error) {
+        console.warn('Footer settings load error:', error);
       }
-    }, (error) => {
-      console.warn("Footer settings listener error:", error);
-    });
-    return () => unsubscribe();
+    };
+
+    loadSettings();
+    return contentService.subscribe('settings', loadSettings);
   }, []);
 
   const getIcon = (platform: string) => {

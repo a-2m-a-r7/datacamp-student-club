@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Camera, Search } from 'lucide-react';
-import { collection, onSnapshot, query } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { demoGallery } from '../lib/demoData';
 import { Button } from '../components/ui/Button';
 import { useLanguage } from '../contexts/LanguageContext';
+import { contentService } from '../services/contentService';
 
 const SAMPLE_GALLERY_EN = [
   {
@@ -139,23 +137,18 @@ export const Gallery = () => {
   ];
 
   useEffect(() => {
-    const sampleData = isArabic ? SAMPLE_GALLERY_AR : SAMPLE_GALLERY_EN;
-    if (!isFirebaseReady) {
-      setImages(demoGallery.length > 0 ? demoGallery : sampleData);
-      setLoading(false);
-      return;
-    }
+    const loadGallery = async () => {
+      try {
+        setImages(await contentService.list('gallery', { orderBy: 'created_at' }));
+      } catch (error) {
+        console.warn('Gallery load error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const q = query(collection(db, 'gallery'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setImages(docs);
-      setLoading(false);
-    }, (error) => {
-      console.warn("Gallery listener error:", error);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    loadGallery();
+    return contentService.subscribe('gallery', loadGallery);
   }, [isArabic]);
 
   const activeSamples = isArabic ? SAMPLE_GALLERY_AR : SAMPLE_GALLERY_EN;

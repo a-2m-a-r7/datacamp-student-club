@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Layout, Edit3, Image as ImageIcon, Link as LinkIcon, Plus, Trash2, Save, Target, Info, LayoutDashboard } from 'lucide-react';
+import { Layout, Save, Target, Info } from 'lucide-react';
 import { toast } from 'sonner';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { demoHomeContent, demoAboutData, setDemoHomeContent, setDemoAboutData } from '../../lib/demoData';
+import { demoHomeContent, demoAboutData } from '../../lib/demoData';
+import { contentService } from '../../services/contentService';
 
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -21,74 +19,28 @@ const ContentManagement = () => {
   const [aboutData, setAboutData] = useState(demoAboutData);
 
   useEffect(() => {
-    if (isSupabaseConfigured) {
-      const fetchSupabaseSettings = async () => {
-        try {
-          const { data: homeRow } = await supabase.from('settings').select('value').eq('key', 'home').single();
-          if (homeRow?.value) setHomeContent(homeRow.value);
-
-          const { data: aboutRow } = await supabase.from('settings').select('value').eq('key', 'about').single();
-          if (aboutRow?.value) setAboutData(aboutRow.value);
-        } catch (err) {
-          console.error("Supabase settings fetch error:", err);
-        }
-      };
-
-      fetchSupabaseSettings();
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      setHomeContent(demoHomeContent);
-      setAboutData(demoAboutData);
-      return;
-    }
-
-    const unsubHome = onSnapshot(doc(db, 'settings', 'home'), (snapshot) => {
-      if (snapshot.exists()) setHomeContent(snapshot.data() as any);
-    }, (error) => {
-      console.warn("Home content listener error:", error);
-    });
-
-    const unsubAbout = onSnapshot(doc(db, 'settings', 'about'), (snapshot) => {
-      if (snapshot.exists()) setAboutData(snapshot.data() as any);
-    }, (error) => {
-      console.warn("About data listener error:", error);
-    });
-
-    return () => {
-      unsubHome();
-      unsubAbout();
+    const loadContent = async () => {
+      try {
+        const [home, about] = await Promise.all([
+          contentService.getSetting('home'),
+          contentService.getSetting('about'),
+        ]);
+        if (home) setHomeContent(home);
+        if (about) setAboutData(about);
+      } catch (err) {
+        console.error('Content settings fetch error:', err);
+      }
     };
+
+    loadContent();
+    return contentService.subscribe('settings', loadContent);
   }, []);
 
   const handleSave = async () => {
-    if (isSupabaseConfigured) {
-      try {
-        if (activeTab === 'home') {
-          await supabase.from('settings').upsert({ key: 'home', value: homeContent, updated_at: new Date().toISOString() });
-        }
-        if (activeTab === 'about') {
-          await supabase.from('settings').upsert({ key: 'about', value: aboutData, updated_at: new Date().toISOString() });
-        }
-        toast.success(`Content for ${activeTab} updated in database`);
-      } catch (err) {
-        toast.error(`Failed to update ${activeTab} content in database`);
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      if (activeTab === 'home') setDemoHomeContent(homeContent);
-      if (activeTab === 'about') setDemoAboutData(aboutData);
-      toast.success(`Content for ${activeTab} updated in memory (Demo Mode)`);
-      return;
-    }
-
     try {
-      if (activeTab === 'home') await setDoc(doc(db, 'settings', 'home'), homeContent);
-      if (activeTab === 'about') await setDoc(doc(db, 'settings', 'about'), aboutData);
-      toast.success(`Content for ${activeTab} updated in cloud`);
+      if (activeTab === 'home') await contentService.upsertSetting('home', homeContent);
+      if (activeTab === 'about') await contentService.upsertSetting('about', aboutData);
+      toast.success(`Content for ${activeTab} updated in database`);
     } catch (error) {
       toast.error(`Failed to update ${activeTab} content`);
     }

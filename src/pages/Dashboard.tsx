@@ -23,8 +23,6 @@ import {
   Crown
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
-import { isFirebaseReady } from '../lib/firebase';
-import { demoEvents } from '../lib/demoData';
 
 const Dashboard = () => {
   const { profile, isSuperAdmin, isAdmin } = useAuth();
@@ -40,15 +38,9 @@ const Dashboard = () => {
   } = usePoints();
 
   const [enrolledCourses, setEnrolledCourses] = useState<{ course: Course; enrollment: Enrollment }[]>([]);
-  const [, setEventsAttendedCount] = useState(0);
 
   useEffect(() => {
     if (!profile) return;
-
-    if (!isFirebaseReady) {
-      const attended = demoEvents.filter(e => e.registeredCount > 0).length;
-      setEventsAttendedCount(attended);
-    }
 
     // Load enrolled courses
     courseService.getUserEnrollments(profile.uid).then(async enrollments => {

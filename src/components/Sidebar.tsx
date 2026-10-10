@@ -6,7 +6,7 @@ import {
   FileText, Users, Image as ImageIcon, Mail, 
   LayoutDashboard, LogOut, ChevronLeft, ChevronRight,
   Settings as SettingsIcon, Shield, BarChart3, X, User, Menu,
-  Trophy, Sparkles, Bell, Award, UserPlus, LogIn
+  Trophy, Sparkles, Bell, Award, UserPlus, LogIn, GraduationCap
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -15,14 +15,11 @@ import { toast } from 'sonner';
 import Logo from './Logo';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { demoSettings } from '../lib/demoData';
-
 const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: boolean) => void }) => {
   const { 
     user, 
     profile, 
+    logout,
     isSuperAdmin,
     isAdmin, 
     isEditor,
@@ -36,7 +33,6 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
   const { t, isArabic } = useLanguage();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
-  const [settings, setSettings] = useState<any>(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -57,29 +53,10 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
     return () => window.removeEventListener('resize', handleResize);
   }, [isCollapsed]);
 
-  useEffect(() => {
-    if (!isFirebaseReady) {
-      setSettings(demoSettings);
-      return;
-    }
-
-    const unsubscribe = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
-      if (snapshot.exists()) {
-        setSettings(snapshot.data());
-      }
-    }, (error) => {
-      console.warn("Sidebar settings listener error:", error);
-    });
-    return () => unsubscribe();
-  }, []);
-
   const handleLogout = async () => {
-    if (isFirebaseReady) {
-      const { signOut } = await import('firebase/auth');
-      const { auth } = await import('../lib/firebase');
-      await signOut(auth);
-    }
-    window.location.href = '/';
+    await logout();
+    navigate('/');
+    closeOnMobile();
   };
 
   const closeOnMobile = () => {
@@ -91,6 +68,7 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
   const mainLinks = [
     { name: t('nav.home', 'Home'), path: '/', icon: Home },
     { name: t('nav.courses', 'Courses'), path: '/courses', icon: BookOpen },
+    ...(user ? [{ name: isArabic ? 'كورساتي' : 'My Courses', path: '/my-courses', icon: GraduationCap }] : []),
     { name: t('nav.compiler', 'Online Compiler'), path: '/compiler', icon: Code },
     { name: t('nav.leaderboard', 'Leaderboard'), path: '/leaderboard', icon: Trophy },
     { name: t('nav.certificates', 'Certificates'), path: '/certificates', icon: Trophy },

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Crown, GraduationCap, User, Mail, ArrowRight, X, Sparkles, ShieldCheck } from 'lucide-react';
+import { Crown, GraduationCap, User, Mail, ArrowRight, X, ShieldCheck } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { useAuth } from '../contexts/AuthContext';
@@ -25,9 +25,9 @@ const GoogleIcon = () => (
 export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
   isOpen,
   onClose,
-  onSuccess
+  onSuccess,
 }) => {
-  const { loginAsRole, loginWithEmail, registerWithEmail, loginWithGoogle } = useAuth();
+  const { loginAsRole, loginWithCustomAccount, loginWithGoogle } = useAuth();
   const { isArabic } = useLanguage();
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
@@ -69,7 +69,6 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
     setLoadingAction('popup');
     try {
       await loginWithGoogle();
-      toast.success(isArabic ? 'تم تسجيل الدخول بحساب Google بنجاح 🚀' : 'Logged in with Google successfully 🚀');
       onClose();
       onSuccess?.();
     } catch {
@@ -87,14 +86,8 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
     }
     setLoadingAction('custom');
     try {
-      const email = customEmail.trim();
-      const generatedPass = 'DataCampClub2025!';
-      try {
-        await loginWithEmail(email, generatedPass);
-      } catch {
-        await registerWithEmail(email, generatedPass, customName.trim() || email.split('@')[0]);
-      }
-      toast.success(isArabic ? `تم تسجيل الدخول بحساب: ${email} بنجاح!` : `Logged in as ${email}!`);
+      await loginWithCustomAccount(customName, customEmail);
+      toast.success(isArabic ? `تم تسجيل الدخول بحساب: ${customEmail} بنجاح!` : `Logged in as ${customEmail}!`);
       onClose();
       onSuccess?.();
     } catch (err: any) {
@@ -124,7 +117,7 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
                   {isArabic ? 'اختيار حساب Google للمتابعة' : 'CHOOSE_GOOGLE_ACCOUNT'}
                 </h3>
                 <p className="text-xs text-muted-foreground font-mono">
-                  {isArabic ? 'حدد الحساب الذي ترغب بالدخول أو الانضمام به للنادي' : 'Select an account to proceed or enter your own'}
+                  {isArabic ? 'حدد الحساب الذي ترغب بالدخول به أو اكتب بريدك' : 'Select an account to proceed or enter your email'}
                 </p>
               </div>
             </div>
@@ -292,7 +285,7 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>{isArabic ? 'اتصال سحابي آمن وموثق' : 'SECURE CLOUD AUTHENTICATION'}</span>
             </span>
-            <span>FIRESTORE & SUPABASE</span>
+            <span>SUPABASE CLOUD SYNC</span>
           </div>
         </motion.div>
       </div>

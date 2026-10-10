@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Plus, Trash2, Code, Save, ExternalLink, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { collection, onSnapshot, query, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { UserIdentityInput } from '../../components/UserIdentityInput';
 import ImagePicker from '../../components/ImagePicker';
-import { demoUsers, demoProjects, setDemoProjects } from '../../lib/demoData';
+import { demoUsers } from '../../lib/demoData';
+import { contentService } from '../../services/contentService';
 
 const ProjectManagement = () => {
   const [projects, setProjects] = useState<any[]>([]);
@@ -29,50 +28,25 @@ const ProjectManagement = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isSupabaseConfigured) {
-      const fetchSupabaseProjects = async () => {
-        try {
-          const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
-          if (!error && data) setProjects(data);
-        } catch {}
-      };
-      fetchSupabaseProjects();
-
-      const channel = supabase.channel('realtime_admin_projects')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => {
-          fetchSupabaseProjects();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setProjects(demoProjects);
-      setUsers(demoUsers);
-      return;
-    }
-
-    const q = query(collection(db, 'projects'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setProjects(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => {
-      console.warn("Projects listener error:", error);
-    });
-
-    const usersQuery = query(collection(db, 'users'));
-    const unsubscribeUsers = onSnapshot(usersQuery, (snapshot) => {
-      setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => {
-      console.warn("Users listener error:", error);
-    });
-
-    return () => {
-      unsubscribe();
-      unsubscribeUsers();
+    const loadProjects = async () => {
+      try {
+        setProjects(await contentService.list('projects', { orderBy: 'created_at', includeDrafts: true }));
+      } catch (error) {
+        console.warn('Projects listener error:', error);
+      }
     };
+
+    loadProjects();
+
+    if (isSupabaseConfigured) {
+      supabase.from('profiles').select('*').then(({ data }) => {
+        if (data) setUsers(data);
+      });
+    } else {
+      setUsers(demoUsers);
+    }
+
+    return contentService.subscribe('projects', loadProjects);
   }, []);
 
   const resetForm = () => {
@@ -105,75 +79,30 @@ const ProjectManagement = () => {
       createdAt: new Date().toISOString() 
     };
 
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('projects').insert({
-          title: newProject.title,
-          description: newProject.description,
-          status: 'active',
-          members: [authorLabel]
-        });
-        if (error) throw error;
-        setShowAddModal(false);
-        resetForm();
-        toast.success('Project added to Supabase portfolio');
-        const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
-        if (data) setProjects(data);
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to add project');
-      } finally {
-        setIsSubmitting(false);
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = [{ ...projectData, id: 'demo_' + Date.now() }, ...projects];
-      setDemoProjects(updated);
-      setProjects(updated);
-      setShowAddModal(false);
-      resetForm();
-      setIsSubmitting(false);
-      toast.success('Project added to portfolio (Demo Mode)');
-      return;
-    }
-
     try {
-      await addDoc(collection(db, 'projects'), projectData);
+      const created = await contentService.create('projects', {
+        ...projectData,
+        technologies: newProject.tech,
+        liveUrl: newProject.link,
+        githubUrl: newProject.link,
+        status: 'active',
+      });
+      setProjects(prev => [created, ...prev]);
       setShowAddModal(false);
       resetForm();
-      toast.success('Project added to cloud portfolio');
-    } catch (error) {
-      console.error('Error adding project:', error);
-      toast.error('Failed to add project');
+      toast.success('Project added to Supabase portfolio');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to add project');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const deleteProject = async (id: string) => {
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('projects').delete().eq('id', id);
-        setProjects(prev => prev.filter(p => p.id !== id));
-        toast.success('Project removed from Supabase');
-      } catch {
-        toast.error('Failed to remove project');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = projects.filter(p => p.id !== id);
-      setDemoProjects(updated);
-      setProjects(updated);
-      toast.success('Project removed (Demo Mode)');
-      return;
-    }
-
     try {
-      await deleteDoc(doc(db, 'projects', id));
-      toast.success('Project removed from cloud');
+      await contentService.remove('projects', id);
+      setProjects(prev => prev.filter(p => p.id !== id));
+      toast.success('Project removed from Supabase');
     } catch (error) {
       toast.error('Failed to remove project');
     }
@@ -210,7 +139,7 @@ const ProjectManagement = () => {
               </div>
               <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
               <div className="text-[10px] font-mono text-primary uppercase tracking-widest bg-primary/5 p-2 rounded border border-primary/10">
-                TECH_STACK: {project.tech}
+                TECH_STACK: {project.tech || project.technologies?.join?.(', ') || 'N/A'}
               </div>
             </CardContent>
           </Card>

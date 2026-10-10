@@ -12,9 +12,7 @@ import {
   Search,
   Briefcase
 } from 'lucide-react';
-import { collection, onSnapshot, query } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { demoStaff } from '../lib/demoData';
+import { contentService } from '../services/contentService';
 import { Button } from '../components/ui/Button';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
@@ -196,23 +194,24 @@ export const Staff = () => {
   const [showSampleStaff, setShowSampleStaff] = useState(false);
 
   useEffect(() => {
-    const sampleData = isArabic ? SAMPLE_STAFF_AR : SAMPLE_STAFF_EN;
-    if (!isFirebaseReady) {
-      setStaff(demoStaff.length > 0 ? demoStaff : sampleData);
-      setLoading(false);
-      return;
-    }
+    let mounted = true;
+    const load = async () => {
+      try {
+        const docs = await contentService.list('staff', { orderBy: 'created_at' });
+        if (mounted) setStaff(docs);
+      } catch (error) {
+        console.warn('Staff Supabase load error:', error);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
 
-    const q = query(collection(db, 'staff'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setStaff(docs);
-      setLoading(false);
-    }, (error) => {
-      console.warn("Staff listener error:", error);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    const unsubscribe = contentService.subscribe('staff', load);
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
   }, [isArabic]);
 
   const getIcon = (iconName: string) => {

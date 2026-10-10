@@ -1,8 +1,8 @@
 /**
  * courseService.ts
  * Comprehensive service for managing Courses, Lessons, Enrollments, and Progress.
- * Fully integrated with Supabase Database (courses, lessons, enrollments) & Storage,
- * with graceful fallback to rich seed courses and offline demo mode.
+ * Fully integrated with Supabase Database (courses, lessons, enrollments) & Storage.
+ * Local seed data is only used when Supabase is not configured.
  */
 
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
@@ -246,15 +246,15 @@ const mapDatabaseCourse = (row: any): Course => {
     coverImage: row.thumbnail_url || row.coverImage || 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800',
     category: row.category || 'data_science',
     level: row.level || 'beginner',
-    language: 'both',
+    language: row.language || 'both',
     durationHours: Number(row.duration_hours || row.durationHours || 12),
     totalLessons: Number(row.total_lessons || row.totalLessons || 10),
-    enrolledCount: Number(row.enrolled_count || row.enrolledCount || 50),
+    enrolledCount: Number(row.enrolled_count || row.enrolledCount || 0),
     rating: Number(row.rating || 4.9),
     ratingCount: Number(row.rating_count || row.ratingCount || 25),
-    tags: Array.isArray(row.tags) ? row.tags : ['Data Science', 'Python', 'AI'],
-    skills: Array.isArray(row.skills) ? row.skills : ['Data Analysis', 'Python Scripting'],
-    prerequisites: Array.isArray(row.prerequisites) ? row.prerequisites : ['Basic Computer Literacy'],
+    tags: Array.isArray(row.tags) ? row.tags : [],
+    skills: Array.isArray(row.skills) ? row.skills : [],
+    prerequisites: Array.isArray(row.prerequisites) ? row.prerequisites : [],
     pointsReward: Number(row.points_reward || row.pointsReward || 500),
     status: row.is_published === false ? 'draft' : 'published',
     isFeatured: true,
@@ -262,6 +262,50 @@ const mapDatabaseCourse = (row: any): Course => {
     createdAt: row.created_at || new Date().toISOString(),
     updatedAt: row.updated_at || new Date().toISOString(),
   };
+};
+
+const mapDatabaseLesson = (row: any): CourseLesson => ({
+  id: row.id,
+  courseId: row.course_id,
+  moduleId: row.module_id || `module-${row.course_id}`,
+  title: row.title,
+  type: row.type || (row.video_url ? 'video' : 'article'),
+  content: row.content || '',
+  videoUrl: row.video_url || '',
+  duration: Number(row.duration_minutes || 20),
+  order: Number(row.position || 1),
+  isPreview: Boolean(row.is_preview),
+  pointsReward: Number(row.points_reward || 30),
+  quizQuestions: Array.isArray(row.quiz_questions) ? row.quiz_questions : [],
+  exercisePrompt: row.exercise_prompt || '',
+  exerciseStarterCode: row.exercise_starter_code || '',
+  exerciseSolution: row.exercise_solution || '',
+  exerciseTestCases: Array.isArray(row.exercise_test_cases) ? row.exercise_test_cases : [],
+});
+
+const mapDatabaseEnrollment = (row: any): Enrollment => ({
+  id: row.id,
+  userId: row.user_id,
+  courseId: row.course_id,
+  enrolledAt: row.enrolled_at || new Date().toISOString(),
+  progress: Number(row.progress_percent || 0),
+  completedLessons: row.completed_lessons || [],
+  completedModules: row.completed_modules || [],
+  lastAccessedAt: row.last_accessed_at || new Date().toISOString(),
+  lastLessonId: row.last_lesson_id || undefined,
+  status: row.status || (row.is_completed ? 'completed' : 'active'),
+  quizScores: row.quiz_scores || {},
+  completedAt: row.completed_at || undefined,
+  certificateId: row.certificate_id || undefined,
+});
+
+const parseListInput = (value: unknown): string[] => {
+  if (Array.isArray(value)) return value.map(String).map(v => v.trim()).filter(Boolean);
+  if (typeof value !== 'string') return [];
+  return value
+    .split(',')
+    .map(v => v.trim())
+    .filter(Boolean);
 };
 
 export const courseService = {
@@ -281,7 +325,7 @@ export const courseService = {
         }
 
         const { data, error } = await q;
-        if (!error && data && data.length > 0) {
+        if (!error && data) {
           return data.map(mapDatabaseCourse);
         }
       } catch (err) {
@@ -314,13 +358,32 @@ export const courseService = {
       }
     }
 
-    return demoCoursesStore.find(c => c.slug === slug) ?? null;
+    return isSupabaseConfigured ? null : demoCoursesStore.find(c => c.slug === slug) ?? null;
   },
 
   /**
    * 3. Get Course Modules
    */
   async getCourseModules(courseId: string): Promise<CourseModule[]> {
+    const lessons = await this.getCourseLessons(courseId);
+    if (lessons.length > 0) {
+      const moduleIds = Array.from(new Set<string>(lessons.map(l => String(l.moduleId || `module-${courseId}`))));
+      return moduleIds.map((moduleId, index) => {
+        const moduleLessons = lessons.filter(l => (l.moduleId || `module-${courseId}`) === moduleId);
+        return {
+          id: moduleId,
+          courseId,
+          title: moduleIds.length === 1 ? 'Course Lessons' : `Module ${index + 1}`,
+          description: 'Lessons managed from the Supabase lessons table.',
+          order: index + 1,
+          totalLessons: moduleLessons.length,
+          durationMinutes: moduleLessons.reduce((sum, lesson) => sum + (lesson.duration || 0), 0),
+        };
+      });
+    }
+
+    if (isSupabaseConfigured) return [];
+
     // If demo python course or fallback
     if (courseId === 'course-py-data' || courseId.includes('python')) {
       return DEMO_MODULES_PYTHON.map(m => ({ ...m, courseId }));
@@ -361,20 +424,8 @@ export const courseService = {
           .eq('course_id', courseId)
           .order('position', { ascending: true });
 
-        if (!error && data && data.length > 0) {
-          return data.map(l => ({
-            id: l.id,
-            courseId: l.course_id,
-            moduleId: `mod-${courseId}-1`,
-            title: l.title,
-            type: l.video_url ? 'video' : 'article',
-            duration: l.duration_minutes || 20,
-            order: l.position || 1,
-            isPreview: l.position === 1,
-            pointsReward: 30,
-            videoUrl: l.video_url || 'https://www.youtube.com/embed/kqtD5dpn9C8',
-            content: l.content || 'Comprehensive training lesson module.',
-          }));
+        if (!error && data) {
+          return data.map(mapDatabaseLesson);
         }
       } catch (err) {
         console.warn('[courseService] Supabase getCourseLessons error:', err);
@@ -382,7 +433,7 @@ export const courseService = {
     }
 
     // Fallback to demo lessons
-    return DEMO_LESSONS_PYTHON.map(l => ({ ...l, courseId }));
+    return isSupabaseConfigured ? [] : DEMO_LESSONS_PYTHON.map(l => ({ ...l, courseId }));
   },
 
   /**
@@ -400,26 +451,13 @@ export const courseService = {
           .eq('course_id', courseId)
           .maybeSingle();
 
-        if (!error && data) {
-          return {
-            id: data.id,
-            userId: data.user_id,
-            courseId: data.course_id,
-            enrolledAt: data.enrolled_at || new Date().toISOString(),
-            progress: data.progress_percent || 0,
-            completedLessons: data.completed_lessons || [],
-            completedModules: [],
-            lastAccessedAt: data.last_accessed_at || new Date().toISOString(),
-            status: data.is_completed ? 'completed' : 'active',
-            quizScores: {},
-          };
-        }
+        if (!error && data) return mapDatabaseEnrollment(data);
       } catch (err) {
         console.warn('[courseService] Supabase getUserEnrollment error:', err);
       }
     }
 
-    return demoEnrollmentsStore.find(e => (e.userId === userId || e.userId === 'demo-user-1') && e.courseId === courseId) ?? null;
+    return isSupabaseConfigured ? null : demoEnrollmentsStore.find(e => e.userId === userId && e.courseId === courseId) ?? null;
   },
 
   /**
@@ -436,26 +474,30 @@ export const courseService = {
           .eq('user_id', userId)
           .order('enrolled_at', { ascending: false });
 
-        if (!error && data) {
-          return data.map(d => ({
-            id: d.id,
-            userId: d.user_id,
-            courseId: d.course_id,
-            enrolledAt: d.enrolled_at || new Date().toISOString(),
-            progress: d.progress_percent || 0,
-            completedLessons: d.completed_lessons || [],
-            completedModules: [],
-            lastAccessedAt: d.last_accessed_at || new Date().toISOString(),
-            status: d.is_completed ? 'completed' : 'active',
-            quizScores: {},
-          }));
-        }
+        if (!error && data) return data.map(mapDatabaseEnrollment);
       } catch (err) {
         console.warn('[courseService] Supabase getUserEnrollments error:', err);
       }
     }
 
-    return demoEnrollmentsStore.filter(e => e.userId === userId);
+    return isSupabaseConfigured ? [] : demoEnrollmentsStore.filter(e => e.userId === userId);
+  },
+
+  async getCoursesByIds(courseIds: string[]): Promise<Course[]> {
+    const uniqueIds = Array.from(new Set(courseIds.filter(Boolean)));
+    if (uniqueIds.length === 0) return [];
+
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase
+        .from('courses')
+        .select('*')
+        .in('id', uniqueIds);
+
+      if (error) throw error;
+      return (data || []).map(mapDatabaseCourse);
+    }
+
+    return demoCoursesStore.filter(c => uniqueIds.includes(c.id || ''));
   },
 
   /**
@@ -495,10 +537,15 @@ export const courseService = {
           .maybeSingle();
 
         if (!error && data) {
-          newEnrollment.id = data.id;
+          return mapDatabaseEnrollment(data);
+        }
+
+        if (error) {
+          throw error;
         }
       } catch (err) {
         console.warn('[courseService] Supabase enrollCourse error:', err);
+        throw err;
       }
     } else {
       demoEnrollmentsStore.push(newEnrollment);
@@ -563,6 +610,8 @@ export const courseService = {
             progress_percent: progress,
             is_completed: isCourseFinished,
             last_accessed_at: new Date().toISOString(),
+            last_lesson_id: lessonId,
+            status: isCourseFinished ? 'completed' : 'active',
             ...(isCourseFinished ? { completed_at: new Date().toISOString() } : {}),
           })
           .eq('user_id', userId)
@@ -621,12 +670,19 @@ export const courseService = {
           description: courseData.description || '',
           short_description: courseData.shortDescription || '',
           instructor_name: courseData.instructorName || 'DataCamp Instructor',
+          instructor_title: courseData.instructorTitle || '',
           thumbnail_url: courseData.coverImage || 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800',
           category: courseData.category || 'data_science',
           level: courseData.level || 'beginner',
+          language: courseData.language || 'both',
           duration_hours: Number(courseData.durationHours) || 12,
           total_lessons: Number(courseData.totalLessons) || 10,
           points_reward: Number(courseData.pointsReward) || 500,
+          tags: parseListInput(courseData.tags),
+          skills: parseListInput(courseData.skills),
+          prerequisites: parseListInput(courseData.prerequisites),
+          is_featured: Boolean(courseData.isFeatured),
+          is_locked: Boolean(courseData.isLocked),
           is_published: courseData.status === 'published',
           updated_at: new Date().toISOString(),
         };
@@ -641,11 +697,11 @@ export const courseService = {
           .select()
           .single();
 
-        if (!error && data) {
-          return mapDatabaseCourse(data);
-        }
+        if (error) throw error;
+        if (data) return mapDatabaseCourse(data);
       } catch (err) {
         console.warn('[courseService] Supabase saveCourse error:', err);
+        throw err;
       }
     }
 
@@ -690,12 +746,83 @@ export const courseService = {
   async deleteCourse(courseId: string): Promise<void> {
     if (isSupabaseConfigured) {
       try {
-        await supabase.from('courses').delete().eq('id', courseId);
+        const { error } = await supabase.from('courses').delete().eq('id', courseId);
+        if (error) throw error;
+        return;
       } catch (err) {
         console.warn('[courseService] Supabase deleteCourse error:', err);
+        throw err;
       }
     }
     demoCoursesStore = demoCoursesStore.filter(c => c.id !== courseId);
+  },
+
+  async saveLesson(lessonData: Partial<CourseLesson> & { courseId: string }): Promise<CourseLesson> {
+    const payload = {
+      course_id: lessonData.courseId,
+      module_id: lessonData.moduleId || null,
+      title: lessonData.title || 'Untitled Lesson',
+      type: lessonData.type || 'article',
+      content: lessonData.content || '',
+      video_url: lessonData.videoUrl || null,
+      position: Number(lessonData.order || 1),
+      duration_minutes: Number(lessonData.duration || 20),
+      is_preview: Boolean(lessonData.isPreview),
+      points_reward: Number(lessonData.pointsReward || 30),
+      quiz_questions: lessonData.quizQuestions || [],
+      exercise_prompt: lessonData.exercisePrompt || '',
+      exercise_starter_code: lessonData.exerciseStarterCode || '',
+      exercise_solution: lessonData.exerciseSolution || '',
+      exercise_test_cases: lessonData.exerciseTestCases || [],
+    };
+
+    if (isSupabaseConfigured) {
+      const query = lessonData.id
+        ? supabase.from('lessons').update(payload).eq('id', lessonData.id).select().single()
+        : supabase.from('lessons').insert(payload).select().single();
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return mapDatabaseLesson(data);
+    }
+
+    const lesson: CourseLesson = {
+      id: lessonData.id || `lesson-${Date.now()}`,
+      courseId: lessonData.courseId,
+      moduleId: lessonData.moduleId || `module-${lessonData.courseId}`,
+      title: lessonData.title || 'Untitled Lesson',
+      type: lessonData.type || 'article',
+      content: lessonData.content || '',
+      videoUrl: lessonData.videoUrl || '',
+      duration: Number(lessonData.duration || 20),
+      order: Number(lessonData.order || 1),
+      isPreview: Boolean(lessonData.isPreview),
+      pointsReward: Number(lessonData.pointsReward || 30),
+      quizQuestions: lessonData.quizQuestions || [],
+    };
+    return lesson;
+  },
+
+  async deleteLesson(lessonId: string): Promise<void> {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase.from('lessons').delete().eq('id', lessonId);
+      if (error) throw error;
+    }
+  },
+
+  async setCoursePublished(courseId: string, isPublished: boolean): Promise<void> {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase
+        .from('courses')
+        .update({ is_published: isPublished, updated_at: new Date().toISOString() })
+        .eq('id', courseId);
+      if (error) throw error;
+      return;
+    }
+
+    demoCoursesStore = demoCoursesStore.map(course =>
+      course.id === courseId ? { ...course, status: isPublished ? 'published' : 'draft' } : course
+    );
   },
 
   /**

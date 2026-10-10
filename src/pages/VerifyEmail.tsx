@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sendEmailVerification, reload } from 'firebase/auth';
-import { auth, isFirebaseReady } from '../lib/firebase';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/Card';
 import { toast } from 'sonner';
-import { Mail, RefreshCw, LogOut, CheckCircle2, ExternalLink } from 'lucide-react';
+import { Mail, RefreshCw, LogOut, ExternalLink } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { analyzeEmail } from '../lib/emailUtils';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 const VerifyEmail = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, logout } = useAuth();
   const { isArabic } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
@@ -19,20 +18,27 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate('/login');
-    } else if (user.emailVerified || (profile && profile.isVerified)) {
-      navigate('/dashboard');
+      navigate('/login', { replace: true });
+    } else if (user.email_confirmed_at || profile?.isVerified) {
+      navigate('/dashboard', { replace: true });
     }
   }, [user, profile, navigate]);
 
   const emailInfo = user?.email ? analyzeEmail(user.email) : null;
 
   const handleResend = async () => {
-    if (!auth.currentUser) return;
+    if (!user?.email || !isSupabaseConfigured) return;
     setLoading(true);
     try {
-      await sendEmailVerification(auth.currentUser);
-      toast.success(isArabic ? 'تم إرسال رابط التفعيل! تحقق من بريدك الإلكتروني.' : 'Verification email sent! Check your inbox.');
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: user.email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+      if (error) throw error;
+      toast.success(isArabic ? 'تم إرسال رابط التفعيل. تحقق من بريدك الإلكتروني.' : 'Verification email sent. Check your inbox.');
     } catch (error: any) {
       toast.error(error.message || (isArabic ? 'فشل إرسال رابط التفعيل.' : 'Failed to send verification email.'));
     } finally {
@@ -41,13 +47,13 @@ const VerifyEmail = () => {
   };
 
   const handleCheckStatus = async () => {
-    if (!auth.currentUser) return;
     setChecking(true);
     try {
-      await reload(auth.currentUser);
-      if (auth.currentUser.emailVerified) {
-        toast.success(isArabic ? 'تم تأكيد البريد بنجاح! جاري التوجيه...' : 'Email verified! Redirecting...');
-        navigate('/dashboard');
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      if (data.user?.email_confirmed_at) {
+        toast.success(isArabic ? 'تم تأكيد البريد بنجاح.' : 'Email verified.');
+        navigate('/dashboard', { replace: true });
       } else {
         toast.info(isArabic ? 'لم يتم تأكيد البريد بعد. يرجى مراجعة صندوق الوارد.' : 'Email not verified yet. Please check your inbox.');
       }
@@ -59,32 +65,9 @@ const VerifyEmail = () => {
   };
 
   const handleLogout = async () => {
-    await auth.signOut();
-    navigate('/login');
+    await logout();
+    navigate('/login', { replace: true });
   };
-
-  if (!isFirebaseReady) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="w-full max-w-md border-primary/20">
-          <CardHeader className="text-center">
-            <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-4" />
-            <CardTitle className="text-2xl font-cyber">
-              {isArabic ? 'تأكيد الحساب في الوضع التجريبي' : 'DEMO MODE VERIFICATION'}
-            </CardTitle>
-            <CardDescription>
-              {isArabic ? 'تأكيد البريد الإلكتروني محاكى تلقائياً في الوضع التجريبي.' : 'Email verification is simulated in Demo Mode.'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="cyber" className="w-full" onClick={() => navigate('/dashboard')}>
-              {isArabic ? 'الانتقال إلى لوحة التحكم' : 'PROCEED_TO_DASHBOARD'}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-dark-navy">
@@ -103,39 +86,28 @@ const VerifyEmail = () => {
             }
             {emailInfo?.isUniversity && (
               <span className="block mt-2 p-2 rounded bg-primary/10 border border-primary/30 text-primary text-[11px]">
-                🏛️ {isArabic ? 'تم التعرف على حساب أكاديمي' : 'Academic Account Detected'} ({emailInfo.institutionName || 'University Domain'})
+                {isArabic ? 'تم التعرف على حساب أكاديمي' : 'Academic Account Detected'} ({emailInfo.institutionName || 'University Domain'})
               </span>
             )}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Smart Webmail Direct Launch Buttons */}
           <div className="space-y-2 pt-1">
             <p className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest text-center">
               {isArabic ? 'الوصول السريع إلى صندوق البريد' : 'QUICK_ACCESS_TO_INBOX'}
             </p>
 
             {emailInfo?.isUniversity ? (
-              <a
-                href={emailInfo.webmailUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block"
-              >
-                <Button variant="cyber" className="w-full gap-2 font-cyber text-xs h-11 tracking-wider shadow-[0_0_15px_rgba(0,255,204,0.3)]">
+              <a href={emailInfo.webmailUrl} target="_blank" rel="noopener noreferrer" className="w-full block">
+                <Button variant="cyber" className="w-full gap-2 font-cyber text-xs h-11 tracking-wider">
                   <ExternalLink className="w-4 h-4" />
-                  {isArabic ? 'فتح بريد أوفيس 365 الجامعي' : 'OPEN OUTLOOK / OFFICE 365 (UNIVERSITY MAIL)'}
+                  {isArabic ? 'فتح بريد أوفيس 365 الجامعي' : 'OPEN OUTLOOK / OFFICE 365'}
                 </Button>
               </a>
             ) : emailInfo?.provider === 'gmail' ? (
-              <a
-                href="https://mail.google.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block"
-              >
-                <Button variant="cyber" className="w-full gap-2 font-cyber text-xs h-11 tracking-wider shadow-[0_0_15px_rgba(0,255,204,0.3)]">
+              <a href="https://mail.google.com/" target="_blank" rel="noopener noreferrer" className="w-full block">
+                <Button variant="cyber" className="w-full gap-2 font-cyber text-xs h-11 tracking-wider">
                   <ExternalLink className="w-4 h-4" />
                   {isArabic ? 'فتح بريد GOOGLE GMAIL' : 'OPEN GOOGLE GMAIL'}
                 </Button>

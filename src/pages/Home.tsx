@@ -6,9 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
 
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { demoSettings, demoHomeContent } from '../lib/demoData';
+import { contentService } from '../services/contentService';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Home = () => {
@@ -18,27 +16,26 @@ const Home = () => {
   const [homeContent, setHomeContent] = useState<any>(null);
 
   useEffect(() => {
-    if (!isFirebaseReady) {
-      setSettings(demoSettings);
-      setHomeContent(demoHomeContent);
-      return;
-    }
+    let mounted = true;
+    const load = async () => {
+      try {
+        const [siteSettings, content] = await Promise.all([
+          contentService.getSetting('site'),
+          contentService.getSetting('home'),
+        ]);
+        if (!mounted) return;
+        setSettings(siteSettings);
+        setHomeContent(content);
+      } catch (error) {
+        console.warn('Home Supabase content load error:', error);
+      }
+    };
+    load();
 
-    const unsubscribeSettings = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
-      if (snapshot.exists()) setSettings(snapshot.data());
-    }, (error) => {
-      console.warn("Home settings listener error:", error);
-    });
-
-    const unsubscribeContent = onSnapshot(doc(db, 'settings', 'home'), (snapshot) => {
-      if (snapshot.exists()) setHomeContent(snapshot.data());
-    }, (error) => {
-      console.warn("Home content listener error:", error);
-    });
-
+    const unsubscribe = contentService.subscribe('settings', load);
     return () => {
-      unsubscribeSettings();
-      unsubscribeContent();
+      mounted = false;
+      unsubscribe();
     };
   }, []);
 

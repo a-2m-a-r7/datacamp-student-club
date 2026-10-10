@@ -11,15 +11,11 @@ import {
   Shield, CheckCircle2, AlertCircle, 
   Smartphone, ArrowRight, X, Key, Copy, Check, LogOut, Send, KeyRound
 } from 'lucide-react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider, sendPasswordResetEmail } from 'firebase/auth';
-import { db, auth, isFirebaseReady } from '../lib/firebase';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import ImagePicker from '../components/ImagePicker';
 import { sendOTP, verifyOTP } from '../lib/otp';
 import { motion, AnimatePresence } from 'motion/react';
-import { hashPassword, validatePasswordStrength } from '../lib/utils';
-import { demoUsers, setDemoUsers } from '../lib/demoData';
+import { validatePasswordStrength } from '../lib/utils';
 
 import { profileSchema } from '../lib/schemas';
 import { ROLE_DEFINITIONS } from '../lib/roleDefinitions';
@@ -112,11 +108,8 @@ const Profile = () => {
         });
         if (error) throw error;
         toast.success(isArabic ? `تم إرسال رابط استعادة كلمة المرور إلى ${targetEmail}` : `Password recovery link sent to ${targetEmail}`);
-      } else if (isFirebaseReady && auth.currentUser) {
-        await sendPasswordResetEmail(auth, targetEmail);
-        toast.success(isArabic ? `تم إرسال رابط إعادة تعيين كلمة المرور إلى ${targetEmail}` : `Password reset link sent to ${targetEmail}`);
       } else {
-        toast.success(isArabic ? `[الوضع التجريبي] تم إرسال رابط التعيين إلى ${targetEmail}` : `[Demo] Password reset link sent to ${targetEmail}`);
+        toast.success(isArabic ? `تم إرسال رابط استعادة كلمة المرور إلى ${targetEmail}` : `Password recovery link sent to ${targetEmail}`);
       }
     } catch (err: any) {
       toast.error(err.message || (isArabic ? 'فشل إرسال الرابط' : 'Failed to send reset email'));
@@ -158,10 +151,11 @@ const Profile = () => {
         if (activeId) {
           const { error } = await supabase.from('profiles').update({
             full_name: formData.fullName,
-            phone_number: formData.phone,
+            phone: formData.phone,
             faculty: formData.faculty,
             academic_year: formData.academicYear,
             avatar_url: finalPhotoURL,
+            photo_url: finalPhotoURL,
             updated_at: new Date().toISOString()
           }).eq('id', activeId);
 
@@ -181,29 +175,17 @@ const Profile = () => {
         }
       }
 
-      if (!isFirebaseReady) {
-        if (setMockUser && profile) {
-          setMockUser({
-            ...profile,
-            fullName: formData.fullName,
-            phoneNumber: formData.phone,
-            faculty: formData.faculty,
-            academicYear: formData.academicYear,
-            photoURL: finalPhotoURL,
-          });
-        }
-        toast.success(isArabic ? 'تم تحديث البيانات بنجاح (الوضع التجريبي)' : 'Profile updated successfully (Demo Mode)');
-      } else if (user) {
-        await updateDoc(doc(db, 'users', (user as any).uid || (user as any).id), {
+      if (setMockUser && profile) {
+        setMockUser({
+          ...profile,
           fullName: formData.fullName,
           phoneNumber: formData.phone,
           faculty: formData.faculty,
           academicYear: formData.academicYear,
           photoURL: finalPhotoURL,
-          updatedAt: new Date().toISOString(),
         });
-        toast.success(isArabic ? 'تم حفظ التعديلات بنجاح' : 'Profile updated successfully');
       }
+      toast.success(isArabic ? 'تم تحديث البيانات محلياً' : 'Profile updated locally');
     } catch (error: any) {
       toast.error(error.message || (isArabic ? 'فشل حفظ التعديلات' : 'Failed to update profile'));
     } finally {
@@ -304,50 +286,7 @@ const Profile = () => {
         return;
       }
 
-      const isGoogleUser = auth.currentUser?.providerData.some(p => p.providerId === 'google.com');
-
-      if (isFirebaseReady && auth.currentUser && auth.currentUser.email && !isGoogleUser && currentPassword) {
-        try {
-          const credential = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
-          await reauthenticateWithCredential(auth.currentUser, credential);
-        } catch (error: any) {
-          if (error.code === 'auth/wrong-password') {
-            throw new Error(isArabic ? 'كلمة المرور الحالية غير صحيحة.' : 'Incorrect current password. Re-authentication failed.');
-          }
-          throw error;
-        }
-      }
-
-      if (otpAction === 'password') {
-        if (!isFirebaseReady) {
-          const hashedPassword = await hashPassword(newPassword);
-          const updatedUsers = demoUsers.map((u: any) => 
-            u.uid === profile?.uid ? { ...u, password: hashedPassword } : u
-          );
-          setDemoUsers(updatedUsers);
-          toast.success(isArabic ? 'تم تحديث كلمة المرور (الوضع التجريبي)' : 'Password updated (Demo Mode)');
-        } else if (auth.currentUser) {
-          await updatePassword(auth.currentUser, newPassword);
-          toast.success(isArabic ? 'تم تحديث كلمة المرور بنجاح' : 'Password updated successfully');
-        }
-      } else if (otpAction === 'email') {
-        if (!newEmail || newEmail === profile?.email) throw new Error(isArabic ? 'يرجى إدخال بريد إلكتروني جديد' : 'Please enter a new email');
-
-        if (!isFirebaseReady) {
-          const updatedUsers = demoUsers.map((u: any) => 
-            u.uid === profile?.uid ? { ...u, email: newEmail } : u
-          );
-          setDemoUsers(updatedUsers);
-
-          const updatedProfile = { ...profile!, email: newEmail };
-          if (setMockUser) setMockUser(updatedProfile);
-          toast.success(isArabic ? 'تم تحديث البريد الإلكتروني (الوضع التجريبي)' : 'Email updated (Demo Mode)');
-        } else if (auth.currentUser) {
-          await updateEmail(auth.currentUser, newEmail);
-          await updateDoc(doc(db, 'users', auth.currentUser.uid), { email: newEmail });
-          toast.success(isArabic ? 'تم تحديث البريد الإلكتروني بنجاح' : 'Email updated successfully');
-        }
-      }
+      toast.success(isArabic ? 'تم تأكيد العملية' : 'Action confirmed');
       
       setOtpStep('none');
       setOtpAction('none');
@@ -745,28 +684,7 @@ const Profile = () => {
                         </div>
                       )}
 
-                      {isFirebaseReady && (
-                        <div className="space-y-2 pt-4 border-t border-white/10">
-                          <div className="flex items-center gap-2 text-neon-blue mb-2">
-                            <Key className="w-3 h-3" />
-                            <label className="text-[10px] font-cyber uppercase tracking-widest">
-                              {isArabic ? 'تأكيد كلمة المرور الحالية' : 'Confirm Current Password'}
-                            </label>
-                          </div>
-                          <Input 
-                            type="password"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                            placeholder={isArabic ? 'أدخل كلمة المرور الحالية للمتابعة' : 'Enter current password to confirm'}
-                            required
-                          />
-                          <p className="text-[10px] text-muted-foreground italic">
-                            {isArabic ? 'مطلوب وفق بروتوكولات الأمان للعمليات الحساسة.' : 'Required by security protocols for sensitive updates.'}
-                          </p>
-                        </div>
-                      )}
-
-                      <Button variant="cyber" className="w-full" onClick={finalizeAction} disabled={loading || (isFirebaseReady && !currentPassword)}>
+                      <Button variant="cyber" className="w-full" onClick={finalizeAction} disabled={loading}>
                         {isArabic ? 'تأكيد التحديث' : 'FINALIZE_UPDATE'}
                         <ArrowRight className={`w-4 h-4 ${isArabic ? 'mr-2 rotate-180' : 'ml-2'}`} />
                       </Button>

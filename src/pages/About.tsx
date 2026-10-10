@@ -18,10 +18,8 @@ import {
   Sparkles,
   ArrowRight
 } from 'lucide-react';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { demoAboutData } from '../lib/demoData';
+import { contentService } from '../services/contentService';
 import { Button } from '../components/ui/Button';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
@@ -31,34 +29,22 @@ export const About = () => {
   const [aboutData, setAboutData] = React.useState(demoAboutData);
 
   React.useEffect(() => {
-    if (isSupabaseConfigured) {
-      supabase
-        .from('settings')
-        .select('*')
-        .eq('key', 'about_data')
-        .maybeSingle()
-        .then(({ data }) => {
-          if (data?.value) {
-            setAboutData(data.value);
-          }
-        });
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      setAboutData(demoAboutData);
-      return;
-    }
-
-    const unsubscribe = onSnapshot(doc(db, 'settings', 'about'), (snapshot) => {
-      if (snapshot.exists()) {
-        setAboutData(snapshot.data() as any);
+    let mounted = true;
+    const load = async () => {
+      try {
+        const data = await contentService.getSetting('about');
+        if (mounted && data) setAboutData(data);
+      } catch (error) {
+        console.warn('About data load error:', error);
       }
-    }, (error) => {
-      console.warn("About data listener error:", error);
-    });
+    };
+    load();
 
-    return () => unsubscribe();
+    const unsubscribe = contentService.subscribe('settings', load);
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
   }, []);
 
   const stats = [

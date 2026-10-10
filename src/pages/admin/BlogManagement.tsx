@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Plus, Trash2, Edit3, Save, FileText } from 'lucide-react';
+import { Plus, Trash2, Edit3, FileText } from 'lucide-react';
 import { toast } from 'sonner';
-import { collection, onSnapshot, query, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
-import { demoUsers, demoBlog, setDemoBlog } from '../../lib/demoData';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { UserIdentityInput } from '../../components/UserIdentityInput';
+import { demoUsers } from '../../lib/demoData';
+import { contentService } from '../../services/contentService';
 
 const BlogManagement = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -20,52 +19,25 @@ const BlogManagement = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isSupabaseConfigured) {
-      const fetchSupabaseBlog = async () => {
-        try {
-          const { data, error } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
-          if (!error && data) setPosts(data);
-        } catch {}
-      };
-      fetchSupabaseBlog();
-
-      const channel = supabase.channel('realtime_admin_blog')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'blog' }, () => {
-          fetchSupabaseBlog();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setPosts(demoBlog);
-      setUsers(demoUsers);
-      return;
-    }
-
-    // Fetch Posts
-    const postsQuery = query(collection(db, 'blog_posts'));
-    const unsubscribePosts = onSnapshot(postsQuery, (snapshot) => {
-      setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => {
-      console.warn("Blog posts listener error:", error);
-    });
-
-    // Fetch Users
-    const usersQuery = query(collection(db, 'users'));
-    const unsubscribeUsers = onSnapshot(usersQuery, (snapshot) => {
-      setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => {
-      console.warn("Users listener error:", error);
-    });
-
-    return () => {
-      unsubscribePosts();
-      unsubscribeUsers();
+    const loadPosts = async () => {
+      try {
+        setPosts(await contentService.list('blog', { orderBy: 'created_at', includeDrafts: true }));
+      } catch (error) {
+        console.warn('Blog posts listener error:', error);
+      }
     };
+
+    loadPosts();
+
+    if (isSupabaseConfigured) {
+      supabase.from('profiles').select('*').then(({ data }) => {
+        if (data) setUsers(data);
+      });
+    } else {
+      setUsers(demoUsers);
+    }
+
+    return contentService.subscribe('blog', loadPosts);
   }, []);
 
   const resetForm = () => {
@@ -91,76 +63,28 @@ const BlogManagement = () => {
 
     const postData = { ...newPost, author: authorLabel, createdAt: new Date().toISOString() };
 
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('blog').insert({
-          title: newPost.title,
-          content: newPost.excerpt,
-          author: authorLabel,
-          date: newPost.date,
-          status: 'published'
-        });
-        if (error) throw error;
-        setShowAddModal(false);
-        resetForm();
-        toast.success('Transmission published to Supabase');
-        const { data } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
-        if (data) setPosts(data);
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to publish');
-      } finally {
-        setIsSubmitting(false);
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = [{ ...postData, id: Date.now().toString() }, ...posts];
-      setDemoBlog(updated);
-      setPosts(updated);
-      setShowAddModal(false);
-      resetForm();
-      setIsSubmitting(false);
-      toast.success('New transmission published (Demo Mode)');
-      return;
-    }
-
     try {
-      await addDoc(collection(db, 'blog_posts'), postData);
+      const created = await contentService.create('blog', {
+        ...postData,
+        content: newPost.excerpt,
+        status: 'published',
+      });
+      setPosts(prev => [created, ...prev]);
       setShowAddModal(false);
       resetForm();
-      toast.success('New transmission published to cloud');
-    } catch (error) {
-      console.error('Error adding post:', error);
-      toast.error('Failed to publish transmission');
+      toast.success('Transmission published to Supabase');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to publish');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const deletePost = async (id: string) => {
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('blog').delete().eq('id', id);
-        setPosts(prev => prev.filter(p => p.id !== id));
-        toast.success('Transmission redacted from Supabase');
-      } catch {
-        toast.error('Failed to redact transmission');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = posts.filter(p => p.id !== id);
-      setDemoBlog(updated);
-      setPosts(updated);
-      toast.success('Transmission redacted (Demo Mode)');
-      return;
-    }
-
     try {
-      await deleteDoc(doc(db, 'blog_posts', id));
-      toast.success('Transmission redacted from cloud');
+      await contentService.remove('blog', id);
+      setPosts(prev => prev.filter(p => p.id !== id));
+      toast.success('Transmission redacted from Supabase');
     } catch (error) {
       toast.error('Failed to redact transmission');
     }

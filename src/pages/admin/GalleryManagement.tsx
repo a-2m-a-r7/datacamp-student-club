@@ -2,15 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Plus, Trash2, Save, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import ImagePicker from '../../components/ImagePicker';
 
-import { collection, onSnapshot, query, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { demoGallery, setDemoGallery } from '../../lib/demoData';
 import { deleteFile } from '../../services/storageService';
+import { contentService } from '../../services/contentService';
 
 const GalleryManagement = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -18,106 +15,43 @@ const GalleryManagement = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isSupabaseConfigured) {
-      const fetchSupabaseGallery = async () => {
-        try {
-          const { data, error } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
-          if (!error && data) setImages(data);
-        } catch {}
-      };
-      fetchSupabaseGallery();
+    const loadGallery = async () => {
+      try {
+        setImages(await contentService.list('gallery', { orderBy: 'created_at', includeDrafts: true }));
+      } catch (error) {
+        console.warn('Gallery listener error:', error);
+      }
+    };
 
-      const channel = supabase.channel('realtime_admin_gallery')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => {
-          fetchSupabaseGallery();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setImages(demoGallery);
-      return;
-    }
-
-    const q = query(collection(db, 'gallery'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setImages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => {
-      console.warn("Gallery listener permission error:", error);
-    });
-    return () => unsubscribe();
+    loadGallery();
+    return contentService.subscribe('gallery', loadGallery);
   }, []);
 
   const handleAdd = async () => {
     if (!newImage.url) return;
-    const imageData = { ...newImage, createdAt: new Date().toISOString() };
-
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('gallery').insert({
-          url: newImage.url,
-          title: newImage.title || 'DataCamp Archive'
-        });
-        if (error) throw error;
-        setNewImage({ url: '', title: '' });
-        toast.success('Visual asset added to Supabase archive');
-        const { data } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
-        if (data) setImages(data);
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to add asset');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = [...images, { ...imageData, id: Date.now().toString() }];
-      setDemoGallery(updated);
-      setImages(updated);
-      setNewImage({ url: '', title: '' });
-      toast.success('Visual asset added to archive (Demo Mode)');
-      return;
-    }
 
     try {
-      await addDoc(collection(db, 'gallery'), imageData);
+      const created = await contentService.create('gallery', {
+        ...newImage,
+        title: newImage.title || 'DataCamp Archive',
+      });
+      setImages(prev => [created, ...prev]);
       setNewImage({ url: '', title: '' });
-      toast.success('Visual asset added to cloud archive');
-    } catch (error) {
-      toast.error('Failed to add asset');
+      toast.success('Visual asset added to Supabase archive');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to add asset');
     }
   };
 
   const removeImage = async (id: string) => {
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('gallery').delete().eq('id', id);
-        setImages(prev => prev.filter(img => img.id !== id));
-        toast.success('Asset removed from Supabase');
-      } catch {
-        toast.error('Failed to remove asset');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = images.filter(img => img.id !== id);
-      setDemoGallery(updated);
-      setImages(updated);
-      toast.success('Asset removed from archive (Demo Mode)');
-      return;
-    }
-
     try {
       const itemToDelete = images.find(img => img.id === id);
       if (itemToDelete?.url) {
         await deleteFile(itemToDelete.url);
       }
-      await deleteDoc(doc(db, 'gallery', id));
-      toast.success('Asset removed from cloud');
+      await contentService.remove('gallery', id);
+      setImages(prev => prev.filter(img => img.id !== id));
+      toast.success('Asset removed from Supabase');
     } catch (error) {
       toast.error('Failed to remove asset');
     }

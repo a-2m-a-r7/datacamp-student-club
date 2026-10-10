@@ -6,42 +6,24 @@ import { Save, Globe, Shield, Bell, Palette, Database, Plus, Trash2 } from 'luci
 import { toast } from 'sonner';
 import ImagePicker from '../../components/ImagePicker';
 
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { demoSettings, setDemoSettings } from '../../lib/demoData';
+import { demoSettings } from '../../lib/demoData';
+import { contentService } from '../../services/contentService';
 
 const Settings = () => {
   const [settings, setSettings] = useState(demoSettings);
 
   useEffect(() => {
-    if (isSupabaseConfigured) {
-      supabase
-        .from('settings')
-        .select('*')
-        .eq('key', 'general')
-        .maybeSingle()
-        .then(({ data }) => {
-          if (data?.value) {
-            setSettings(prev => ({ ...prev, ...data.value }));
-          }
-        });
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      setSettings(demoSettings);
-      return;
-    }
-
-    const unsubscribe = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
-      if (snapshot.exists()) {
-        setSettings(snapshot.data() as any);
+    const loadSettings = async () => {
+      try {
+        const data = await contentService.getSetting('site');
+        if (data) setSettings(prev => ({ ...prev, ...data }));
+      } catch (error) {
+        console.warn('Settings load error:', error);
       }
-    }, (error) => {
-      console.warn("Settings listener permission error:", error);
-    });
-    return () => unsubscribe();
+    };
+
+    loadSettings();
+    return contentService.subscribe('settings', loadSettings);
   }, []);
 
   const handleAddSocial = () => {
@@ -65,32 +47,11 @@ const Settings = () => {
   };
 
   const handleSave = async () => {
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('settings').upsert({
-          key: 'general',
-          value: settings,
-          updated_at: new Date().toISOString()
-        });
-        if (error) throw error;
-        toast.success('System settings saved to Supabase ☁️');
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to update settings');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      setDemoSettings(settings);
-      toast.success('System settings updated in memory (Demo Mode)');
-      return;
-    }
-
     try {
-      await setDoc(doc(db, 'settings', 'site'), settings);
-      toast.success('System settings updated in cloud');
-    } catch (error) {
-      toast.error('Failed to update cloud settings');
+      await contentService.upsertSetting('site', settings);
+      toast.success('System settings saved to Supabase');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to update settings');
     }
   };
 

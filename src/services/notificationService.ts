@@ -1,23 +1,10 @@
 /**
  * notificationService.ts
- * Manages user alerts, notifications, and real-time announcements.
+ * Supabase-backed user alerts, notifications, and real-time announcements.
  */
 
-import {
-  collection,
-  doc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  query,
-  where,
-  orderBy,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { Notification, NotificationType } from '../types';
-
-const LOCAL_NOTIFS_KEY = 'datacamp_user_notifications';
 
 const INITIAL_NOTIFICATIONS: Notification[] = [
   {
@@ -29,56 +16,36 @@ const INITIAL_NOTIFICATIONS: Notification[] = [
     isRead: false,
     createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
   },
-  {
-    id: 'notif-compiler',
-    userId: 'demo-user',
-    type: 'course_update',
-    title: 'New Feature: Universal Online Compiler',
-    body: 'The club compiler now supports Python, JavaScript, TypeScript, SQL, C++, Java, R, Go, and Rust!',
-    isRead: false,
-    createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
-  },
-  {
-    id: 'notif-event',
-    userId: 'demo-user',
-    type: 'event_reminder',
-    title: 'AI Summit 2026 Registration Open',
-    body: 'Reserve your pass for the premier AI & Data Science gathering this month.',
-    isRead: true,
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-  },
 ];
 
+const mapNotification = (row: any): Notification => ({
+  id: row.id,
+  userId: row.user_id || '',
+  type: (row.type || 'admin_message') as NotificationType,
+  title: row.title,
+  body: row.message || row.body || '',
+  isRead: Boolean(row.read),
+  referenceId: row.reference_id || undefined,
+  referenceType: row.reference_type || undefined,
+  createdAt: row.created_at,
+});
+
 export const notificationService = {
-  /**
-   * Get all notifications for a specific user
-   */
   async getUserNotifications(userId: string): Promise<Notification[]> {
-    if (isFirebaseReady) {
-      try {
-        const q = query(
-          collection(db, 'notifications', userId, 'items'),
-          orderBy('createdAt', 'desc')
-        );
-        const snap = await getDocs(q);
-        if (!snap.empty) {
-          const list: Notification[] = [];
-          snap.forEach(d => list.push({ id: d.id, ...d.data() } as Notification));
-          return list;
-        }
-      } catch (err) {
-        console.warn('Firestore notifications read fallback:', err);
-      }
+    if (!isSupabaseConfigured) {
+      return INITIAL_NOTIFICATIONS.filter(n => n.userId === userId || n.userId === 'demo-user');
     }
 
-    const local = this.getLocalNotifications();
-    const userNotifs = local.filter(n => n.userId === userId || n.userId === 'demo-user');
-    return userNotifs.length > 0 ? userNotifs : INITIAL_NOTIFICATIONS;
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .or(`user_id.eq.${userId},user_id.is.null`)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return (data || []).map(mapNotification);
   },
 
-  /**
-   * Create a new notification
-   */
   async sendNotification(
     userId: string,
     type: NotificationType,
@@ -87,9 +54,8 @@ export const notificationService = {
     referenceId?: string,
     referenceType?: string
   ): Promise<Notification> {
-    const id = `notif_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
-    const newNotif: Notification = {
-      id,
+    const fallback: Notification = {
+      id: `notif_${Date.now()}`,
       userId,
       type,
       title,
@@ -100,57 +66,50 @@ export const notificationService = {
       createdAt: new Date().toISOString(),
     };
 
-    if (isFirebaseReady) {
-      try {
-        await setDoc(doc(db, 'notifications', userId, 'items', id), {
-          ...newNotif,
-          createdAt: serverTimestamp(),
-        });
-      } catch (err) {
-        console.warn('Firebase save notification fallback:', err);
-      }
-    }
+    if (!isSupabaseConfigured) return fallback;
 
-    const current = this.getLocalNotifications();
-    localStorage.setItem(LOCAL_NOTIFS_KEY, JSON.stringify([newNotif, ...current]));
+    const { data, error } = await supabase
+      .from('notifications')
+      .insert({
+        user_id: userId,
+        title,
+        message: body,
+        read: false,
+        type,
+        reference_id: referenceId,
+        reference_type: referenceType,
+      } as any)
+      .select()
+      .single();
 
-    return newNotif;
+    if (error) throw error;
+    return mapNotification(data);
   },
 
-  /**
-   * Mark single notification as read
-   */
   async markAsRead(userId: string, notificationId: string): Promise<void> {
-    if (isFirebaseReady) {
-      try {
-        await updateDoc(doc(db, 'notifications', userId, 'items', notificationId), {
-          isRead: true,
-        });
-      } catch {}
-    }
+    if (!isSupabaseConfigured) return;
 
-    const current = this.getLocalNotifications();
-    const updated = current.map(n => (n.id === notificationId ? { ...n, isRead: true } : n));
-    localStorage.setItem(LOCAL_NOTIFS_KEY, JSON.stringify(updated));
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', notificationId)
+      .eq('user_id', userId);
+
+    if (error) throw error;
   },
 
-  /**
-   * Mark all notifications as read
-   */
   async markAllAsRead(userId: string): Promise<void> {
-    const current = this.getLocalNotifications();
-    const updated = current.map(n =>
-      n.userId === userId || n.userId === 'demo-user' ? { ...n, isRead: true } : n
-    );
-    localStorage.setItem(LOCAL_NOTIFS_KEY, JSON.stringify(updated));
+    if (!isSupabaseConfigured) return;
+
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('user_id', userId);
+
+    if (error) throw error;
   },
 
   getLocalNotifications(): Notification[] {
-    try {
-      const data = localStorage.getItem(LOCAL_NOTIFS_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch {
-      return [];
-    }
+    return INITIAL_NOTIFICATIONS;
   },
 };

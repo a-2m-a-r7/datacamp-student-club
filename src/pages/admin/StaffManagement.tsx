@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Plus, Trash2, Save, User, Link as LinkIcon, Facebook, Linkedin, Instagram, Twitter, Github, Globe } from 'lucide-react';
+import { Plus, Trash2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import ImagePicker from '../../components/ImagePicker';
-import { collection, onSnapshot, query, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { logAction } from '../../lib/logger';
 import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
-import { demoUsers, demoStaff, setDemoStaff } from '../../lib/demoData';
+import { demoUsers } from '../../lib/demoData';
+import { contentService } from '../../services/contentService';
 
 const StaffManagement = () => {
   const [staff, setStaff] = useState<any[]>([]);
@@ -28,64 +27,29 @@ const StaffManagement = () => {
   });
 
   useEffect(() => {
+    const loadStaff = async () => {
+      try {
+        setStaff(await contentService.list('staff', { orderBy: 'created_at', includeDrafts: true }));
+      } catch (error) {
+        console.warn('Staff listener error:', error);
+      }
+    };
+
+    loadStaff();
+
     if (isSupabaseConfigured) {
-      const fetchSupabaseStaff = async () => {
-        try {
-          const { data, error } = await supabase.from('staff').select('*').order('created_at', { ascending: false });
-          if (!error && data) {
-            setStaff(data);
-          }
-        } catch {}
-      };
-      fetchSupabaseStaff();
-
-      const channel = supabase.channel('realtime_admin_staff')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'staff' }, () => {
-          fetchSupabaseStaff();
-        })
-        .subscribe();
-
       supabase.from('profiles').select('*').then(({ data }) => {
         if (data) setUsers(data);
       });
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setStaff(demoStaff);
+    } else {
       setUsers(demoUsers);
-      return;
     }
 
-    // Fetch Staff
-    const staffQuery = query(collection(db, 'staff'));
-    const unsubscribeStaff = onSnapshot(staffQuery, (snapshot) => {
-      setStaff(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => {
-      console.warn("Staff listener error:", error);
-    });
-
-    // Fetch Users for linking
-    const usersQuery = query(collection(db, 'users'));
-    const unsubscribeUsers = onSnapshot(usersQuery, (snapshot) => {
-      setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (error) => {
-      console.warn("Users listener error:", error);
-    });
-
-    return () => {
-      unsubscribeStaff();
-      unsubscribeUsers();
-    };
+    return contentService.subscribe('staff', loadStaff);
   }, []);
 
   const handleSave = () => {
-    if (!isFirebaseReady) {
-      toast.success('Demo Mode: Roster updated in memory.');
-    }
+    toast.success('Roster is saved automatically to Supabase.');
   };
 
   const handleAddMember = async () => {
@@ -97,78 +61,32 @@ const StaffManagement = () => {
 
     const memberData = { ...newMember, linkedUser: linkedUserLabel, createdAt: new Date().toISOString() };
 
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('staff').insert({
-          name: newMember.name,
-          role: newMember.role,
-          category: newMember.category,
-          image: newMember.image || 'https://picsum.photos/seed/pres/400/400',
-          socials: newMember.socials || []
-        });
-        if (error) throw error;
-        await logAction('STAFF_MEMBER_ADDED', 'Admin', newMember.name, 'success');
-        setShowAddModal(false);
-        setNewMember({ name: '', role: '', category: 'Leaders', image: '', socials: [], linkedUser: '', linkedUserType: 'email' });
-        toast.success('New operative initialized in Supabase');
-        const { data } = await supabase.from('staff').select('*').order('created_at', { ascending: false });
-        if (data) setStaff(data);
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to initialize operative');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = [...staff, { ...memberData, id: Date.now().toString() }];
-      setDemoStaff(updated);
-      setStaff(updated);
-      setShowAddModal(false);
-      setNewMember({ name: '', role: '', category: 'Leaders', image: '', socials: [], linkedUser: '', linkedUserType: 'email' });
-      toast.success('New operative initialized (Demo Mode)');
-      return;
-    }
-
     try {
-      await addDoc(collection(db, 'staff'), memberData);
+      const created = await contentService.create('staff', {
+        ...memberData,
+        image: newMember.image || 'https://picsum.photos/seed/pres/400/400',
+      });
       await logAction('STAFF_MEMBER_ADDED', 'Admin', memberData.name, 'success');
+      setStaff(prev => [created, ...prev]);
       setShowAddModal(false);
       setNewMember({ name: '', role: '', category: 'Leaders', image: '', socials: [], linkedUser: '', linkedUserType: 'email' });
-      toast.success('New operative initialized in cloud database');
-    } catch (error) {
-      toast.error('Failed to initialize operative');
+      toast.success('New operative initialized in Supabase');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to initialize operative');
     }
   };
 
   const removeMember = async (id: string) => {
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('staff').delete().eq('id', id);
-        setStaff(prev => prev.filter(s => s.id !== id));
-        toast.success('Operative decommissioned from Supabase');
-      } catch {
-        toast.error('Failed to delete operative');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = staff.filter(s => s.id !== id);
-      setDemoStaff(updated);
-      setStaff(updated);
-      toast.success('Operative decommissioned (Demo Mode)');
-      return;
-    }
-
     try {
       const memberToDelete = staff.find(s => s.id === id);
       if (memberToDelete?.image) {
         const { deleteFile } = await import('../../services/storageService');
         await deleteFile(memberToDelete.image);
       }
-      await deleteDoc(doc(db, 'staff', id));
+      await contentService.remove('staff', id);
       await logAction('STAFF_MEMBER_REMOVED', 'Admin', id, 'warning');
-      toast.success('Operative decommissioned from cloud');
+      setStaff(prev => prev.filter(s => s.id !== id));
+      toast.success('Operative decommissioned from Supabase');
     } catch (error) {
       toast.error('Failed to decommission operative');
     }

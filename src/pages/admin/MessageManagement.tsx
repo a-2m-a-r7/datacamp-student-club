@@ -3,10 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Ca
 import { Button } from '../../components/ui/Button';
 import { Mail, Trash2, Eye, CheckCircle, Clock } from 'lucide-react';
 import { toast } from 'sonner';
-import { collection, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { demoMessages, setDemoMessages } from '../../lib/demoData';
+import { contentService } from '../../services/contentService';
 
 const MessageManagement = () => {
   const [messages, setMessages] = useState<any[]>([]);
@@ -15,111 +12,36 @@ const MessageManagement = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isSupabaseConfigured) {
-      const fetchSupabaseMessages = async () => {
-        try {
-          const { data, error } = await supabase
-            .from('messages')
-            .select('*')
-            .order('created_at', { ascending: false });
+    const loadMessages = async () => {
+      try {
+        const rows = await contentService.list('messages', { orderBy: 'created_at' });
+        setMessages(rows.map((m: any) => ({ ...m, timestamp: m.created_at || m.createdAt })));
+      } catch (err) {
+        console.error('Messages fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-          if (!error && data) {
-            setMessages(data.map((m: any) => ({
-              id: m.id,
-              name: m.name,
-              email: m.email,
-              subject: m.subject,
-              message: m.message,
-              status: m.status || 'unread',
-              timestamp: m.created_at
-            })));
-          }
-        } catch (err) {
-          console.error("Supabase messages fetch error:", err);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchSupabaseMessages();
-
-      const channel = supabase
-        .channel('messages_realtime')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, () => {
-          fetchSupabaseMessages();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setMessages(demoMessages);
-      setLoading(false);
-      return;
-    }
-
-    const q = query(collection(db, 'messages'), orderBy('timestamp', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setLoading(false);
-    }, (error) => {
-      console.warn("Messages listener permission error:", error);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    loadMessages();
+    return contentService.subscribe('messages', loadMessages);
   }, []);
 
   const deleteMessage = async (id: string) => {
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('messages').delete().eq('id', id);
-        setMessages(prev => prev.filter(m => m.id !== id));
-        toast.success('Message deleted from database');
-      } catch (err) {
-        toast.error('Failed to delete message');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = messages.filter(m => m.id !== id);
-      setDemoMessages(updated);
-      setMessages(updated);
-      toast.success('Message deleted (Demo Mode)');
-      return;
-    }
-
     try {
-      await deleteDoc(doc(db, 'messages', id));
-      toast.success('Message deleted from cloud');
+      await contentService.remove('messages', id);
+      setMessages(prev => prev.filter(m => m.id !== id));
+      toast.success('Message deleted from database');
     } catch (error) {
       toast.error('Failed to delete message');
     }
   };
 
   const markAsRead = async (id: string) => {
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('messages').update({ status: 'read' }).eq('id', id);
-        setMessages(prev => prev.map(m => m.id === id ? { ...m, status: 'read' } : m));
-      } catch (err) {
-        console.error('Failed to update status in Supabase:', err);
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const updated = messages.map(m => m.id === id ? { ...m, status: 'read' } : m);
-      setDemoMessages(updated);
-      setMessages(updated);
-      return;
-    }
-
     try {
-      await updateDoc(doc(db, 'messages', id), { status: 'read' });
+      const target = messages.find(m => m.id === id);
+      await contentService.update('messages', id, { ...target, status: 'read' });
+      setMessages(prev => prev.map(m => m.id === id ? { ...m, status: 'read' } : m));
     } catch (error) {
       console.error('Failed to update status:', error);
     }

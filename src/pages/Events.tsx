@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, onSnapshot, query, orderBy, doc, updateDoc, arrayUnion, runTransaction } from 'firebase/firestore';
-import { db, isFirebaseReady, auth } from '../lib/firebase';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 import { Calendar, MapPin, Clock, Users, Search, Filter, CheckCircle2, QrCode, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { toast } from 'sonner';
 import { QRCodeSVG } from 'qrcode.react';
-import { demoEvents, setDemoEvents } from '../lib/demoData';
+import { demoEvents } from '../lib/demoData';
+import { contentService } from '../services/contentService';
 
 const Events = () => {
   const { user } = useAuth();
@@ -23,49 +21,20 @@ const Events = () => {
   const [showSuccess, setShowSuccess] = useState<any>(null);
 
   useEffect(() => {
-    if (isSupabaseConfigured) {
-      const fetchSupabaseEvents = async () => {
-        try {
-          const { data, error } = await supabase.from('events').select('*').order('created_at', { ascending: false });
-          if (!error && data) {
-            setEvents(data.map((e: any) => ({
-              ...e,
-              registeredCount: e.registered_count ?? 0,
-            })));
-          }
-        } catch {} finally {
-          setLoading(false);
-        }
-      };
-      fetchSupabaseEvents();
+    const loadEvents = async () => {
+      try {
+        const rows = await contentService.list('events', { orderBy: 'date' });
+        setEvents(rows.length > 0 ? rows : demoEvents);
+      } catch (error) {
+        console.warn('Events load error:', error);
+        setEvents(demoEvents);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      const channel = supabase.channel('realtime_public_events')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, () => {
-          fetchSupabaseEvents();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setEvents(demoEvents);
-      setLoading(false);
-      return;
-    }
-
-    const q = query(collection(db, 'events'), orderBy('date', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const eventsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setEvents(eventsData);
-      setLoading(false);
-    }, (error) => {
-      console.warn("Events listener permission error:", error);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    loadEvents();
+    return contentService.subscribe('events', loadEvents);
   }, []);
 
   const filteredEvents = events.filter(event => 
@@ -74,7 +43,7 @@ const Events = () => {
   );
 
   const handleRegister = async (event: any) => {
-    const activeUser = user || auth.currentUser;
+    const activeUser = user;
     if (!activeUser) {
       toast.error(isArabic ? 'يرجى تسجيل الدخول أولاً للتسجيل في الفعالية.' : 'Please login to register for events.');
       return;
@@ -94,55 +63,9 @@ const Events = () => {
         qrCode: `REG-${event.id}-${activeUserId}`
       };
 
-      if (isSupabaseConfigured) {
-        await supabase.from('events').update({
-          registered_count: (event.registered_count || event.registeredCount || 0) + 1
-        }).eq('id', event.id);
-
-        try {
-          await supabase.from('notifications').insert({
-            user_id: activeUserId,
-            title: 'Event Registration Confirmed',
-            message: `You are registered for ${event.title}`
-          });
-        } catch {}
-
-        setEvents(events.map(e => e.id === event.id ? { ...e, registeredCount: (e.registeredCount || 0) + 1 } : e));
-        setShowSuccess(registrationData);
-        toast.success(isArabic ? 'تم تأكيد التسجيل! احتفظ برمز QR.' : 'Registration Confirmed! Check your QR code.');
-        return;
-      }
-
-      if (!isFirebaseReady) {
-        // Mock registration
-        const updatedEvents = events.map(e => 
-          e.id === event.id ? { ...e, registeredCount: (e.registeredCount || 0) + 1 } : e
-        );
-        setDemoEvents(updatedEvents);
-        setEvents(updatedEvents);
-        
-        setShowSuccess(registrationData);
-        toast.success(isArabic ? 'تم تأكيد التسجيل! احتفظ برمز QR.' : 'Registration Confirmed! Check your QR code.');
-        return;
-      }
-
-      // Real Firebase Transaction
-      await runTransaction(db, async (transaction) => {
-        const eventRef = doc(db, 'events', event.id);
-        const eventDoc = await transaction.get(eventRef);
-        
-        if (!eventDoc.exists()) throw new Error(isArabic ? "الفعالية غير موجودة!" : "Event does not exist!");
-        
-        const currentCount = eventDoc.data().registeredCount || 0;
-        if (currentCount >= eventDoc.data().capacity) throw new Error(isArabic ? "اكتمل عدد الحضور في الفعالية!" : "Event is full!");
-
-        transaction.update(eventRef, { 
-          registeredCount: currentCount + 1,
-          registrations: arrayUnion(registrationData)
-        });
-      });
-
-      setShowSuccess(registrationData);
+      const confirmedRegistration = await contentService.registerEvent(event, activeUserId, activeUserEmail);
+      setEvents(events.map(e => e.id === event.id ? { ...e, registeredCount: (e.registeredCount || 0) + 1 } : e));
+      setShowSuccess(confirmedRegistration || registrationData);
       toast.success(isArabic ? 'تم تأكيد التسجيل بنجاح! تم إنشاء رمز الدخول.' : 'Registration Confirmed! QR code generated.');
     } catch (error: any) {
       toast.error(error.message || (isArabic ? 'فشل التسجيل في الفعالية.' : 'Registration failed.'));

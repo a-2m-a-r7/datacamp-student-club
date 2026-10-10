@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { courseService } from '../../services/courseService';
-import { Course, CourseCategory, CourseLevel } from '../../types';
+import { Course, CourseCategory, CourseLevel, CourseLesson, LessonType } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+const toCsv = (value: unknown) => Array.isArray(value) ? value.join(', ') : String(value || '');
+
 export const CourseManagement = () => {
   const { isArabic } = useLanguage();
   const [courses, setCourses] = useState<Course[]>([]);
@@ -32,6 +34,11 @@ export const CourseManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Partial<Course> | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [lessonCourse, setLessonCourse] = useState<Course | null>(null);
+  const [lessons, setLessons] = useState<CourseLesson[]>([]);
+  const [loadingLessons, setLoadingLessons] = useState(false);
+  const [editingLesson, setEditingLesson] = useState<Partial<CourseLesson> | null>(null);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -104,6 +111,86 @@ export const CourseManagement = () => {
     }
   };
 
+  const handleTogglePublish = async (course: Course) => {
+    const nextPublished = course.status !== 'published';
+    try {
+      await courseService.setCoursePublished(course.id, nextPublished);
+      toast.success(nextPublished ? (isArabic ? 'تم نشر الدورة للطلاب' : 'Course published') : (isArabic ? 'تم تحويل الدورة لمسودة' : 'Course unpublished'));
+      fetchCourses();
+    } catch (err: any) {
+      toast.error(err.message || (isArabic ? 'فشل تغيير حالة النشر' : 'Failed to update publish status'));
+    }
+  };
+
+  const openLessonManager = async (course: Course) => {
+    setLessonCourse(course);
+    setEditingLesson(null);
+    setLoadingLessons(true);
+    try {
+      const list = await courseService.getCourseLessons(course.id);
+      setLessons(list);
+    } catch (err: any) {
+      toast.error(err.message || (isArabic ? 'فشل تحميل دروس الدورة' : 'Failed to load lessons'));
+    } finally {
+      setLoadingLessons(false);
+    }
+  };
+
+  const handleOpenCreateLesson = () => {
+    if (!lessonCourse) return;
+    setEditingLesson({
+      courseId: lessonCourse.id,
+      moduleId: `module-${lessonCourse.id}`,
+      title: '',
+      type: 'article',
+      content: '',
+      videoUrl: '',
+      duration: 20,
+      order: lessons.length + 1,
+      isPreview: lessons.length === 0,
+      pointsReward: 30,
+      quizQuestions: [],
+      exercisePrompt: '',
+      exerciseStarterCode: '',
+      exerciseSolution: '',
+      exerciseTestCases: [],
+    });
+  };
+
+  const handleSaveLesson = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!lessonCourse || !editingLesson?.title?.trim()) {
+      toast.error(isArabic ? 'عنوان الدرس مطلوب' : 'Lesson title is required');
+      return;
+    }
+
+    try {
+      await courseService.saveLesson({ ...editingLesson, courseId: lessonCourse.id });
+      toast.success(isArabic ? 'تم حفظ الدرس بنجاح' : 'Lesson saved successfully');
+      setEditingLesson(null);
+      const list = await courseService.getCourseLessons(lessonCourse.id);
+      setLessons(list);
+      await courseService.saveCourse({ ...lessonCourse, totalLessons: Math.max(lessonCourse.totalLessons, list.length) });
+      fetchCourses();
+    } catch (err: any) {
+      toast.error(err.message || (isArabic ? 'فشل حفظ الدرس' : 'Failed to save lesson'));
+    }
+  };
+
+  const handleDeleteLesson = async (lessonId: string) => {
+    const confirmMsg = isArabic ? 'هل أنت متأكد من حذف هذا الدرس؟' : 'Delete this lesson?';
+    if (!lessonCourse || !window.confirm(confirmMsg)) return;
+
+    try {
+      await courseService.deleteLesson(lessonId);
+      toast.success(isArabic ? 'تم حذف الدرس' : 'Lesson deleted');
+      const list = await courseService.getCourseLessons(lessonCourse.id);
+      setLessons(list);
+    } catch (err: any) {
+      toast.error(err.message || (isArabic ? 'فشل حذف الدرس' : 'Failed to delete lesson'));
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingCourse || !editingCourse.title?.trim()) {
@@ -111,6 +198,7 @@ export const CourseManagement = () => {
       return;
     }
 
+    setSaving(true);
     try {
       if (!editingCourse.slug) {
         editingCourse.slug = editingCourse.title
@@ -124,8 +212,10 @@ export const CourseManagement = () => {
       setIsModalOpen(false);
       setEditingCourse(null);
       fetchCourses();
-    } catch {
-      toast.error(isArabic ? 'فشل حفظ الدورة' : 'Failed to save course.');
+    } catch (err: any) {
+      toast.error(err.message || (isArabic ? 'فشل حفظ الدورة' : 'Failed to save course.'));
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -259,6 +349,24 @@ export const CourseManagement = () => {
                         <PlayCircle className="w-4 h-4" />
                       </Link>
 
+                      {/* Manage Lessons */}
+                      <button
+                        onClick={() => openLessonManager(course)}
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-white/5 transition-colors"
+                        title={isArabic ? 'إدارة دروس الدورة' : 'Manage Lessons'}
+                      >
+                        <BookOpen className="w-4 h-4" />
+                      </button>
+
+                      {/* Publish / Unpublish */}
+                      <button
+                        onClick={() => handleTogglePublish(course)}
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-emerald-400 hover:bg-white/5 transition-colors"
+                        title={course.status === 'published' ? (isArabic ? 'إلغاء النشر' : 'Unpublish') : (isArabic ? 'نشر الدورة' : 'Publish')}
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                      </button>
+
                       {/* Edit */}
                       <button
                         onClick={() => handleOpenEdit(course)}
@@ -284,6 +392,13 @@ export const CourseManagement = () => {
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-muted-foreground font-mono text-xs">
                     {isArabic ? 'لم يتم العثور على أي دورات تطابق البحث.' : 'No courses found matching criteria.'}
+                  </td>
+                </tr>
+              )}
+              {loading && (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-primary font-cyber text-xs animate-pulse">
+                    {isArabic ? 'جاري تحميل الدورات من Supabase...' : 'LOADING_COURSES_FROM_SUPABASE...'}
                   </td>
                 </tr>
               )}
@@ -498,6 +613,42 @@ export const CourseManagement = () => {
                 />
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-cyber text-muted-foreground uppercase">
+                    {isArabic ? 'الوسوم' : 'Tags'}
+                  </label>
+                  <Input
+                    value={toCsv(editingCourse.tags)}
+                    onChange={e => setEditingCourse(p => ({ ...p, tags: e.target.value.split(',').map(v => v.trim()).filter(Boolean) }))}
+                    placeholder="Python, Pandas, AI"
+                    className="font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-cyber text-muted-foreground uppercase">
+                    {isArabic ? 'المهارات' : 'Skills'}
+                  </label>
+                  <Input
+                    value={toCsv(editingCourse.skills)}
+                    onChange={e => setEditingCourse(p => ({ ...p, skills: e.target.value.split(',').map(v => v.trim()).filter(Boolean) }))}
+                    placeholder="Data Analysis, Modeling"
+                    className="font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-cyber text-muted-foreground uppercase">
+                    {isArabic ? 'المتطلبات' : 'Prerequisites'}
+                  </label>
+                  <Input
+                    value={toCsv(editingCourse.prerequisites)}
+                    onChange={e => setEditingCourse(p => ({ ...p, prerequisites: e.target.value.split(',').map(v => v.trim()).filter(Boolean) }))}
+                    placeholder="Basic Python"
+                    className="font-mono text-xs"
+                  />
+                </div>
+              </div>
+
               {/* Modal Actions */}
               <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
                 <Button
@@ -508,11 +659,185 @@ export const CourseManagement = () => {
                 >
                   {isArabic ? 'إلغاء' : 'CANCEL'}
                 </Button>
-                <Button type="submit" variant="cyber" className="font-cyber text-xs tracking-wider">
-                  {isArabic ? 'حفظ الدورة' : 'SAVE_COURSE'}
+                <Button type="submit" variant="cyber" className="font-cyber text-xs tracking-wider" disabled={saving}>
+                  {saving ? (isArabic ? 'جاري الحفظ...' : 'SAVING...') : (isArabic ? 'حفظ الدورة' : 'SAVE_COURSE')}
                 </Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {lessonCourse && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="w-full max-w-5xl max-h-[90vh] bg-dark-navy border border-primary/30 rounded-2xl p-6 overflow-y-auto space-y-6 custom-scrollbar">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+              <div>
+                <h3 className="font-cyber font-bold text-primary text-lg flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5" />
+                  {isArabic ? 'إدارة دروس الدورة' : 'MANAGE_COURSE_LESSONS'}
+                </h3>
+                <p className="text-xs font-mono text-muted-foreground mt-1">{lessonCourse.title}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="cyber" className="font-cyber text-xs" onClick={handleOpenCreateLesson}>
+                  <Plus className="w-4 h-4 mr-1 rtl:mr-0 rtl:ml-1" />
+                  {isArabic ? 'درس جديد' : 'NEW_LESSON'}
+                </Button>
+                <Button variant="outline" className="font-cyber text-xs border-white/20" onClick={() => setLessonCourse(null)}>
+                  {isArabic ? 'إغلاق' : 'CLOSE'}
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                {loadingLessons ? (
+                  <div className="py-10 text-center text-primary font-cyber text-xs animate-pulse">
+                    {isArabic ? 'جاري تحميل الدروس...' : 'LOADING_LESSONS...'}
+                  </div>
+                ) : lessons.length === 0 ? (
+                  <div className="py-10 text-center border border-dashed border-white/10 rounded-xl text-muted-foreground text-xs font-mono">
+                    {isArabic ? 'لا توجد دروس لهذه الدورة بعد.' : 'No lessons created for this course yet.'}
+                  </div>
+                ) : lessons.map(lesson => (
+                  <div key={lesson.id} className="p-4 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-cyber text-primary">#{lesson.order}</span>
+                        <span className="text-[10px] font-mono uppercase text-muted-foreground">{lesson.type}</span>
+                        {lesson.isPreview && (
+                          <span className="text-[9px] font-cyber px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                            PREVIEW
+                          </span>
+                        )}
+                      </div>
+                      <h4 className="text-sm font-bold text-white truncate">{lesson.title}</h4>
+                      <p className="text-[10px] text-muted-foreground font-mono">
+                        {lesson.duration} min • +{lesson.pointsReward} XP
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => setEditingLesson({ ...lesson })}
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-white/5"
+                        title={isArabic ? 'تعديل الدرس' : 'Edit lesson'}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteLesson(lesson.id)}
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-white/5"
+                        title={isArabic ? 'حذف الدرس' : 'Delete lesson'}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                {editingLesson ? (
+                  <form onSubmit={handleSaveLesson} className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-cyber text-primary text-sm">
+                        {editingLesson.id ? (isArabic ? 'تعديل الدرس' : 'EDIT_LESSON') : (isArabic ? 'إنشاء درس جديد' : 'CREATE_LESSON')}
+                      </h4>
+                      <button type="button" onClick={() => setEditingLesson(null)} className="text-muted-foreground hover:text-white">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <Input
+                      value={editingLesson.title || ''}
+                      onChange={e => setEditingLesson(p => ({ ...p, title: e.target.value }))}
+                      placeholder={isArabic ? 'عنوان الدرس' : 'Lesson title'}
+                      className="font-mono text-xs"
+                      required
+                    />
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <select
+                        value={editingLesson.type || 'article'}
+                        onChange={e => setEditingLesson(p => ({ ...p, type: e.target.value as LessonType }))}
+                        className="h-10 px-3 rounded-lg bg-dark-navy border border-white/20 text-xs font-mono"
+                      >
+                        <option value="article">Article</option>
+                        <option value="video">Video</option>
+                        <option value="quiz">Quiz</option>
+                        <option value="exercise">Exercise</option>
+                        <option value="project">Project</option>
+                      </select>
+                      <Input
+                        type="number"
+                        value={editingLesson.order || 1}
+                        onChange={e => setEditingLesson(p => ({ ...p, order: Number(e.target.value) }))}
+                        placeholder="Position"
+                        className="font-mono text-xs"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <Input
+                        type="number"
+                        value={editingLesson.duration || 20}
+                        onChange={e => setEditingLesson(p => ({ ...p, duration: Number(e.target.value) }))}
+                        placeholder="Duration minutes"
+                        className="font-mono text-xs"
+                      />
+                      <Input
+                        type="number"
+                        value={editingLesson.pointsReward || 30}
+                        onChange={e => setEditingLesson(p => ({ ...p, pointsReward: Number(e.target.value) }))}
+                        placeholder="XP"
+                        className="font-mono text-xs"
+                      />
+                    </div>
+
+                    <Input
+                      value={editingLesson.videoUrl || ''}
+                      onChange={e => setEditingLesson(p => ({ ...p, videoUrl: e.target.value }))}
+                      placeholder="https://www.youtube.com/embed/..."
+                      className="font-mono text-xs"
+                    />
+
+                    <textarea
+                      value={editingLesson.content || ''}
+                      onChange={e => setEditingLesson(p => ({ ...p, content: e.target.value }))}
+                      rows={8}
+                      className="w-full p-3 rounded-lg bg-dark-navy border border-white/20 text-xs font-mono text-foreground"
+                      placeholder={isArabic ? 'محتوى الدرس أو تعليمات التمرين...' : 'Lesson content or exercise instructions...'}
+                    />
+
+                    <label className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+                      <input
+                        type="checkbox"
+                        checked={!!editingLesson.isPreview}
+                        onChange={e => setEditingLesson(p => ({ ...p, isPreview: e.target.checked }))}
+                      />
+                      {isArabic ? 'متاح كمعاينة مجانية' : 'Available as free preview'}
+                    </label>
+
+                    <div className="flex justify-end gap-2 pt-2">
+                      <Button type="button" variant="outline" className="text-xs" onClick={() => setEditingLesson(null)}>
+                        {isArabic ? 'إلغاء' : 'CANCEL'}
+                      </Button>
+                      <Button type="submit" variant="cyber" className="text-xs">
+                        {isArabic ? 'حفظ الدرس' : 'SAVE_LESSON'}
+                      </Button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="h-full min-h-[260px] flex flex-col items-center justify-center text-center text-muted-foreground">
+                    <BookOpen className="w-10 h-10 mb-3 text-primary/50" />
+                    <p className="text-xs font-mono">
+                      {isArabic ? 'اختر درسًا لتعديله أو أنشئ درسًا جديدًا.' : 'Select a lesson to edit, or create a new lesson.'}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}

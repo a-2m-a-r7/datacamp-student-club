@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { analyzeEmail } from '../lib/emailUtils';
 import { GoogleAccountModal } from '../components/GoogleAccountModal';
 import { toast } from 'sonner';
+import { validatePasswordStrength } from '../lib/utils';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
@@ -51,8 +52,12 @@ const Register = () => {
     if (!email.trim()) errs.email = isArabic ? 'البريد الإلكتروني مطلوب.' : 'Email is required.';
     else if (!/\S+@\S+\.\S+/.test(email)) errs.email = isArabic ? 'صيغة البريد الإلكتروني غير صحيحة.' : 'Invalid email format.';
 
-    if (!password) errs.password = isArabic ? 'كلمة المرور مطلوبة.' : 'Password is required.';
-    else if (password.length < 6) errs.password = isArabic ? 'كلمة المرور يجب ألا تقل عن 6 أحرف.' : 'Password must be at least 6 characters.';
+    if (!password) {
+      errs.password = isArabic ? 'كلمة المرور مطلوبة.' : 'Password is required.';
+    } else {
+      const strength = validatePasswordStrength(password);
+      if (!strength.isValid) errs.password = isArabic ? 'كلمة المرور يجب أن تكون 8 أحرف على الأقل وتحتوي على حرف كبير وصغير ورقم ورمز.' : strength.message;
+    }
 
     if (password !== confirmPassword) {
       errs.confirmPassword = isArabic ? 'كلمتا المرور غير متطابقتين.' : 'Passwords do not match.';
@@ -67,9 +72,9 @@ const Register = () => {
     if (!validate() || isLoading) return;
     setIsLoading(true);
     try {
-      await registerWithEmail(email, password, fullName);
-      toast.success(isArabic ? 'مرحباً بك! تم إنشاء حسابك وحفظه في السحابة بنجاح 🚀' : 'Welcome! Account created successfully 🚀');
-      navigate('/dashboard');
+      const result = await registerWithEmail(email, password, fullName);
+      toast.success(isArabic ? 'مرحباً بك! تم إنشاء حسابك وحفظه في السحابة بنجاح' : 'Welcome! Account created successfully');
+      navigate(result.needsVerification ? '/verify-email' : '/dashboard');
     } catch {
       // toast shown inside registerWithEmail
     } finally {
@@ -197,7 +202,7 @@ const Register = () => {
               {/* Password */}
               <div className="space-y-1">
                 <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">
-                  {isArabic ? 'كلمة المرور (6 أحرف على الأقل)' : 'Password (min 6 characters)'}
+                  {isArabic ? 'كلمة المرور القوية' : 'Strong Password'}
                 </label>
                 <div className="relative">
                   <Lock className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />

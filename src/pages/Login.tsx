@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from '../components/ui/Button';
@@ -23,6 +23,8 @@ const Login = () => {
   const { user, loading: authLoading, loginWithGoogle, loginWithEmail } = useAuth();
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = (location.state as { from?: string } | null)?.from || sessionStorage.getItem('datacamp_auth_redirect') || '/dashboard';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,8 +34,8 @@ const Login = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   React.useEffect(() => {
-    if (user && !authLoading) navigate('/dashboard', { replace: true });
-  }, [user, authLoading, navigate]);
+    if (user && !authLoading) navigate(redirectTo, { replace: true });
+  }, [user, authLoading, navigate, redirectTo]);
 
   const validate = () => {
     const errs: typeof errors = {};
@@ -50,7 +52,8 @@ const Login = () => {
     setIsLoading(true);
     try {
       await loginWithEmail(email, password);
-      navigate('/dashboard');
+      sessionStorage.removeItem('datacamp_auth_redirect');
+      navigate(redirectTo, { replace: true });
     } catch {
       // error handled inside loginWithEmail
     } finally {

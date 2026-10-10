@@ -12,8 +12,7 @@ import {
   awardPoints,
   checkAndAwardBadges,
 } from '../services/pointsService';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import {
   PointsLog,
   Achievement,
@@ -89,7 +88,7 @@ export const PointsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     ? Math.round(((totalPoints - levelData.min) / (nextLevelData.min - levelData.min)) * 100)
     : 100;
 
-  // Listen to real-time totalPoints from user profile
+  // Listen to real-time totalPoints from the Supabase profile mirror
   useEffect(() => {
     if (!user) {
       setTotalPoints(0);
@@ -97,26 +96,49 @@ export const PointsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return;
     }
 
-    if (!isFirebaseReady) {
-      setTotalPoints(profile?.totalPoints ?? 0);
-      setLoading(false);
-      return;
-    }
+    const activeUserId = (user as any).id || (user as any).uid;
+    setTotalPoints(profile?.totalPoints ?? 0);
+    setStats(prev => ({ ...prev, totalPoints: profile?.totalPoints ?? 0 }));
+    setLoading(false);
 
-    const unsubscribe = onSnapshot(doc(db, 'users', user.uid), snap => {
-      if (snap.exists()) {
-        setTotalPoints(snap.data().totalPoints ?? 0);
-        // Update stats from profile data
-        setStats(prev => ({ ...prev, totalPoints: snap.data().totalPoints ?? 0 }));
-      }
-      setLoading(false);
-    }, err => {
-      console.warn('PointsContext profile listener error:', err);
-      setLoading(false);
-    });
+    if (!isSupabaseConfigured || !activeUserId) return;
 
-    return () => unsubscribe();
+    const channel = supabase
+      .channel(`profile_points_${activeUserId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${activeUserId}` }, (payload) => {
+        const nextTotal = Number((payload.new as any)?.total_points ?? (payload.new as any)?.xp ?? 0);
+        setTotalPoints(nextTotal);
+        setStats(prev => ({ ...prev, totalPoints: nextTotal }));
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user, profile]);
+
+  useEffect(() => {
+    if (!user) return;
+    const activeUserId = (user as any).id || (user as any).uid;
+    if (!isSupabaseConfigured || !activeUserId) return;
+
+    (async () => {
+      try {
+        const { data } = await supabase
+          .from('profiles')
+          .select('total_points, xp')
+          .eq('id', activeUserId)
+          .maybeSingle();
+        const nextTotal = Number((data as any)?.total_points ?? (data as any)?.xp ?? 0);
+        setTotalPoints(nextTotal);
+        setStats(prev => ({ ...prev, totalPoints: nextTotal }));
+      } catch (err) {
+        console.warn('[PointsContext] Error fetching points:', err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [user]);
 
   // Listen to recent points log
   useEffect(() => {
@@ -176,6 +198,8 @@ export const PointsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       });
 
       if (result.points > 0) {
+        setTotalPoints(result.newTotal);
+        setStats(prev => ({ ...prev, totalPoints: result.newTotal }));
         toast.custom(() => <XPToast points={result.points} action={action} />, {
           duration: 3000,
           position: 'bottom-right',

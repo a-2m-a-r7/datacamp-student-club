@@ -4,10 +4,8 @@ import { Send, Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { toast } from 'sonner';
-import { isFirebaseReady } from '../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
-import { demoMessages, setDemoMessages } from '../lib/demoData';
 import { useLanguage } from '../contexts/LanguageContext';
+import { contentService } from '../services/contentService';
 
 const Contact = () => {
   const { isArabic } = useLanguage();
@@ -32,34 +30,10 @@ const Contact = () => {
     };
 
     try {
-      if (isSupabaseConfigured) {
-        const { error } = await supabase.from('messages').insert({
-          name: trimmedData.name,
-          email: trimmedData.email,
-          subject: trimmedData.subject,
-          message: trimmedData.message,
-          status: 'unread'
-        });
-        if (error) throw error;
-        toast.success(isArabic ? 'تم استلام رسالتك بنجاح. سنتواصل معك قريباً.' : 'Transmission received. We will contact you shortly.');
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        return;
-      }
-
-      const messageData = {
+      await contentService.create('messages', {
         ...trimmedData,
-        timestamp: new Date().toISOString(),
-        status: 'unread'
-      };
-
-      if (!isFirebaseReady) {
-        const updated = [...demoMessages, { ...messageData, id: Date.now().toString() }];
-        setDemoMessages(updated);
-      } else {
-        const { collection, addDoc } = await import('firebase/firestore');
-        const { db } = await import('../lib/firebase');
-        await addDoc(collection(db, 'messages'), messageData);
-      }
+        status: 'unread',
+      });
       
       toast.success(isArabic ? 'تم استلام رسالتك بنجاح. سنتواصل معك قريباً.' : 'Transmission received. We will contact you shortly.');
       setFormData({ name: '', email: '', subject: '', message: '' });

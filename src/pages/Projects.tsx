@@ -10,12 +10,9 @@ import {
   X
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { collection, onSnapshot, query, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
-import { demoProjects } from '../lib/demoData';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { contentService } from '../services/contentService';
 import { toast } from 'sonner';
 
 const SAMPLE_PROJECTS_EN = [
@@ -136,55 +133,18 @@ export const Projects = () => {
   ];
 
   useEffect(() => {
-    const sampleData = isArabic ? SAMPLE_PROJECTS_AR : SAMPLE_PROJECTS_EN;
-    if (isSupabaseConfigured) {
-      const fetchSupabaseProjects = async () => {
-        try {
-          const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
-          if (!error && data && data.length > 0) {
-            setProjects(data.map((p: any) => ({
-              ...p,
-              author: p.members?.[0] || 'Club Member',
-              technologies: Array.isArray(p.technologies) ? p.technologies : ['Python', 'Data Science'],
-            })));
-          } else {
-            setProjects(sampleData);
-          }
-        } catch {
-          setProjects(sampleData);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchSupabaseProjects();
+    const loadProjects = async () => {
+      try {
+        setProjects(await contentService.list('projects', { orderBy: 'created_at' }));
+      } catch (error) {
+        console.warn('Projects load error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      const channel = supabase.channel('realtime_public_projects')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => {
-          fetchSupabaseProjects();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setProjects(demoProjects.length > 0 ? demoProjects : sampleData);
-      setLoading(false);
-      return;
-    }
-
-    const q = query(collection(db, 'projects'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setProjects(docs);
-      setLoading(false);
-    }, (error) => {
-      console.warn("Projects listener error:", error);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    loadProjects();
+    return contentService.subscribe('projects', loadProjects);
   }, [isArabic]);
 
   const activeSamples = isArabic ? SAMPLE_PROJECTS_AR : SAMPLE_PROJECTS_EN;
@@ -218,29 +178,13 @@ export const Projects = () => {
         githubUrl: submitForm.githubUrl.trim(),
         liveUrl: submitForm.liveUrl.trim(),
         image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
-        status: 'published',
+        status: 'active',
         createdAt: new Date().toISOString(),
       };
 
-      if (isSupabaseConfigured) {
-        await supabase.from('projects').insert({
-          title: payload.title,
-          description: payload.description,
-          status: 'active',
-          members: [payload.author]
-        });
-        setProjects(prev => [payload, ...prev]);
-        toast.success(isArabic ? 'تم نشر المشروع في مستودع النادي بـ Supabase! 🚀' : 'Project published to Supabase repository! 🚀');
-      } else if (!isFirebaseReady) {
-        setProjects(prev => [payload, ...prev]);
-        toast.success(isArabic ? 'تم إرسال المشروع بنجاح! (الوضع التجريبي)' : 'Project submitted successfully! (Demo Mode)');
-      } else {
-        await addDoc(collection(db, 'projects'), {
-          ...payload,
-          timestamp: serverTimestamp(),
-        });
-        toast.success(isArabic ? 'تم نشر المشروع في مستودع النادي!' : 'Project published to the repository!');
-      }
+      const createdProject = await contentService.create('projects', payload);
+      setProjects(prev => [createdProject, ...prev]);
+      toast.success(isArabic ? 'تم نشر المشروع في مستودع النادي!' : 'Project published to the club repository!');
 
       setShowSubmitModal(false);
       setSubmitForm({

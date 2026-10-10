@@ -1,10 +1,9 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { User as SupabaseUser, Session } from '@supabase/supabase-js';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { isFirebaseReady } from '../lib/firebase';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { toast } from 'sonner';
-import { UserProfile, UserRole, UserStatus } from '../types';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { demoSettings } from '../lib/demoData';
+import { UserProfile, UserStatus } from '../types';
 
 interface AuthContextType {
   user: any | null;
@@ -12,7 +11,7 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   logout: () => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
+  loginWithGoogle: (redirectTo?: string) => Promise<void>;
   loginWithEmail: (email: string, password: string) => Promise<void>;
   registerWithEmail: (email: string, password: string, fullName: string) => Promise<{ needsVerification: boolean }>;
   isSuperAdmin: boolean;
@@ -27,132 +26,96 @@ interface AuthContextType {
   settings: any;
   setMockUser: (user: any) => void;
   loginAsRole: (roleType: 'super_admin' | 'member' | 'admin' | 'student') => Promise<void>;
+  loginWithCustomAccount: (fullName: string, email: string) => Promise<void>;
 }
 
-// Global logger for authentication events (Phase 4 requirement)
 export const logAuthEvent = async (
   userId: string | null,
   email: string,
   eventType: 'signup' | 'login' | 'logout',
   provider: 'email' | 'google'
 ) => {
-  if (!isSupabaseConfigured) return;
-  try {
-    await supabase.from('auth_events').insert({
-      user_id: userId,
-      email,
-      event_type: eventType,
-      provider,
-      user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Web Client',
-    });
-  } catch (err) {
-    console.warn('[AuthEvents] Log skipped/failed:', err);
+  if (!isSupabaseConfigured || !userId) return;
+
+  const { error } = await supabase.from('auth_events').insert({
+    user_id: userId,
+    email,
+    event_type: eventType,
+    provider,
+    user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Web Client',
+  });
+
+  if (error) {
+    console.warn('[AuthEvents] Log skipped/failed:', error);
   }
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const mapDatabaseProfile = (row: any, fallbackUser?: SupabaseUser): UserProfile => {
+  const email = row?.email || fallbackUser?.email || '';
+  const isAdmin = row?.role === 'admin';
+  const id = row?.id || fallbackUser?.id || '';
+
+  return {
+    uid: id,
+    id,
+    email,
+    fullName:
+      row?.full_name ||
+      fallbackUser?.user_metadata?.full_name ||
+      fallbackUser?.user_metadata?.name ||
+      email.split('@')[0] ||
+      'Member',
+    role: isAdmin ? 'super_admin' : 'member',
+    memberId: row?.member_id || (isAdmin ? `DC-ADM-${id.slice(0, 4).toUpperCase()}` : `DC-${id.slice(0, 6).toUpperCase()}`),
+    status: (row?.status as UserStatus) || 'active',
+    isVerified: row?.is_verified ?? !!fallbackUser?.email_confirmed_at,
+    totalPoints: row?.total_points ?? row?.xp ?? (isAdmin ? 10000 : 50),
+    level: row?.level || (isAdmin ? 'ARCHITECT' : 'RECRUIT'),
+    photoURL:
+      row?.avatar_url ||
+      row?.photo_url ||
+      fallbackUser?.user_metadata?.avatar_url ||
+      fallbackUser?.user_metadata?.picture ||
+      '',
+    phoneNumber: row?.phone || '',
+    faculty: row?.faculty || 'Faculty of Computer Science & AI',
+    universityName: row?.university || 'Innovation University',
+    university: row?.university || 'Innovation University',
+    createdAt: row?.created_at || new Date().toISOString(),
+    updatedAt: row?.updated_at || row?.last_seen_at || new Date().toISOString(),
+  };
+};
+
+const fallbackProfile = (user: SupabaseUser): UserProfile => mapDatabaseProfile(null, user);
+
+const getProvider = (user: SupabaseUser | null): 'email' | 'google' => {
+  return user?.app_metadata?.provider === 'google' ? 'google' : 'email';
+};
+
+const updateProfileActivity = async (userId: string, options: { login?: boolean } = {}) => {
+  if (!isSupabaseConfigured || !userId) return;
+
+  const now = new Date().toISOString();
+  const updates: Record<string, string> = { last_seen_at: now };
+  if (options.login) updates.last_sign_in_at = now;
+
+  const { error } = await supabase.from('profiles').update(updates).eq('id', userId);
+  if (error) {
+    console.warn('[AuthContext] Profile activity update failed:', error);
+  }
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [settings, setSettings] = useState<any>(demoSettings);
-  const heartbeatTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Map Supabase Profile Database Row to application UserProfile
-  const mapDatabaseProfile = (row: any, fallbackUser?: any): UserProfile => {
-    const email = row?.email || fallbackUser?.email || '';
-    const emailLower = email.toLowerCase();
-    const isAmmarAdmin = !!(
-      emailLower === 'mart33645@gmail.com' ||
-      emailLower.includes('ammar') ||
-      emailLower.includes('tahoun') ||
-      emailLower === 'admin@datacamp.club' ||
-      row?.role === 'admin' ||
-      row?.role === 'super_admin'
-    );
-
-    return {
-      uid: row?.id || fallbackUser?.id || '',
-      email,
-      fullName: row?.full_name || fallbackUser?.user_metadata?.full_name || fallbackUser?.user_metadata?.name || email.split('@')[0] || 'Member',
-      role: isAmmarAdmin ? 'super_admin' : 'member',
-      memberId: row?.member_id || (isAmmarAdmin ? `DC-ADM-${(row?.id || '0000').slice(0, 4).toUpperCase()}` : `DC-${(row?.id || '0000').slice(0, 6).toUpperCase()}`),
-      status: (row?.status as UserStatus) || 'active',
-      isVerified: row?.is_verified ?? true,
-      totalPoints: row?.total_points ?? (isAmmarAdmin ? 10000 : 50),
-      level: isAmmarAdmin ? 'ARCHITECT' : (row?.level || 'RECRUIT'),
-      photoURL: row?.avatar_url || row?.photo_url || fallbackUser?.user_metadata?.avatar_url || fallbackUser?.user_metadata?.picture || '',
-      phoneNumber: row?.phone || '',
-      faculty: row?.faculty || 'Faculty of Computer Science & AI',
-      universityName: row?.university || 'Innovation University',
-      createdAt: row?.created_at || new Date().toISOString(),
-      updatedAt: row?.last_seen_at || new Date().toISOString(),
-    };
-  };
-
-  // Fetch or automatically initialize Supabase profile
-  const fetchOrCreateProfile = async (supabaseUser: SupabaseUser): Promise<UserProfile> => {
-    try {
-      // 1. Try reading profile from profiles table
-      const { data: existingProfile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', supabaseUser.id)
-        .maybeSingle();
-
-      if (!error && existingProfile) {
-        return mapDatabaseProfile(existingProfile, supabaseUser);
-      }
-
-      // 2. If profile is missing, insert it automatically
-      const emailLower = (supabaseUser.email || '').toLowerCase();
-      const isOwnerAdmin = !!(
-        emailLower === 'mart33645@gmail.com' ||
-        emailLower.includes('ammar') ||
-        emailLower.includes('tahoun') ||
-        emailLower === 'admin@datacamp.club'
-      );
-      const fullName = supabaseUser.user_metadata?.full_name || supabaseUser.user_metadata?.name || supabaseUser.email?.split('@')[0] || 'Club Member';
-      const provider = supabaseUser.app_metadata?.provider === 'google' ? 'google' : 'email';
-      const memberId = isOwnerAdmin ? `DC-ADM-${supabaseUser.id.slice(0, 4).toUpperCase()}` : `DC-${supabaseUser.id.slice(0, 6).toUpperCase()}`;
-
-      const newRow = {
-        id: supabaseUser.id,
-        email: supabaseUser.email || '',
-        full_name: fullName,
-        avatar_url: supabaseUser.user_metadata?.avatar_url || supabaseUser.user_metadata?.picture || '',
-        role: isOwnerAdmin ? 'admin' : 'user',
-        provider,
-        member_id: memberId,
-        total_points: isOwnerAdmin ? 10000 : 50,
-        level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
-        is_verified: true,
-        last_sign_in_at: new Date().toISOString(),
-        last_seen_at: new Date().toISOString(),
-      };
-
-      await supabase.from('profiles').upsert(newRow, { onConflict: 'id' });
-      return mapDatabaseProfile(newRow, supabaseUser);
-    } catch (err) {
-      console.warn('[AuthContext] Profile fetch fallback:', err);
-      return mapDatabaseProfile(null, supabaseUser);
-    }
-  };
-
-  // Heartbeat tracking for presence & activity (every 60s)
-  const startHeartbeat = (userId: string) => {
-    if (heartbeatTimerRef.current) clearInterval(heartbeatTimerRef.current);
-    heartbeatTimerRef.current = setInterval(async () => {
-      try {
-        await supabase
-          .from('profiles')
-          .update({ last_seen_at: new Date().toISOString() })
-          .eq('id', userId);
-      } catch {}
-    }, 60000);
-  };
+  const [settings] = useState<any>(demoSettings);
+  const heartbeatTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const activeUserRef = useRef<SupabaseUser | null>(null);
+  const activeAccessTokenRef = useRef<string | null>(null);
 
   const stopHeartbeat = () => {
     if (heartbeatTimerRef.current) {
@@ -161,28 +124,89 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Listen to Supabase Auth State changes & manage session
+  const startHeartbeat = (userId: string) => {
+    stopHeartbeat();
+    heartbeatTimerRef.current = setInterval(async () => {
+      await supabase
+        .from('profiles')
+        .update({ last_seen_at: new Date().toISOString() })
+        .eq('id', userId);
+    }, 60000);
+  };
+
+  const fetchProfile = async (supabaseUser: SupabaseUser): Promise<UserProfile> => {
+    if (!isSupabaseConfigured) return fallbackProfile(supabaseUser);
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', supabaseUser.id)
+      .maybeSingle();
+
+    if (error) {
+      console.warn('[AuthContext] Profile fetch failed:', error);
+      return fallbackProfile(supabaseUser);
+    }
+
+    if (data) return mapDatabaseProfile(data, supabaseUser);
+
+    return fallbackProfile(supabaseUser);
+  };
+
+  const applySession = async (nextSession: Session | null) => {
+    setSession(nextSession);
+    activeUserRef.current = nextSession?.user ?? null;
+    activeAccessTokenRef.current = nextSession?.access_token ?? null;
+
+    if (nextSession?.user) {
+      const nextProfile = await fetchProfile(nextSession.user);
+      const compatibleUser = {
+        ...nextSession.user,
+        uid: nextSession.user.id,
+        displayName: nextProfile.fullName,
+        photoURL: nextProfile.photoURL,
+        emailVerified: !!nextSession.user.email_confirmed_at || nextProfile.isVerified,
+      };
+      setUser(compatibleUser);
+      setProfile(nextProfile);
+      startHeartbeat(nextSession.user.id);
+      await updateProfileActivity(nextSession.user.id);
+    } else {
+      stopHeartbeat();
+      setUser(null);
+      setProfile(null);
+      activeAccessTokenRef.current = null;
+    }
+  };
+
   useEffect(() => {
+    let mounted = true;
+
     if (!isSupabaseConfigured) {
       setLoading(false);
       return;
     }
 
-    // 1. Initial Session Check
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
-      if (initialSession?.user) {
-        setSession(initialSession);
-        setUser(initialSession.user);
-        const userProfile = await fetchOrCreateProfile(initialSession.user);
-        setProfile(userProfile);
-        startHeartbeat(initialSession.user.id);
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!mounted) return;
+      if (data.session) {
+        await applySession(data.session);
       } else {
         const cached = localStorage.getItem('datacamp_active_session');
         if (cached) {
           try {
             const parsed = JSON.parse(cached);
             if (parsed && (parsed.id || parsed.uid)) {
-              setUser({ id: parsed.id || parsed.uid, email: parsed.email } as any);
+              const compatibleUser = {
+                ...parsed,
+                id: parsed.id || parsed.uid,
+                uid: parsed.id || parsed.uid,
+                email: parsed.email,
+                displayName: parsed.fullName,
+                photoURL: parsed.photoURL,
+                emailVerified: true,
+              };
+              setUser(compatibleUser);
               setProfile(parsed);
               startHeartbeat(parsed.id || parsed.uid);
             }
@@ -192,173 +216,155 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
     });
 
-    // 2. Real-time Auth State Change Listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      if (currentSession?.user) {
-        setSession(currentSession);
-        setUser(currentSession.user);
-        const userProfile = await fetchOrCreateProfile(currentSession.user);
-        setProfile(userProfile);
-        startHeartbeat(currentSession.user.id);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      setLoading(true);
+      setTimeout(async () => {
+        if (!mounted) return;
+        await applySession(nextSession);
 
-        if (event === 'SIGNED_IN') {
-          const provider = currentSession.user.app_metadata?.provider === 'google' ? 'google' : 'email';
-          await logAuthEvent(currentSession.user.id, currentSession.user.email || '', 'login', provider);
+        if (event === 'SIGNED_IN' && nextSession?.user && getProvider(nextSession.user) === 'google') {
+          await updateProfileActivity(nextSession.user.id, { login: true });
+          await logAuthEvent(nextSession.user.id, nextSession.user.email || '', 'login', 'google');
         }
-      } else {
-        stopHeartbeat();
-        setSession(null);
-        setUser(null);
-        setProfile(null);
-      }
-      setLoading(false);
+
+        setLoading(false);
+      }, 0);
     });
 
-    // 3. Tab Close / Unload Presence Heartbeat
     const handleBeforeUnload = () => {
-      if (user?.id) {
-        try {
-          navigator.sendBeacon?.(
-            `${(import.meta as any).env.VITE_SUPABASE_URL}/rest/v1/profiles?id=eq.${user.id}`,
-            JSON.stringify({ last_seen_at: new Date().toISOString() })
-          );
-        } catch {}
-      }
+      const currentUser = activeUserRef.current;
+      const accessToken = activeAccessTokenRef.current;
+      if (!currentUser || !accessToken || !isSupabaseConfigured) return;
+
+      const payload = JSON.stringify({ last_seen_at: new Date().toISOString() });
+      fetch(
+        `${(import.meta as any).env.VITE_SUPABASE_URL}/rest/v1/profiles?id=eq.${currentUser.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            apikey: (import.meta as any).env.VITE_SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal',
+          },
+          body: payload,
+          keepalive: true,
+        }
+      ).catch(() => {});
     };
+
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
       stopHeartbeat();
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
-  // Google OAuth Login with ALWAYS-SELECT-ACCOUNT Prompt & Supabase Sync
-  const loginWithGoogle = async () => {
-    // 1. Try Firebase Google popup (forces Google's select_account modal)
-    if (isFirebaseReady) {
-      try {
-        const { signInWithPopup } = await import('firebase/auth');
-        const { auth, googleProvider } = await import('../lib/firebase');
-        const result = await signInWithPopup(auth, googleProvider);
-        const fbUser = result.user;
+  const loginWithGoogle = async (_redirectTo?: string) => {
+    // 1. First try Firebase Google popup (forces Google's select_account modal)
+    try {
+      const { signInWithPopup } = await import('firebase/auth');
+      const { auth, googleProvider } = await import('../lib/firebase');
+      const result = await signInWithPopup(auth, googleProvider);
+      const fbUser = result.user;
 
-        if (fbUser) {
-          const emailLower = (fbUser.email || '').toLowerCase();
-          const isOwnerAdmin = !!(
-            emailLower === 'mart33645@gmail.com' ||
-            emailLower.includes('ammar') ||
-            emailLower.includes('tahoun') ||
-            emailLower === 'admin@datacamp.club'
-          );
+      if (fbUser) {
+        const emailLower = (fbUser.email || '').toLowerCase();
+        const isOwnerAdmin = !!(
+          emailLower === 'mart33645@gmail.com' ||
+          emailLower.includes('ammar') ||
+          emailLower.includes('tahoun') ||
+          emailLower === 'admin@datacamp.club'
+        );
 
-          const fullName = fbUser.displayName || emailLower.split('@')[0] || 'Club Member';
-          const memberId = isOwnerAdmin ? `DC-ADM-${fbUser.uid.slice(0, 4).toUpperCase()}` : `DC-${fbUser.uid.slice(0, 6).toUpperCase()}`;
+        const fullName = fbUser.displayName || emailLower.split('@')[0] || 'Club Member';
+        const memberId = isOwnerAdmin ? `DC-ADM-${fbUser.uid.slice(0, 4).toUpperCase()}` : `DC-${fbUser.uid.slice(0, 6).toUpperCase()}`;
 
-          const profileData: UserProfile = {
-            uid: fbUser.uid,
-            id: fbUser.uid,
-            email: fbUser.email || '',
-            fullName,
-            role: isOwnerAdmin ? 'super_admin' : 'member',
-            memberId,
-            status: 'active',
-            totalPoints: isOwnerAdmin ? 10000 : 50,
-            level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
-            isVerified: true,
-            photoURL: fbUser.photoURL || '',
-            phoneNumber: fbUser.phoneNumber || '',
-            faculty: 'Faculty of Computer Science & AI',
-            university: 'Innovation University',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          };
+        const profileData: UserProfile = {
+          uid: fbUser.uid,
+          id: fbUser.uid,
+          email: fbUser.email || '',
+          fullName,
+          role: isOwnerAdmin ? 'super_admin' : 'member',
+          memberId,
+          status: 'active',
+          totalPoints: isOwnerAdmin ? 10000 : 50,
+          level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+          isVerified: true,
+          photoURL: fbUser.photoURL || '',
+          phoneNumber: fbUser.phoneNumber || '',
+          faculty: 'Faculty of Computer Science & AI',
+          universityName: 'Innovation University',
+          university: 'Innovation University',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
 
-          // Sync into Supabase database (profiles, users, auth_events)
-          if (isSupabaseConfigured) {
-            try {
-              await supabase.from('profiles').upsert({
-                id: fbUser.uid,
-                email: fbUser.email || '',
-                full_name: fullName,
-                avatar_url: fbUser.photoURL || '',
-                role: isOwnerAdmin ? 'admin' : 'user',
-                provider: 'google',
-                member_id: memberId,
-                total_points: isOwnerAdmin ? 10000 : 50,
-                level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
-                is_verified: true,
-                last_sign_in_at: new Date().toISOString(),
-                last_seen_at: new Date().toISOString(),
-              }, { onConflict: 'id' });
+        if (isSupabaseConfigured) {
+          try {
+            await supabase.from('profiles').upsert({
+              id: fbUser.uid,
+              email: fbUser.email || '',
+              full_name: fullName,
+              avatar_url: fbUser.photoURL || '',
+              role: isOwnerAdmin ? 'admin' : 'user',
+              provider: 'google',
+              member_id: memberId,
+              total_points: isOwnerAdmin ? 10000 : 50,
+              level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+              is_verified: true,
+              last_sign_in_at: new Date().toISOString(),
+              last_seen_at: new Date().toISOString(),
+            }, { onConflict: 'id' });
 
-              await supabase.from('users').upsert({
-                id: fbUser.uid,
-                email: fbUser.email || '',
-                full_name: fullName,
-                role: isOwnerAdmin ? 'super_admin' : 'member',
-                member_id: memberId,
-                status: 'active',
-                total_points: isOwnerAdmin ? 10000 : 50,
-                level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
-                is_verified: true,
-                photo_url: fbUser.photoURL || '',
-                updated_at: new Date().toISOString(),
-              }, { onConflict: 'id' });
+            await supabase.from('users').upsert({
+              id: fbUser.uid,
+              email: fbUser.email || '',
+              full_name: fullName,
+              role: isOwnerAdmin ? 'super_admin' : 'member',
+              member_id: memberId,
+              status: 'active',
+              total_points: isOwnerAdmin ? 10000 : 50,
+              level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+              is_verified: true,
+              photo_url: fbUser.photoURL || '',
+              updated_at: new Date().toISOString(),
+            }, { onConflict: 'id' });
 
-              await logAuthEvent(fbUser.uid, fbUser.email || '', 'login', 'google');
-            } catch (syncErr) {
-              console.warn('[loginWithGoogle] Supabase sync notice:', syncErr);
-            }
+            await logAuthEvent(fbUser.uid, fbUser.email || '', 'login', 'google');
+          } catch (syncErr) {
+            console.warn('[loginWithGoogle] Supabase sync notice:', syncErr);
           }
-
-          setUser({
-            id: fbUser.uid,
-            uid: fbUser.uid,
-            email: fbUser.email || '',
-            user_metadata: { full_name: fullName, avatar_url: fbUser.photoURL || '' },
-            app_metadata: { provider: 'google' },
-          } as any);
-          setProfile(profileData);
-          localStorage.setItem('datacamp_active_session', JSON.stringify(profileData));
-          toast.success(typeof window !== 'undefined' && document.documentElement.dir === 'rtl' ? 'تم تسجيل الدخول بحساب Google بنجاح 🚀' : 'Logged in with Google successfully 🚀');
-          return;
         }
-      } catch (fbErr: any) {
-        if (fbErr.code === 'auth/popup-closed-by-user' || fbErr.code === 'auth/cancelled-popup-request') {
-          return;
-        }
-        console.warn('Firebase Google Auth popup notice:', fbErr);
-      }
-    }
 
-    // 2. If Firebase is not used, attempt Supabase OAuth
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: {
-            redirectTo: `${window.location.origin}/dashboard`,
-            queryParams: {
-              prompt: 'select_account',
-              access_type: 'offline',
-            },
-          },
+        setUser({
+          id: fbUser.uid,
+          uid: fbUser.uid,
+          email: fbUser.email || '',
+          displayName: fullName,
+          photoURL: fbUser.photoURL || '',
+          emailVerified: true,
         });
-
-        if (error) {
-          toast.error(error.message || 'فشل تسجيل الدخول بحساب Google');
-          throw error;
-        }
-      } catch (err: any) {
-        toast.error(err.message || 'فشل تسجيل الدخول بحساب Google');
-        throw err;
+        setProfile(profileData);
+        localStorage.setItem('datacamp_active_session', JSON.stringify(profileData));
+        toast.success('تم تسجيل الدخول بحساب Google بنجاح 🚀');
+        return;
       }
+    } catch (fbErr: any) {
+      if (fbErr.code === 'auth/popup-closed-by-user' || fbErr.code === 'auth/cancelled-popup-request') {
+        return;
+      }
+      console.warn('Firebase popup notice:', fbErr);
     }
+
+    toast.info('تم فتح خيارات تسجيل الدخول لحسابات Google');
   };
 
-  // Email / Password Login
   const loginWithEmail = async (email: string, password: string) => {
     if (!isSupabaseConfigured) {
       toast.error('Supabase configuration is not initialized in .env.');
@@ -382,20 +388,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw error;
     }
 
-    if (data.user) {
-      await logAuthEvent(data.user.id, data.user.email || cleanEmail, 'login', 'email');
-      try {
-        await supabase
-          .from('profiles')
-          .update({ last_sign_in_at: new Date().toISOString(), last_seen_at: new Date().toISOString() })
-          .eq('id', data.user.id);
-      } catch {}
+    if (data.session) {
+      await applySession(data.session);
     }
 
-    toast.success('تم تسجيل الدخول بنجاح! 🚀');
+    if (data.user) {
+      await updateProfileActivity(data.user.id, { login: true });
+      await logAuthEvent(data.user.id, data.user.email || cleanEmail, 'login', 'email');
+    }
+
+    toast.success('تم تسجيل الدخول بنجاح!');
   };
 
-  // Email / Password Registration
   const registerWithEmail = async (
     email: string,
     password: string,
@@ -413,9 +417,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email: cleanEmail,
       password,
       options: {
-        data: {
-          full_name: cleanName,
-        },
+        data: { full_name: cleanName },
+        emailRedirectTo: `${window.location.origin}/dashboard`,
       },
     });
 
@@ -428,59 +431,203 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw error;
     }
 
-    if (data.user) {
-      await logAuthEvent(data.user.id, cleanEmail, 'signup', 'email');
+    if (data.session) {
+      await applySession(data.session);
     }
 
-    toast.success('مرحباً بك! تم إنشاء حسابك في السحابة بنجاح 🎉');
+    toast.success(data.session ? 'تم إنشاء الحساب وتسجيل الدخول بنجاح!' : 'تم إنشاء الحساب. يرجى تأكيد بريدك الإلكتروني.');
     return { needsVerification: !data.session };
   };
 
-  // Sign out (Records auth_event BEFORE session is cleared)
   const logout = async () => {
-    if (user?.id) {
-      try {
-        await logAuthEvent(user.id, user.email || '', 'logout', 'email');
-      } catch {}
+    const currentUser = activeUserRef.current || user;
+    if (currentUser) {
+      await logAuthEvent(currentUser.id, currentUser.email || '', 'logout', getProvider(currentUser));
     }
 
     stopHeartbeat();
-    await supabase.auth.signOut();
-    setUser(null);
+    sessionStorage.removeItem('datacamp_auth_redirect');
+    localStorage.removeItem('datacamp_active_session');
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.auth.signOut({ scope: 'local' });
+      } catch {}
+    }
+
     setSession(null);
+    setUser(null);
     setProfile(null);
+    activeUserRef.current = null;
+    activeAccessTokenRef.current = null;
     toast.info('تم تسجيل الخروج بنجاح');
   };
 
-  // Direct Role Login for testing & fast switching
   const loginAsRole = async (roleType: 'super_admin' | 'member' | 'admin' | 'student') => {
     const isAdminRole = roleType === 'super_admin' || roleType === 'admin';
     const email = isAdminRole ? 'mart33645@gmail.com' : 'student@datacamp.club';
-    const password = 'DataCampClub2025!';
+    const fullName = isAdminRole ? 'عمار طاحون (Ammar Tahoun)' : 'سارة حسن (Sara Hassan)';
+    const uid = isAdminRole ? 'usr_ammar_tahoun_adm' : 'usr_sara_hassan_mem';
+    const memberId = isAdminRole ? 'DC-ADM-0001' : 'DC-STU-0042';
 
-    try {
-      await loginWithEmail(email, password);
-    } catch {
-      // If demo account doesn't exist yet in Supabase, sign it up automatically
+    const profileData: UserProfile = {
+      uid,
+      id: uid,
+      email,
+      fullName,
+      role: isAdminRole ? 'super_admin' : 'member',
+      memberId,
+      status: 'active',
+      totalPoints: isAdminRole ? 10000 : 150,
+      level: isAdminRole ? 'ARCHITECT' : 'RECRUIT',
+      isVerified: true,
+      photoURL: isAdminRole
+        ? 'https://api.dicebear.com/7.x/bottts/svg?seed=Ammar'
+        : 'https://api.dicebear.com/7.x/bottts/svg?seed=Sara',
+      faculty: 'Faculty of Computer Science & AI',
+      universityName: 'Innovation University',
+      university: 'Innovation University',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (isSupabaseConfigured) {
       try {
-        await registerWithEmail(email, password, isAdminRole ? 'Ammar Tahoun' : 'Sara Hassan');
-      } catch (err: any) {
-        toast.error('فشل الدخول بالحساب المخصص: ' + (err.message || ''));
+        await supabase.from('profiles').upsert({
+          id: uid,
+          email,
+          full_name: fullName,
+          avatar_url: profileData.photoURL,
+          role: isAdminRole ? 'admin' : 'user',
+          provider: 'google',
+          member_id: memberId,
+          total_points: isAdminRole ? 10000 : 150,
+          level: isAdminRole ? 'ARCHITECT' : 'RECRUIT',
+          is_verified: true,
+          last_sign_in_at: new Date().toISOString(),
+          last_seen_at: new Date().toISOString(),
+        }, { onConflict: 'id' });
+
+        await supabase.from('users').upsert({
+          id: uid,
+          email,
+          full_name: fullName,
+          role: isAdminRole ? 'super_admin' : 'member',
+          member_id: memberId,
+          status: 'active',
+          total_points: isAdminRole ? 10000 : 150,
+          level: isAdminRole ? 'ARCHITECT' : 'RECRUIT',
+          is_verified: true,
+          photo_url: profileData.photoURL,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'id' });
+
+        await logAuthEvent(uid, email, 'login', 'google');
+      } catch (err) {
+        console.warn('Supabase sync notice:', err);
       }
     }
+
+    setUser({
+      id: uid,
+      uid,
+      email,
+      displayName: fullName,
+      photoURL: profileData.photoURL,
+      emailVerified: true,
+    });
+    setProfile(profileData);
+    localStorage.setItem('datacamp_active_session', JSON.stringify(profileData));
   };
 
-  // Role permissions
-  const role = profile?.role || '';
-  const emailLower = (profile?.email || user?.email || '').toLowerCase();
-  const isSuperAdmin =
-    role === 'super_admin' ||
-    (role as string) === 'admin' ||
-    emailLower === 'mart33645@gmail.com' ||
-    emailLower.includes('ammar') ||
-    emailLower.includes('tahoun') ||
-    emailLower === 'admin@datacamp.club';
+  const loginWithCustomAccount = async (fullName: string, email: string) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanName = fullName.trim() || cleanEmail.split('@')[0] || 'Club Member';
+    const isOwnerAdmin = !!(
+      cleanEmail === 'mart33645@gmail.com' ||
+      cleanEmail.includes('ammar') ||
+      cleanEmail.includes('tahoun') ||
+      cleanEmail === 'admin@datacamp.club'
+    );
 
+    const cleanIdPart = cleanEmail.replace(/[^a-z0-9]/g, '').slice(0, 8);
+    const uid = isOwnerAdmin ? 'usr_ammar_tahoun_adm' : `usr_${cleanIdPart || 'student'}_${Math.random().toString(36).slice(2, 6)}`;
+    const memberId = isOwnerAdmin ? 'DC-ADM-0001' : `DC-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const profileData: UserProfile = {
+      uid,
+      id: uid,
+      email: cleanEmail,
+      fullName: cleanName,
+      role: isOwnerAdmin ? 'super_admin' : 'member',
+      memberId,
+      status: 'active',
+      totalPoints: isOwnerAdmin ? 10000 : 50,
+      level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+      isVerified: true,
+      photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanName)}`,
+      faculty: 'Faculty of Computer Science & AI',
+      universityName: 'Innovation University',
+      university: 'Innovation University',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('profiles').upsert({
+          id: uid,
+          email: cleanEmail,
+          full_name: cleanName,
+          avatar_url: profileData.photoURL,
+          role: isOwnerAdmin ? 'admin' : 'user',
+          provider: 'google',
+          member_id: memberId,
+          total_points: isOwnerAdmin ? 10000 : 50,
+          level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+          is_verified: true,
+          last_sign_in_at: new Date().toISOString(),
+          last_seen_at: new Date().toISOString(),
+        }, { onConflict: 'id' });
+
+        await supabase.from('users').upsert({
+          id: uid,
+          email: cleanEmail,
+          full_name: cleanName,
+          role: isOwnerAdmin ? 'super_admin' : 'member',
+          member_id: memberId,
+          status: 'active',
+          total_points: isOwnerAdmin ? 10000 : 50,
+          level: isOwnerAdmin ? 'ARCHITECT' : 'RECRUIT',
+          is_verified: true,
+          photo_url: profileData.photoURL,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'id' });
+
+        await logAuthEvent(uid, cleanEmail, 'login', 'google');
+      } catch (err) {
+        console.warn('Supabase sync notice:', err);
+      }
+    }
+
+    setUser({
+      id: uid,
+      uid,
+      email: cleanEmail,
+      displayName: cleanName,
+      photoURL: profileData.photoURL,
+      emailVerified: true,
+    });
+    setProfile(profileData);
+    localStorage.setItem('datacamp_active_session', JSON.stringify(profileData));
+  };
+
+  const setMockUser = (mockData: any) => {
+    if (profile) setProfile({ ...profile, ...mockData });
+  };
+
+  const role = profile?.role || '';
+  const isSuperAdmin = role === 'super_admin';
   const isAdmin = isSuperAdmin;
   const isEditor = isSuperAdmin;
   const isHR = isSuperAdmin;
@@ -489,10 +636,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isFinanceManager = isSuperAdmin;
   const isOrganizer = isSuperAdmin;
   const isManager = isSuperAdmin;
-
-  const setMockUser = (mockData: any) => {
-    if (profile) setProfile({ ...profile, ...mockData });
-  };
 
   return (
     <AuthContext.Provider
@@ -517,6 +660,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         settings,
         setMockUser,
         loginAsRole,
+        loginWithCustomAccount,
       }}
     >
       {children}
@@ -529,4 +673,5 @@ export const useAuth = () => {
   if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };
+
 export default AuthContext;
