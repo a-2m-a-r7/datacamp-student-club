@@ -1,4 +1,8 @@
-import { Timestamp } from 'firebase/firestore';
+export type Timestamp = {
+  seconds: number;
+  nanoseconds: number;
+  toDate?: () => Date;
+} | string | Date;
 
 // ─── USER ROLES & STATUS ────────────────────────────────────────────────────
 

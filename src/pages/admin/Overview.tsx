@@ -9,8 +9,6 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, 
   Tooltip, ResponsiveContainer, AreaChart, Area 
 } from 'recharts';
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../../lib/firebase';
 import { demoUsers, demoEvents } from '../../lib/demoData';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 
@@ -55,35 +53,6 @@ const Overview = () => {
           }
         } catch (err) {
           console.error("Error fetching Supabase stats:", err);
-        }
-      } else if (isFirebaseReady) {
-        try {
-          const usersSnap = await getDocs(collection(db, 'users'));
-          userCount = usersSnap.size;
-
-          const eventsSnap = await getDocs(collection(db, 'events'));
-          eventCount = eventsSnap.size;
-          
-          eventsSnap.forEach(doc => {
-            regCount += (doc.data().registeredCount || 0);
-          });
-
-          // Get real audit logs
-          const logsSnap = await getDocs(query(collection(db, 'audit_logs'), orderBy('timestamp', 'desc'), limit(5)));
-          activity = logsSnap.docs.map(doc => ({
-            user: doc.data().user,
-            action: doc.data().action,
-            time: doc.data().timestamp?.toDate()?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) || 'Just now'
-          }));
-          
-          if (activity.length === 0) {
-            activity = [
-              { user: 'System', action: 'Database connection established', time: 'Just now' },
-              { user: 'Security', action: 'Firewall rules updated', time: '5m ago' },
-            ];
-          }
-        } catch (error) {
-          console.error("Error fetching Firestore stats:", error);
         }
       } else {
         userCount = demoUsers.length;

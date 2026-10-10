@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { awardPoints } from '../../services/pointsService';
 import { demoUsers } from '../../lib/demoData';
-import { db, isFirebaseReady } from '../../lib/firebase';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { collection, getDocs } from 'firebase/firestore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import {
@@ -49,25 +47,6 @@ export const PointsManagement = () => {
             totalPoints: Number(d.xp || 0),
             memberId: d.member_id || 'DC-000',
           }));
-          setMembers(list);
-          setLoading(false);
-          return;
-        }
-      }
-
-      if (isFirebaseReady) {
-        const snap = await getDocs(collection(db, 'users'));
-        if (!snap.empty) {
-          const list: MemberItem[] = snap.docs.map(d => {
-            const data = d.data();
-            return {
-              uid: d.id,
-              fullName: data.fullName || 'Operative',
-              email: data.email || '',
-              totalPoints: Number(data.totalPoints) || 0,
-              memberId: data.memberId || 'DC-000',
-            };
-          });
           setMembers(list);
           setLoading(false);
           return;

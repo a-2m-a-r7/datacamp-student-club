@@ -96,8 +96,8 @@ export const Privacy = () => {
             </h2>
             <p>
               {isArabic
-                ? 'تُخزن جميع البيانات باستخدام بروتوكولات التشفير الحديثة (SSL/TLS)، مع إدارة جلسات المصادقة الآمنة عبر Firebase و OAuth 2.0، ولا تتم مشاركة أي بيانات طلابية مع جهات تجارية خارجية.'
-                : 'All club data is stored securely using TLS encryption and protected via Firebase Authentication and OAuth 2.0 protocols. Student data is never sold or shared with third-party advertisers.'
+                ? 'تُخزن جميع البيانات باستخدام بروتوكولات التشفير الحديثة (SSL/TLS)، مع إدارة جلسات المصادقة الآمنة عبر Supabase و OAuth 2.0، ولا تتم مشاركة أي بيانات طلابية مع جهات تجارية خارجية.'
+                : 'All club data is stored securely using TLS encryption and protected via Supabase Authentication and OAuth 2.0 protocols. Student data is never sold or shared with third-party advertisers.'
               }
             </p>
           </section>

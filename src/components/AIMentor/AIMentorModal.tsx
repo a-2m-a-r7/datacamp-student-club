@@ -10,7 +10,7 @@ import { Input } from '../ui/Input';
 import { X, Send, Bot, Sparkles, Key, Database, Zap, RefreshCw, MessageSquarePlus, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { isFirebaseReady } from '../../lib/firebase';
+import { isSupabaseConfigured } from '../../lib/supabase';
 
 const renderInlineText = (text: string) => {
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
@@ -172,8 +172,8 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
       id: 'welcome-msg',
       sender: 'assistant',
       text: isAr
-        ? `مرحباً بك يا ${name}. أنا **NEXUS**، مرشدك الذكي في نادي DataCamp بجامعة الابتكار.\n\n${isFirebaseReady ? '🟢 **قاعدة البيانات متصلة** — وصول مباشر للدورات والفعاليات ونقاط الأعضاء.' : '🟡 **النظام المحلي نشط** — تشغيل قاعدة المعرفة المحلية.'}\n\n${isGeminiConfigured() ? '⚡ **ذكاء Gemini المتطور متصل** — تفكير تحليلي حي فائق السرعة.' : '💡 **ملاحظة**: يعمل بنظام الذكاء المحلي.'}\n\nكيف يمكنني مساعدتك ودعم مسارك التعليمي اليوم؟`
-        : `Hello ${name}! I am **NEXUS**, your AI mentor at DataCamp Student Club.\n\n${isFirebaseReady ? '🟢 **Database Connected** — Live access to courses, events, and member XP.' : '🟡 **Local Runtime Active** — Local knowledge base operating.'}\n\n${isGeminiConfigured() ? '⚡ **Google Gemini Online** — Live ultra-fast reasoning enabled.' : '💡 **Note**: Running on local AI heuristics.'}\n\nHow can I accelerate your learning journey today?`,
+        ? `مرحباً بك يا ${name}. أنا **NEXUS**، مرشدك الذكي في نادي DataCamp بجامعة الابتكار.\n\n${isSupabaseConfigured ? '🟢 **قاعدة بيانات Supabase متصلة** — وصول مباشر للدورات والفعاليات ونقاط الأعضاء.' : '🟡 **النظام المحلي نشط** — تشغيل قاعدة المعرفة المحلية.'}\n\n${isGeminiConfigured() ? '⚡ **ذكاء Gemini المتطور متصل** — تفكير تحليلي حي فائق السرعة.' : '💡 **ملاحظة**: يعمل بنظام الذكاء المحلي.'}\n\nكيف يمكنني مساعدتك ودعم مسارك التعليمي اليوم؟`
+        : `Hello ${name}! I am **NEXUS**, your AI mentor at DataCamp Student Club.\n\n${isSupabaseConfigured ? '🟢 **Supabase Database Connected** — Live access to courses, events, and member XP.' : '🟡 **Local Runtime Active** — Local knowledge base operating.'}\n\n${isGeminiConfigured() ? '⚡ **Google Gemini Online** — Live ultra-fast reasoning enabled.' : '💡 **Note**: Running on local AI heuristics.'}\n\nHow can I accelerate your learning journey today?`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       suggestedActions: isAr ? [
         { label: '🗺️ اقترح دورة مناسبة', action: 'ask', payload: 'ما هي أفضل دورة أبدأ بها في النادي؟' },
@@ -365,9 +365,9 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
                   </p>
                   {/* Status indicators */}
                   <div className="flex items-center gap-1.5">
-                    <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-mono ${isFirebaseReady ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                    <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-mono ${isSupabaseConfigured ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
                       <Database className="w-2.5 h-2.5" />
-                      {isFirebaseReady ? 'DB' : 'DEMO'}
+                      {isSupabaseConfigured ? 'SUPABASE' : 'DEMO'}
                     </div>
                     <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-mono ${hasApiKey ? 'bg-blue-500/20 text-blue-400' : 'bg-gray-500/20 text-gray-400'}`}>
                       <Zap className="w-2.5 h-2.5" />
@@ -522,8 +522,8 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
                   <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.4s]" />
                   <span className="text-[11px] text-primary/80">
                     {isArabic 
-                      ? (isFirebaseReady ? 'جاري استدعاء بيانات النادي...' : 'جاري تحليل وصياغة الإجابة...')
-                      : (isFirebaseReady ? 'Querying club database...' : 'Synthesizing response...')}
+                      ? (isSupabaseConfigured ? 'جاري استدعاء بيانات النادي...' : 'جاري تحليل وصياغة الإجابة...')
+                      : (isSupabaseConfigured ? 'Querying club database...' : 'Synthesizing response...')}
                   </span>
                 </div>
               </div>

@@ -11,7 +11,7 @@
 
 import { UserProfile, Course } from '../types';
 import { getAIContextData, getUserLearningContext } from './dbService';
-import { isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured } from '../lib/supabase';
 
 export interface AIMessage {
   id: string;
@@ -59,7 +59,7 @@ async function fetchDatabaseContext() {
 }
 
 async function fetchUserContext(userId: string) {
-  if (!userId || !isFirebaseReady) return null;
+  if (!userId || !isSupabaseConfigured) return null;
   
   try {
     return await getUserLearningContext(userId);

@@ -22,7 +22,7 @@ const GoogleIcon = () => (
 );
 
 const Register = () => {
-  const { user, loading: authLoading, registerWithEmail } = useAuth();
+  const { user, loading: authLoading, registerWithEmail, loginWithGoogle } = useAuth();
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
 
@@ -82,8 +82,13 @@ const Register = () => {
     }
   };
 
-  const handleGoogleSignUp = () => {
-    setShowGoogleModal(true);
+  const handleGoogleSignUp = async () => {
+    setIsLoading(true);
+    try {
+      await loginWithGoogle('/dashboard');
+    } catch {
+      setIsLoading(false);
+    }
   };
 
   if (authLoading && !isLoading) {
@@ -115,7 +120,7 @@ const Register = () => {
           </CardHeader>
 
           <CardContent className="space-y-4 pt-4">
-            {/* Google Sign Up - Always Visible */}
+            {/* Google Sign Up - Direct OAuth */}
             <Button
               type="button"
               variant="outline"
@@ -129,6 +134,16 @@ const Register = () => {
                 <><GoogleIcon /><span>{isArabic ? 'التسجيل السريع بحساب Google' : 'SIGN UP WITH GOOGLE'}</span></>
               )}
             </Button>
+
+            <div className="flex justify-center -mt-1">
+              <button
+                type="button"
+                onClick={() => setShowGoogleModal(true)}
+                className="text-[11px] font-mono text-muted-foreground/70 hover:text-primary transition-colors underline decoration-dotted"
+              >
+                {isArabic ? '⚡ تجربة الحسابات السريعة (حساب المشرف / حساب العضو)' : '⚡ Quick Demo Accounts Switcher'}
+              </button>
+            </div>
 
             {/* Stylish Divider */}
             <div className="relative my-3">
