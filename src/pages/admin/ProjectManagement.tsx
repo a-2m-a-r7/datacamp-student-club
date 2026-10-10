@@ -6,6 +6,7 @@ import { Plus, Trash2, Code, Save, ExternalLink, Image as ImageIcon } from 'luci
 import { toast } from 'sonner';
 import { collection, onSnapshot, query, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
 import ImagePicker from '../../components/ImagePicker';
 import { demoUsers, demoProjects, setDemoProjects } from '../../lib/demoData';
@@ -28,6 +29,26 @@ const ProjectManagement = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isSupabaseConfigured) {
+      const fetchSupabaseProjects = async () => {
+        try {
+          const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+          if (!error && data) setProjects(data);
+        } catch {}
+      };
+      fetchSupabaseProjects();
+
+      const channel = supabase.channel('realtime_admin_projects')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => {
+          fetchSupabaseProjects();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+
     if (!isFirebaseReady) {
       setProjects(demoProjects);
       setUsers(demoUsers);
@@ -84,6 +105,28 @@ const ProjectManagement = () => {
       createdAt: new Date().toISOString() 
     };
 
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from('projects').insert({
+          title: newProject.title,
+          description: newProject.description,
+          status: 'active',
+          members: [authorLabel]
+        });
+        if (error) throw error;
+        setShowAddModal(false);
+        resetForm();
+        toast.success('Project added to Supabase portfolio');
+        const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+        if (data) setProjects(data);
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to add project');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const updated = [{ ...projectData, id: 'demo_' + Date.now() }, ...projects];
       setDemoProjects(updated);
@@ -109,6 +152,17 @@ const ProjectManagement = () => {
   };
 
   const deleteProject = async (id: string) => {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('projects').delete().eq('id', id);
+        setProjects(prev => prev.filter(p => p.id !== id));
+        toast.success('Project removed from Supabase');
+      } catch {
+        toast.error('Failed to remove project');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const updated = projects.filter(p => p.id !== id);
       setDemoProjects(updated);

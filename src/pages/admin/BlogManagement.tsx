@@ -6,6 +6,7 @@ import { Plus, Trash2, Edit3, Save, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { collection, onSnapshot, query, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
 import { demoUsers, demoBlog, setDemoBlog } from '../../lib/demoData';
 
@@ -19,6 +20,26 @@ const BlogManagement = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isSupabaseConfigured) {
+      const fetchSupabaseBlog = async () => {
+        try {
+          const { data, error } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
+          if (!error && data) setPosts(data);
+        } catch {}
+      };
+      fetchSupabaseBlog();
+
+      const channel = supabase.channel('realtime_admin_blog')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'blog' }, () => {
+          fetchSupabaseBlog();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+
     if (!isFirebaseReady) {
       setPosts(demoBlog);
       setUsers(demoUsers);
@@ -70,6 +91,29 @@ const BlogManagement = () => {
 
     const postData = { ...newPost, author: authorLabel, createdAt: new Date().toISOString() };
 
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from('blog').insert({
+          title: newPost.title,
+          content: newPost.excerpt,
+          author: authorLabel,
+          date: newPost.date,
+          status: 'published'
+        });
+        if (error) throw error;
+        setShowAddModal(false);
+        resetForm();
+        toast.success('Transmission published to Supabase');
+        const { data } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
+        if (data) setPosts(data);
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to publish');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const updated = [{ ...postData, id: Date.now().toString() }, ...posts];
       setDemoBlog(updated);
@@ -95,6 +139,17 @@ const BlogManagement = () => {
   };
 
   const deletePost = async (id: string) => {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('blog').delete().eq('id', id);
+        setPosts(prev => prev.filter(p => p.id !== id));
+        toast.success('Transmission redacted from Supabase');
+      } catch {
+        toast.error('Failed to redact transmission');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const updated = posts.filter(p => p.id !== id);
       setDemoBlog(updated);

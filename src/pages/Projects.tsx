@@ -12,6 +12,7 @@ import {
 import { Button } from '../components/ui/Button';
 import { collection, onSnapshot, query, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { demoProjects } from '../lib/demoData';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -136,6 +137,38 @@ export const Projects = () => {
 
   useEffect(() => {
     const sampleData = isArabic ? SAMPLE_PROJECTS_AR : SAMPLE_PROJECTS_EN;
+    if (isSupabaseConfigured) {
+      const fetchSupabaseProjects = async () => {
+        try {
+          const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+          if (!error && data && data.length > 0) {
+            setProjects(data.map((p: any) => ({
+              ...p,
+              author: p.members?.[0] || 'Club Member',
+              technologies: Array.isArray(p.technologies) ? p.technologies : ['Python', 'Data Science'],
+            })));
+          } else {
+            setProjects(sampleData);
+          }
+        } catch {
+          setProjects(sampleData);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchSupabaseProjects();
+
+      const channel = supabase.channel('realtime_public_projects')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => {
+          fetchSupabaseProjects();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+
     if (!isFirebaseReady) {
       setProjects(demoProjects.length > 0 ? demoProjects : sampleData);
       setLoading(false);
@@ -189,7 +222,16 @@ export const Projects = () => {
         createdAt: new Date().toISOString(),
       };
 
-      if (!isFirebaseReady) {
+      if (isSupabaseConfigured) {
+        await supabase.from('projects').insert({
+          title: payload.title,
+          description: payload.description,
+          status: 'active',
+          members: [payload.author]
+        });
+        setProjects(prev => [payload, ...prev]);
+        toast.success(isArabic ? 'تم نشر المشروع في مستودع النادي بـ Supabase! 🚀' : 'Project published to Supabase repository! 🚀');
+      } else if (!isFirebaseReady) {
         setProjects(prev => [payload, ...prev]);
         toast.success(isArabic ? 'تم إرسال المشروع بنجاح! (الوضع التجريبي)' : 'Project submitted successfully! (Demo Mode)');
       } else {

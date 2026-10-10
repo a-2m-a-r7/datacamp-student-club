@@ -1,18 +1,52 @@
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
-const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']);
 
 export const uploadFile = async (path: string, file: File | Blob): Promise<string> => {
   // 1. Validate file size
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    throw new Error(`File size exceeds maximum allowed limit of 5MB (${Math.round(file.size / 1024 / 1024)}MB uploaded)`);
+    throw new Error(`File size exceeds maximum allowed limit of 10MB (${Math.round(file.size / 1024 / 1024)}MB uploaded)`);
   }
 
   // 2. Validate MIME type
   if (file.type && !ALLOWED_MIME_TYPES.has(file.type.toLowerCase())) {
-    throw new Error(`Unsupported file type: ${file.type}. Only JPEG, PNG, and WebP are allowed.`);
+    throw new Error(`Unsupported file type: ${file.type}. Only JPEG, PNG, WebP, GIF, and SVG are allowed.`);
+  }
+
+  // Sanitize path to prevent directory traversal
+  const sanitizedPath = path.replace(/\.\./g, '').replace(/\/+/g, '/').replace(/^\//, '');
+
+  // 3. Try Supabase Storage first
+  if (isSupabaseConfigured) {
+    try {
+      let bucket = 'uploads';
+      let filePath = sanitizedPath;
+
+      if (sanitizedPath.startsWith('avatars/')) {
+        bucket = 'avatars';
+        filePath = sanitizedPath.replace(/^avatars\//, '');
+      } else if (sanitizedPath.startsWith('course-thumbnails/')) {
+        bucket = 'course-thumbnails';
+        filePath = sanitizedPath.replace(/^course-thumbnails\//, '');
+      }
+
+      const { data, error } = await supabase.storage.from(bucket).upload(filePath, file, {
+        upsert: true,
+        contentType: file.type || 'image/jpeg',
+      });
+
+      if (error) {
+        console.warn('Supabase Storage upload warning, attempting fallback:', error);
+      } else if (data) {
+        const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(data.path);
+        return urlData.publicUrl;
+      }
+    } catch (sbError) {
+      console.warn('Supabase Storage exception:', sbError);
+    }
   }
 
   if (!isFirebaseReady) {
@@ -27,8 +61,6 @@ export const uploadFile = async (path: string, file: File | Blob): Promise<strin
     return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEwMTAxMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMzk2ZjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSI+W0RFTU8gTUVESUFdPC90ZXh0Pjwvc3ZnPg==';
   }
 
-  // Sanitize path to prevent directory traversal
-  const sanitizedPath = path.replace(/\.\./g, '').replace(/\/+/g, '/').replace(/^\//, '');
   const storageRef = ref(storage, sanitizedPath);
   await uploadBytes(storageRef, file, {
     contentType: file.type || 'image/jpeg',
@@ -37,7 +69,23 @@ export const uploadFile = async (path: string, file: File | Blob): Promise<strin
 };
 
 export const deleteFile = async (url: string): Promise<void> => {
-  if (!isFirebaseReady || !url || url.startsWith('data:')) return;
+  if (!url || url.startsWith('data:')) return;
+
+  if (isSupabaseConfigured && url.includes('supabase.co/storage/v1/object/public/')) {
+    try {
+      const match = url.match(/\/object\/public\/([^/]+)\/(.+)$/);
+      if (match) {
+        const bucket = match[1];
+        const filePath = match[2];
+        await supabase.storage.from(bucket).remove([filePath]);
+        return;
+      }
+    } catch (e) {
+      console.error('Failed to delete file from Supabase storage:', e);
+    }
+  }
+
+  if (!isFirebaseReady) return;
   try {
     const storageRef = ref(storage, url);
     await deleteObject(storageRef);

@@ -19,7 +19,8 @@ import {
   PlayCircle,
   Eye,
   CheckCircle,
-  Clock
+  Clock,
+  Upload
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -30,6 +31,22 @@ export const CourseManagement = () => {
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Partial<Course> | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingImage(true);
+    try {
+      const url = await courseService.uploadThumbnail(file);
+      setEditingCourse(p => ({ ...p, coverImage: url }));
+      toast.success(isArabic ? 'تم رفع غلاف الدورة إلى سحابة Supabase Storage بنجاح ☁️' : 'Uploaded thumbnail to Supabase Storage ☁️');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to upload thumbnail');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -299,16 +316,30 @@ export const CourseManagement = () => {
                   currentImage={editingCourse.coverImage}
                   onImageSelected={(base64) => setEditingCourse(p => ({ ...p, coverImage: base64 }))}
                 />
-                <div className="space-y-1">
-                  <label className="text-[10px] font-cyber text-muted-foreground uppercase">
-                    {isArabic ? 'أو أدخل رابط الصورة مباشرة' : 'Or paste Cover Image URL directly'}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+                  <label className="cursor-pointer">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={handleFileUpload} 
+                      disabled={uploadingImage}
+                    />
+                    <div className="flex items-center justify-center px-3 py-2 bg-primary/10 border border-primary/30 rounded-md text-xs font-cyber text-primary hover:bg-primary/20 transition-all">
+                      <Upload className={`w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 ${uploadingImage ? 'animate-spin' : ''}`} />
+                      {uploadingImage 
+                        ? (isArabic ? 'جاري الرفع لـ Supabase...' : 'Uploading to Cloud...') 
+                        : (isArabic ? 'رفع لسحابة Supabase Storage ☁️' : 'Upload to Supabase Storage ☁️')}
+                    </div>
                   </label>
-                  <Input
-                    value={editingCourse.coverImage || ''}
-                    onChange={e => setEditingCourse(p => ({ ...p, coverImage: e.target.value }))}
-                    placeholder="https://images.unsplash.com/..."
-                    className="font-mono text-xs"
-                  />
+                  <div className="flex-1 space-y-1">
+                    <Input
+                      value={editingCourse.coverImage || ''}
+                      onChange={e => setEditingCourse(p => ({ ...p, coverImage: e.target.value }))}
+                      placeholder="https://images.unsplash.com/... or uploaded URL"
+                      className="font-mono text-xs"
+                    />
+                  </div>
                 </div>
               </div>
 

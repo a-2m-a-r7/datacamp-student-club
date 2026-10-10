@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { toast } from 'sonner';
 import { isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { demoMessages, setDemoMessages } from '../lib/demoData';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -30,13 +31,27 @@ const Contact = () => {
       message: formData.message.trim(),
     };
 
-    const messageData = {
-      ...trimmedData,
-      timestamp: new Date().toISOString(),
-      status: 'unread'
-    };
-
     try {
+      if (isSupabaseConfigured) {
+        const { error } = await supabase.from('messages').insert({
+          name: trimmedData.name,
+          email: trimmedData.email,
+          subject: trimmedData.subject,
+          message: trimmedData.message,
+          status: 'unread'
+        });
+        if (error) throw error;
+        toast.success(isArabic ? 'تم استلام رسالتك بنجاح. سنتواصل معك قريباً.' : 'Transmission received. We will contact you shortly.');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        return;
+      }
+
+      const messageData = {
+        ...trimmedData,
+        timestamp: new Date().toISOString(),
+        status: 'unread'
+      };
+
       if (!isFirebaseReady) {
         const updated = [...demoMessages, { ...messageData, id: Date.now().toString() }];
         setDemoMessages(updated);

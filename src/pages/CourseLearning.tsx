@@ -67,9 +67,10 @@ const CourseLearning = () => {
         setLessons(less);
 
         if (user) {
-          let enr = await courseService.getUserEnrollment(user.uid, c.id);
+          const currentUserId = user.id || (user as any).uid;
+          let enr = await courseService.getUserEnrollment(currentUserId, c.id);
           if (!enr) {
-            enr = await courseService.enrollCourse(user.uid, c.id);
+            enr = await courseService.enrollCourse(currentUserId, c.id);
           }
           setEnrollment(enr);
 
@@ -100,8 +101,9 @@ const CourseLearning = () => {
 
     setCompleting(true);
     try {
+      const currentUserId = user.id || (user as any).uid;
       const res = await courseService.completeLesson(
-        user.uid,
+        currentUserId,
         course.id,
         currentLesson.id,
         course.totalLessons,

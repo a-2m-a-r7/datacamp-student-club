@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { awardPoints } from '../../services/pointsService';
 import { demoUsers } from '../../lib/demoData';
 import { db, isFirebaseReady } from '../../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { collection, getDocs } from 'firebase/firestore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -38,6 +39,22 @@ export const PointsManagement = () => {
   const fetchMembers = async () => {
     setLoading(true);
     try {
+      if (isSupabaseConfigured) {
+        const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
+        if (!error && data && data.length > 0) {
+          const list: MemberItem[] = data.map((d: any) => ({
+            uid: d.id,
+            fullName: d.full_name || 'Operative',
+            email: d.email || '',
+            totalPoints: Number(d.xp || 0),
+            memberId: d.member_id || 'DC-000',
+          }));
+          setMembers(list);
+          setLoading(false);
+          return;
+        }
+      }
+
       if (isFirebaseReady) {
         const snap = await getDocs(collection(db, 'users'));
         if (!snap.empty) {
@@ -82,6 +99,32 @@ export const PointsManagement = () => {
     if (!selectedMember || !pointsAmount) return;
 
     setIsSubmitting(true);
+    if (isSupabaseConfigured) {
+      try {
+        const { data: prof } = await supabase.from('profiles').select('xp').eq('id', selectedMember.uid).single();
+        const currentPoints = Number(prof?.xp || 0);
+        const newPoints = Math.max(0, currentPoints + pointsAmount);
+        await supabase.from('profiles').update({ xp: newPoints }).eq('id', selectedMember.uid);
+        await supabase.from('audit_logs').insert({
+          user_id: selectedMember.uid,
+          action: 'ADMIN_BONUS',
+          details: { points: pointsAmount, reason: reason || 'Manual Admin XP Bonus' }
+        });
+        toast.success(`Successfully granted +${pointsAmount} XP to ${selectedMember.fullName}!`);
+        setMembers(prev =>
+          prev.map(m =>
+            m.uid === selectedMember.uid ? { ...m, totalPoints: newPoints } : m
+          )
+        );
+        setSelectedMember(null);
+      } catch {
+        toast.error('Failed to grant points in database.');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
     try {
       await awardPoints({
         userId: selectedMember.uid,

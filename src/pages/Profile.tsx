@@ -14,6 +14,7 @@ import {
 import { doc, updateDoc } from 'firebase/firestore';
 import { updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider, sendPasswordResetEmail } from 'firebase/auth';
 import { db, auth, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import ImagePicker from '../components/ImagePicker';
 import { sendOTP, verifyOTP } from '../lib/otp';
 import { motion, AnimatePresence } from 'motion/react';
@@ -98,14 +99,20 @@ const Profile = () => {
   };
 
   const handleSendPasswordReset = async () => {
-    const targetEmail = profile?.email || auth.currentUser?.email;
+    const targetEmail = profile?.email || (user as any)?.email;
     if (!targetEmail) {
       toast.error(isArabic ? 'لا يوجد بريد إلكتروني مرتبط بهذا الحساب' : 'No email address found for this account');
       return;
     }
     setLoading(true);
     try {
-      if (isFirebaseReady && auth.currentUser) {
+      if (isSupabaseConfigured) {
+        const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
+          redirectTo: `${window.location.origin}/reset-password`
+        });
+        if (error) throw error;
+        toast.success(isArabic ? `تم إرسال رابط استعادة كلمة المرور إلى ${targetEmail}` : `Password recovery link sent to ${targetEmail}`);
+      } else if (isFirebaseReady && auth.currentUser) {
         await sendPasswordResetEmail(auth, targetEmail);
         toast.success(isArabic ? `تم إرسال رابط إعادة تعيين كلمة المرور إلى ${targetEmail}` : `Password reset link sent to ${targetEmail}`);
       } else {
@@ -128,16 +135,15 @@ const Profile = () => {
       let finalPhotoURL = formData.photoURL;
 
       if (formData.photoURL.startsWith('data:image')) {
-        if (isFirebaseReady && user) {
-          try {
-            const response = await fetch(formData.photoURL);
-            const blob = await response.blob();
-            const { uploadFile, getStoragePath } = await import('../services/storageService');
-            const file = new File([blob], `avatar_${Date.now()}.jpg`, { type: 'image/jpeg' });
-            finalPhotoURL = await uploadFile(getStoragePath('avatars', user.uid, file.name), file);
-          } catch {
-            console.warn("Storage upload fallback");
-          }
+        try {
+          const response = await fetch(formData.photoURL);
+          const blob = await response.blob();
+          const { uploadFile, getStoragePath } = await import('../services/storageService');
+          const activeUid = (user as any)?.id || (user as any)?.uid || 'user';
+          const file = new File([blob], `avatar_${Date.now()}.jpg`, { type: 'image/jpeg' });
+          finalPhotoURL = await uploadFile(getStoragePath('avatars', activeUid, file.name), file);
+        } catch {
+          console.warn("Storage upload fallback");
         }
       }
 
@@ -145,6 +151,34 @@ const Profile = () => {
         toast.error(isArabic ? 'صيغة رقم الهاتف المصري غير صحيحة (+201XXXXXXXXX)' : 'Invalid Egyptian phone format (+201XXXXXXXXX)');
         setLoading(false);
         return;
+      }
+
+      if (isSupabaseConfigured) {
+        const activeId = (user as any)?.id || (user as any)?.uid || profile?.uid;
+        if (activeId) {
+          const { error } = await supabase.from('profiles').update({
+            full_name: formData.fullName,
+            phone_number: formData.phone,
+            faculty: formData.faculty,
+            academic_year: formData.academicYear,
+            avatar_url: finalPhotoURL,
+            updated_at: new Date().toISOString()
+          }).eq('id', activeId);
+
+          if (error) throw error;
+
+          if (profile) {
+            profile.fullName = formData.fullName;
+            profile.phoneNumber = formData.phone;
+            profile.faculty = formData.faculty;
+            profile.academicYear = formData.academicYear;
+            profile.photoURL = finalPhotoURL;
+          }
+
+          toast.success(isArabic ? 'تم حفظ التعديلات بنجاح في قاعدة البيانات' : 'Profile updated successfully in database');
+          setLoading(false);
+          return;
+        }
       }
 
       if (!isFirebaseReady) {
@@ -160,7 +194,7 @@ const Profile = () => {
         }
         toast.success(isArabic ? 'تم تحديث البيانات بنجاح (الوضع التجريبي)' : 'Profile updated successfully (Demo Mode)');
       } else if (user) {
-        await updateDoc(doc(db, 'users', user.uid), {
+        await updateDoc(doc(db, 'users', (user as any).uid || (user as any).id), {
           fullName: formData.fullName,
           phoneNumber: formData.phone,
           faculty: formData.faculty,
@@ -246,6 +280,30 @@ const Profile = () => {
 
     setLoading(true);
     try {
+      if (isSupabaseConfigured) {
+        if (otpAction === 'password') {
+          const { error } = await supabase.auth.updateUser({ password: newPassword });
+          if (error) throw error;
+          toast.success(isArabic ? 'تم تحديث كلمة المرور بنجاح' : 'Password updated successfully');
+        } else if (otpAction === 'email') {
+          const { error } = await supabase.auth.updateUser({ email: newEmail });
+          if (error) throw error;
+          const activeId = (user as any)?.id || (user as any)?.uid || profile?.uid;
+          if (activeId) {
+            await supabase.from('profiles').update({ email: newEmail }).eq('id', activeId);
+          }
+          toast.success(isArabic ? 'تم إرسال رابط تأكيد للبريد الإلكتروني الجديد' : 'Confirmation link sent to new email');
+        }
+        setOtpStep('none');
+        setOtpAction('none');
+        setNewPassword('');
+        setConfirmPassword('');
+        setOtpCode('');
+        setCurrentPassword('');
+        setLoading(false);
+        return;
+      }
+
       const isGoogleUser = auth.currentUser?.providerData.some(p => p.providerId === 'google.com');
 
       if (isFirebaseReady && auth.currentUser && auth.currentUser.email && !isGoogleUser && currentPassword) {

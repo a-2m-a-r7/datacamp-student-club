@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { demoAboutData } from '../lib/demoData';
 import { Button } from '../components/ui/Button';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -30,6 +31,20 @@ export const About = () => {
   const [aboutData, setAboutData] = React.useState(demoAboutData);
 
   React.useEffect(() => {
+    if (isSupabaseConfigured) {
+      supabase
+        .from('settings')
+        .select('*')
+        .eq('key', 'about_data')
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data?.value) {
+            setAboutData(data.value);
+          }
+        });
+      return;
+    }
+
     if (!isFirebaseReady) {
       setAboutData(demoAboutData);
       return;

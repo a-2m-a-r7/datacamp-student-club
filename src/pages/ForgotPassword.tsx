@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth, isFirebaseReady } from '../lib/firebase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/Card';
@@ -21,14 +20,17 @@ const ForgotPassword = () => {
     setLoading(true);
     
     try {
-      if (isFirebaseReady) {
-        await sendPasswordResetEmail(auth, email);
+      if (isSupabaseConfigured) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
       }
       
       setSubmitted(true);
       toast.success(isArabic ? 'تم إرسال رابط استعادة كلمة المرور بنجاح.' : 'Recovery link transmission successful.');
-    } catch {
-      toast.error(isArabic ? 'إذا كان هذا البريد مسجلاً، فسيتم إرسال رابط الاستعادة إليه.' : 'If this account is registered, a recovery link will be sent.');
+    } catch (err: any) {
+      toast.error(err.message || (isArabic ? 'إذا كان هذا البريد مسجلاً، فسيتم إرسال رابط الاستعادة إليه.' : 'If this account is registered, a recovery link will be sent.'));
     } finally {
       setLoading(false);
     }

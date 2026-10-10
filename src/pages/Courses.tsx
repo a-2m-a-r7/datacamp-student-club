@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { usePoints } from '../contexts/PointsContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -7,6 +7,7 @@ import { courseService } from '../services/courseService';
 import { Course, CourseCategory, CourseLevel, Enrollment } from '../types';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { toast } from 'sonner';
 import {
   BookOpen,
   Search,
@@ -23,6 +24,7 @@ import {
 import { motion } from 'motion/react';
 
 const Courses = () => {
+  const navigate = useNavigate();
   const { user, profile, isAdmin, isEditor } = useAuth();
   const { totalPoints, level } = usePoints();
   const { isArabic, t } = useLanguage();
@@ -56,7 +58,8 @@ const Courses = () => {
         setCourses(list);
 
         if (user) {
-          const userEnr = await courseService.getUserEnrollments(user.uid);
+          const currentUserId = user.id || (user as any).uid;
+          const userEnr = await courseService.getUserEnrollments(currentUserId);
           const map: Record<string, Enrollment> = {};
           userEnr.forEach(e => { map[e.courseId] = e; });
           setEnrollments(map);
@@ -69,6 +72,24 @@ const Courses = () => {
     };
     loadData();
   }, [user]);
+
+  const handleEnrollCourse = async (e: React.MouseEvent, course: Course) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      toast.info(isArabic ? 'يرجى تسجيل الدخول أولاً للالتحاق بالدورة' : 'Please sign in to enroll in this course');
+      navigate('/login');
+      return;
+    }
+    const currentUserId = user.id || (user as any).uid;
+    try {
+      const enr = await courseService.enrollCourse(currentUserId, course.id);
+      setEnrollments(prev => ({ ...prev, [course.id]: enr }));
+      toast.success(isArabic ? `تم التسجيل بنجاح في ${course.title}! 🚀` : `Successfully enrolled in ${course.title}! 🚀`);
+    } catch {
+      toast.error(isArabic ? 'فشل التسجيل في الدورة' : 'Failed to enroll');
+    }
+  };
 
   const filteredCourses = courses.filter(c => {
     const matchCategory = selectedCategory === 'all' || c.category === selectedCategory;
@@ -333,22 +354,39 @@ const Courses = () => {
                           </Button>
                         </Link>
                       )}
-                      <Link to={`/courses/${course.slug}`}>
-                        <Button
-                          variant={isEnrolled ? "cyber" : "outline"}
-                          className="h-9 px-4 text-xs font-cyber tracking-wider border-primary/40 group-hover:border-primary"
-                        >
-                          {isEnrolled ? (
-                            progress >= 100 ? (
+                      {isEnrolled ? (
+                        <Link to={`/courses/${course.slug}`}>
+                          <Button
+                            variant="cyber"
+                            className="h-9 px-4 text-xs font-cyber tracking-wider shadow-[0_0_15px_rgba(57,255,20,0.2)]"
+                          >
+                            {progress >= 100 ? (
                               <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'مكتمل' : 'COMPLETED'}</span>
                             ) : (
-                              <span>{isArabic ? `متابعة (${progress}%)` : `RESUME (${progress}%)`}</span>
-                            )
-                          ) : (
-                            <span className="flex items-center gap-1">{isArabic ? 'استكشاف الدورة' : 'EXPLORE'} <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" /></span>
-                          )}
-                        </Button>
-                      </Link>
+                              <span className="flex items-center gap-1.5">{isArabic ? `متابعة التعلم (${progress}%)` : `CONTINUE LEARNING (${progress}%)`} <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" /></span>
+                            )}
+                          </Button>
+                        </Link>
+                      ) : (
+                        <div className="flex items-center gap-1.5">
+                          <Button
+                            variant="cyber"
+                            onClick={(e) => handleEnrollCourse(e, course)}
+                            className="h-9 px-3 text-xs font-cyber tracking-wider"
+                          >
+                            {isArabic ? 'سجل الآن ⚡' : 'ENROLL NOW ⚡'}
+                          </Button>
+                          <Link to={`/courses/${course.slug}`}>
+                            <Button
+                              variant="outline"
+                              className="h-9 px-2.5 text-xs font-cyber border-white/10 hover:border-primary/40"
+                              title={isArabic ? 'معاينة تفاصيل المنهج' : 'View Course Syllabus'}
+                            >
+                              <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                            </Button>
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

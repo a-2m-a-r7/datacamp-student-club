@@ -33,11 +33,12 @@ const Overview = () => {
 
       if (isSupabaseConfigured) {
         try {
-          const { count: usersTotal } = await supabase.from('users').select('*', { count: 'exact', head: true });
+          const { count: usersTotal } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
           userCount = usersTotal || 0;
 
-          const { count: eventsTotal } = await supabase.from('events').select('*', { count: 'exact', head: true });
-          eventCount = eventsTotal || 0;
+          const { count: eventsTotal, data: evList } = await supabase.from('events').select('registered_count');
+          eventCount = eventsTotal || (evList?.length ?? 0);
+          regCount = (evList || []).reduce((sum: number, ev: any) => sum + (ev.registered_count || 0), 0);
 
           const { data: logsData } = await supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(5);
           activity = (logsData || []).map((l: any) => ({

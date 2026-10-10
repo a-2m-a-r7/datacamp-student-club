@@ -8,12 +8,27 @@ import ImagePicker from '../../components/ImagePicker';
 
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { demoSettings, setDemoSettings } from '../../lib/demoData';
 
 const Settings = () => {
   const [settings, setSettings] = useState(demoSettings);
 
   useEffect(() => {
+    if (isSupabaseConfigured) {
+      supabase
+        .from('settings')
+        .select('*')
+        .eq('key', 'general')
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data?.value) {
+            setSettings(prev => ({ ...prev, ...data.value }));
+          }
+        });
+      return;
+    }
+
     if (!isFirebaseReady) {
       setSettings(demoSettings);
       return;
@@ -50,6 +65,21 @@ const Settings = () => {
   };
 
   const handleSave = async () => {
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from('settings').upsert({
+          key: 'general',
+          value: settings,
+          updated_at: new Date().toISOString()
+        });
+        if (error) throw error;
+        toast.success('System settings saved to Supabase ☁️');
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to update settings');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       setDemoSettings(settings);
       toast.success('System settings updated in memory (Demo Mode)');

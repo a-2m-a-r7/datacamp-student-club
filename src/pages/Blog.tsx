@@ -16,6 +16,7 @@ import {
 import { Button } from '../components/ui/Button';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { demoBlog } from '../lib/demoData';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -162,6 +163,39 @@ export const Blog = () => {
 
   useEffect(() => {
     const sampleData = isArabic ? SAMPLE_ARTICLES_AR : SAMPLE_ARTICLES_EN;
+    if (isSupabaseConfigured) {
+      const fetchSupabaseBlog = async () => {
+        try {
+          const { data, error } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
+          if (!error && data && data.length > 0) {
+            setPosts(data.map((b: any) => ({
+              ...b,
+              excerpt: b.content || b.excerpt || '',
+              tag: b.category || 'Data Science',
+              readTime: '5 min read'
+            })));
+          } else {
+            setPosts(sampleData);
+          }
+        } catch {
+          setPosts(sampleData);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchSupabaseBlog();
+
+      const channel = supabase.channel('realtime_public_blog')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'blog' }, () => {
+          fetchSupabaseBlog();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+
     if (!isFirebaseReady) {
       setPosts(demoBlog.length > 0 ? demoBlog : sampleData);
       setLoading(false);

@@ -3,6 +3,7 @@ import { collection, onSnapshot, query, orderBy, addDoc, doc, updateDoc, deleteD
 import { auth, db, isFirebaseReady } from '../../lib/firebase';
 import { logAction } from '../../lib/logger';
 import { useAuth } from '../../contexts/AuthContext';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -97,6 +98,26 @@ const EventManagement = () => {
 
   const handleUpdateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from('events').update({
+          title: editingEvent.title,
+          description: editingEvent.description,
+          date: editingEvent.date,
+          location: editingEvent.location,
+          capacity: Number(editingEvent.capacity) || 50,
+          status: editingEvent.status || 'published'
+        }).eq('id', editingEvent.id);
+        if (error) throw error;
+        toast.success('Event updated in Supabase');
+        setEditingEvent(null);
+        const { data } = await supabase.from('events').select('*').order('created_at', { ascending: false });
+        if (data) setEvents(data.map((ev: any) => ({ ...ev, registeredCount: ev.registered_count ?? 0 })));
+      } catch {
+        toast.error('Update failed');
+      }
+      return;
+    }
     if (!isFirebaseReady) {
       const newEvents = events.map(ev => ev.id === editingEvent.id ? editingEvent : ev);
       updateDemoEvents(newEvents);
@@ -147,6 +168,37 @@ const EventManagement = () => {
   });
 
   useEffect(() => {
+    if (isSupabaseConfigured) {
+      const fetchSupabaseEvents = async () => {
+        try {
+          const { data, error } = await supabase.from('events').select('*').order('created_at', { ascending: false });
+          if (!error && data) {
+            setEvents(data.map((ev: any) => ({
+              ...ev,
+              registeredCount: ev.registered_count ?? 0,
+            })));
+          }
+        } catch {} finally {
+          setLoading(false);
+        }
+      };
+      fetchSupabaseEvents();
+
+      const channel = supabase.channel('realtime_admin_events')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, () => {
+          fetchSupabaseEvents();
+        })
+        .subscribe();
+
+      supabase.from('profiles').select('*').then(({ data }) => {
+        if (data) setUsers(data);
+      });
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+
     if (!isFirebaseReady) {
       setEvents(demoEvents);
       setLoading(false);
@@ -178,6 +230,29 @@ const EventManagement = () => {
       createdAt: new Date().toISOString()
     };
 
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from('events').insert({
+          title: newEvent.title,
+          description: newEvent.description,
+          date: newEvent.date,
+          location: newEvent.location,
+          capacity: Number(newEvent.capacity) || 50,
+          status: newEvent.status || 'published',
+          registered_count: 0
+        });
+        if (error) throw error;
+        await logAction('EVENT_CREATED', profile?.fullName || 'Admin', newEvent.title, 'success');
+        toast.success('Event published successfully to Supabase');
+        setShowAddModal(false);
+        const { data } = await supabase.from('events').select('*').order('created_at', { ascending: false });
+        if (data) setEvents(data.map((ev: any) => ({ ...ev, registeredCount: ev.registered_count ?? 0 })));
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to create event');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const newEvents = [{ id: 'demo_' + Date.now(), ...eventData }, ...events];
       updateDemoEvents(newEvents);
@@ -197,6 +272,18 @@ const EventManagement = () => {
   };
 
   const handleDeleteEvent = async (id: string) => {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('events').delete().eq('id', id);
+        toast.success('Event deleted from Supabase');
+        setDeleteConfirmId(null);
+        setEvents(prev => prev.filter(e => e.id !== id));
+      } catch {
+        toast.error('Failed to delete event');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const newEvents = events.filter(e => e.id !== id);
       updateDemoEvents(newEvents);

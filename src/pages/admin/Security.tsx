@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
 import { doc, onSnapshot, setDoc, collection, query, orderBy, limit } from 'firebase/firestore';
 import { db, isFirebaseReady, auth } from '../../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { logAction } from '../../lib/logger';
 
@@ -25,6 +26,39 @@ const Security = () => {
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
 
   useEffect(() => {
+    if (isSupabaseConfigured) {
+      const fetchSupabaseSecurity = async () => {
+        try {
+          const { data: setRow } = await supabase.from('settings').select('value').eq('key', 'security').single();
+          if (setRow?.value) {
+            setSecuritySettings(prev => ({ ...prev, ...setRow.value }));
+          }
+
+          const { data: logs } = await supabase
+            .from('audit_logs')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(10);
+
+          if (logs) {
+            setAuditLogs(logs.map((l: any) => ({
+              id: l.id,
+              action: l.action,
+              user: l.user_email || 'Admin',
+              ip: 'Supabase Cloud',
+              time: l.created_at ? new Date(l.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now',
+              status: 'success'
+            })));
+          }
+        } catch (err) {
+          console.error("Supabase security data error:", err);
+        }
+      };
+
+      fetchSupabaseSecurity();
+      return;
+    }
+
     if (!isFirebaseReady) {
       // Mock data for demo mode
       setAuditLogs([
@@ -64,6 +98,21 @@ const Security = () => {
   }, [profile]);
 
   const handleUpdateSecurity = async () => {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('settings').upsert({
+          key: 'security',
+          value: securitySettings,
+          updated_at: new Date().toISOString()
+        });
+        await logAction('SECURITY_SETTINGS_UPDATE', profile?.fullName || 'Admin', 'Global Policy', 'success');
+        toast.success('Security protocol updated in Supabase');
+      } catch (err) {
+        toast.error('Failed to update security protocol in database');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       toast.success('Security settings updated (Demo Mode)');
       return;
@@ -79,11 +128,27 @@ const Security = () => {
   };
 
   const handlePasswordReset = async () => {
-    if (!user?.email) return;
+    const targetEmail = user?.email || profile?.email;
+    if (!targetEmail) return;
+
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
+          redirectTo: `${window.location.origin}/reset-password`
+        });
+        if (error) throw error;
+        await logAction('PASSWORD_RESET_REQUEST', profile?.fullName || 'Admin', targetEmail, 'success');
+        toast.success(`Password reset email sent to ${targetEmail}`);
+      } catch (error: any) {
+        toast.error(error.message || 'Failed to send reset email');
+      }
+      return;
+    }
+
     try {
-      await sendPasswordResetEmail(auth, user.email);
-      await logAction('PASSWORD_RESET_REQUEST', profile?.fullName || 'Admin', user.email, 'success');
-      toast.success(`Password reset email sent to ${user.email}`);
+      await sendPasswordResetEmail(auth, targetEmail);
+      await logAction('PASSWORD_RESET_REQUEST', profile?.fullName || 'Admin', targetEmail, 'success');
+      toast.success(`Password reset email sent to ${targetEmail}`);
     } catch (error) {
       toast.error('Failed to send reset email');
     }

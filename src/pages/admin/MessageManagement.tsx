@@ -5,6 +5,7 @@ import { Mail, Trash2, Eye, CheckCircle, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { collection, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { demoMessages, setDemoMessages } from '../../lib/demoData';
 
 const MessageManagement = () => {
@@ -14,6 +15,46 @@ const MessageManagement = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isSupabaseConfigured) {
+      const fetchSupabaseMessages = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('messages')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (!error && data) {
+            setMessages(data.map((m: any) => ({
+              id: m.id,
+              name: m.name,
+              email: m.email,
+              subject: m.subject,
+              message: m.message,
+              status: m.status || 'unread',
+              timestamp: m.created_at
+            })));
+          }
+        } catch (err) {
+          console.error("Supabase messages fetch error:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchSupabaseMessages();
+
+      const channel = supabase
+        .channel('messages_realtime')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, () => {
+          fetchSupabaseMessages();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+
     if (!isFirebaseReady) {
       setMessages(demoMessages);
       setLoading(false);
@@ -32,6 +73,17 @@ const MessageManagement = () => {
   }, []);
 
   const deleteMessage = async (id: string) => {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('messages').delete().eq('id', id);
+        setMessages(prev => prev.filter(m => m.id !== id));
+        toast.success('Message deleted from database');
+      } catch (err) {
+        toast.error('Failed to delete message');
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const updated = messages.filter(m => m.id !== id);
       setDemoMessages(updated);
@@ -49,6 +101,16 @@ const MessageManagement = () => {
   };
 
   const markAsRead = async (id: string) => {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('messages').update({ status: 'read' }).eq('id', id);
+        setMessages(prev => prev.map(m => m.id === id ? { ...m, status: 'read' } : m));
+      } catch (err) {
+        console.error('Failed to update status in Supabase:', err);
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       const updated = messages.map(m => m.id === id ? { ...m, status: 'read' } : m);
       setDemoMessages(updated);

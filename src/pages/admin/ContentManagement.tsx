@@ -6,6 +6,7 @@ import { Layout, Edit3, Image as ImageIcon, Link as LinkIcon, Plus, Trash2, Save
 import { toast } from 'sonner';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db, isFirebaseReady } from '../../lib/firebase';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { demoHomeContent, demoAboutData, setDemoHomeContent, setDemoAboutData } from '../../lib/demoData';
 
 const ContentManagement = () => {
@@ -20,6 +21,23 @@ const ContentManagement = () => {
   const [aboutData, setAboutData] = useState(demoAboutData);
 
   useEffect(() => {
+    if (isSupabaseConfigured) {
+      const fetchSupabaseSettings = async () => {
+        try {
+          const { data: homeRow } = await supabase.from('settings').select('value').eq('key', 'home').single();
+          if (homeRow?.value) setHomeContent(homeRow.value);
+
+          const { data: aboutRow } = await supabase.from('settings').select('value').eq('key', 'about').single();
+          if (aboutRow?.value) setAboutData(aboutRow.value);
+        } catch (err) {
+          console.error("Supabase settings fetch error:", err);
+        }
+      };
+
+      fetchSupabaseSettings();
+      return;
+    }
+
     if (!isFirebaseReady) {
       setHomeContent(demoHomeContent);
       setAboutData(demoAboutData);
@@ -45,6 +63,21 @@ const ContentManagement = () => {
   }, []);
 
   const handleSave = async () => {
+    if (isSupabaseConfigured) {
+      try {
+        if (activeTab === 'home') {
+          await supabase.from('settings').upsert({ key: 'home', value: homeContent, updated_at: new Date().toISOString() });
+        }
+        if (activeTab === 'about') {
+          await supabase.from('settings').upsert({ key: 'about', value: aboutData, updated_at: new Date().toISOString() });
+        }
+        toast.success(`Content for ${activeTab} updated in database`);
+      } catch (err) {
+        toast.error(`Failed to update ${activeTab} content in database`);
+      }
+      return;
+    }
+
     if (!isFirebaseReady) {
       if (activeTab === 'home') setDemoHomeContent(homeContent);
       if (activeTab === 'about') setDemoAboutData(aboutData);

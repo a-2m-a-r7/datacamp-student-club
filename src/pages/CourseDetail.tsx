@@ -63,7 +63,8 @@ const CourseDetail = () => {
         setExpandedModules(exp);
 
         if (user) {
-          const enr = await courseService.getUserEnrollment(user.uid, c.id);
+          const currentUserId = user.id || (user as any).uid;
+          const enr = await courseService.getUserEnrollment(currentUserId, c.id);
           setEnrollment(enr);
         }
       } catch (err) {
@@ -85,9 +86,10 @@ const CourseDetail = () => {
 
     setEnrolling(true);
     try {
-      const enr = await courseService.enrollCourse(user.uid, course.id);
+      const currentUserId = user.id || (user as any).uid;
+      const enr = await courseService.enrollCourse(currentUserId, course.id);
       setEnrollment(enr);
-      toast.success(isArabic ? `تم التسجيل بنجاح في ${course.title}! تم منح +5 XP.` : `Successfully enrolled in ${course.title}! +5 XP awarded.`);
+      toast.success(isArabic ? `تم التسجيل بنجاح في ${course.title}! تم منح +50 XP.` : `Successfully enrolled in ${course.title}! +50 XP awarded.`);
     } catch {
       toast.error(isArabic ? 'فشل التسجيل في الدورة.' : 'Failed to enroll.');
     } finally {

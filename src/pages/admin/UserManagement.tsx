@@ -1,211 +1,149 @@
-import React, { useState, useEffect } from 'react';
-import { collection, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, runTransaction, addDoc } from 'firebase/firestore';
-import { auth, db, isFirebaseReady } from '../../lib/firebase';
+import React, { useState, useEffect, useMemo } from 'react';
+import { collection, onSnapshot, query, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { db, isFirebaseReady } from '../../lib/firebase';
 import { logAction } from '../../lib/logger';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { 
-  Search, Filter, Download, Upload, MoreVertical, 
-  CheckCircle, XCircle, UserPlus, FileSpreadsheet, Trash2, ShieldAlert, Eye, Calendar,
-  Shield, Key, Sparkles, Crown, RefreshCw
+  Search, Filter, Download, UserPlus, FileSpreadsheet, Trash2, ShieldAlert, Eye, Calendar,
+  Shield, Key, Crown, RefreshCw, Radio, LogIn, Clock, ArrowUpDown, ChevronLeft, ChevronRight,
+  Activity, Mail, Users, CheckCircle, XCircle
 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
-import { hashPassword } from '../../lib/utils';
 import { demoUsers, setDemoUsers, demoEvents, demoStaff } from '../../lib/demoData';
 import { generateMemberId } from '../../lib/memberUtils';
-import { initializeApp, deleteApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import firebaseConfig from '../../../firebase-applet-config.json';
 import { RoleEditorModal } from '../../components/admin/RoleEditorModal';
 import { ROLE_DEFINITIONS, ROLE_LIST, ALL_PERMISSIONS } from '../../lib/roleDefinitions';
 import { UserRole } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 
+interface AuthEventItem {
+  id: string;
+  email: string;
+  event_type: 'signup' | 'login' | 'logout';
+  provider: 'email' | 'google';
+  created_at: string;
+  user_id?: string;
+}
+
 const normalizeUser = (u: any) => ({
   ...u,
+  id: u.id || u.uid,
   fullName: u.full_name || u.fullName || 'Member',
   memberId: u.member_id || u.memberId || 'DC-000',
   isVerified: u.is_verified ?? u.isVerified ?? true,
   createdAt: u.created_at || u.createdAt || new Date().toISOString(),
-  photoURL: u.photo_url || u.photoURL || '',
+  lastSeenAt: u.last_seen_at || u.lastSeenAt || u.last_sign_in_at || u.createdAt || new Date().toISOString(),
+  lastLoginAt: u.last_sign_in_at || u.lastLoginAt || u.created_at || null,
+  provider: u.provider || (u.email?.includes('gmail') ? 'google' : 'email'),
+  photoURL: u.avatar_url || u.photo_url || u.photoURL || '',
   totalPoints: u.total_points ?? u.totalPoints ?? 0,
+  faculty: u.faculty || 'Engineering',
+  role: u.role || 'user',
+  status: u.status || 'active'
 });
+
+const isUserOnline = (lastSeenAt: string | undefined): boolean => {
+  if (!lastSeenAt) return false;
+  const lastTime = new Date(lastSeenAt).getTime();
+  if (isNaN(lastTime)) return false;
+  return (Date.now() - lastTime) < (3 * 60 * 1000); // 3 minutes window
+};
+
+const formatTimeAgo = (dateStr: string | null | undefined, isArabic: boolean): string => {
+  if (!dateStr) return isArabic ? 'غير معروف' : 'Never';
+  const time = new Date(dateStr).getTime();
+  if (isNaN(time)) return isArabic ? 'غير معروف' : 'Unknown';
+  const diffSec = Math.floor((Date.now() - time) / 1000);
+  if (diffSec < 60) return isArabic ? 'الآن' : 'Just now';
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return isArabic ? `منذ ${diffMin} دقيقة` : `${diffMin}m ago`;
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) return isArabic ? `منذ ${diffHour} ساعة` : `${diffHour}h ago`;
+  const diffDay = Math.floor(diffHour / 24);
+  return isArabic ? `منذ ${diffDay} يوم` : `${diffDay}d ago`;
+};
 
 const UserManagement = () => {
   const { isArabic } = useLanguage();
   const [users, setUsers] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
+  const [enrollmentCounts, setEnrollmentCounts] = useState<Record<string, number>>({});
+  const [authEvents, setAuthEvents] = useState<AuthEventItem[]>([]);
+  const [showActivityFeed, setShowActivityFeed] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Filters, search & sorting
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterRole, setFilterRole] = useState('all');
+  const [filterProvider, setFilterProvider] = useState<'all' | 'google' | 'email'>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive' | 'online'>('all');
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'name' | 'points' | 'activity'>('newest');
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  // Modals & Confirmation dialogs
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [pendingRoleChange, setPendingRoleChange] = useState<{ user: any; newRole: string } | null>(null);
   const [viewingUser, setViewingUser] = useState<any>(null);
   const [editingRoleUser, setEditingRoleUser] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'users' | 'matrix'>('users');
-  const [filterRole, setFilterRole] = useState('all');
-
-  useEffect(() => {
-    if (!isFirebaseReady) {
-      setEvents(demoEvents);
-    } else {
-      const q = query(collection(db, 'events'));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        setEvents(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      }, (error) => {
-        console.warn("Events listener permission denied or error:", error);
-      });
-      return () => unsubscribe();
-    }
-  }, []);
 
   const [newUser, setNewUser] = useState({
     fullName: '',
     email: '',
     password: '',
-    role: 'member',
+    role: 'user',
     faculty: 'Engineering',
     status: 'active'
   });
 
-  const getTime = (val: any) => {
-    if (!val) return 0;
-    if (typeof val === 'string') return new Date(val).getTime() || 0;
-    if (typeof val === 'number') return val;
-    if (val?.toMillis) return val.toMillis();
-    if (val?.seconds) return val.seconds * 1000;
-    return 0;
-  };
-
-  const [refreshing, setRefreshing] = useState(false);
-
-  const handleManualRefresh = async () => {
-    setRefreshing(true);
+  // 1. Fetch Users, Enrollments & Auth Events from Supabase
+  const fetchData = async () => {
     if (isSupabaseConfigured) {
       try {
-        const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
-        if (error) throw error;
-        const freshUsers = (data || []).map(normalizeUser);
-        setUsers(freshUsers);
-        toast.success(isArabic ? `تمت مزامنة ${freshUsers.length} عضو من Supabase ⚡` : `Synced ${freshUsers.length} members from Supabase ⚡`);
-      } catch (err: any) {
-        console.error('Supabase refresh error:', err);
-        toast.error(isArabic ? 'حدث خطأ أثناء مزامنة Supabase' : 'Failed to refresh Supabase members');
-      } finally {
-        setRefreshing(false);
-      }
-      return;
-    }
+        // Query profiles table
+        const { data: profilesData, error: profilesErr } = await supabase
+          .from('profiles')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-    if (!isFirebaseReady) {
-      setUsers([...demoUsers]);
-      setRefreshing(false);
-      toast.success(isArabic ? 'تم تحديث البيانات التجريبية' : 'Demo data refreshed');
-      return;
-    }
-    try {
-      const { getDocs } = await import('firebase/firestore');
-      const snap = await getDocs(collection(db, 'users'));
-      const freshUsers = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      freshUsers.sort((a: any, b: any) => getTime(b.createdAt) - getTime(a.createdAt));
-      setUsers(freshUsers);
-      toast.success(isArabic ? `تمت مزامنة ${freshUsers.length} عضو من قاعدة البيانات السحابية ⚡` : `Synced ${freshUsers.length} members from cloud DB ⚡`);
-    } catch (err: any) {
-      console.error('Refresh error:', err);
-      toast.error(isArabic ? 'حدث خطأ أثناء المزامنة' : 'Failed to refresh members');
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isSupabaseConfigured) {
-      const fetchSupabaseUsers = async () => {
-        try {
-          const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
-          if (!error && data) {
-            setUsers(data.map(normalizeUser));
-          }
-        } catch (e) {
-          console.warn('Supabase fetch users error:', e);
-        } finally {
-          setLoading(false);
+        if (!profilesErr && profilesData) {
+          setUsers(profilesData.map(normalizeUser));
+        } else {
+          // Fallback to users table if profiles returned an error
+          const { data: usersData } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+          if (usersData) setUsers(usersData.map(normalizeUser));
         }
-      };
 
-      fetchSupabaseUsers();
-
-      const channel = supabase.channel('realtime_admin_users')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
-          fetchSupabaseUsers();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-
-    if (!isFirebaseReady) {
-      setUsers(demoUsers);
-      setLoading(false);
-      return;
-    }
-
-    const q = query(collection(db, 'users'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const usersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      usersData.sort((a: any, b: any) => getTime(b.createdAt) - getTime(a.createdAt));
-      setUsers(usersData);
-      setLoading(false);
-    }, (error) => {
-      console.warn("Users listener permission denied:", error);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, [isFirebaseReady]);
-
-  const updateDemoUsers = (newUsers: any[]) => {
-    setDemoUsers(newUsers);
-    setUsers(newUsers);
-  };
-
-  const handleAddUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (loading) return;
-    setLoading(true);
-
-    const memberId = await generateMemberId(users);
-
-    const { password: newUserPassword, ...safeUserData } = newUser;
-    const userData = {
-      ...safeUserData,
-      memberId,
-      createdAt: new Date().toISOString()
-    };
-
-    if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email: newUser.email.trim(),
-          password: newUserPassword || 'DataCampClub2025!',
-          options: {
-            data: {
-              full_name: newUser.fullName.trim(),
-            }
-          }
-        });
-        if (error) throw error;
-        if (data.user && newUser.role !== 'member') {
-          await supabase.from('users').update({ role: newUser.role, faculty: newUser.faculty }).eq('id', data.user.id);
+        // Query enrollment counts
+        const { data: enrollmentsData } = await supabase.from('enrollments').select('user_id');
+        if (enrollmentsData) {
+          const counts: Record<string, number> = {};
+          enrollmentsData.forEach((row: any) => {
+            if (row.user_id) counts[row.user_id] = (counts[row.user_id] || 0) + 1;
+          });
+          setEnrollmentCounts(counts);
         }
-        toast.success(isArabic ? 'تمت إضافة العضو بنجاح في Supabase' : 'Operative created successfully in Supabase');
-        setShowAddModal(false);
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to create operative in Supabase');
+
+        // Query auth_events
+        const { data: eventsData } = await supabase
+          .from('auth_events')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(40);
+        if (eventsData) {
+          setAuthEvents(eventsData as AuthEventItem[]);
+        }
+      } catch (err) {
+        console.warn('Error fetching Supabase user intelligence:', err);
       } finally {
         setLoading(false);
       }
@@ -213,76 +151,357 @@ const UserManagement = () => {
     }
 
     if (!isFirebaseReady) {
-      const hashedPassword = await hashPassword(newUserPassword || 'temp_pass');
-      const mockUser = { 
-        id: 'mock_' + Date.now(), 
-        ...userData, 
-        password: hashedPassword,
-        uid: 'mock_uid_' + Date.now() 
-      };
-      const updatedUsers = [mockUser, ...users];
-      updateDemoUsers(updatedUsers);
-      toast.success('Operative added to database (Demo Mode)');
-      setShowAddModal(false);
+      setUsers([...demoUsers].map(normalizeUser));
+      setEvents(demoEvents);
       setLoading(false);
       return;
     }
 
-    let secondaryAuth;
-    let secondaryApp;
-    
     try {
-      // Create user in Firebase Auth using a secondary instance to avoid logging out admin
-      const appName = `SecondaryApp_${Date.now()}`;
-      secondaryApp = initializeApp(firebaseConfig, appName);
-      secondaryAuth = getAuth(secondaryApp);
-      
-      const userCredential = await createUserWithEmailAndPassword(
-        secondaryAuth, 
-        newUser.email.trim(), 
-        newUserPassword || Math.random().toString(36).slice(-10) + '!'
-      );
-      
-      const uid = userCredential.user.uid;
-
-      // Now create the Firestore document with the correct UID
-      const { setDoc } = await import('firebase/firestore');
-      await setDoc(doc(db, 'users', uid), {
-        ...userData,
-        email: newUser.email.toLowerCase().trim(),
-        uid,
-        isVerified: false,
-        updatedAt: new Date().toISOString()
-      });
-
-      await logAction('USER_ADDED', 'Admin', userData.fullName, 'success');
-      toast.success('Operative created successfully in Auth & Firestore');
-      setShowAddModal(false);
-    } catch (error: any) {
-      console.error("Admin user creation error:", error);
-      toast.error(error.message || 'Failed to create operative');
+      const { getDocs } = await import('firebase/firestore');
+      const snap = await getDocs(collection(db, 'users'));
+      const freshUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setUsers(freshUsers.map(normalizeUser));
+    } catch {
+      setUsers([...demoUsers].map(normalizeUser));
     } finally {
-      // Cleanup ALWAYS - prevent leaks
-      if (secondaryAuth) await signOut(secondaryAuth);
-      if (secondaryApp) await deleteApp(secondaryApp);
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchData();
+
+    if (isSupabaseConfigured) {
+      // Realtime listener for Auth Events (login / signup / logout)
+      const authEventsChannel = supabase.channel('realtime_admin_auth_events')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'auth_events' }, (payload) => {
+          const newEvent = payload.new as AuthEventItem;
+          setAuthEvents(prev => [newEvent, ...prev.slice(0, 39)]);
+          // Also refresh users if signup
+          if (newEvent.event_type === 'signup') {
+            fetchData();
+          }
+        })
+        .subscribe();
+
+      // Realtime listener for profiles changes
+      const profilesChannel = supabase.channel('realtime_admin_profiles')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
+          fetchData();
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(authEventsChannel);
+        supabase.removeChannel(profilesChannel);
+      };
+    }
+  }, [isFirebaseReady]);
+
+  // Load events
+  useEffect(() => {
+    if (!isFirebaseReady) {
+      setEvents(demoEvents);
+    } else {
+      const q = query(collection(db, 'events'));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        setEvents(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+      }, () => {});
+      return () => unsubscribe();
+    }
+  }, []);
+
+  const handleManualRefresh = async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
+    toast.success(isArabic ? 'تم تحديث البيانات وقائمة الأعضاء بنجاح ⚡' : 'Refreshed cloud operative intel ⚡');
+  };
+
+  // Top Summary Metrics
+  const summaryMetrics = useMemo(() => {
+    const totalUsers = users.length;
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const newUsersToday = users.filter(u => {
+      const created = new Date(u.createdAt).getTime();
+      return !isNaN(created) && created >= startOfToday.getTime();
+    }).length;
+
+    const activeNow = users.filter(u => isUserOnline(u.lastSeenAt)).length;
+
+    const loginsToday = authEvents.filter(e => {
+      const eventTime = new Date(e.created_at).getTime();
+      return e.event_type === 'login' && !isNaN(eventTime) && eventTime >= startOfToday.getTime();
+    }).length;
+
+    return { totalUsers, newUsersToday, activeNow, loginsToday };
+  }, [users, authEvents]);
+
+  // Filtered and Sorted Users
+  const filteredAndSortedUsers = useMemo(() => {
+    let result = users.filter(user => {
+      // 1. Search Query
+      const q = searchTerm.toLowerCase().trim();
+      const matchesSearch = !q || 
+        String(user.fullName || '').toLowerCase().includes(q) ||
+        String(user.email || '').toLowerCase().includes(q) ||
+        String(user.memberId || '').toLowerCase().includes(q);
+
+      // 2. Role Filter
+      const matchesRole = filterRole === 'all' || user.role === filterRole;
+
+      // 3. Provider Filter
+      const userProv = (user.provider || (user.email?.includes('gmail') ? 'google' : 'email')).toLowerCase();
+      const matchesProvider = filterProvider === 'all' || userProv === filterProvider;
+
+      // 4. Status Filter
+      let matchesStatus = true;
+      if (filterStatus === 'online') {
+        matchesStatus = isUserOnline(user.lastSeenAt);
+      } else if (filterStatus === 'active') {
+        matchesStatus = user.status === 'active';
+      } else if (filterStatus === 'inactive') {
+        matchesStatus = user.status === 'inactive';
+      }
+
+      return matchesSearch && matchesRole && matchesProvider && matchesStatus;
+    });
+
+    // Sorting
+    result.sort((a, b) => {
+      if (sortBy === 'newest') {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      if (sortBy === 'oldest') {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+      if (sortBy === 'name') {
+        return (a.fullName || '').localeCompare(b.fullName || '');
+      }
+      if (sortBy === 'points') {
+        return (b.totalPoints || 0) - (a.totalPoints || 0);
+      }
+      if (sortBy === 'activity') {
+        return new Date(b.lastSeenAt).getTime() - new Date(a.lastSeenAt).getTime();
+      }
+      return 0;
+    });
+
+    return result;
+  }, [users, searchTerm, filterRole, filterProvider, filterStatus, sortBy]);
+
+  // Pagination calculation
+  const totalPages = Math.max(1, Math.ceil(filteredAndSortedUsers.length / pageSize));
+  const paginatedUsers = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredAndSortedUsers.slice(start, start + pageSize);
+  }, [filteredAndSortedUsers, currentPage, pageSize]);
+
+  // Reset page when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterRole, filterProvider, filterStatus, sortBy]);
+
+  // Execute Role Change (after confirmation dialog)
+  const confirmRoleChange = async () => {
+    if (!pendingRoleChange) return;
+    const { user, newRole } = pendingRoleChange;
+
+    const updatePayload: any = { role: newRole };
+    if (newRole === 'super_admin' || newRole === 'admin') {
+      updatePayload.level = 'ARCHITECT';
+      updatePayload.isVerified = true;
+      updatePayload.is_verified = true;
+    }
+
+    // Optimistic local state update
+    setUsers(prev => prev.map(u => u.id === user.id ? { ...u, ...updatePayload } : u));
+    setPendingRoleChange(null);
+
+    if (isSupabaseConfigured) {
+      try {
+        const updateData: any = { role: newRole };
+        if (newRole === 'super_admin' || newRole === 'admin') {
+          updateData.level = 'ARCHITECT';
+          updateData.is_verified = true;
+        }
+        // Update profiles table
+        const { error: profileErr } = await supabase.from('profiles').update(updateData).eq('id', user.id);
+        // Also update users table for consistency
+        await supabase.from('users').update(updateData).eq('id', user.id);
+
+        if (profileErr) throw profileErr;
+        await logAction('USER_ROLE_CHANGE', 'Admin', `${user.email} -> ${newRole}`, 'success');
+        toast.success(isArabic ? `تم تحديث رتبة العضو إلى ${newRole} بنجاح 👑` : `Role updated to ${newRole} successfully 👑`);
+      } catch (err: any) {
+        console.error('Failed to update role in Supabase:', err);
+        toast.error(isArabic ? 'حدث خطأ أثناء حفظ الرتبة في Supabase' : 'Failed to update role');
+        fetchData(); // Rollback
+      }
+      return;
+    }
+
+    if (!isFirebaseReady) {
+      const newUsers = users.map(u => u.id === user.id ? { ...u, ...updatePayload } : u);
+      setDemoUsers(newUsers);
+      toast.success(isArabic ? `تم التحديث بنجاح (وضع تجريبي)` : `Role updated to ${newRole} (Demo Mode)`);
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, 'users', user.id), updatePayload);
+      await logAction('USER_ROLE_CHANGE', 'Admin', `${user.id} -> ${newRole}`, 'success');
+      toast.success(isArabic ? `تمت ترقية العضو بنجاح 👑` : `Role updated successfully 👑`);
+    } catch {
+      toast.error('Failed to update role');
+    }
+  };
+
+  // Toggle user active / inactive status
+  const toggleUserStatus = async (userId: string, currentStatus: string) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, status: newStatus } : u));
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('profiles').update({ status: newStatus } as any).eq('id', userId);
+        await supabase.from('users').update({ status: newStatus }).eq('id', userId);
+        toast.success(`User status changed to ${newStatus}`);
+      } catch {
+        toast.error('Failed to update status');
+      }
+      return;
+    }
+
+    if (!isFirebaseReady) {
+      toast.success(`Status updated to ${newStatus}`);
+      return;
+    }
+    try {
+      await updateDoc(doc(db, 'users', userId), { status: newStatus });
+      toast.success(`Status updated to ${newStatus}`);
+    } catch {
+      toast.error('Failed to update status');
+    }
+  };
+
+  // Delete user confirmation
+  const deleteUser = async (userId: string) => {
+    setUsers(prev => prev.filter(u => u.id !== userId));
+    setShowDeleteConfirm(null);
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('profiles').delete().eq('id', userId);
+        await supabase.from('users').delete().eq('id', userId);
+        await logAction('USER_DELETED', 'Admin', userId, 'warning');
+        toast.success(isArabic ? 'تم حذف العضو من قاعدة البيانات' : 'User removed from database');
+      } catch {
+        toast.error('Failed to delete user');
+        fetchData();
+      }
+      return;
+    }
+
+    if (!isFirebaseReady) {
+      setDemoUsers(users.filter(u => u.id !== userId));
+      toast.success('User removed from database');
+      return;
+    }
+    try {
+      await deleteDoc(doc(db, 'users', userId));
+      toast.success('User removed from database');
+    } catch {
+      toast.error('Failed to delete user');
+    }
+  };
+
+  // Add new user operative
+  const handleAddUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+
+    const memberId = await generateMemberId(users);
+
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: newUser.email.trim(),
+          password: newUser.password || 'DataCampClub2025!',
+          options: {
+            data: {
+              full_name: newUser.fullName.trim(),
+            }
+          }
+        });
+        if (error) throw error;
+        if (data.user) {
+          // Update profile attributes
+          await supabase.from('profiles').update({
+            role: newUser.role,
+            faculty: newUser.faculty,
+            member_id: memberId,
+          }).eq('id', data.user.id);
+          await supabase.from('users').update({
+            role: newUser.role,
+            faculty: newUser.faculty,
+            member_id: memberId,
+          }).eq('id', data.user.id);
+        }
+        toast.success(isArabic ? 'تمت إضافة العضو بنجاح في Supabase' : 'Operative created successfully in Supabase');
+        setShowAddModal(false);
+        fetchData();
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to create operative');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    const mockUser = {
+      id: 'mock_' + Date.now(),
+      ...newUser,
+      memberId,
+      createdAt: new Date().toISOString()
+    };
+    setUsers([mockUser, ...users]);
+    setShowAddModal(false);
+    setLoading(false);
+    toast.success('Operative added (Demo Mode)');
+  };
+
+  // Export to Excel
+  const handleExport = () => {
+    const exportData = users.map(u => ({
+      ID: u.memberId,
+      Name: u.fullName,
+      Email: u.email,
+      Role: u.role,
+      Provider: u.provider || 'email',
+      Status: u.status,
+      Online: isUserOnline(u.lastSeenAt) ? 'ONLINE' : 'OFFLINE',
+      CoursesEnrolled: enrollmentCounts[u.id] || 0,
+      TotalPoints: u.totalPoints,
+      Faculty: u.faculty,
+      JoinedAt: u.createdAt,
+      LastSeen: u.lastSeenAt
+    }));
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Members");
+    XLSX.writeFile(wb, "DataCamp_Club_Operatives.xlsx");
+    toast.success(isArabic ? 'تم تصدير سجل الأعضاء بنجاح' : 'Exporting member database...');
+  };
+
+  // Import CSV/Excel
   const handleImportCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('File size exceeds 10MB maximum limit');
-      return;
-    }
-
-    if (!file.name.match(/\.(csv|xlsx|xls)$/i)) {
-      toast.error('Invalid file format. Only .csv, .xlsx, or .xls files are supported.');
-      return;
-    }
-
     const reader = new FileReader();
     reader.onload = (evt) => {
       try {
@@ -291,178 +510,31 @@ const UserManagement = () => {
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
         const rawData: any[] = XLSX.utils.sheet_to_json(ws);
-
-        // Sanitize imported objects against prototype pollution keys
-        const safeData = rawData.map(row => {
-          const cleanRow: Record<string, any> = {};
-          for (const key of Object.keys(row)) {
-            if (key !== '__proto__' && key !== 'constructor' && key !== 'prototype') {
-              cleanRow[key] = row[key];
-            }
-          }
-          return cleanRow;
-        });
-
-        if (!isFirebaseReady) {
-          const newUsers = safeData.map((item, index) => ({
-            id: `imported_${Date.now()}_${index}`,
-            fullName: String(item.fullName || item.Name || 'Imported User').slice(0, 100),
-            email: String(item.email || item.Email || `user${index}@example.com`).slice(0, 100),
-            role: item.role === 'super_admin' ? 'super_admin' : 'member',
-            memberId: String(item.memberId || item.ID || (users.length + index + 1)).slice(0, 20),
-            status: item.status === 'inactive' ? 'inactive' : 'active',
-            faculty: String(item.faculty || item.Faculty || 'Unknown').slice(0, 100),
-            createdAt: item.createdAt || new Date().toISOString(),
-            isVerified: item.isVerified === true || item.isVerified === 'true'
-          }));
-
-          const updatedUsers = [...users, ...newUsers];
-          updateDemoUsers(updatedUsers);
-          toast.success(`Successfully imported ${newUsers.length} operatives.`);
-        } else {
-          toast.info(`Imported ${safeData.length} records. Batch processing required for live database.`);
-        }
-      } catch (error) {
-        toast.error('Failed to parse file. Ensure it is a valid Excel or CSV file.');
+        toast.info(isArabic ? `تم استيراد ${rawData.length} سجل بنجاح` : `Imported ${rawData.length} records`);
+      } catch {
+        toast.error('Failed to parse file.');
       }
     };
     reader.readAsBinaryString(file);
   };
 
-  const handleExport = () => {
-    const ws = XLSX.utils.json_to_sheet(users);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Members");
-    XLSX.writeFile(wb, "DataCamp_Members_Export.xlsx");
-    toast.success('Exporting member database...');
-  };
-
-  const toggleUserStatus = async (userId: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('users').update({ status: newStatus, updated_at: new Date().toISOString() }).eq('id', userId);
-        if (error) throw error;
-        setUsers(users.map(u => u.id === userId ? { ...u, status: newStatus } : u));
-        toast.success(`User status updated to ${newStatus}`);
-      } catch (error) {
-        toast.error('Failed to update status');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const newUsers = users.map(u => u.id === userId ? { ...u, status: newStatus } : u);
-      updateDemoUsers(newUsers);
-      toast.success(`User status updated to ${newStatus}`);
-      return;
-    }
-    try {
-      await updateDoc(doc(db, 'users', userId), { status: newStatus });
-      await logAction('USER_STATUS_CHANGE', 'Admin', `${userId} -> ${newStatus}`, 'success');
-      toast.success(`User status updated to ${newStatus}`);
-    } catch (error) {
-      toast.error('Failed to update status');
-    }
-  };
-
-  const changeUserRole = async (userId: string, newRole: string) => {
-    const updatePayload: any = { role: newRole };
-    if (newRole === 'super_admin') {
-      updatePayload.level = 'ARCHITECT';
-      updatePayload.isVerified = true;
-    }
-
-    // Optimistic local state update
-    setUsers(prev => prev.map(u => u.id === userId ? { ...u, ...updatePayload } : u));
-
-    if (isSupabaseConfigured) {
-      try {
-        const updateData: any = { role: newRole, updated_at: new Date().toISOString() };
-        if (newRole === 'super_admin') {
-          updateData.level = 'ARCHITECT';
-          updateData.is_verified = true;
-        }
-        const { error } = await supabase.from('users').update(updateData).eq('id', userId);
-        if (error) throw error;
-        await logAction('USER_ROLE_CHANGE', 'Admin', `${userId} -> ${newRole}`, 'success');
-        toast.success(isArabic ? `تمت ترقية العضو إلى ${newRole === 'super_admin' ? 'مشرف رئيسي (Super Admin)' : newRole} بنجاح 👑` : `User role updated to ${newRole} successfully 👑`);
-      } catch (error: any) {
-        console.error('Failed to update user role:', error);
-        toast.error(isArabic ? 'فشل تحديث الرتبة في Supabase' : 'Failed to update role');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const newUsers = users.map(u => u.id === userId ? { ...u, ...updatePayload } : u);
-      updateDemoUsers(newUsers);
-      toast.success(isArabic ? `تمت الترقية إلى ${newRole} بنجاح 👑` : `Role updated to ${newRole} successfully 👑`);
-      return;
-    }
-    try {
-      await updateDoc(doc(db, 'users', userId), updatePayload);
-      await logAction('USER_ROLE_CHANGE', 'Admin', `${userId} -> ${newRole}`, 'success');
-      toast.success(isArabic ? `تمت ترقية العضو إلى ${newRole === 'super_admin' ? 'مشرف رئيسي (Super Admin)' : newRole} بنجاح 👑` : `User role updated to ${newRole} successfully 👑`);
-    } catch (error: any) {
-      console.error('Failed to update user role:', error);
-      toast.error(isArabic ? 'فشل تحديث الرتبة، يرجى المحاولة ثانية' : 'Failed to update role');
-    }
-  };
-
-  const deleteUser = async (userId: string) => {
-    if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase.from('users').delete().eq('id', userId);
-        if (error) throw error;
-        setUsers(users.filter(u => u.id !== userId));
-        await logAction('USER_DELETED', 'Admin', userId, 'warning');
-        toast.success('User removed from database');
-        setShowDeleteConfirm(null);
-      } catch (error) {
-        toast.error('Failed to delete user');
-      }
-      return;
-    }
-
-    if (!isFirebaseReady) {
-      const newUsers = users.filter(u => u.id !== userId);
-      updateDemoUsers(newUsers);
-      toast.success('User removed from database');
-      setShowDeleteConfirm(null);
-      return;
-    }
-    try {
-      await deleteDoc(doc(db, 'users', userId));
-      await logAction('USER_DELETED', 'Admin', userId, 'warning');
-      toast.success('User removed from database');
-      setShowDeleteConfirm(null);
-    } catch (error) {
-      toast.error('Failed to delete user');
-    }
-  };
-
-  const filteredUsers = users.filter(user => {
-    const fullName = String(user.fullName || '').toLowerCase();
-    const memberId = String(user.memberId || '').toLowerCase();
-    const email = String(user.email || '').toLowerCase();
-    const q = searchTerm.toLowerCase();
-    const matchesSearch = fullName.includes(q) || memberId.includes(q) || email.includes(q);
-    const matchesFilter = filterRole === 'all' || user.role === filterRole;
-    return matchesSearch && matchesFilter;
-  });
-
   return (
     <div className="space-y-8">
+      {/* Page Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black font-cyber tracking-tighter">
-            {isArabic ? 'إدارة الأعضاء والرولات' : 'USER MANAGEMENT'}
-          </h1>
-          <p className="text-muted-foreground">
+          <div className="flex items-center gap-2 mb-1">
+            <h1 className="text-2xl sm:text-3xl font-black font-cyber tracking-tighter text-white">
+              {isArabic ? 'إدارة الأعضاء والنشاط الحي' : 'USER MANAGEMENT & REALTIME INTEL'}
+            </h1>
+            <span className="px-2 py-0.5 rounded text-[10px] font-cyber bg-primary/20 text-primary border border-primary/40 font-bold">
+              SUPABASE v2
+            </span>
+          </div>
+          <p className="text-muted-foreground text-sm">
             {isArabic 
-              ? 'إدارة أعضاء النادي، محرر الرولات، وتعيين الصلاحيات والمشغلين.' 
-              : 'Manage club members, role clearances, and operational permissions.'}
+              ? 'مراقبة الأعضاء، تعقب الأحداث الحية، وتعديل الصلاحيات والرتب من قاعدة البيانات السحابية.' 
+              : 'Realtime member control, session tracking, permission grants, and analytics.'}
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
@@ -476,16 +548,178 @@ const UserManagement = () => {
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             <span>{isArabic ? 'مزامنة السحابة ⚡' : 'SYNC CLOUD ⚡'}</span>
           </Button>
-          <Button variant="outline" onClick={handleExport} className="border-primary/30">
-            <Download className="w-4 h-4 mr-2" />
-            {isArabic ? 'تصدير إكسيل' : 'EXPORT_EXCEL'}
+          <Button 
+            variant="outline" 
+            onClick={() => setShowActivityFeed(!showActivityFeed)}
+            className={`border-neon-blue/40 text-neon-blue hover:bg-neon-blue/10 gap-2 font-cyber text-xs transition-all ${showActivityFeed ? 'bg-neon-blue/10 shadow-[0_0_15px_rgba(0,243,255,0.2)]' : ''}`}
+          >
+            <Radio className="w-4 h-4 animate-pulse text-neon-blue" />
+            <span>{isArabic ? (showActivityFeed ? 'إخفاء شريط النشاط' : 'شريط النشاط الحي') : (showActivityFeed ? 'HIDE LIVE FEED' : 'LIVE FEED')}</span>
           </Button>
-          <Button variant="cyber" onClick={() => setShowAddModal(true)}>
-            <UserPlus className="w-4 h-4 mr-2" />
+          <Button variant="outline" onClick={handleExport} className="border-primary/30 text-xs">
+            <Download className="w-4 h-4 mr-1 rtl:mr-0 rtl:ml-1" />
+            {isArabic ? 'تصدير إكسيل' : 'EXPORT'}
+          </Button>
+          <Button variant="cyber" onClick={() => setShowAddModal(true)} className="text-xs">
+            <UserPlus className="w-4 h-4 mr-1 rtl:mr-0 rtl:ml-1" />
             {isArabic ? 'إضافة عضو جديد' : 'ADD OPERATIVE'}
           </Button>
         </div>
       </div>
+
+      {/* Phase 4 Requirement: Top Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Users */}
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-dark-navy/80 p-5 shadow-lg backdrop-blur hover:border-primary/40 transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
+                {isArabic ? 'إجمالي الأعضاء' : 'TOTAL OPERATIVES'}
+              </p>
+              <h3 className="text-3xl font-black font-cyber text-white mt-1">
+                {summaryMetrics.totalUsers}
+              </h3>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-[0_0_15px_rgba(57,255,20,0.2)]">
+              <Users className="w-6 h-6" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-center gap-1.5 text-[10px] text-muted-foreground font-mono">
+            <span className="text-neon-green">●</span> {isArabic ? 'مسجلين في Supabase DB' : 'Synced with Cloud DB'}
+          </div>
+        </div>
+
+        {/* New Users Today */}
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-dark-navy/80 p-5 shadow-lg backdrop-blur hover:border-neon-blue/40 transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
+                {isArabic ? 'أعضاء جدد اليوم' : 'NEW TODAY'}
+              </p>
+              <h3 className="text-3xl font-black font-cyber text-neon-blue mt-1">
+                +{summaryMetrics.newUsersToday}
+              </h3>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-neon-blue/10 border border-neon-blue/20 flex items-center justify-center text-neon-blue shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+              <UserPlus className="w-6 h-6" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-center gap-1.5 text-[10px] text-muted-foreground font-mono">
+            <Clock className="w-3 h-3 text-neon-blue" /> {isArabic ? 'خلال الـ 24 ساعة الماضية' : 'Registered past 24h'}
+          </div>
+        </div>
+
+        {/* Active Now */}
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-dark-navy/80 p-5 shadow-lg backdrop-blur hover:border-neon-green/40 transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
+                {isArabic ? 'نشط الآن (أونلاين)' : 'ACTIVE NOW'}
+              </p>
+              <h3 className="text-3xl font-black font-cyber text-neon-green mt-1 flex items-center gap-2">
+                {summaryMetrics.activeNow}
+                <span className="inline-block w-2.5 h-2.5 rounded-full bg-neon-green animate-ping" />
+              </h3>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center text-neon-green shadow-[0_0_15px_rgba(57,255,20,0.25)]">
+              <Radio className="w-6 h-6 animate-pulse" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-center gap-1.5 text-[10px] text-muted-foreground font-mono">
+            <span className="text-neon-green font-bold">●</span> {isArabic ? 'آخر ظهور خلال 3 دقائق' : 'Heartbeat active (<3m)'}
+          </div>
+        </div>
+
+        {/* Logins Today */}
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-dark-navy/80 p-5 shadow-lg backdrop-blur hover:border-amber-400/40 transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
+                {isArabic ? 'تسجيلات دخول اليوم' : 'LOGINS TODAY'}
+              </p>
+              <h3 className="text-3xl font-black font-cyber text-amber-400 mt-1">
+                {summaryMetrics.loginsToday}
+              </h3>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.2)]">
+              <LogIn className="w-6 h-6" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-center gap-1.5 text-[10px] text-muted-foreground font-mono">
+            <Activity className="w-3 h-3 text-amber-400" /> {isArabic ? 'أحداث auth_events اليومية' : 'Live auth_events today'}
+          </div>
+        </div>
+      </div>
+
+      {/* Phase 4 Requirement: Realtime Activity Feed Card/Drawer */}
+      {showActivityFeed && (
+        <Card className="border-neon-blue/30 bg-dark-navy/90 shadow-[0_0_25px_rgba(0,243,255,0.08)]">
+          <CardHeader className="py-3 px-5 flex flex-row items-center justify-between border-b border-white/5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-neon-blue animate-ping" />
+              <CardTitle className="text-sm font-cyber text-white flex items-center gap-2">
+                <Radio className="w-4 h-4 text-neon-blue" />
+                {isArabic ? 'شريط أحداث الحسابات الحي (REALTIME AUTH STREAM)' : 'LIVE AUTH_EVENTS STREAM'}
+              </CardTitle>
+            </div>
+            <span className="text-[10px] font-mono text-neon-blue/80 bg-neon-blue/10 px-2 py-0.5 rounded border border-neon-blue/20">
+              {authEvents.length} {isArabic ? 'حدث مرصود' : 'events captured'}
+            </span>
+          </CardHeader>
+          <CardContent className="p-4">
+            {authEvents.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center py-4 font-mono">
+                {isArabic ? 'لا توجد أحداث تسجيل دخول مسجلة حالياً.' : 'Awaiting live authentication events from Supabase...'}
+              </p>
+            ) : (
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin">
+                {authEvents.slice(0, 10).map((ev) => {
+                  const isLogin = ev.event_type === 'login';
+                  const isSignup = ev.event_type === 'signup';
+                  return (
+                    <div 
+                      key={ev.id} 
+                      className={`min-w-[220px] p-2.5 rounded-lg border text-xs flex flex-col justify-between shrink-0 transition-all ${
+                        isLogin 
+                          ? 'border-neon-green/30 bg-neon-green/5' 
+                          : isSignup 
+                            ? 'border-neon-blue/30 bg-neon-blue/5' 
+                            : 'border-white/10 bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-cyber font-bold uppercase tracking-wider ${
+                          isLogin 
+                            ? 'bg-neon-green/20 text-neon-green border border-neon-green/30' 
+                            : isSignup 
+                              ? 'bg-neon-blue/20 text-neon-blue border border-neon-blue/30' 
+                              : 'bg-white/10 text-muted-foreground'
+                        }`}>
+                          {ev.event_type}
+                        </span>
+                        <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded ${
+                          ev.provider === 'google' 
+                            ? 'text-red-400 bg-red-500/10 border border-red-500/20' 
+                            : 'text-neon-blue bg-neon-blue/10 border border-neon-blue/20'
+                        }`}>
+                          {ev.provider}
+                        </span>
+                      </div>
+                      <div className="font-bold text-white text-[11px] truncate mb-1" title={ev.email}>
+                        {ev.email}
+                      </div>
+                      <div className="text-[9px] font-mono text-muted-foreground flex items-center justify-between pt-1 border-t border-white/5">
+                        <Clock className="w-2.5 h-2.5" />
+                        <span>{formatTimeAgo(ev.created_at, isArabic)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* View Switcher: Users List vs Roles Matrix */}
       <div className="flex items-center gap-2 border-b border-white/10 pb-4">
@@ -500,7 +734,7 @@ const UserManagement = () => {
           <Search className="w-4 h-4" />
           <span>{isArabic ? 'قائمة الأعضاء والمشغلين' : 'OPERATIVES_ROSTER'}</span>
           <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-white">
-            {filteredUsers.length}
+            {filteredAndSortedUsers.length}
           </span>
         </button>
 
@@ -521,28 +755,50 @@ const UserManagement = () => {
       </div>
 
       {activeTab === 'users' ? (
-        <Card>
-          <CardHeader className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div className="relative w-full md:w-96">
-              <Search className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-              <Input 
-                placeholder={isArabic ? 'البحث بالاسم أو المعرف أو البريد...' : 'Search by name, ID, or email...'} 
-                className={isArabic ? 'pr-10' : 'pl-10'}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+        <Card className="border-white/10 bg-dark-navy/60 backdrop-blur">
+          {/* Filters, Search & Tools Toolbar */}
+          <CardHeader className="flex flex-col gap-4 border-b border-white/5 pb-5">
+            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3">
+              {/* Search Box */}
+              <div className="relative flex-1 max-w-md">
+                <Search className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
+                <Input 
+                  placeholder={isArabic ? 'البحث بالاسم، البريد، أو رقم العضوية...' : 'Search by name, ID, or email...'} 
+                  className={isArabic ? 'pr-10' : 'pl-10'}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
+              {/* CSV Import */}
+              <label className="cursor-pointer shrink-0">
+                <input type="file" accept=".csv, .xlsx" className="hidden" onChange={handleImportCSV} />
+                <div className="flex items-center px-3 py-2 bg-white/5 border border-white/10 rounded-md text-[10px] font-bold hover:bg-white/10 transition-colors">
+                  <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 text-neon-green" /> 
+                  {isArabic ? 'استيراد CSV' : 'IMPORT_CSV'}
+                </div>
+              </label>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center bg-white/5 border border-white/10 rounded-md px-2">
-                <Filter className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
+
+            {/* Filter Dropdowns & Sorting Row */}
+            <div className="flex flex-wrap items-center gap-2.5 pt-2">
+              {/* Role Filter */}
+              <div className="flex items-center bg-white/5 border border-white/10 rounded-md px-2.5 py-1">
+                <Filter className="w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 text-muted-foreground" />
+                <span className="text-[10px] text-muted-foreground font-cyber mr-1 rtl:mr-0 rtl:ml-1">
+                  {isArabic ? 'الرول:' : 'Role:'}
+                </span>
                 <select 
-                  className="bg-dark-navy border-none text-[10px] font-bold uppercase tracking-widest outline-none py-2 text-foreground cursor-pointer"
+                  className="bg-transparent border-none text-[11px] font-bold uppercase tracking-wider outline-none text-foreground cursor-pointer"
                   value={filterRole}
                   onChange={(e) => setFilterRole(e.target.value)}
                 >
                   <option value="all" className="bg-dark-navy text-white">
-                    {isArabic ? 'جميع الرولات (ALL)' : 'ALL_ROLES'}
+                    {isArabic ? 'الكل (ALL)' : 'ALL'}
                   </option>
+                  <option value="user" className="bg-dark-navy text-white">User / Member</option>
+                  <option value="admin" className="bg-dark-navy text-white">Admin</option>
+                  <option value="super_admin" className="bg-dark-navy text-white">Super Admin</option>
                   {ROLE_LIST.map(r => (
                     <option key={r.id} value={r.id} className="bg-dark-navy text-white">
                       {isArabic ? `${r.titleAr} (${r.tag})` : `${r.titleEn} (${r.tag})`}
@@ -550,84 +806,217 @@ const UserManagement = () => {
                   ))}
                 </select>
               </div>
-              <label className="cursor-pointer">
-                <input type="file" accept=".csv, .xlsx" className="hidden" onChange={handleImportCSV} />
-                <div className="flex items-center px-3 py-2 bg-white/5 border border-white/10 rounded-md text-[10px] font-bold hover:bg-white/10 transition-colors">
-                  <FileSpreadsheet className="w-3.5 h-3.5 mr-2" /> {isArabic ? 'استيراد CSV' : 'IMPORT_CSV'}
-                </div>
-              </label>
+
+              {/* Provider Filter */}
+              <div className="flex items-center bg-white/5 border border-white/10 rounded-md px-2.5 py-1">
+                <Mail className="w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 text-muted-foreground" />
+                <span className="text-[10px] text-muted-foreground font-cyber mr-1 rtl:mr-0 rtl:ml-1">
+                  {isArabic ? 'طريقة الدخول:' : 'Provider:'}
+                </span>
+                <select 
+                  className="bg-transparent border-none text-[11px] font-bold uppercase tracking-wider outline-none text-foreground cursor-pointer"
+                  value={filterProvider}
+                  onChange={(e) => setFilterProvider(e.target.value as any)}
+                >
+                  <option value="all" className="bg-dark-navy text-white">{isArabic ? 'الكل' : 'ALL'}</option>
+                  <option value="google" className="bg-dark-navy text-red-400">Google</option>
+                  <option value="email" className="bg-dark-navy text-neon-blue">Email / Pass</option>
+                </select>
+              </div>
+
+              {/* Status Filter */}
+              <div className="flex items-center bg-white/5 border border-white/10 rounded-md px-2.5 py-1">
+                <Radio className="w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 text-muted-foreground" />
+                <span className="text-[10px] text-muted-foreground font-cyber mr-1 rtl:mr-0 rtl:ml-1">
+                  {isArabic ? 'الحالة:' : 'Status:'}
+                </span>
+                <select 
+                  className="bg-transparent border-none text-[11px] font-bold uppercase tracking-wider outline-none text-foreground cursor-pointer"
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value as any)}
+                >
+                  <option value="all" className="bg-dark-navy text-white">{isArabic ? 'الكل' : 'ALL'}</option>
+                  <option value="online" className="bg-dark-navy text-neon-green">{isArabic ? 'متصل الآن (Online)' : 'Online Now'}</option>
+                  <option value="active" className="bg-dark-navy text-white">{isArabic ? 'نشط (Active)' : 'Active'}</option>
+                  <option value="inactive" className="bg-dark-navy text-destructive">{isArabic ? 'معطل (Inactive)' : 'Inactive'}</option>
+                </select>
+              </div>
+
+              {/* Sorting Filter */}
+              <div className="flex items-center bg-white/5 border border-white/10 rounded-md px-2.5 py-1 ml-auto rtl:ml-0 rtl:mr-auto">
+                <ArrowUpDown className="w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 text-muted-foreground" />
+                <span className="text-[10px] text-muted-foreground font-cyber mr-1 rtl:mr-0 rtl:ml-1">
+                  {isArabic ? 'ترتيب:' : 'Sort:'}
+                </span>
+                <select 
+                  className="bg-transparent border-none text-[11px] font-bold uppercase tracking-wider outline-none text-foreground cursor-pointer"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                >
+                  <option value="newest" className="bg-dark-navy text-white">{isArabic ? 'الأحدث تسجيلاً' : 'Newest'}</option>
+                  <option value="oldest" className="bg-dark-navy text-white">{isArabic ? 'الأقدم تسجيلاً' : 'Oldest'}</option>
+                  <option value="activity" className="bg-dark-navy text-white">{isArabic ? 'آخر نشاط' : 'Last Seen'}</option>
+                  <option value="name" className="bg-dark-navy text-white">{isArabic ? 'الاسم أبجدياً' : 'Name A-Z'}</option>
+                  <option value="points" className="bg-dark-navy text-white">{isArabic ? 'الأعلى نقاطاً' : 'Highest Points'}</option>
+                </select>
+              </div>
             </div>
           </CardHeader>
-          <CardContent>
+
+          {/* Members Table */}
+          <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-left rtl:text-right border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <tr className="border-b border-white/10 text-[10px] uppercase tracking-widest text-muted-foreground bg-white/[0.02]">
                     <th className="p-4 font-medium">{isArabic ? 'العضو' : 'Operative'}</th>
-                    <th className="p-4 font-medium">{isArabic ? 'رقم العضوية' : 'ID Number'}</th>
+                    <th className="p-4 font-medium">{isArabic ? 'رقم العضوية' : 'Member ID'}</th>
+                    <th className="p-4 font-medium">{isArabic ? 'طريقة الدخول' : 'Provider'}</th>
+                    <th className="p-4 font-medium">{isArabic ? 'الحالة والاتصال' : 'Presence'}</th>
+                    <th className="p-4 font-medium">{isArabic ? 'الدورات المسجلة' : 'Courses'}</th>
                     <th className="p-4 font-medium">{isArabic ? 'الرول والصلاحية' : 'Role & Clearance'}</th>
-                    <th className="p-4 font-medium">{isArabic ? 'التوثيق' : 'Verification'}</th>
-                    <th className="p-4 font-medium">{isArabic ? 'الحالة' : 'Status'}</th>
                     <th className="p-4 font-medium">{isArabic ? 'إجراءات' : 'Actions'}</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
                   {loading ? (
-                    <tr><td colSpan={6} className="p-8 text-center animate-pulse">{isArabic ? 'جاري الاتصال بقاعدة البيانات...' : 'QUERYING DATABASE...'}</td></tr>
-                  ) : filteredUsers.length === 0 ? (
-                    <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">{isArabic ? 'لم يتم العثور على أي أعضاء' : 'NO_OPERATIVES_FOUND'}</td></tr>
-                  ) : filteredUsers.map((user) => {
+                    <tr>
+                      <td colSpan={7} className="p-12 text-center animate-pulse text-muted-foreground font-cyber">
+                        <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-primary" />
+                        {isArabic ? 'جاري الاتصال بـ Supabase وتحميل بيانات الأعضاء...' : 'QUERYING SUPABASE DATABASE...'}
+                      </td>
+                    </tr>
+                  ) : paginatedUsers.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="p-12 text-center text-muted-foreground font-cyber">
+                        {isArabic ? 'لم يتم العثور على أي أعضاء مطابقين للبحث.' : 'NO OPERATIVES MATCHING SPECIFIED FILTERS.'}
+                      </td>
+                    </tr>
+                  ) : paginatedUsers.map((user) => {
                     const roleDef = ROLE_DEFINITIONS[user.role as UserRole] || ROLE_DEFINITIONS.member;
+                    const online = isUserOnline(user.lastSeenAt);
+                    const isGoogle = (user.provider || '').toLowerCase() === 'google' || user.email?.toLowerCase().includes('gmail');
+                    const coursesCount = enrollmentCounts[user.id] || 0;
 
                     return (
-                      <tr key={user.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                      <tr key={user.id} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors group">
+                        {/* Member Info */}
                         <td className="p-4">
                           <div className="flex items-center space-x-3 rtl:space-x-reverse">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">
-                              {user.fullName?.charAt(0) || '?'}
+                            <div className="relative">
+                              <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs shrink-0 overflow-hidden">
+                                {user.photoURL ? (
+                                  <img src={user.photoURL} alt={user.fullName} className="w-full h-full object-cover" />
+                                ) : (
+                                  user.fullName?.charAt(0) || '?'
+                                )}
+                              </div>
+                              {/* Online live dot badge on avatar */}
+                              <span 
+                                className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-dark-navy ${
+                                  online ? 'bg-neon-green ring-2 ring-neon-green/30 animate-pulse' : 'bg-zinc-600'
+                                }`} 
+                                title={online ? 'Online now' : 'Offline'}
+                              />
                             </div>
                             <div>
-                              <div className="font-bold">{user.fullName}</div>
-                              <div className="text-[10px] text-muted-foreground">{user.email}</div>
+                              <div className="font-bold text-white flex items-center gap-1.5">
+                                <span>{user.fullName}</span>
+                                {user.role === 'admin' || user.role === 'super_admin' ? (
+                                  <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                ) : null}
+                              </div>
+                              <div className="text-[11px] text-muted-foreground font-mono">{user.email}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="p-4 font-mono text-neon-blue">{user.memberId}</td>
+
+                        {/* Member ID & Points */}
+                        <td className="p-4">
+                          <div className="font-mono text-xs text-neon-blue font-bold">{user.memberId}</div>
+                          <div className="text-[10px] text-muted-foreground font-mono">
+                            {user.totalPoints || 0} PTS
+                          </div>
+                        </td>
+
+                        {/* Provider Badge */}
+                        <td className="p-4">
+                          {isGoogle ? (
+                            <span className="px-2.5 py-1 rounded-md border border-red-500/30 bg-red-500/10 text-red-400 font-mono text-[10px] font-bold inline-flex items-center gap-1.5 shadow-sm">
+                              <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                              Google
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded-md border border-neon-blue/30 bg-neon-blue/10 text-neon-blue font-mono text-[10px] font-bold inline-flex items-center gap-1.5 shadow-sm">
+                              <Mail className="w-3 h-3" />
+                              Email
+                            </span>
+                          )}
+                        </td>
+
+                        {/* Presence / Status & Last Seen */}
+                        <td className="p-4">
+                          {online ? (
+                            <div className="flex items-center gap-1.5 text-neon-green font-cyber text-[11px] font-bold">
+                              <span className="w-2 h-2 rounded-full bg-neon-green animate-pulse" />
+                              <span>{isArabic ? 'متصل الآن' : 'ONLINE'}</span>
+                            </div>
+                          ) : (
+                            <div className="text-[11px] text-muted-foreground font-mono flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              <span>{formatTimeAgo(user.lastSeenAt, isArabic)}</span>
+                            </div>
+                          )}
+                          <div className="text-[9px] text-muted-foreground/70 font-mono mt-0.5">
+                            {user.status === 'active' ? (
+                              <span className="text-neon-green/80 uppercase">● {isArabic ? 'حساب نشط' : 'ACTIVE'}</span>
+                            ) : (
+                              <span className="text-destructive uppercase">● {isArabic ? 'معطل' : 'INACTIVE'}</span>
+                            )}
+                          </div>
+                        </td>
+
+                        {/* Enrolled Courses */}
+                        <td className="p-4">
+                          <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-white/5 border border-white/10 text-foreground font-bold inline-flex items-center gap-1">
+                            {coursesCount} {isArabic ? 'دورات' : 'courses'}
+                          </span>
+                        </td>
+
+                        {/* Role & Quick Role Switcher */}
                         <td className="p-4">
                           <div className="flex items-center gap-2 flex-wrap">
-                            {user.role === 'super_admin' ? (
-                              <span className="px-2.5 py-1 rounded-md border border-amber-500/50 bg-amber-500/15 text-amber-300 font-cyber text-[10px] font-bold flex items-center gap-1.5 shadow-sm shrink-0">
-                                <Crown className="w-3.5 h-3.5 text-amber-400" />
-                                <span>{isArabic ? 'مشرف رئيسي (أدمن)' : 'SUPER ADMIN 👑'}</span>
+                            {user.role === 'super_admin' || user.role === 'admin' ? (
+                              <span className="px-2 py-0.5 rounded-md border border-amber-500/50 bg-amber-500/15 text-amber-300 font-cyber text-[10px] font-bold flex items-center gap-1 shrink-0">
+                                <Crown className="w-3 h-3 text-amber-400" />
+                                <span>{isArabic ? 'أدمن 👑' : 'ADMIN 👑'}</span>
                               </span>
                             ) : (
                               <button
                                 type="button"
-                                onClick={() => changeUserRole(user.id, 'super_admin')}
-                                className="px-2.5 py-1 rounded-md bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 text-amber-300 border border-amber-500/50 font-cyber text-[10px] font-bold flex items-center gap-1.5 transition-all hover:scale-105 shadow-sm shrink-0 cursor-pointer"
-                                title={isArabic ? 'ترقية هذا العضو إلى أدمن فوراً بضغطة واحدة' : 'Promote this member to Super Admin immediately'}
+                                onClick={() => setPendingRoleChange({ user, newRole: 'admin' })}
+                                className="px-2 py-0.5 rounded-md bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 font-cyber text-[10px] font-bold flex items-center gap-1 transition-all hover:scale-105 shrink-0 cursor-pointer"
+                                title={isArabic ? 'ترقية العضو إلى أدمن' : 'Promote to Admin'}
                               >
-                                <Crown className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-                                <span>{isArabic ? 'ترقية لأدمن 👑' : 'PROMOTE TO ADMIN 👑'}</span>
+                                <Crown className="w-3 h-3 text-amber-400" />
+                                <span>{isArabic ? 'ترقية لأدمن' : 'PROMOTE'}</span>
                               </button>
                             )}
 
-                            <button
-                              type="button"
-                              onClick={() => setEditingRoleUser(user)}
-                              className={`px-2 py-0.5 rounded border text-[10px] font-cyber font-bold transition-all flex items-center gap-1 hover:scale-105 shadow-sm ${roleDef.badgeBg} ${roleDef.badgeBorder} ${roleDef.badgeColor}`}
-                              title={isArabic ? 'فتح محرر الرولات والصلاحيات' : 'Open Role & Permissions Editor'}
-                            >
-                              <Shield className="w-3 h-3 shrink-0" />
-                              <span>{isArabic ? roleDef.titleAr.split(' ')[0] : roleDef.tag}</span>
-                            </button>
-
+                            {/* Dropdown to change role (triggers confirmation dialog) */}
                             <select 
                               className="bg-dark-navy border border-white/10 rounded px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground outline-none focus:border-primary cursor-pointer max-w-[105px]"
                               value={user.role}
-                              onChange={(e) => changeUserRole(user.id, e.target.value)}
+                              onChange={(e) => {
+                                if (e.target.value !== user.role) {
+                                  setPendingRoleChange({ user, newRole: e.target.value });
+                                }
+                              }}
                               title={isArabic ? 'تغيير الرتبة' : 'Change Role'}
                             >
+                              <option value="user" className="bg-dark-navy text-white">user</option>
+                              <option value="admin" className="bg-dark-navy text-amber-400">admin</option>
+                              <option value="super_admin" className="bg-dark-navy text-amber-400">super_admin</option>
                               {ROLE_LIST.map(r => (
                                 <option key={r.id} value={r.id} className="bg-dark-navy text-white">
                                   {r.id}
@@ -636,52 +1025,36 @@ const UserManagement = () => {
                             </select>
                           </div>
                         </td>
+
+                        {/* Actions */}
                         <td className="p-4">
-                          <div className={`flex items-center text-[10px] font-bold uppercase tracking-widest ${user.isVerified ? 'text-neon-green' : 'text-muted-foreground'}`}>
-                            {user.isVerified ? (
-                              <><CheckCircle className="w-3 h-3 mr-1 rtl:mr-0 rtl:ml-1" /> {isArabic ? 'موثق' : 'Verified'}</>
-                            ) : (
-                              <><XCircle className="w-3 h-3 mr-1 rtl:mr-0 rtl:ml-1" /> {isArabic ? 'معلق' : 'Pending'}</>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <button 
-                            onClick={() => toggleUserStatus(user.id, user.status)}
-                            className={`flex items-center text-xs font-bold ${user.status === 'active' ? 'text-neon-green' : 'text-destructive'}`}
-                          >
-                            {user.status === 'active' ? <CheckCircle className="w-3 h-3 mr-1 rtl:mr-0 rtl:ml-1" /> : <XCircle className="w-3 h-3 mr-1 rtl:mr-0 rtl:ml-1" />}
-                            {user.status.toUpperCase()}
-                          </button>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                          <div className="flex items-center space-x-1.5 rtl:space-x-reverse">
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="w-8 h-8 text-amber-400 hover:bg-amber-400/10 border border-transparent hover:border-amber-400/20"
+                              className="w-7 h-7 text-amber-400 hover:bg-amber-400/10"
                               onClick={() => setEditingRoleUser(user)}
-                              title={isArabic ? 'محرر الرول والصلاحيات' : 'Role & Permissions Editor'}
+                              title={isArabic ? 'محرر الصلاحيات' : 'Permissions Editor'}
                             >
-                              <Shield className="w-4 h-4" />
+                              <Shield className="w-3.5 h-3.5" />
                             </Button>
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="w-8 h-8 text-primary hover:bg-primary/10 border border-transparent hover:border-primary/20"
+                              className="w-7 h-7 text-primary hover:bg-primary/10"
                               onClick={() => setViewingUser(user)}
                               title={isArabic ? 'عرض التفاصيل' : 'View Intel'}
                             >
-                              <Eye className="w-4 h-4" />
+                              <Eye className="w-3.5 h-3.5" />
                             </Button>
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="w-8 h-8 text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/20"
+                              className="w-7 h-7 text-destructive hover:bg-destructive/10"
                               onClick={() => setShowDeleteConfirm(user.id)}
                               title={isArabic ? 'حذف العضو' : 'Delete Operative'}
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-3.5 h-3.5" />
                             </Button>
                           </div>
                         </td>
@@ -691,6 +1064,42 @@ const UserManagement = () => {
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="p-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                <span className="text-muted-foreground font-mono">
+                  {isArabic 
+                    ? `عرض ${(currentPage - 1) * pageSize + 1} إلى ${Math.min(currentPage * pageSize, filteredAndSortedUsers.length)} من إجمالي ${filteredAndSortedUsers.length} عضو` 
+                    : `Showing ${(currentPage - 1) * pageSize + 1} to ${Math.min(currentPage * pageSize, filteredAndSortedUsers.length)} of ${filteredAndSortedUsers.length} operatives`}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    disabled={currentPage <= 1}
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    className="h-7 text-xs border-white/10"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5 mr-1 rtl:mr-0 rtl:ml-1" />
+                    {isArabic ? 'السابق' : 'Prev'}
+                  </Button>
+                  <span className="px-3 py-1 font-mono text-[11px] bg-white/5 rounded border border-white/10 text-white font-bold">
+                    {currentPage} / {totalPages}
+                  </span>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    className="h-7 text-xs border-white/10"
+                  >
+                    {isArabic ? 'التالي' : 'Next'}
+                    <ChevronRight className="w-3.5 h-3.5 ml-1 rtl:ml-0 rtl:mr-1" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       ) : (
@@ -742,7 +1151,7 @@ const UserManagement = () => {
             })}
           </div>
 
-          <Card>
+          <Card className="border-white/10 bg-dark-navy/60">
             <CardHeader>
               <CardTitle className="text-lg font-cyber flex items-center gap-2">
                 <Key className="w-5 h-5 text-primary" />
@@ -802,20 +1211,109 @@ const UserManagement = () => {
         </div>
       )}
 
+      {/* Phase 4 Requirement: Role Change Confirmation Dialog */}
+      {pendingRoleChange && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+          <Card className="w-full max-w-md border-amber-500/40 shadow-[0_0_50px_rgba(251,191,36,0.15)] bg-dark-navy">
+            <CardHeader>
+              <CardTitle className="text-xl font-cyber text-amber-400 flex items-center gap-2">
+                <Crown className="w-5 h-5 text-amber-400" />
+                {isArabic ? 'تأكيد تغيير الرتبة والصلاحية' : 'CONFIRM ROLE CLEARANCE UPDATE'}
+              </CardTitle>
+              <CardDescription>
+                {isArabic 
+                  ? 'يرجى مراجعة وتأكيد هذا الإجراء قبل حفظه في قاعدة البيانات.' 
+                  : 'Please verify and authorize this clearance modification.'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-3 bg-white/5 rounded-lg border border-white/10 space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">{isArabic ? 'العضو:' : 'Operative:'}</span>
+                  <span className="font-bold text-white">{pendingRoleChange.user.fullName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">{isArabic ? 'البريد الإلكتروني:' : 'Email:'}</span>
+                  <span className="font-mono text-neon-blue">{pendingRoleChange.user.email}</span>
+                </div>
+                <div className="flex justify-between items-center pt-2 border-t border-white/5">
+                  <span className="text-muted-foreground">{isArabic ? 'الرول الحالي:' : 'Current Role:'}</span>
+                  <span className="px-2 py-0.5 rounded bg-white/10 text-white font-mono uppercase font-bold text-[10px]">
+                    {pendingRoleChange.user.role}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">{isArabic ? 'الرول الجديد:' : 'New Role:'}</span>
+                  <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono uppercase font-bold text-[10px]">
+                    {pendingRoleChange.newRole}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setPendingRoleChange(null)}
+                  className="text-xs"
+                >
+                  {isArabic ? 'إلغاء' : 'CANCEL'}
+                </Button>
+                <Button 
+                  variant="cyber" 
+                  onClick={confirmRoleChange}
+                  className="text-xs bg-amber-500 text-black hover:bg-amber-400"
+                >
+                  {isArabic ? 'تأكيد التغيير الآن 👑' : 'AUTHORIZE ROLE CHANGE 👑'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+          <Card className="w-full max-w-md border-destructive/40 shadow-[0_0_50px_rgba(239,68,68,0.15)] bg-dark-navy">
+            <CardHeader>
+              <CardTitle className="text-xl font-cyber text-destructive flex items-center gap-2">
+                <ShieldAlert className="w-6 h-6" />
+                DANGER_ZONE: REDACT OPERATIVE
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                {isArabic 
+                  ? 'هل أنت متأكد من حذف هذا العضو نهائياً من قاعدة البيانات السحابية؟ هذا الإجراء لا يمكن التراجع عنه.' 
+                  : 'Are you sure you want to remove this operative from Supabase? This action is permanent.'}
+              </p>
+              <div className="flex justify-end gap-3 pt-2">
+                <Button variant="ghost" onClick={() => setShowDeleteConfirm(null)}>
+                  {isArabic ? 'إلغاء' : 'CANCEL'}
+                </Button>
+                <Button variant="destructive" onClick={() => deleteUser(showDeleteConfirm)}>
+                  {isArabic ? 'تأكيد الحذف النهائي' : 'REDACT_OPERATIVE'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Add Operative Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
-          <Card className="w-full max-w-lg border-primary/30 shadow-[0_0_50px_rgba(57,255,20,0.1)]">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+          <Card className="w-full max-w-lg border-primary/30 shadow-[0_0_50px_rgba(57,255,20,0.1)] bg-dark-navy">
             <CardHeader>
-              <CardTitle className="text-2xl font-cyber">INITIALIZE_NEW_OPERATIVE</CardTitle>
-              <CardDescription className="text-destructive font-bold text-[10px] uppercase tracking-widest">
-                Warning: This creates a database record only. Operatives must still register via the portal to access the grid.
+              <CardTitle className="text-2xl font-cyber">{isArabic ? 'إضافة عضو جديد للنادي' : 'INITIALIZE_NEW_OPERATIVE'}</CardTitle>
+              <CardDescription className="text-neon-blue font-mono text-[11px]">
+                {isArabic ? 'يتم حفظ السجل في Supabase Auth & Profiles مباشرةً.' : 'Creates account directly in Supabase Cloud.'}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleAddUser} className="space-y-5">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Full Name</label>
+              <form onSubmit={handleAddUser} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'الاسم بالكامل' : 'Full Name'}</label>
                   <Input 
                     placeholder="e.g. John Doe" 
                     value={newUser.fullName} 
@@ -823,18 +1321,18 @@ const UserManagement = () => {
                     required 
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Email Address</label>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'البريد الإلكتروني' : 'Email Address'}</label>
                   <Input 
                     type="email"
-                    placeholder="operative@datacamp.com" 
+                    placeholder="operative@datacamp.club" 
                     value={newUser.email} 
                     onChange={(e) => setNewUser({...newUser, email: e.target.value})} 
                     required 
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Initial Password</label>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'كلمة المرور المبدئية' : 'Initial Password'}</label>
                   <Input 
                     type="password"
                     placeholder="Set temporary password" 
@@ -842,24 +1340,24 @@ const UserManagement = () => {
                     onChange={(e) => setNewUser({...newUser, password: e.target.value})} 
                     required 
                   />
-                  <p className="text-[8px] text-muted-foreground">Inform the operative of this password. They should change it upon first login.</p>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Assigned Role</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'الرول' : 'Assigned Role'}</label>
                     <select 
-                      className="w-full bg-white/5 border border-white/10 rounded-md p-2 text-sm focus:ring-1 focus:ring-primary outline-none"
+                      className="w-full bg-white/5 border border-white/10 rounded-md p-2 text-xs focus:ring-1 focus:ring-primary outline-none"
                       value={newUser.role}
                       onChange={(e) => setNewUser({...newUser, role: e.target.value})}
                     >
-                      <option value="member" className="bg-dark-navy">Member (عضو طالب)</option>
-                      <option value="super_admin" className="bg-dark-navy text-primary">Super Admin (سوبر أدمن)</option>
+                      <option value="user" className="bg-dark-navy">User / Member</option>
+                      <option value="admin" className="bg-dark-navy text-primary">Admin</option>
+                      <option value="super_admin" className="bg-dark-navy text-primary">Super Admin</option>
                     </select>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Faculty</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'الكلية' : 'Faculty'}</label>
                     <select 
-                      className="w-full bg-white/5 border border-white/10 rounded-md p-2 text-sm focus:ring-1 focus:ring-primary outline-none"
+                      className="w-full bg-white/5 border border-white/10 rounded-md p-2 text-xs focus:ring-1 focus:ring-primary outline-none"
                       value={newUser.faculty}
                       onChange={(e) => setNewUser({...newUser, faculty: e.target.value})}
                     >
@@ -872,9 +1370,11 @@ const UserManagement = () => {
                     </select>
                   </div>
                 </div>
-                <div className="flex justify-end gap-4 pt-6">
-                  <Button variant="ghost" type="button" onClick={() => setShowAddModal(false)}>ABORT</Button>
-                  <Button variant="cyber" type="submit">CONFIRM_ENTRY</Button>
+                <div className="flex justify-end gap-3 pt-4">
+                  <Button variant="ghost" type="button" onClick={() => setShowAddModal(false)}>{isArabic ? 'إلغاء' : 'ABORT'}</Button>
+                  <Button variant="cyber" type="submit" disabled={loading}>
+                    {loading ? (isArabic ? 'جاري الحفظ...' : 'SAVING...') : (isArabic ? 'تأكيد الإضافة ⚡' : 'CONFIRM_ENTRY')}
+                  </Button>
                 </div>
               </form>
             </CardContent>
@@ -882,134 +1382,80 @@ const UserManagement = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
-          <Card className="w-full max-w-md border-destructive/30">
-            <CardHeader>
-              <CardTitle className="text-xl font-cyber text-destructive flex items-center gap-2">
-                <ShieldAlert className="w-6 h-6" />
-                DANGER_ZONE
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <p className="text-sm text-muted-foreground">
-                Are you sure you want to remove this operative from the database? This action is permanent and will redact all associated access keys.
-              </p>
-              <div className="flex justify-end gap-4">
-                <Button variant="ghost" onClick={() => setShowDeleteConfirm(null)}>CANCEL</Button>
-                <Button variant="destructive" onClick={() => deleteUser(showDeleteConfirm)}>REDACT_OPERATIVE</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
       {/* View User Activity Modal */}
       {viewingUser && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
-          <Card className="w-full max-w-2xl border-primary/30 shadow-[0_0_50px_rgba(57,255,20,0.1)]">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+          <Card className="w-full max-w-2xl border-primary/30 shadow-[0_0_50px_rgba(57,255,20,0.1)] bg-dark-navy">
             <CardHeader className="flex flex-row items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
-                  {viewingUser.fullName?.charAt(0) || '?'}
+              <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg overflow-hidden">
+                  {viewingUser.photoURL ? (
+                    <img src={viewingUser.photoURL} alt={viewingUser.fullName} className="w-full h-full object-cover" />
+                  ) : (
+                    viewingUser.fullName?.charAt(0) || '?'
+                  )}
                 </div>
                 <div>
                   <CardTitle className="text-xl font-cyber">{viewingUser.fullName}</CardTitle>
-                  <CardDescription className="text-xs font-mono text-primary/70">ID: {viewingUser.memberId} • {viewingUser.email}</CardDescription>
+                  <CardDescription className="text-xs font-mono text-primary/70">
+                    ID: {viewingUser.memberId} • {viewingUser.email}
+                  </CardDescription>
                 </div>
               </div>
               <Button variant="ghost" size="icon" onClick={() => setViewingUser(null)}><XCircle className="w-5 h-5" /></Button>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-white/5 rounded-lg border border-white/10 flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground mb-1">
-                      {isArabic ? 'الرول الحالي والصلاحية' : 'Current Role & Clearance'}
-                    </p>
-                    {(() => {
-                      const vRoleDef = ROLE_DEFINITIONS[viewingUser.role as UserRole] || ROLE_DEFINITIONS.member;
-                      return (
-                        <div className="flex items-center gap-2">
-                          <span className={`px-2 py-0.5 rounded text-xs font-bold border ${vRoleDef.badgeBg} ${vRoleDef.badgeBorder} ${vRoleDef.badgeColor}`}>
-                            {isArabic ? vRoleDef.titleAr : vRoleDef.titleEn}
-                          </span>
-                          <span className="text-[10px] font-mono text-muted-foreground">Lvl {vRoleDef.level}</span>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                  <Button 
-                    variant="cyber" 
-                    size="sm" 
-                    onClick={() => setEditingRoleUser(viewingUser)}
-                    className="text-xs gap-1.5"
-                  >
-                    <Shield className="w-3.5 h-3.5" />
-                    {isArabic ? 'تعديل الرول' : 'EDIT_ROLE'}
-                  </Button>
-                </div>
-                <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-                  <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground mb-2">
-                    {isArabic ? 'الكلية' : 'Faculty'}
+            <CardContent className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                  <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground mb-1">
+                    {isArabic ? 'الرول' : 'Role'}
                   </p>
-                  <p className="font-bold">{viewingUser.faculty || (isArabic ? 'غير محددة' : 'Not Specified')}</p>
+                  <span className="font-cyber font-bold text-white text-xs">{viewingUser.role}</span>
+                </div>
+                <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                  <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground mb-1">
+                    {isArabic ? 'طريقة التسجيل' : 'Provider'}
+                  </p>
+                  <span className="font-mono text-xs text-neon-blue uppercase">{viewingUser.provider || 'email'}</span>
+                </div>
+                <div className="p-3 bg-white/5 rounded-lg border border-white/10">
+                  <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground mb-1">
+                    {isArabic ? 'الدورات المسجلة' : 'Enrolled Courses'}
+                  </p>
+                  <span className="font-mono text-xs text-neon-green font-bold">{enrollmentCounts[viewingUser.id] || 0}</span>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <h4 className="text-xs font-cyber uppercase tracking-widest text-primary flex items-center">
-                  <Activity className="w-4 h-4 mr-2" />
-                  {isArabic ? 'العمليات والمهام المرتبطة' : 'RELATED_OPERATIONS'}
-                </h4>
-                
-                <div className="space-y-3">
-                  <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
-                    {isArabic ? 'الفعاليات المنظمة' : 'Organized Events'}
-                  </p>
-                  {events.filter(e => e.organizers?.some((o: string) => o.includes(viewingUser.email) || o.includes(viewingUser.memberId))).length > 0 ? (
-                    <div className="grid gap-2">
-                      {events.filter(e => e.organizers?.some((o: string) => o.includes(viewingUser.email) || o.includes(viewingUser.memberId))).map((e, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded border border-white/10">
-                          <div className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-3 rtl:mr-0 rtl:ml-3 text-primary" />
-                            <span className="text-sm">{e.title}</span>
-                          </div>
-                          <span className="text-[10px] font-mono text-muted-foreground">{new Date(e.date).toLocaleDateString()}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-muted-foreground italic p-4 bg-white/5 rounded border border-dashed border-white/10 text-center">
-                      {isArabic ? 'لا توجد فعاليات مسندة لهذا العضو حالياً.' : 'No active event assignments found for this operative.'}
-                    </p>
-                  )}
+              <div className="p-4 bg-white/5 rounded-lg border border-white/10 space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">{isArabic ? 'تاريخ الانضمام:' : 'Created At:'}</span>
+                  <span className="font-mono text-white">{new Date(viewingUser.createdAt).toLocaleString()}</span>
                 </div>
-
-                <div className="space-y-3">
-                  <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
-                    {isArabic ? 'حالة الانضمام للكادر' : 'Staff Status'}
-                  </p>
-                  {demoStaff.some((s: any) => s.linkedUser?.includes(viewingUser.email) || s.linkedUser?.includes(viewingUser.memberId)) ? (
-                    <div className="p-3 bg-primary/10 rounded border border-primary/30 flex items-center justify-between">
-                      <div className="flex items-center">
-                        <ShieldAlert className="w-4 h-4 mr-3 rtl:mr-0 rtl:ml-3 text-primary" />
-                        <span className="text-sm font-bold">{isArabic ? 'عضو كادر قيادي نشط' : 'ACTIVE CORE OPERATIVE'}</span>
-                      </div>
-                      <span className="text-[10px] font-cyber text-primary">{isArabic ? 'موثق' : 'VERIFIED'}</span>
-                    </div>
-                  ) : (
-                    <p className="text-xs text-muted-foreground italic p-4 bg-white/5 rounded border border-dashed border-white/10 text-center">
-                      {isArabic ? 'غير مدرج في قائمة الكادر الأساسي حالياً.' : 'Not currently listed in core staff roster.'}
-                    </p>
-                  )}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">{isArabic ? 'آخر نشاط / ظهور:' : 'Last Seen:'}</span>
+                  <span className="font-mono text-neon-green">{formatTimeAgo(viewingUser.lastSeenAt, isArabic)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">{isArabic ? 'الكلية:' : 'Faculty:'}</span>
+                  <span className="font-bold text-white">{viewingUser.faculty || 'Engineering'}</span>
                 </div>
               </div>
 
-              <div className="flex justify-end pt-4">
-                <Button variant="cyber" onClick={() => setViewingUser(null)}>
-                  {isArabic ? 'إغلاق المعاينة' : 'CLOSE_INTEL'}
+              <div className="flex justify-end gap-3 pt-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    const target = viewingUser;
+                    setViewingUser(null);
+                    setEditingRoleUser(target);
+                  }}
+                  className="text-xs gap-1.5"
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  {isArabic ? 'تعديل الصلاحيات' : 'EDIT_PERMISSIONS'}
+                </Button>
+                <Button variant="cyber" onClick={() => setViewingUser(null)} className="text-xs">
+                  {isArabic ? 'إغلاق' : 'CLOSE'}
                 </Button>
               </div>
             </CardContent>
@@ -1024,19 +1470,13 @@ const UserManagement = () => {
           isOpen={!!editingRoleUser}
           onClose={() => setEditingRoleUser(null)}
           onSaveRole={async (userId, newRole) => {
-            await changeUserRole(userId, newRole);
-            if (viewingUser && viewingUser.id === userId) {
-              setViewingUser({ ...viewingUser, role: newRole });
-            }
+            setPendingRoleChange({ user: editingRoleUser, newRole });
+            setEditingRoleUser(null);
           }}
         />
       )}
     </div>
   );
 };
-
-const Activity = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-);
 
 export default UserManagement;
