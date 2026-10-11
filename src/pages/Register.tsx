@@ -160,7 +160,7 @@ const Register = () => {
             </div>
 
             {/* Registration Form - Always Visible */}
-            <form onSubmit={handleEmailRegister} className="space-y-3.5">
+            <form onSubmit={handleEmailRegister} noValidate className="space-y-3.5">
               {/* Full Name */}
               <div className="space-y-1">
                 <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest">

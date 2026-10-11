@@ -139,7 +139,7 @@ const Login = () => {
             </div>
 
             {/* Email & Password Form - Always Visible */}
-            <form onSubmit={handleEmailLogin} className="space-y-3.5">
+            <form onSubmit={handleEmailLogin} noValidate className="space-y-3.5">
               {/* Email Field */}
               <div className="space-y-1">
                 <label className="text-[10px] font-cyber text-muted-foreground uppercase tracking-widest flex items-center justify-between">
