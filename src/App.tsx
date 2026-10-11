@@ -44,6 +44,7 @@ import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import PublicFormView from './pages/PublicFormView';
 import ContentPage from './components/ContentPage';
+import NotFound from './pages/NotFound';
 import { PointsProvider } from './contexts/PointsContext';
 import { NotificationsProvider } from './contexts/NotificationsContext';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -101,26 +102,6 @@ const ManagerRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (!isManager) return <Navigate to="/dashboard" />;
   return <>{children}</>;
-};
-
-const NotFound = () => {
-  const { isArabic } = useLanguage();
-  return (
-    <div className="h-[80vh] flex flex-col items-center justify-center text-center p-6">
-      <h1 className="text-9xl font-black font-cyber text-primary mb-4 opacity-20">404</h1>
-      <h2 className="text-3xl font-bold mb-6 font-cyber">
-        {isArabic ? 'انقطع الاتصال • الصفحة غير موجودة' : 'SIGNAL_LOST_IN_VOID'}
-      </h2>
-      <p className="text-muted-foreground mb-8 max-w-md">
-        {isArabic 
-          ? 'الإحداثيات المطلوبة لا تتطابق مع أي صفحة معروفة في شبكة نادي DataCamp.' 
-          : 'The requested coordinates do not correspond to any known terminal in the network.'}
-      </p>
-      <Button variant="cyber" onClick={() => window.location.href = '/'}>
-        {isArabic ? 'العودة إلى الصفحة الرئيسية' : 'RETURN_TO_HOME_BASE'}
-      </Button>
-    </div>
-  );
 };
 
 function AppContent() {
