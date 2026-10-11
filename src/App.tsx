@@ -14,37 +14,39 @@ import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
 import { Menu } from 'lucide-react';
-import About from './pages/About';
-import Projects from './pages/Projects';
-import Blog from './pages/Blog';
-import Events from './pages/Events';
-import Staff from './pages/Staff';
-import Gallery from './pages/Gallery';
-import Contact from './pages/Contact';
-import FAQ from './pages/FAQ';
-import Privacy from './pages/Privacy';
-import Terms from './pages/Terms';
-import Courses from './pages/Courses';
-import MyCourses from './pages/MyCourses';
-import CourseDetail from './pages/CourseDetail';
-import CourseLearning from './pages/CourseLearning';
-import Leaderboard from './pages/Leaderboard';
-import CompilerPlayground from './pages/CompilerPlayground';
-import CourseQuiz from './pages/CourseQuiz';
-import Certificates from './pages/Certificates';
-import Notifications from './pages/Notifications';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import VerifyEmail from './pages/VerifyEmail';
-import AuthCallback from './pages/AuthCallback';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import AdminDashboard from './pages/AdminDashboard';
-import PublicFormView from './pages/PublicFormView';
-import ContentPage from './components/ContentPage';
-import NotFound from './pages/NotFound';
+
+// Route-level code splitting & lazy loading
+const About = React.lazy(() => import('./pages/About'));
+const Projects = React.lazy(() => import('./pages/Projects'));
+const Blog = React.lazy(() => import('./pages/Blog'));
+const Events = React.lazy(() => import('./pages/Events'));
+const Staff = React.lazy(() => import('./pages/Staff'));
+const Gallery = React.lazy(() => import('./pages/Gallery'));
+const Contact = React.lazy(() => import('./pages/Contact'));
+const FAQ = React.lazy(() => import('./pages/FAQ'));
+const Privacy = React.lazy(() => import('./pages/Privacy'));
+const Terms = React.lazy(() => import('./pages/Terms'));
+const Courses = React.lazy(() => import('./pages/Courses'));
+const MyCourses = React.lazy(() => import('./pages/MyCourses'));
+const CourseDetail = React.lazy(() => import('./pages/CourseDetail'));
+const CourseLearning = React.lazy(() => import('./pages/CourseLearning'));
+const Leaderboard = React.lazy(() => import('./pages/Leaderboard'));
+const CompilerPlayground = React.lazy(() => import('./pages/CompilerPlayground'));
+const CourseQuiz = React.lazy(() => import('./pages/CourseQuiz'));
+const Certificates = React.lazy(() => import('./pages/Certificates'));
+const Notifications = React.lazy(() => import('./pages/Notifications'));
+const Login = React.lazy(() => import('./pages/Login'));
+const Register = React.lazy(() => import('./pages/Register'));
+const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = React.lazy(() => import('./pages/ResetPassword'));
+const VerifyEmail = React.lazy(() => import('./pages/VerifyEmail'));
+const AuthCallback = React.lazy(() => import('./pages/AuthCallback'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Profile = React.lazy(() => import('./pages/Profile'));
+const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
+const PublicFormView = React.lazy(() => import('./pages/PublicFormView'));
+const ContentPage = React.lazy(() => import('./components/ContentPage'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
 import { PointsProvider } from './contexts/PointsContext';
 import { NotificationsProvider } from './contexts/NotificationsContext';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -103,6 +105,18 @@ const ManagerRoute = ({ children }: { children: React.ReactNode }) => {
   if (!isManager) return <Navigate to="/dashboard" />;
   return <>{children}</>;
 };
+
+const RouteLoadingFallback: React.FC = () => (
+  <div className="min-h-[50vh] flex flex-col items-center justify-center p-8 space-y-4">
+    <div className="relative w-12 h-12 flex items-center justify-center">
+      <div className="absolute inset-0 rounded-full border-2 border-primary/20 animate-ping" />
+      <div className="w-10 h-10 rounded-full border-2 border-t-primary border-r-primary border-b-transparent border-l-transparent animate-spin" />
+    </div>
+    <span className="text-[11px] font-cyber tracking-widest text-primary/80 uppercase animate-pulse">
+      SYNCING_NEURAL_INTERFACE...
+    </span>
+  </div>
+);
 
 function AppContent() {
   const { settings, isSuperAdmin, loading } = useAuth();
@@ -198,7 +212,8 @@ function AppContent() {
               }}
               className="w-full h-full"
             >
-              <Routes location={location}>
+              <React.Suspense fallback={<RouteLoadingFallback />}>
+                <Routes location={location}>
                 <Route path="/" element={<Home />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/my-courses" element={
@@ -277,6 +292,7 @@ function AppContent() {
                 } />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </React.Suspense>
             </motion.div>
           </AnimatePresence>
         </main>
