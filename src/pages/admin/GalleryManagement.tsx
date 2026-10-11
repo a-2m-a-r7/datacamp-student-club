@@ -6,7 +6,6 @@ import { Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import ImagePicker from '../../components/ImagePicker';
 
-import { deleteFile } from '../../services/storageService';
 import { contentService } from '../../services/contentService';
 
 const GalleryManagement = () => {
@@ -47,6 +46,7 @@ const GalleryManagement = () => {
     try {
       const itemToDelete = images.find(img => img.id === id);
       if (itemToDelete?.url) {
+        const { deleteFile } = await import('../../services/storageService');
         await deleteFile(itemToDelete.url);
       }
       await contentService.remove('gallery', id);
