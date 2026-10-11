@@ -37,7 +37,6 @@ const SAMPLE_PROJECTS_EN = [
     description: 'Edge-deployed object detection pipeline tracking vehicle density at major Cairo intersections to dynamically calibrate green light intervals.',
     technologies: ['YOLOv8', 'OpenCV', 'DeepSort', 'Docker'],
     githubUrl: 'https://github.com',
-    liveUrl: '#',
     featured: true
   },
   {
@@ -49,7 +48,6 @@ const SAMPLE_PROJECTS_EN = [
     description: 'BERT-based sentiment classification model fine-tuned on university discussion datasets to aggregate and analyze course feedback.',
     technologies: ['Transformers', 'HuggingFace', 'Pandas', 'Streamlit'],
     githubUrl: 'https://github.com',
-    liveUrl: '#',
     featured: false
   }
 ];
@@ -65,7 +63,6 @@ const SAMPLE_PROJECTS_AR = [
     description: 'نظام متكامل يدمج الرؤية الحاسوبية والانحدار الإحصائي لتحليل صور الأقمار الصناعية متعددة الأطياف للتنبؤ بإنتاجية القمح المصري بدقة 94.2%.',
     technologies: ['Python', 'PyTorch', 'Rasterio', 'FastAPI', 'React'],
     githubUrl: 'https://github.com',
-    liveUrl: 'https://demo.datacamp.club',
     featured: true
   },
   {
@@ -78,7 +75,6 @@ const SAMPLE_PROJECTS_AR = [
     description: 'خط معالجة متقدم لاكتشاف وتتبع كثافة المركبات في تقاطعات القاهرة الكبرى لمعايرة فترات الإشارة الخضراء ديناميكياً على الأجهزة الطرفية.',
     technologies: ['YOLOv8', 'OpenCV', 'DeepSort', 'Docker'],
     githubUrl: 'https://github.com',
-    liveUrl: '#',
     featured: true
   },
   {
@@ -91,7 +87,6 @@ const SAMPLE_PROJECTS_AR = [
     description: 'نموذج BERT تم تدريبه وضبطه بدقة على مجموعات بيانات مناقشات واستبيانات الجامعة لتصنيف انطباعات وتقييمات الطلاب حول المقررات.',
     technologies: ['Transformers', 'HuggingFace', 'Pandas', 'Streamlit'],
     githubUrl: 'https://github.com',
-    liveUrl: '#',
     featured: false
   }
 ];
