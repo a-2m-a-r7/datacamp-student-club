@@ -3,6 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "description": "Interactive Web Platform & NEXUS AI Mentor for DataCamp Student Club at Innovation University",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
