@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Layout, Save, Target, Info } from 'lucide-react';
+import { Layout, Save, Target, Info, Globe, MessageSquare, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { demoHomeContent, demoAboutData } from '../../lib/demoData';
 import { contentService } from '../../services/contentService';
@@ -13,20 +13,46 @@ const ContentManagement = () => {
   const pages = [
     { id: 'home', name: 'Home Page', icon: Layout },
     { id: 'about', name: 'About Us', icon: Info },
+    { id: 'site', name: 'Discord & Social Links', icon: Share2 },
   ];
 
   const [homeContent, setHomeContent] = useState(demoHomeContent);
   const [aboutData, setAboutData] = useState(demoAboutData);
+  const [siteSettings, setSiteSettings] = useState<any>({
+    discordUrl: '',
+    githubUrl: '',
+    linkedinUrl: '',
+    twitterUrl: '',
+    facebookUrl: '',
+    siteDescription: '',
+  });
 
   useEffect(() => {
     const loadContent = async () => {
       try {
-        const [home, about] = await Promise.all([
+        const [home, about, site] = await Promise.all([
           contentService.getSetting('home'),
           contentService.getSetting('about'),
+          contentService.getSetting('site'),
         ]);
         if (home) setHomeContent(home);
         if (about) setAboutData(about);
+        if (site) {
+          // Normalize socialLinks array into flat state for easy editing
+          const links = site.socialLinks || [];
+          const gh = links.find((l: any) => l.platform?.toLowerCase() === 'github')?.url || site.githubUrl || '';
+          const li = links.find((l: any) => l.platform?.toLowerCase() === 'linkedin')?.url || site.linkedinUrl || '';
+          const tw = links.find((l: any) => l.platform?.toLowerCase() === 'twitter')?.url || site.twitterUrl || '';
+          const fb = links.find((l: any) => l.platform?.toLowerCase() === 'facebook')?.url || site.facebookUrl || '';
+          setSiteSettings({
+            discordUrl: site.discordUrl || '',
+            githubUrl: gh,
+            linkedinUrl: li,
+            twitterUrl: tw,
+            facebookUrl: fb,
+            siteDescription: site.siteDescription || '',
+          });
+        }
       } catch (err) {
         console.error('Content settings fetch error:', err);
       }
@@ -40,6 +66,19 @@ const ContentManagement = () => {
     try {
       if (activeTab === 'home') await contentService.upsertSetting('home', homeContent);
       if (activeTab === 'about') await contentService.upsertSetting('about', aboutData);
+      if (activeTab === 'site') {
+        const socialLinks = [
+          siteSettings.githubUrl ? { platform: 'github', url: siteSettings.githubUrl } : null,
+          siteSettings.linkedinUrl ? { platform: 'linkedin', url: siteSettings.linkedinUrl } : null,
+          siteSettings.twitterUrl ? { platform: 'twitter', url: siteSettings.twitterUrl } : null,
+          siteSettings.facebookUrl ? { platform: 'facebook', url: siteSettings.facebookUrl } : null,
+        ].filter(Boolean);
+
+        await contentService.upsertSetting('site', {
+          ...siteSettings,
+          socialLinks,
+        });
+      }
       toast.success(`Content for ${activeTab} updated in database`);
     } catch (error) {
       toast.error(`Failed to update ${activeTab} content`);
@@ -176,6 +215,85 @@ const ContentManagement = () => {
                       value={aboutData.history}
                       onChange={(e) => setAboutData({...aboutData, history: e.target.value})}
                     />
+                  </div>
+                  </CardContent>
+                </Card>
+              </div>
+          )}
+
+          {activeTab === 'site' && (
+            <div className="space-y-6">
+              <Card className="border-neon-purple/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-neon-purple" />
+                    Discord Community Configuration
+                  </CardTitle>
+                  <CardDescription>
+                    Configure the official student Discord invitation link displayed on the Contact page.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
+                      Discord Invite URL
+                    </label>
+                    <Input 
+                      placeholder="https://discord.gg/your-club-invite"
+                      value={siteSettings.discordUrl} 
+                      onChange={(e) => setSiteSettings({...siteSettings, discordUrl: e.target.value})}
+                    />
+                    <p className="text-[11px] text-muted-foreground font-mono">
+                      If left empty, the Discord section on the public Contact page displays a "Coming Soon" badge and a direct link for admins to configure it here.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-primary/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Share2 className="w-5 h-5 text-primary" />
+                    Official Social Media Channels
+                  </CardTitle>
+                  <CardDescription>
+                    Active links are displayed in the footer and across the platform. Leave empty to hide.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">GitHub Organization / Profile</label>
+                      <Input 
+                        placeholder="https://github.com/datacamp-club"
+                        value={siteSettings.githubUrl} 
+                        onChange={(e) => setSiteSettings({...siteSettings, githubUrl: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">LinkedIn Page</label>
+                      <Input 
+                        placeholder="https://linkedin.com/company/datacamp-club"
+                        value={siteSettings.linkedinUrl} 
+                        onChange={(e) => setSiteSettings({...siteSettings, linkedinUrl: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Twitter / X Profile</label>
+                      <Input 
+                        placeholder="https://x.com/datacamp_club"
+                        value={siteSettings.twitterUrl} 
+                        onChange={(e) => setSiteSettings({...siteSettings, twitterUrl: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Facebook Page</label>
+                      <Input 
+                        placeholder="https://facebook.com/datacamp.club"
+                        value={siteSettings.facebookUrl} 
+                        onChange={(e) => setSiteSettings({...siteSettings, facebookUrl: e.target.value})}
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>

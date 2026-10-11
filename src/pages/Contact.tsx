@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Send, Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
+import { Send, Mail, Phone, MapPin, MessageSquare, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { toast } from 'sonner';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 import { contentService } from '../services/contentService';
 
 const Contact = () => {
   const { isArabic } = useLanguage();
+  const { isManager } = useAuth();
+  const [siteSettings, setSiteSettings] = useState<any>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,6 +20,24 @@ const Contact = () => {
     message: ''
   });
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadSettings = async () => {
+      try {
+        const data = await contentService.getSetting('site');
+        if (mounted && data) setSiteSettings(data);
+      } catch (err) {
+        console.warn('Failed to load site settings in Contact:', err);
+      }
+    };
+    loadSettings();
+    const unsubscribe = contentService.subscribe('settings', loadSettings);
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,9 +209,30 @@ const Contact = () => {
                     : 'Our neural network is active 24/7. For urgent inquiries, use the priority channel in our Discord.'
                   }
                 </p>
-                <Button variant="outline" className="w-full">
-                  {isArabic ? 'الانضمام لمجتمع Discord' : 'Join Discord Server'}
-                </Button>
+                {siteSettings?.discordUrl ? (
+                  <a 
+                    href={siteSettings.discordUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    aria-label={isArabic ? 'الانضمام لمجتمع Discord الرسمي' : 'Join official Discord community'}
+                    className="block w-full"
+                  >
+                    <Button variant="outline" className="w-full">
+                      {isArabic ? 'الانضمام لمجتمع Discord' : 'Join Discord Server'}
+                    </Button>
+                  </a>
+                ) : isManager ? (
+                  <Link to="/admin/content" className="block w-full">
+                    <Button variant="outline" className="w-full border-amber-500/40 text-amber-300 hover:bg-amber-500/10 gap-2 font-mono text-xs">
+                      <Settings className="w-4 h-4 text-amber-400" />
+                      {isArabic ? 'إعداد رابط Discord (مشرف)' : 'Configure Discord URL (Admin)'}
+                    </Button>
+                  </Link>
+                ) : (
+                  <p className="text-xs text-muted-foreground/70 font-mono text-center py-2 border border-white/5 rounded-lg bg-white/5">
+                    {isArabic ? 'رابط مجتمع Discord سيتاح قريباً' : 'Official Discord link coming soon'}
+                  </p>
+                )}
               </div>
             </motion.div>
           </div>
