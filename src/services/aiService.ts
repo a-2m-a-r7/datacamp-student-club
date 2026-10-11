@@ -454,17 +454,12 @@ async function getIntelligentOfflineReply(
 // ─── GEMINI API INTEGRATION (Official SDK + REST fallback) ────────────────────
 
 function getActiveGeminiKey(): string | null {
-  const key =
-    (import.meta as any).env?.VITE_GEMINI_API_KEY ||
-    (import.meta as any).env?.GEMINI_API_KEY ||
-    (typeof process !== 'undefined' && process.env ? (process.env as any).GEMINI_API_KEY : null) ||
-    localStorage.getItem('datacamp_gemini_api_key');
-
-  return key && key !== 'MY_GEMINI_API_KEY' && key.trim().length > 10 ? key.trim() : null;
+  const localKey = typeof window !== 'undefined' ? localStorage.getItem('datacamp_gemini_api_key') : null;
+  return localKey && localKey !== 'MY_GEMINI_API_KEY' && localKey.trim().length > 10 ? localKey.trim() : null;
 }
 
 export function isGeminiConfigured(): boolean {
-  return !!getActiveGeminiKey();
+  return true;
 }
 
 // Client-side rate limiting: 10 queries per 60 seconds
@@ -490,84 +485,77 @@ export function clearChatHistory(): void {
 }
 
 async function callGeminiAPI(prompt: string, systemPrompt: string): Promise<string | null> {
-  const apiKey = getActiveGeminiKey();
-  if (!apiKey) return null;
-
-  // Active production models in order of preference
-  const models = ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-3.8-flash'];
-
-  for (const model of models) {
+  // 1. Primary: Use secure serverless proxy endpoint /api/ai/chat (key stays on server)
+  try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 18000);
+    const timeoutId = setTimeout(() => controller.abort(), 16000);
 
-    try {
-      // Build messages with history for multi-turn
-      const contents = [
-        // System instruction as first user message
-        {
-          role: 'user',
-          parts: [{ text: systemPrompt }],
-        },
-        {
-          role: 'model',
-          parts: [{ text: 'Understood. I am NEXUS, ready to assist.' }],
-        },
-        // Add conversation history (last 6 turns max)
-        ...chatHistory.slice(-12),
-        // Current user message
-        {
-          role: 'user',
-          parts: [{ text: prompt }],
-        },
-      ];
+    const res = await fetch('/api/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        prompt,
+        systemPrompt,
+        history: chatHistory.slice(-12),
+      }),
+    });
 
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        signal: controller.signal,
-        body: JSON.stringify({
-          contents,
-          generationConfig: {
-            temperature: 0.75,
-            maxOutputTokens: 1500,
-            topP: 0.95,
-            topK: 40,
-          },
-          safetySettings: [
-            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          ],
-        }),
-      });
+    clearTimeout(timeoutId);
 
-      clearTimeout(timeoutId);
-
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        console.warn(`Gemini model ${model} returned HTTP ${res.status}:`, errBody);
-        const isAuthError = res.status === 403 || errBody?.error?.status === 'PERMISSION_DENIED';
-        if (isAuthError) break; // Bad API key, don't try other models
-        continue;
-      }
-
-      const data = await res.json();
-      const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (candidateText && candidateText.trim().length > 0) {
-        // Update chat history for multi-turn continuity
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      const candidateText = data?.text;
+      if (candidateText && typeof candidateText === 'string' && candidateText.trim().length > 0) {
         chatHistory.push(
           { role: 'user', parts: [{ text: prompt }] },
-          { role: 'model', parts: [{ text: candidateText }] }
+          { role: 'model', parts: [{ text: candidateText.trim() }] }
         );
-        // Keep history bounded to last 20 turns
         if (chatHistory.length > 40) chatHistory = chatHistory.slice(-40);
-        return candidateText;
+        return candidateText.trim();
       }
-    } catch (err: any) {
-      clearTimeout(timeoutId);
-      console.warn(`Error invoking Gemini model ${model}:`, err?.message || err);
+    }
+  } catch {
+    // Serverless proxy unavailable (local static preview or offline) - fall through
+  }
+
+  // 2. Direct client fallback ONLY if user explicitly entered a personal key in localStorage
+  const localKey = getActiveGeminiKey();
+  if (localKey) {
+    const models = ['gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-2.0-flash'];
+    for (const model of models) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 16000);
+      try {
+        const contents = [
+          { role: 'user', parts: [{ text: systemPrompt }] },
+          { role: 'model', parts: [{ text: 'Understood. I am NEXUS, ready to assist.' }] },
+          ...chatHistory.slice(-12),
+          { role: 'user', parts: [{ text: prompt }] },
+        ];
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${localKey}`;
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({ contents }),
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const data = await res.json();
+          const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (candidateText && candidateText.trim().length > 0) {
+            chatHistory.push(
+              { role: 'user', parts: [{ text: prompt }] },
+              { role: 'model', parts: [{ text: candidateText.trim() }] }
+            );
+            if (chatHistory.length > 40) chatHistory = chatHistory.slice(-40);
+            return candidateText.trim();
+          }
+        }
+      } catch {
+        clearTimeout(timeoutId);
+      }
     }
   }
 
