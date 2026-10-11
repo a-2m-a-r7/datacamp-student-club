@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { validatePasswordStrength } from '../lib/utils';
 
 import { profileSchema } from '../lib/schemas';
+import { getSiteUrl } from '../lib/siteUrl';
 import { ROLE_DEFINITIONS } from '../lib/roleDefinitions';
 import { UserRole } from '../types';
 
@@ -104,7 +105,7 @@ const Profile = () => {
     try {
       if (isSupabaseConfigured) {
         const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
-          redirectTo: `${window.location.origin}/reset-password`
+          redirectTo: `${getSiteUrl()}/reset-password`
         });
         if (error) throw error;
         toast.success(isArabic ? `تم إرسال رابط استعادة كلمة المرور إلى ${targetEmail}` : `Password recovery link sent to ${targetEmail}`);

@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { demoSettings } from '../lib/demoData';
 import { UserProfile, UserRole, UserStatus } from '../types';
+import { getSiteUrl } from '../lib/siteUrl';
 
 interface AuthContextType {
   user: any | null;
@@ -315,7 +316,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const target = redirectTo || sessionStorage.getItem('datacamp_auth_redirect') || '/dashboard';
     sessionStorage.setItem('datacamp_auth_redirect', target);
 
-    const redirectUri = `${window.location.origin}/auth/callback`;
+    const redirectUri = `${getSiteUrl()}/auth/callback`;
 
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -400,7 +401,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       password,
       options: {
         data: { full_name: cleanName },
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${getSiteUrl()}/dashboard`,
       },
     });
 
@@ -435,7 +436,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${getSiteUrl()}/reset-password`,
     });
 
     if (error) {

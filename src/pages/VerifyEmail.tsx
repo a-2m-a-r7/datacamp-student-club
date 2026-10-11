@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { analyzeEmail } from '../lib/emailUtils';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { getSiteUrl } from '../lib/siteUrl';
 
 const VerifyEmail = () => {
   const { user, profile, logout } = useAuth();
@@ -34,7 +35,7 @@ const VerifyEmail = () => {
         type: 'signup',
         email: user.email,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${getSiteUrl()}/dashboard`,
         },
       });
       if (error) throw error;

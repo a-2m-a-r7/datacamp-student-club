@@ -23,6 +23,7 @@ import {
   Lock,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { getCanonicalUrl } from '../lib/siteUrl';
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -252,7 +253,7 @@ const CourseDetail = () => {
                   variant="outline"
                   className="w-full h-10 font-cyber text-xs border-white/10 hover:border-primary/40 gap-2"
                   onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
+                    navigator.clipboard.writeText(getCanonicalUrl(`/courses/${course.slug}`));
                     toast.success(isArabic ? 'تم نسخ رابط الدورة إلى الحافظة!' : 'Course link copied to clipboard!');
                   }}
                 >

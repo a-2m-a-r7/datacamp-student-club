@@ -5,6 +5,7 @@
 
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { Certificate } from '../types';
+import { getSiteUrl } from '../lib/siteUrl';
 
 function generateVerificationCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -55,7 +56,7 @@ export const certificateService = {
     type: 'course' | 'event' | 'achievement';
   }): Promise<Certificate> {
     const verificationCode = generateVerificationCode();
-    const shareUrl = `${window.location.origin}/verify-certificate/${verificationCode}`;
+    const shareUrl = `${getSiteUrl()}/verify-certificate/${verificationCode}`;
 
     const fallback: Certificate = {
       id: `cert_${Date.now()}`,

@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { logAction } from '../../lib/logger';
+import { getSiteUrl } from '../../lib/siteUrl';
 
 const Security = () => {
   const { profile, user } = useAuth();
@@ -94,7 +95,7 @@ const Security = () => {
     if (isSupabaseConfigured) {
       try {
         const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
-          redirectTo: `${window.location.origin}/reset-password`
+          redirectTo: `${getSiteUrl()}/reset-password`
         });
         if (error) throw error;
         await logAction('PASSWORD_RESET_REQUEST', profile?.fullName || 'Admin', targetEmail, 'success');

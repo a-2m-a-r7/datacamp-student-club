@@ -19,6 +19,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import { getCanonicalUrl } from '../lib/siteUrl';
 
 const SAMPLE_ARTICLES_EN = [
   {
@@ -427,7 +428,7 @@ export const Blog = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      navigator.clipboard.writeText(window.location.href);
+                      navigator.clipboard.writeText(getCanonicalUrl('/blog'));
                       toast.success(isArabic ? 'تم نسخ رابط المقال إلى الحافظة!' : 'Article link copied to clipboard!');
                     }}
                     className="gap-2 text-xs font-cyber"

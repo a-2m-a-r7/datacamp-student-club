@@ -12,6 +12,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
 import { FormRecord } from '../../../types/forms';
 import { useLanguage } from '../../../contexts/LanguageContext';
+import { getSiteUrl } from '../../../lib/siteUrl';
 
 interface FormShareModalProps {
   isOpen: boolean;
@@ -30,7 +31,7 @@ export const FormShareModal: React.FC<FormShareModalProps> = ({
 
   if (!isOpen) return null;
 
-  const publicUrl = `${window.location.origin}/f/${form.slug}`;
+  const publicUrl = `${getSiteUrl()}/f/${form.slug}`;
 
   const handleCopyLink = async () => {
     try {

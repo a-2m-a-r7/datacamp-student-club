@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { toast } from 'sonner';
 import { Mail, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getSiteUrl } from '../lib/siteUrl';
 
 const ForgotPassword = () => {
   const { isArabic } = useLanguage();
@@ -22,7 +23,7 @@ const ForgotPassword = () => {
     try {
       if (isSupabaseConfigured) {
         const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo: `${getSiteUrl()}/reset-password`,
         });
         if (error) throw error;
       }

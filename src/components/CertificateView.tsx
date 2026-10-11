@@ -16,6 +16,7 @@ import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
 import { jsPDF } from 'jspdf';
 import { toast } from 'sonner';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getSiteUrl } from '../lib/siteUrl';
 
 interface CertificateViewProps {
   certificate: Certificate;
@@ -32,7 +33,7 @@ function loadImg(src: string): Promise<HTMLImageElement> {
       const fallback = new Image();
       fallback.onload = () => resolve(fallback);
       fallback.onerror = () => resolve(img);
-      fallback.src = window.location.origin + src;
+      fallback.src = getSiteUrl() + src;
     };
     img.src = src;
   });
@@ -556,7 +557,7 @@ async function generateCertificateCanvas(
   ctx.font = '500 12px "JetBrains Mono", monospace';
   ctx.fillStyle = 'rgba(148, 163, 184, 0.75)';
   ctx.fillText(
-    `OFFICIALLY RECOGNIZED CREDENTIAL • SHA-256 REGISTRY: ${cert.verificationCode}-EIU2026 • DIGITAL VERIFICATION: ${window.location.origin.toUpperCase()}/VERIFY-CERTIFICATE`,
+    `OFFICIALLY RECOGNIZED CREDENTIAL • SHA-256 REGISTRY: ${cert.verificationCode}-EIU2026 • DIGITAL VERIFICATION: ${getSiteUrl().toUpperCase()}/VERIFY-CERTIFICATE`,
     W / 2,
     1620
   );
@@ -570,7 +571,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
   const hiddenQrCanvasRef = useRef<HTMLCanvasElement>(null);
   const [downloading, setDownloading] = useState(false);
 
-  const verificationUrl = `${window.location.origin}/verify-certificate/${certificate.verificationCode}`;
+  const verificationUrl = `${getSiteUrl()}/verify-certificate/${certificate.verificationCode}`;
 
   const issueDateObj = certificate.issuedAt && typeof (certificate.issuedAt as any).toDate === 'function'
     ? (certificate.issuedAt as any).toDate()
