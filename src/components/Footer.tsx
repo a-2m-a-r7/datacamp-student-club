@@ -47,23 +47,32 @@ const Footer = () => {
                 ? 'تمكين الطلاب من إتقان علم البيانات، الذكاء الاصطناعي، وهندسة البرمجيات عبر تعليم تفاعلي وشهادات معتمدة.' 
                 : (settings?.siteDescription || 'Empowering students with data science, AI, and software engineering skills.')}
             </p>
-            <div className="flex space-x-4 rtl:space-x-reverse">
-              {settings?.socialLinks?.map((link: any, idx: number) => {
-                const Icon = getIcon(link.platform);
-                return (
-                  <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                    <Icon className="w-5 h-5" />
-                  </a>
-                );
-              }) || (
-                <>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Github className="w-5 h-5" /></a>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Twitter className="w-5 h-5" /></a>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Linkedin className="w-5 h-5" /></a>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Facebook className="w-5 h-5" /></a>
-                </>
-              )}
-            </div>
+            {(() => {
+              const activeLinks = (settings?.socialLinks || []).filter(
+                (l: any) => l?.url && typeof l.url === 'string' && l.url.trim() !== '' && l.url.trim() !== '#'
+              );
+              if (activeLinks.length === 0) return null;
+              return (
+                <div className="flex space-x-4 rtl:space-x-reverse">
+                  {activeLinks.map((link: any, idx: number) => {
+                    const Icon = getIcon(link.platform);
+                    const platformName = link.platform || 'Social';
+                    return (
+                      <a
+                        key={idx}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`DataCamp Student Club on ${platformName}`}
+                        className="text-muted-foreground hover:text-primary transition-colors p-1 rounded hover:bg-white/5"
+                      >
+                        <Icon className="w-5 h-5" />
+                      </a>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
 
           <div>
