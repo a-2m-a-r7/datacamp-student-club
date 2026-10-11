@@ -650,7 +650,9 @@ export const FormBuilder: React.FC = () => {
                 <button
                   type="button"
                   disabled
-                  className="px-6 py-2 rounded-xl bg-primary/50 text-white text-xs font-semibold cursor-not-allowed"
+                  title={isArabic ? 'معاينة فقط، تم تعطيل الإرسال داخل منشئ النماذج' : 'Preview only, submission is disabled in the builder.'}
+                  aria-label="Preview only, submission is disabled in the builder."
+                  className="px-6 py-2 rounded-xl bg-primary/50 text-white text-xs font-semibold cursor-not-allowed opacity-75"
                 >
                   {isArabic ? 'إرسال (معاينة)' : 'Submit (Preview)'}
                 </button>

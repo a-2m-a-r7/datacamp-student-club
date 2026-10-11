@@ -8,7 +8,7 @@
 
 export const getSiteUrl = (): string => {
   // 1. Check environment variable VITE_SITE_URL
-  const envUrl = import.meta.env.VITE_SITE_URL;
+  const envUrl = (import.meta as any).env?.VITE_SITE_URL;
   if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
     return envUrl.trim().replace(/\/+$/, '');
   }
