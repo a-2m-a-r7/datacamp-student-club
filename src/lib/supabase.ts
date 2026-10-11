@@ -28,4 +28,19 @@ export const supabase: SupabaseClient = createClient(
   }
 );
 
+export const createIsolatedAuthClient = (): SupabaseClient => {
+  return createClient(
+    isSupabaseConfigured ? supabaseUrl : fallbackUrl,
+    isSupabaseConfigured ? supabaseAnonKey : fallbackKey,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+        storageKey: 'datacamp_isolated_ephemeral_token',
+      },
+    }
+  );
+};
+
 export default supabase;

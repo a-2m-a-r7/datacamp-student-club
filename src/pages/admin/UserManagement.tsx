@@ -15,7 +15,7 @@ import { RoleEditorModal } from '../../components/admin/RoleEditorModal';
 import { ROLE_DEFINITIONS, ROLE_LIST, ALL_PERMISSIONS } from '../../lib/roleDefinitions';
 import { UserRole } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { isSupabaseConfigured, supabase } from '../../lib/supabase';
+import { isSupabaseConfigured, supabase, createIsolatedAuthClient } from '../../lib/supabase';
 
 interface AuthEventItem {
   id: string;
@@ -358,8 +358,23 @@ const UserManagement = () => {
 
     if (isSupabaseConfigured) {
       try {
-        await supabase.from('profiles').delete().eq('id', userId);
-        await supabase.from('users').delete().eq('id', userId);
+        // 1. Try serverless admin endpoint first (handles auth.users & profiles)
+        let handledViaServerless = false;
+        try {
+          const apiRes = await fetch('/api/admin/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'delete', userId }),
+          });
+          if (apiRes.ok) handledViaServerless = true;
+        } catch {}
+
+        // 2. Direct database delete fallback
+        if (!handledViaServerless) {
+          await supabase.from('profiles').delete().eq('id', userId);
+          await supabase.from('users').delete().eq('id', userId);
+        }
+
         await logAction('USER_DELETED', 'Admin', userId, 'warning');
         toast.success(isArabic ? 'تم حذف العضو من قاعدة البيانات' : 'User removed from database');
       } catch {
@@ -382,30 +397,58 @@ const UserManagement = () => {
 
     if (isSupabaseConfigured) {
       try {
-        const { data, error } = await supabase.auth.signUp({
-          email: newUser.email.trim(),
-          password: newUser.password || 'DataCampClub2025!',
-          options: {
-            data: {
-              full_name: newUser.fullName.trim(),
-            }
+        let createdUserId = '';
+
+        // 1. Try serverless admin endpoint (avoids client session disruption and uses service role)
+        try {
+          const apiRes = await fetch('/api/admin/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'create',
+              email: newUser.email.trim(),
+              password: newUser.password || 'DataCampClub2025!',
+              fullName: newUser.fullName.trim(),
+              role: newUser.role,
+              faculty: newUser.faculty,
+              memberId,
+            }),
+          });
+          if (apiRes.ok) {
+            const resJson = await apiRes.json().catch(() => ({}));
+            createdUserId = resJson?.userId || '';
           }
-        });
-        if (error) throw error;
-        if (data.user) {
-          const dbRole = toDatabaseRole(newUser.role);
-          // Update profile attributes
-          await supabase.from('profiles').update({
-            role: dbRole,
-            faculty: newUser.faculty,
-            member_id: memberId,
-          }).eq('id', data.user.id);
-          await supabase.from('users').update({
-            role: toUsersMirrorRole(newUser.role),
-            faculty: newUser.faculty,
-            member_id: memberId,
-          }).eq('id', data.user.id);
+        } catch {}
+
+        // 2. Fallback: Use isolated client so the admin's active session is NEVER overwritten!
+        if (!createdUserId) {
+          const isolatedClient = createIsolatedAuthClient();
+          const { data, error } = await isolatedClient.auth.signUp({
+            email: newUser.email.trim(),
+            password: newUser.password || 'DataCampClub2025!',
+            options: {
+              data: {
+                full_name: newUser.fullName.trim(),
+              },
+            },
+          });
+          if (error) throw error;
+          if (data.user) {
+            createdUserId = data.user.id;
+            const dbRole = toDatabaseRole(newUser.role);
+            await supabase.from('profiles').update({
+              role: dbRole,
+              faculty: newUser.faculty,
+              member_id: memberId,
+            }).eq('id', createdUserId);
+            await supabase.from('users').update({
+              role: toUsersMirrorRole(newUser.role),
+              faculty: newUser.faculty,
+              member_id: memberId,
+            }).eq('id', createdUserId);
+          }
         }
+
         toast.success(isArabic ? 'تمت إضافة العضو بنجاح في Supabase' : 'Operative created successfully in Supabase');
         setShowAddModal(false);
         fetchData();
