@@ -6,7 +6,7 @@ import {
   FileText, Users, Image as ImageIcon, Mail, 
   LayoutDashboard, LogOut, ChevronLeft, ChevronRight,
   Settings as SettingsIcon, Shield, BarChart3, X, User, Menu,
-  Trophy, Sparkles, Bell, Award, UserPlus, LogIn, GraduationCap
+  Trophy, Sparkles, Bell, Award, UserPlus, LogIn, GraduationCap, ClipboardList
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -88,6 +88,7 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
     { name: isArabic ? 'النقاط والـ XP' : 'Points & XP', path: '/admin/points', icon: Sparkles, visible: isAdmin || isManager },
     { name: isArabic ? 'الأعضاء' : 'Users', path: '/admin/users', icon: Users, visible: isAdmin || isHR },
     { name: isArabic ? 'الفعاليات' : 'Events', path: '/admin/events', icon: Calendar, visible: isAdmin || isHR || isEventManager },
+    { name: isArabic ? 'النماذج والاستبيانات' : 'Forms', path: '/admin/forms', icon: ClipboardList, visible: isAdmin },
     { name: isArabic ? 'فريق العمل' : 'Staff', path: '/admin/staff', icon: User, visible: isAdmin },
     { name: isArabic ? 'المعرض' : 'Gallery', path: '/admin/gallery', icon: ImageIcon, visible: isAdmin || isContentManager },
     { name: isArabic ? 'المشاريع' : 'Projects', path: '/admin/projects', icon: Code, visible: isAdmin || isContentManager },

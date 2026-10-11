@@ -42,6 +42,7 @@ import AuthCallback from './pages/AuthCallback';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
+import PublicFormView from './pages/PublicFormView';
 import ContentPage from './components/ContentPage';
 import { PointsProvider } from './contexts/PointsContext';
 import { NotificationsProvider } from './contexts/NotificationsContext';
@@ -151,6 +152,21 @@ function AppContent() {
             </span>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (location.pathname.startsWith('/f/')) {
+    return (
+      <div className="min-h-screen w-full bg-dark-navy text-foreground relative overflow-hidden">
+        <Starfield />
+        <div className="relative z-10">
+          <Routes>
+            <Route path="/f/:slug" element={<PublicFormView />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+        <Toaster position="top-right" theme="dark" richColors />
       </div>
     );
   }

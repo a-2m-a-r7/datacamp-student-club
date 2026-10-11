@@ -17,6 +17,7 @@ import Security from './admin/Security';
 import SettingsPage from './admin/Settings';
 import CourseManagement from './admin/CourseManagement';
 import PointsManagement from './admin/PointsManagement';
+import FormManagement from './admin/forms/FormManagement';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
 import { AnimatePresence, motion } from 'motion/react';
@@ -115,6 +116,12 @@ const AdminDashboard = () => {
           </RoleGuard>
         } />
 
+        <Route path="/forms/*" element={
+          <RoleGuard check={auth.isAdmin}>
+            <FormManagement />
+          </RoleGuard>
+        } />
+        
         <Route path="/security" element={
           <RoleGuard check={auth.isSuperAdmin}>
             <Security />

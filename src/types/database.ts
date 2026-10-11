@@ -540,6 +540,135 @@ export interface Database {
         };
         Update: Partial<Database['public']['Tables']['certificates']['Insert']>;
       };
+      forms: {
+        Row: {
+          id: string;
+          title: string;
+          description: string;
+          slug: string;
+          status: 'draft' | 'published' | 'closed';
+          theme: Json;
+          allow_anonymous: boolean;
+          one_response_per_user: boolean;
+          collect_email: boolean;
+          opens_at: string | null;
+          closes_at: string | null;
+          success_message: string;
+          sheets_sync_enabled: boolean;
+          spreadsheet_id: string | null;
+          spreadsheet_url: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string;
+          slug: string;
+          status?: 'draft' | 'published' | 'closed';
+          theme?: Json;
+          allow_anonymous?: boolean;
+          one_response_per_user?: boolean;
+          collect_email?: boolean;
+          opens_at?: string | null;
+          closes_at?: string | null;
+          success_message?: string;
+          sheets_sync_enabled?: boolean;
+          spreadsheet_id?: string | null;
+          spreadsheet_url?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['forms']['Insert']>;
+      };
+      form_questions: {
+        Row: {
+          id: string;
+          form_id: string;
+          type: string;
+          title: string;
+          description: string;
+          required: boolean;
+          position: number;
+          options: Json;
+          settings: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          form_id: string;
+          type: string;
+          title: string;
+          description?: string;
+          required?: boolean;
+          position?: number;
+          options?: Json;
+          settings?: Json;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['form_questions']['Insert']>;
+      };
+      form_responses: {
+        Row: {
+          id: string;
+          form_id: string;
+          respondent_id: string | null;
+          respondent_email: string | null;
+          submitted_at: string;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          form_id: string;
+          respondent_id?: string | null;
+          respondent_email?: string | null;
+          submitted_at?: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['form_responses']['Insert']>;
+      };
+      form_answers: {
+        Row: {
+          id: string;
+          response_id: string;
+          question_id: string;
+          value: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          response_id: string;
+          question_id: string;
+          value?: Json;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['form_answers']['Insert']>;
+      };
+      sync_logs: {
+        Row: {
+          id: string;
+          form_id: string;
+          response_id: string | null;
+          status: 'pending' | 'synced' | 'failed' | 'retrying';
+          error: string | null;
+          details: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          form_id: string;
+          response_id?: string | null;
+          status?: 'pending' | 'synced' | 'failed' | 'retrying';
+          error?: string | null;
+          details?: Json;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['sync_logs']['Insert']>;
+      };
     };
     Views: {
       [_ in never]: never;
