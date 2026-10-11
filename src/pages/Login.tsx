@@ -114,15 +114,17 @@ const Login = () => {
               )}
             </Button>
 
-            <div className="flex justify-center -mt-1">
-              <button
-                type="button"
-                onClick={() => setShowGoogleModal(true)}
-                className="text-[11px] font-mono text-muted-foreground/70 hover:text-primary transition-colors underline decoration-dotted"
-              >
-                {isArabic ? '⚡ تجربة الحسابات السريعة (حساب المشرف / حساب العضو)' : '⚡ Quick Demo Accounts Switcher'}
-              </button>
-            </div>
+            {Boolean((import.meta as any).env?.DEV) && (
+              <div className="flex justify-center -mt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowGoogleModal(true)}
+                  className="text-[11px] font-mono text-muted-foreground/70 hover:text-primary transition-colors underline decoration-dotted"
+                >
+                  {isArabic ? '⚡ تجربة الحسابات السريعة (حساب المشرف / حساب العضو)' : '⚡ Quick Demo Accounts Switcher'}
+                </button>
+              </div>
+            )}
 
             {/* Stylish Divider */}
             <div className="relative my-3">
@@ -245,11 +247,13 @@ const Login = () => {
         </Card>
       </motion.div>
 
-      <GoogleAccountModal
-        isOpen={showGoogleModal}
-        onClose={() => setShowGoogleModal(false)}
-        onSuccess={() => navigate('/dashboard')}
-      />
+      {Boolean((import.meta as any).env?.DEV) && (
+        <GoogleAccountModal
+          isOpen={showGoogleModal}
+          onClose={() => setShowGoogleModal(false)}
+          onSuccess={() => navigate('/dashboard')}
+        />
+      )}
     </div>
   );
 };

@@ -38,6 +38,10 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
   if (!isOpen) return null;
 
   const handleSelectAdmin = async () => {
+    if (!(import.meta as any).env?.DEV) {
+      toast.error(isArabic ? 'الحسابات التجريبية غير مفعّلة في بيئة الإنتاج' : 'Demo accounts are disabled in production');
+      return;
+    }
     setLoadingAction('admin');
     try {
       await loginAsRole('super_admin');
@@ -52,6 +56,10 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
   };
 
   const handleSelectMember = async () => {
+    if (!(import.meta as any).env?.DEV) {
+      toast.error(isArabic ? 'الحسابات التجريبية غير مفعّلة في بيئة الإنتاج' : 'Demo accounts are disabled in production');
+      return;
+    }
     setLoadingAction('member');
     try {
       await loginAsRole('member');
@@ -80,6 +88,10 @@ export const GoogleAccountModal: React.FC<GoogleAccountModalProps> = ({
 
   const handleCustomAccountSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!(import.meta as any).env?.DEV) {
+      toast.error(isArabic ? 'الحسابات التجريبية غير مفعّلة في بيئة الإنتاج' : 'Demo accounts are disabled in production');
+      return;
+    }
     if (!customEmail.trim()) {
       toast.error(isArabic ? 'يرجى كتابة البريد الإلكتروني' : 'Please enter an email address');
       return;
