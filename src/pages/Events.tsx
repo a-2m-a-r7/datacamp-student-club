@@ -103,7 +103,7 @@ const Events = () => {
                     {isArabic ? 'رمز الدخول الشخصي (QR Code)' : 'Your Personal Access Code'}
                   </p>
                   <p className="text-[10px] text-muted-foreground">
-                    {isArabic ? 'أظهر هذا الرمز لمسؤولي التنظيم عند الدخول للفعالية.' : 'A confirmation email with this QR code has been recorded.'}
+                    {isArabic ? 'أظهر هذا الرمز لمسؤولي التنظيم عند الدخول للفعالية.' : 'Show this code to event organizers at the entrance.'}
                   </p>
                 </div>
                 <Button variant="cyber" className="w-full" onClick={() => setShowSuccess(null)}>

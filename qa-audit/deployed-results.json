@@ -1,6 +1,6 @@
 {
   "origin": "https://datacamp-student-club.vercel.app",
-  "passed": 42,
+  "passed": 45,
   "results": [
     {
       "route": "/",
@@ -107,6 +107,14 @@
       "overflow": false
     },
     {
+      "route": "/verify-membership/00000000-0000-4000-8000-000000000020",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
       "route": "/",
       "width": 768,
       "status": 200,
@@ -211,6 +219,14 @@
       "overflow": false
     },
     {
+      "route": "/verify-membership/00000000-0000-4000-8000-000000000020",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
       "route": "/",
       "width": 375,
       "status": 200,
@@ -308,6 +324,14 @@
     },
     {
       "route": "/admin/users",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/verify-membership/00000000-0000-4000-8000-000000000020",
       "width": 375,
       "status": 200,
       "cache": "no-store, max-age=0",
