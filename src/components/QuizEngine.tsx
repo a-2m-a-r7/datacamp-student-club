@@ -8,7 +8,6 @@ import {
   RotateCcw,
   ArrowRight,
   ArrowLeft,
-  Trophy,
   Check
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -18,9 +17,7 @@ interface QuizEngineProps {
   quizTitle: string;
   questions: QuizQuestion[];
   passingScore?: number; // default 80%
-  pointsRewardPass?: number;
-  pointsRewardPerfect?: number;
-  onComplete: (scorePercentage: number, passed: boolean, answers: Record<number, number>) => void | Promise<void>;
+  onComplete: (scorePercentage: number, passed: boolean, answers: Record<number, number>) => number | Promise<number>;
   onAskAI?: (questionText: string) => void;
 }
 
@@ -28,8 +25,6 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   quizTitle,
   questions,
   passingScore = 80,
-  pointsRewardPass = 30,
-  pointsRewardPerfect = 50,
   onComplete,
 }) => {
   const { isArabic } = useLanguage();
@@ -37,6 +32,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [awardedPoints, setAwardedPoints] = useState<number | null>(null);
 
   const currentQ = questions[currentIndex];
   const total = questions.length;
@@ -85,7 +81,8 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
 
     setSubmitting(true);
     try {
-      await onComplete(scorePct, passed, selectedAnswers);
+      const points = await onComplete(scorePct, passed, selectedAnswers);
+      setAwardedPoints(points);
       setSubmitted(true);
       if (passed) toast.success(isArabic ? 'تم اجتياز الاختبار وحفظ النتيجة' : 'Quiz passed and result saved');
       else toast.error(isArabic ? 'لم تصل إلى درجة النجاح' : 'Passing score not reached');
@@ -94,6 +91,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   };
 
   const handleRetake = () => {
+    setAwardedPoints(null);
     setSelectedAnswers({});
     setSubmitted(false);
     setCurrentIndex(0);
@@ -127,13 +125,8 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
 
         <div className="flex items-center gap-2">
           <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-cyber flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" /> +{pointsRewardPass} XP
+            <Sparkles className="w-3.5 h-3.5" /> {awardedPoints === null ? (isArabic ? 'المكافأة تُسجل بعد التقييم' : 'Reward recorded after assessment') : `${awardedPoints > 0 ? '+' : ''}${awardedPoints} XP ${isArabic ? 'مسجلة' : 'recorded'}`}
           </span>
-          {pointsRewardPerfect > pointsRewardPass && (
-            <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-cyber flex items-center gap-1">
-              <Trophy className="w-3.5 h-3.5" /> +{pointsRewardPerfect} XP (100%)
-            </span>
-          )}
         </div>
       </div>
 
@@ -261,8 +254,8 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
             <p className="text-xs font-mono text-muted-foreground max-w-md mx-auto">
               {passed
                 ? (isArabic
-                    ? `تهانينا! حققت نسبة النجاح (${passingScore}%). تمت إضافة نقاط XP إلى حسابك.`
-                    : `Congratulations! You met the passing criteria (${passingScore}%). Your XP bounty has been added to your club record.`)
+                    ? `تهانينا! حققت نسبة النجاح (${passingScore}%) وتم حفظ النتيجة.`
+                    : `Congratulations! You met the passing criteria (${passingScore}%). Your passing result has been saved.`)
                 : (isArabic
                     ? `حققت ${scorePct}%. درجة النجاح المطلوبة هي ${passingScore}%. راجع محتوى الدورة وأعد المحاولة.`
                     : `You scored ${scorePct}%. The passing threshold is ${passingScore}%. Review the course material and retake when ready.`)}

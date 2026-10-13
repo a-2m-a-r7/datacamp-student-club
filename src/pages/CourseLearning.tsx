@@ -27,7 +27,7 @@ import { AIMentorModal } from '../components/AIMentor/AIMentorModal';
 const CourseLearning = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const { grantPoints } = usePoints();
   const { isArabic } = useLanguage();
 
@@ -111,6 +111,7 @@ const CourseLearning = () => {
       );
 
       setEnrollment(res.enrollment);
+      await refreshProfile().catch(() => {});
       toast.success(isArabic ? `تم إكمال الدرس! +${res.pointsAwarded} XP أضيفت لحسابك.` : `Lesson completed! +${res.pointsAwarded} XP claimed.`);
 
       if (res.isCourseFinished) {
@@ -140,6 +141,7 @@ const CourseLearning = () => {
   if (result.passed) {
    const rows = await courseService.getUserEnrollment(user.id || user.uid, course.id);
    if (rows) setEnrollment(rows);
+   await refreshProfile().catch(() => {});
    toast.success(isArabic ? 'تم اجتياز الاختبار وحفظ النتيجة' : 'Assessment passed and result saved');
    if (result.progress?.isCourseFinished && rows?.certificateId) toast.success(isArabic ? 'تم إصدار شهادة الكورس تلقائيًا' : 'Your course certificate was issued automatically');
   } else toast.error(isArabic ? 'درجة النجاح 80%' : 'Passing score is 80%');

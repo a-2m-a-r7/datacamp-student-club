@@ -24,7 +24,9 @@
 
 منصة تعليمية وإدارية تفاعلية متكاملة، مصممة بأعلى معايير الويب الحديثة (Cyberpunk Dark Aesthetics) لخدمة مجتمع طلاب علم البيانات، وهندسة الذكاء الاصطناعي، والبرمجيات بجامعة الابتكار.
 
-تعتمد المنصة بنية سحابية كاملة باستخدام **React 19** و **Supabase PostgreSQL** و **Vercel Serverless Functions**، وتوفر تجربة تعليمية فريدة تشمل مرشداً ذكياً بالذكاء الاصطناعي (NEXUS AI Mentor)، ومترجماً سحابياً للأكواد، ومنشئ نماذج ديناميكي متطور مستوحى من Microsoft Forms مع مزامنة فورية إلى جداول بيانات Google Sheets، بالإضافة إلى نظام التحقق الأكاديمي الرقمي من الشهادات عبر رموز QR.
+تعتمد المنصة على **React 19** و **Supabase PostgreSQL** و **Vercel Serverless Functions**، وتشمل مرشدًا بالذكاء الاصطناعي ومترجم أكواد ونماذج تحفظ الردود في قاعدة البيانات. إكمال الكورس يصدر شهادة تلقائيًا داخل معاملة الإكمال، مع تحقق عبر QR. تصدير الردود إلى Google Sheets يتطلب إعداد حساب خدمة وصلاحيات جدول فعلية.
+
+نتائج الإصلاح والتسليم الحالية: [HANDOVER.md](qa-audit/HANDOVER.md). تفاصيل ربط الشهادات: [COURSE_CERTIFICATES.md](qa-audit/COURSE_CERTIFICATES.md). الملفات والاختبارات المعزولة ليست بيانات مستخدمين في الإنتاج.
 
 ---
 
@@ -49,7 +51,7 @@
 محمية بنظام أدوار وصلاحيات هرمي (`super_admin`, `admin`, `hr`, `event_manager`, `content_manager`, `editor`):
 * **Form Builder (منشئ النماذج المتقدم):**
   * سحب وإفلات وإضافة 14 نوعاً من الأسئلة مع شروط الإلزام والحدود.
-  * مزامنة تلقائية لحظية ثنائية الاتجاه مع Google Sheets عبر Google Service Account.
+  * تصدير ردود النماذج إلى Google Sheets بعد إعداد Google Service Account وصلاحيات الجدول.
   * لوحة تحليلات وإحصاءات بيانية فورية للردود وتصدير Excel / CSV بنقرة واحدة.
 * **إدارة المستخدمين والصلاحيات (User Management):** تعيين الأدوار وترقية المشرفين وتصدير السجلات.
 * **إدارة الفعاليات وماسح الحضور بالكاميرا (Event Scanner):** مسح تذاكر QR للطلاب بكاميرا المتصفح وتسجيل الحضور المباشر.
@@ -130,9 +132,9 @@ datacamp-student-club/
 
 ### 2. استنساخ المستودع وتثبيت الاعتمادات
 ```bash
-git clone <repository-url>
-cd ref_datacamp_temp
-npm install
+git clone https://github.com/a-2m-a-r7/datacamp-student-club.git
+cd datacamp-student-club
+npm ci
 ```
 
 ### 3. إعداد متغيرات البيئة (Environment Variables)
@@ -144,11 +146,14 @@ cp .env.example .env
 
 ### 4. إعداد قاعدة بيانات Supabase
 1. افتح مشروعك في **Supabase Dashboard** -> **SQL Editor**.
-2. انسخ محتوى الملف الموحد [`supabase/full_schema.sql`](supabase/full_schema.sql) والصقه في المحرر ونفذه (`RUN`).
-3. (اختياري) أضف البيانات التجريبية الأولية بنسخ وتنفيذ [`supabase/seed.sql`](supabase/seed.sql).
-4. لترقية أول حساب مسؤول فائق (`Super Admin`)، نفّذ الأمر التالي في SQL Editor:
+2. للجداول والصلاحيات الحالية استخدم [`qa-audit/SETUP_SUPABASE.sql`](qa-audit/SETUP_SUPABASE.sql)، وهو يجمع ترقيات الإصلاح دون بيانات تجريبية. المشروع الحالي طُبقت عليه الترقيات بالفعل؛ لا يلزم إعادة تهيئته.
+3. لا تنفذ ملفات seed أو الأمثلة القديمة على الإنتاج. إكمال كورس حقيقي مؤهل يصدر شهادته تلقائيًا؛ الكورس الخالي من الدروس لا يمنح شهادة.
+4. عند إعداد مشروع جديد فقط، سجّل حساب المسؤول وأكد بريده، ثم اختر هذا الحساب الموجود صراحة من SQL Editor بصلاحية مالك المشروع:
 ```sql
-SELECT public.promote_admin_by_email('your-admin-email@example.com');
+UPDATE public.profiles AS p SET role='admin'
+FROM auth.users AS u
+WHERE p.id=u.id AND lower(u.email)=lower('your-admin-email@example.com')
+  AND u.email_confirmed_at IS NOT NULL AND p.status='active';
 ```
 
 ### 5. تشغيل خادم التطوير المحلي
@@ -178,7 +183,7 @@ npm run dev
 
 ## 🧪 Testing & Verification | فحص واختبار المشروع
 
-تم تزويد المشروع بمجموعة اختبارات E2E شاملة باستخدام Playwright تغطي جميع المسارات والصلاحيات عبر 3 شاشات:
+اختبارات Playwright تفحص مسارات وصلاحيات وتدفقات محددة على 3 أحجام شاشة. اختبارات الكورسات والشهادات تنفذ روتينات PostgreSQL الفعلية في قاعدة معزولة، مع هوية Auth خاصة بالاختبار. راجع تقرير التسليم للتغطية الفعلية وحدود الاختبارات؛ ليست هذه شهادة بأن كل زر أو تكامل خارجي اختُبر.
 
 ```bash
 # تشغيل فحص الأنواع (TypeScript Typecheck)

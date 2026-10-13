@@ -106,7 +106,9 @@ test('partial completion and failed inline assessment do not issue; passing fina
 
 test('standalone final quiz creates and opens the matching persisted certificate',async({page})=>{
  await learningDatabase(page,true);await page.goto('/courses/qa-test-automatic/learn');await page.getByRole('button',{name:'COMPLETE & CLAIM +10 XP',exact:true}).click();await expect(page.getByRole('heading',{name:'QA_TEST_ASSESSMENT',exact:true})).toBeVisible();
+ const before=Number((await db.query<{total_points:number}>('SELECT total_points FROM profiles')).rows[0].total_points);
  await page.goto('/courses/qa-test-automatic/quiz');await page.getByRole('button',{name:/QA_TEST_CORRECT/}).click();await page.getByRole('button',{name:'SUBMIT ASSESSMENT',exact:true}).click();
+ await expect(page.getByText('ASSESSMENT COMPLETED!',{exact:true})).toBeVisible();const after=Number((await db.query<{total_points:number}>('SELECT total_points FROM profiles')).rows[0].total_points);await expect(page.getByText(`+${after-before} XP recorded`,{exact:true})).toBeVisible();
  await expect(page.getByText('Course completed. Your certificate was issued automatically.',{exact:true})).toBeVisible();expect(await certificates()).toHaveLength(1);await page.getByRole('button',{name:'VIEW CERTIFICATE',exact:true}).click();await expect(page.locator('#printable-certificate')).toContainText('QA_TEST_AUTOMATIC_COURSE');
 });
 

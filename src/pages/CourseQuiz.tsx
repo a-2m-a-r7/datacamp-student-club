@@ -12,7 +12,7 @@ import { Button } from '../components/ui/Button';
 export const CourseQuiz = () => {
   const { slug, lessonId } = useParams<{ slug: string; lessonId?: string }>();
   const navigate = useNavigate();
-  const { profile } = useAuth();
+  const { profile, refreshProfile } = useAuth();
   const { grantPoints } = usePoints();
   const { isArabic } = useLanguage();
 
@@ -67,6 +67,8 @@ export const CourseQuiz = () => {
  const saved = await courseService.submitQuiz(lesson.id, payload as Record<string, number>);
  if (saved.scorePercentage !== scorePct || saved.passed !== passed) throw new Error('Assessment changed. Reload and retry.');
  if (saved.progress?.isCourseFinished) setCertificateId(saved.progress.enrollment.certificate_id);
+ await refreshProfile().catch(() => {});
+ return Number(saved.progress?.pointsAwarded || 0);
 };
 
   if (loading) {
@@ -103,8 +105,6 @@ export const CourseQuiz = () => {
           quizTitle={lesson?.title ? `${lesson.title} — ${isArabic ? 'اختبار' : 'Quiz'}` : `${course?.title} — ${isArabic ? 'تقييم شامل' : 'Assessment'}`}
           questions={questions}
           passingScore={80}
-          pointsRewardPass={30}
-          pointsRewardPerfect={50}
           onComplete={handleQuizComplete}
         />
       </div>
