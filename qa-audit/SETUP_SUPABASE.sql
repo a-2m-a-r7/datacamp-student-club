@@ -982,3 +982,7 @@ REVOKE ALL ON FUNCTION public.public_leaderboard(integer) FROM PUBLIC,anon;
 GRANT EXECUTE ON FUNCTION public.public_leaderboard(integer) TO authenticated;
 COMMIT;
 
+BEGIN;
+DROP POLICY IF EXISTS qa_staff_read ON public.staff;
+COMMIT;
+

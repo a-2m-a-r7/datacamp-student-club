@@ -66,7 +66,7 @@ The user authorized repairs after the initial discovery and explicitly authorize
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
 - Browser scenarios: ${rows.length}; results: ${JSON.stringify(counts)}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
-- PostgreSQL: 33 passed, zero failed in an isolated in-memory PostgreSQL database. All nine migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
+- PostgreSQL: 37 passed, zero failed in an isolated in-memory PostgreSQL database. All ten migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
 - TypeScript check and production build passed; npm audit reported zero known vulnerabilities. Zero audit findings does not guarantee absence of all defects.
@@ -75,7 +75,7 @@ The user authorized repairs after the initial discovery and explicitly authorize
 
 ## Supabase changes and evidence
 
-The connected dashboard project matched the workspace configuration. Before repair, forms, form_questions, points_log and certificates returned HTTP404; anonymous profile reads exposed five rows. The prepared SETUP_SUPABASE.sql was applied through the owner's logged-in SQL editor in a single transaction and returned Success. No rows returned. Afterwards the missing tables respond successfully, anonymous profiles/events return zero private rows, and public courses remain readable. Events are published through the sanitized public_events projection.
+The connected dashboard project matched the workspace configuration. Before repair, forms, form_questions, points_log and certificates returned HTTP404; anonymous profile reads exposed five rows. The prepared SETUP_SUPABASE.sql was applied through the owner's logged-in SQL editor in a single transaction and returned Success. No rows returned. Afterwards the missing tables respond successfully, anonymous profiles/events return zero private rows, and public courses remain readable. Events are published through the sanitized public_events projection. Member and staff directories are now admin-only in both the UI and PostgreSQL; direct anonymous directory RPC returns401 and anonymous staff reads return zero rows.
 
 Record counts verified before/after: profiles 5/5, courses 3/3, events 2/2, legacy users 0/0, customers 0/0, sales 0/0. Forms and certificates started empty. Existing records were retained; no seeded content was inserted. The unrelated commerce tables and existing public.users permissions were preserved. Public.users belongs to a legacy mixed schema; DataCamp now uses profiles as the authoritative account/points table.
 
@@ -105,7 +105,7 @@ Still unverified or blocked:
 
 1. A real member and admin session in the application: Google/email login, signup, logout, reset/OTP delivery, profile saves and admin create/delete require a private QA environment/account; dashboard sign-in alone does not log into the app.
 2. Google Sheets synchronization requires GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY and GOOGLE_SPREADSHEET_OWNER_EMAIL plus spreadsheet permissions. No credentials were fabricated and no sheet was created/shared.
-3. Production hosting/deployment: local server configuration is complete, but source/build changes and server environment variables have not been published to a live host.
+3. Production is deployed at https://datacamp-student-club.vercel.app from GitHub main (application commit e78f6f1). Vercel reports Ready. The server key is configured privately in Production, and VITE_GEMINI_API_KEY was removed. Three admin endpoints were verified to return401 for visitors after repairing an ESM import failure; the TypeScript endpoint returns200.
 4. Live realtime delivery and file uploads, storage download, CSV/Excel/PDF/print variants, notification actions, all dynamic filters/sorting/pagination/drag/drop, and exhaustive keyboard/mobile hit-target checks for all 685 declarations are not fully exercised. Untested declarations retain Not tested status in the original inventory.
 5. Python/SQL CDN loading and Piston language availability still need live external checks. JavaScript/TypeScript execution, Gemini connectivity and service-failure handling were tested; TypeScript transpilation reports syntax diagnostics, not complete semantic type checking.
 6. Existing database content could have been historical sample data; it was not deleted without a reliable record classification. Configure real contact content in admin settings.
@@ -115,7 +115,7 @@ No claim that every button or all external services work is made. Missing servic
 
 ## Priority order
 
-1. Deploy the repaired app and server routes with private server configuration.
+1. Complete a separate QA environment for every remaining authenticated operation.
 2. Verify real member/admin sessions in a separate QA environment.
 3. Complete Google service-account configuration and Sheets permissions.
 4. Verify login redirects, reset/OTP emails and phone-provider setup.

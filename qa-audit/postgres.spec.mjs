@@ -26,6 +26,10 @@ try {
  await check('SQL schema applies without seeds',async()=>assert.equal((await db.query('SELECT count(*)::int AS n FROM events')).rows[0].n,0));
  await check('anonymous profiles are private',async()=>{await db.exec('SET ROLE anon;');assert.equal((await db.query('SELECT * FROM profiles')).rows.length,0);await db.exec('RESET ROLE;');});
  await db.query("SELECT set_config('qa.uid',$1,false)",[member]); await db.exec('SET ROLE authenticated;');
+ await check('member reads only their own profile',async()=>{const rows=(await db.query('SELECT id FROM profiles')).rows;assert.deepEqual(rows.map(r=>r.id),[member]);});
+ await check('member can persist own profile name',async()=>{await db.query("UPDATE profiles SET full_name='QA_TEST_UPDATED_MEMBER' WHERE id=$1",[member]);assert.equal((await db.query('SELECT full_name FROM profiles WHERE id=$1',[member])).rows[0].full_name,'QA_TEST_UPDATED_MEMBER');});
+ await check('member cannot edit another profile',async()=>assert.equal((await db.query("UPDATE profiles SET full_name='QA_TEST_FORGED' WHERE id=$1 RETURNING id",[admin])).rows.length,0));
+ await check('member cannot read staff directory',async()=>assert.equal((await db.query('SELECT * FROM staff')).rows.length,0));
  await check('member cannot assign own admin role',async()=>{await assert.rejects(db.query("UPDATE profiles SET role='admin' WHERE id=$1",[member]));});
  await check('member cannot mint admin XP',async()=>await assert.rejects(db.query("SELECT award_points($1,'ADMIN_BONUS','QA_TEST',100,NULL,NULL)",[member])));
  await check('enrollment creates persisted record and repeat does not reset it',async()=>{await db.query('SELECT enroll_course($1)',[course]);await db.query('SELECT enroll_course($1)',[course]);assert.equal((await db.query('SELECT count(*)::int AS n FROM enrollments')).rows[0].n,1);});

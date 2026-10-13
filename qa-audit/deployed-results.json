@@ -1,0 +1,330 @@
+{
+  "origin": "https://datacamp-student-club.vercel.app",
+  "passed": 42,
+  "results": [
+    {
+      "route": "/",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/courses",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/events",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/projects",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/blog",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/staff",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/gallery",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/contact",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/leaderboard",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/profile",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/admin/users",
+      "width": 1440,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/courses",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/events",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/projects",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/blog",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/staff",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/gallery",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/contact",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/leaderboard",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/profile",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/admin/users",
+      "width": 768,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/courses",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/events",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/projects",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/blog",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/staff",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/gallery",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/contact",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/leaderboard",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/profile",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "route": "/admin/users",
+      "width": 375,
+      "status": 200,
+      "cache": "no-store, max-age=0",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "endpoint": "/api/admin/users",
+      "status": 401
+    },
+    {
+      "endpoint": "/api/admin/backup",
+      "status": 401
+    },
+    {
+      "endpoint": "/api/forms/sync-sheet",
+      "status": 401
+    }
+  ]
+}
