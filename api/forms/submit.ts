@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import syncSheet, { internalSubmissionSync } from './sync-sheet';
+import syncSheet, { internalSubmissionSync } from './sync-sheet.js';
 
 export default async function handler(req: any, res: any) {
   res.setHeader('Cache-Control', 'no-store');

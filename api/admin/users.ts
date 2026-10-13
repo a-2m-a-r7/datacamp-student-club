@@ -1,4 +1,4 @@
-import { authorizeAdmin } from '../_lib/authorize';
+import { authorizeAdmin } from '../_lib/authorize.js';
 export default async function handler(req: any, res: any) {
  if (req.method !== 'POST') return res.status(405).json({ error: 'Use POST.' });
  const authorized = await authorizeAdmin(req, res); if (!authorized) return;
