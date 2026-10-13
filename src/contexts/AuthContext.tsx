@@ -8,7 +8,8 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import { Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { toast } from 'sonner';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { demoSettings } from '../lib/demoData';
+import { defaultSettings } from '../lib/defaultContent';
+import { contentService } from '../services/contentService';
 import { UserProfile, UserRole, UserStatus } from '../types';
 import { getSiteUrl } from '../lib/siteUrl';
 
@@ -33,9 +34,10 @@ interface AuthContextType {
   isOrganizer: boolean;
   isManager: boolean;
   settings: any;
-  setMockUser: (user: any) => void;
-  loginAsRole: (roleType: 'super_admin' | 'member' | 'admin' | 'student') => Promise<void>;
-  loginWithCustomAccount: (fullName: string, email: string) => Promise<void>;
+  refreshProfile: () => Promise<void>;
+
+
+
 }
 
 // Global logger for authentication events (Auditing Phase)
@@ -63,20 +65,12 @@ export const logAuthEvent = async (
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Helper to determine if an email belongs to the primary admin
-const isPrimaryAdminEmail = (email?: string | null): boolean => {
-  if (!email) return false;
-  const clean = email.toLowerCase().trim();
-  return (
-    clean === 'mart33645@gmail.com' ||
-    clean === 'admin@datacamp.club' ||
-    clean.includes('ammar.tahoun')
-  );
-};
+
 
 // Map database profile row to UI UserProfile
 const mapDatabaseProfile = (row: any, fallbackUser?: SupabaseUser | null): UserProfile => {
   const email = (row?.email || fallbackUser?.email || '').toLowerCase().trim();
-  const isOwner = isPrimaryAdminEmail(email) || row?.role === 'admin' || row?.role === 'super_admin';
+  const isOwner = row?.role === 'admin' || row?.role === 'super_admin';
   const id = row?.id || fallbackUser?.id || '';
 
   return {
@@ -90,12 +84,10 @@ const mapDatabaseProfile = (row: any, fallbackUser?: SupabaseUser | null): UserP
       email.split('@')[0] ||
       'Member',
     role: isOwner ? 'super_admin' : 'member',
-    memberId:
-      row?.member_id ||
-      (isOwner ? `DC-ADM-${id.slice(0, 4).toUpperCase() || '0001'}` : `DC-${id.slice(0, 6).toUpperCase() || 'STU01'}`),
+    memberId: row?.member_id || '',
     status: (row?.status as UserStatus) || 'active',
     isVerified: row?.is_verified ?? !!fallbackUser?.email_confirmed_at,
-    totalPoints: row?.total_points ?? row?.xp ?? (isOwner ? 10000 : 50),
+    totalPoints: row?.total_points ?? row?.xp ?? 0,
     level: isOwner ? 'ARCHITECT' : row?.level || 'RECRUIT',
     photoURL:
       row?.avatar_url ||
@@ -104,15 +96,14 @@ const mapDatabaseProfile = (row: any, fallbackUser?: SupabaseUser | null): UserP
       fallbackUser?.user_metadata?.picture ||
       `https://api.dicebear.com/7.x/bottts/svg?seed=${id || email}`,
     phoneNumber: row?.phone || '',
-    faculty: row?.faculty || 'Faculty of Computer Science & AI',
-    universityName: row?.university || 'Innovation University',
-    university: row?.university || 'Innovation University',
+    faculty: row?.faculty || '',
+    universityName: row?.university || '',
+    university: row?.university || '',
     createdAt: row?.created_at || new Date().toISOString(),
     updatedAt: row?.updated_at || row?.last_seen_at || new Date().toISOString(),
   };
 };
 
-const fallbackProfile = (user: SupabaseUser): UserProfile => mapDatabaseProfile(null, user);
 
 const getProvider = (user: SupabaseUser | null): 'email' | 'google' => {
   return user?.app_metadata?.provider === 'google' ? 'google' : 'email';
@@ -123,10 +114,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [settings] = useState<any>(demoSettings);
+  const [settings, setSettings] = useState<any>(defaultSettings);
+  useEffect(() => {
+    let active = true;
+    const load = () => contentService.getSetting('general').then(value => {
+      if (active) setSettings({ ...defaultSettings, ...value });
+    }).catch(() => {});
+    load();
+    const unsubscribe = contentService.subscribe('settings', load);
+    return () => { active = false; unsubscribe(); };
+  }, []);
   const heartbeatTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const activeUserRef = useRef<SupabaseUser | null>(null);
   const activeAccessTokenRef = useRef<string | null>(null);
+  const sessionRevision = useRef(0);
+  const refreshProfile = async () => {
+    const activeUser = activeUserRef.current;
+    if (!activeUser) throw new Error('Authentication required.');
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', activeUser.id).single();
+    if (error) throw error;
+    setProfile(mapDatabaseProfile(data, activeUser));
+  };
+  useEffect(() => {
+    if (!user?.id || !isSupabaseConfigured) return;
+    const channel = supabase.channel(`account_profile_${user.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${user.id}` }, () => {
+        refreshProfile().catch(() => setProfile(null));
+      }).subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user?.id]);
 
   // Stop heartbeat timer
   const stopHeartbeat = () => {
@@ -152,8 +168,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Fetch or construct profile from Supabase
-  const fetchProfile = async (supabaseUser: SupabaseUser): Promise<UserProfile> => {
-    if (!isSupabaseConfigured) return fallbackProfile(supabaseUser);
+  const fetchProfile = async (supabaseUser: SupabaseUser): Promise<UserProfile | null> => {
+    if (!isSupabaseConfigured) return null;
 
     try {
       const { data, error } = await supabase
@@ -166,49 +182,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return mapDatabaseProfile(data, supabaseUser);
       }
 
-      // If profile does not exist yet (e.g. trigger lag), create it immediately
-      const newProf = mapDatabaseProfile(null, supabaseUser);
-      const isOwner = isPrimaryAdminEmail(supabaseUser.email);
-      await supabase.from('profiles').upsert({
-        id: supabaseUser.id,
-        email: supabaseUser.email || '',
-        full_name: newProf.fullName,
-        avatar_url: newProf.photoURL,
-        role: isOwner ? 'admin' : 'user',
-        provider: getProvider(supabaseUser),
-        member_id: newProf.memberId,
-        total_points: newProf.totalPoints,
-        level: newProf.level,
-        is_verified: true,
-        last_sign_in_at: new Date().toISOString(),
-        last_seen_at: new Date().toISOString(),
-      }, { onConflict: 'id' });
-
-      return newProf;
+      if (error) throw error;
+      return null;
     } catch (err) {
       console.warn('[AuthContext] Profile fetch warning:', err);
-      return fallbackProfile(supabaseUser);
+      return null;
     }
   };
 
   // Synchronize state with current active session
   const applySession = async (nextSession: Session | null) => {
+    const revision = ++sessionRevision.current;
     setSession(nextSession);
     activeUserRef.current = nextSession?.user ?? null;
     activeAccessTokenRef.current = nextSession?.access_token ?? null;
 
     if (nextSession?.user) {
       const nextProfile = await fetchProfile(nextSession.user);
+      if (revision !== sessionRevision.current) return;
       const compatibleUser = {
         ...nextSession.user,
         uid: nextSession.user.id,
-        displayName: nextProfile.fullName,
-        photoURL: nextProfile.photoURL,
-        emailVerified: !!nextSession.user.email_confirmed_at || nextProfile.isVerified,
+        displayName: nextProfile?.fullName || '',
+        photoURL: nextProfile?.photoURL || '',
+        emailVerified: !!nextSession.user.email_confirmed_at,
       };
       setUser(compatibleUser);
       setProfile(nextProfile);
-      localStorage.setItem('datacamp_active_session', JSON.stringify(nextProfile));
       startHeartbeat(nextSession.user.id);
     } else {
       stopHeartbeat();
@@ -227,41 +227,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
+    localStorage.removeItem('datacamp_active_session');
     // A. Check initial session
     supabase.auth.getSession().then(async ({ data }) => {
       if (!mounted) return;
       if (data?.session) {
         await applySession(data.session);
-      } else {
-        // Fallback: check cached active session in localStorage
-        const cached = localStorage.getItem('datacamp_active_session');
-        if (cached) {
-          try {
-            const parsed = JSON.parse(cached);
-            if (parsed && (parsed.id || parsed.uid)) {
-              const compatibleUser = {
-                ...parsed,
-                id: parsed.id || parsed.uid,
-                uid: parsed.id || parsed.uid,
-                email: parsed.email,
-                displayName: parsed.fullName,
-                photoURL: parsed.photoURL,
-                emailVerified: true,
-              };
-              setUser(compatibleUser);
-              setProfile(parsed);
-              startHeartbeat(parsed.id || parsed.uid);
-            }
-          } catch {}
-        }
-      }
+      } else { await applySession(null); }
       setLoading(false);
     });
 
     // B. Real-time auth state listener
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, nextSession) => {
+    } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      setTimeout(async () => {
       if (!mounted) return;
       await applySession(nextSession);
 
@@ -271,6 +251,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       setLoading(false);
+      }, 0);
     });
 
     // C. Handle tab close/unload presence
@@ -310,7 +291,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginWithGoogle = async (redirectTo?: string) => {
     if (!isSupabaseConfigured) {
       toast.error('Supabase configuration is not initialized in .env.');
-      return;
+      throw new Error('Authentication service is not configured.');
     }
 
     const target = redirectTo || sessionStorage.getItem('datacamp_auth_redirect') || '/dashboard';
@@ -349,7 +330,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginWithEmail = async (email: string, password: string) => {
     if (!isSupabaseConfigured) {
       toast.error('Supabase configuration is not initialized in .env.');
-      return;
+      throw new Error('Authentication service is not configured.');
     }
 
     const cleanEmail = email.trim().toLowerCase();
@@ -390,7 +371,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ): Promise<{ needsVerification: boolean }> => {
     if (!isSupabaseConfigured) {
       toast.error('Supabase configuration is not initialized in .env.');
-      return { needsVerification: false };
+      throw new Error('Authentication service is not configured.');
     }
 
     const cleanEmail = email.trim().toLowerCase();
@@ -432,7 +413,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const resetPassword = async (email: string) => {
     if (!isSupabaseConfigured) {
       toast.error('Supabase configuration is not initialized in .env.');
-      return;
+      throw new Error('Authentication service is not configured.');
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
@@ -449,6 +430,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // 6. Sign out (Records logout in auth_events BEFORE session is cleared)
   const logout = async () => {
+    sessionRevision.current++;
     const currentUser = activeUserRef.current || user;
     if (currentUser) {
       await logAuthEvent(currentUser.id, currentUser.email || '', 'logout', getProvider(currentUser));
@@ -479,144 +461,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // 8. Instant Role Authentication (Full Supabase Sync)
-  const loginAsRole = async (roleType: 'super_admin' | 'member' | 'admin' | 'student') => {
-    const isAdminRole = roleType === 'super_admin' || roleType === 'admin';
-    const email = isAdminRole ? 'mart33645@gmail.com' : 'student@datacamp.club';
-    const fullName = isAdminRole ? 'عمار طاحون (Ammar Tahoun)' : 'سارة حسن (Sara Hassan)';
-    const uid = isAdminRole ? 'usr_ammar_tahoun_adm' : 'usr_sara_hassan_mem';
-    const memberId = isAdminRole ? 'DC-ADM-0001' : 'DC-STU-0042';
 
-    const profileData: UserProfile = {
-      uid,
-      id: uid,
-      email,
-      fullName,
-      role: isAdminRole ? 'super_admin' : 'member',
-      memberId,
-      status: 'active',
-      totalPoints: isAdminRole ? 10000 : 150,
-      level: isAdminRole ? 'ARCHITECT' : 'RECRUIT',
-      isVerified: true,
-      photoURL: isAdminRole
-        ? 'https://api.dicebear.com/7.x/bottts/svg?seed=Ammar'
-        : 'https://api.dicebear.com/7.x/bottts/svg?seed=Sara',
-      faculty: 'Faculty of Computer Science & AI',
-      universityName: 'Innovation University',
-      university: 'Innovation University',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('profiles').upsert({
-          id: uid,
-          email,
-          full_name: fullName,
-          avatar_url: profileData.photoURL,
-          role: isAdminRole ? 'admin' : 'user',
-          provider: 'google',
-          member_id: memberId,
-          total_points: isAdminRole ? 10000 : 150,
-          level: isAdminRole ? 'ARCHITECT' : 'RECRUIT',
-          is_verified: true,
-          last_sign_in_at: new Date().toISOString(),
-          last_seen_at: new Date().toISOString(),
-        }, { onConflict: 'id' });
-
-        await logAuthEvent(uid, email, 'login', 'google');
-      } catch (err) {
-        console.warn('Supabase sync notice:', err);
-      }
-    }
-
-    setUser({
-      id: uid,
-      uid,
-      email,
-      displayName: fullName,
-      photoURL: profileData.photoURL,
-      emailVerified: true,
-    });
-    setProfile(profileData);
-    localStorage.setItem('datacamp_active_session', JSON.stringify(profileData));
-  };
 
   // 9. Instant Custom Account (Full Supabase Sync)
-  const loginWithCustomAccount = async (fullName: string, email: string) => {
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanName = fullName.trim() || cleanEmail.split('@')[0] || 'Club Member';
-    const isOwner = isPrimaryAdminEmail(cleanEmail);
 
-    const cleanIdPart = cleanEmail.replace(/[^a-z0-9]/g, '').slice(0, 8);
-    const uid = isOwner ? 'usr_ammar_tahoun_adm' : `usr_${cleanIdPart || 'student'}_${Math.random().toString(36).slice(2, 6)}`;
-    const memberId = isOwner ? 'DC-ADM-0001' : `DC-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const profileData: UserProfile = {
-      uid,
-      id: uid,
-      email: cleanEmail,
-      fullName: cleanName,
-      role: isOwner ? 'super_admin' : 'member',
-      memberId,
-      status: 'active',
-      totalPoints: isOwner ? 10000 : 50,
-      level: isOwner ? 'ARCHITECT' : 'RECRUIT',
-      isVerified: true,
-      photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cleanName)}`,
-      faculty: 'Faculty of Computer Science & AI',
-      universityName: 'Innovation University',
-      university: 'Innovation University',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
 
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('profiles').upsert({
-          id: uid,
-          email: cleanEmail,
-          full_name: cleanName,
-          avatar_url: profileData.photoURL,
-          role: isOwner ? 'admin' : 'user',
-          provider: 'google',
-          member_id: memberId,
-          total_points: isOwner ? 10000 : 50,
-          level: isOwner ? 'ARCHITECT' : 'RECRUIT',
-          is_verified: true,
-          last_sign_in_at: new Date().toISOString(),
-          last_seen_at: new Date().toISOString(),
-        }, { onConflict: 'id' });
-
-        await logAuthEvent(uid, cleanEmail, 'login', 'google');
-      } catch (err) {
-        console.warn('Supabase sync notice:', err);
-      }
-    }
-
-    setUser({
-      id: uid,
-      uid,
-      email: cleanEmail,
-      displayName: cleanName,
-      photoURL: profileData.photoURL,
-      emailVerified: true,
-    });
-    setProfile(profileData);
-    localStorage.setItem('datacamp_active_session', JSON.stringify(profileData));
-  };
-
-  const setMockUser = (mockData: any) => {
-    if (profile) setProfile({ ...profile, ...mockData });
-  };
 
   // Role permissions
   const role = profile?.role || '';
-  const currentEmail = (profile?.email || user?.email || '').toLowerCase();
+
   const isSuperAdmin =
-    role === 'super_admin' ||
-    (role as string) === 'admin' ||
-    isPrimaryAdminEmail(currentEmail);
+    Boolean(session && user?.email_confirmed_at && profile?.status === 'active' &&
+      (role === 'super_admin' || (role as string) === 'admin'));
 
   const isAdmin = isSuperAdmin;
   const isEditor = isSuperAdmin;
@@ -650,9 +507,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isOrganizer,
         isManager,
         settings,
-        setMockUser,
-        loginAsRole,
-        loginWithCustomAccount,
+        refreshProfile,
       }}
     >
       {children}

@@ -43,7 +43,7 @@ const Contact = () => {
     e.preventDefault();
     if (submitting) return;
     setSubmitting(true);
-    
+
     const trimmedData = {
       name: formData.name.trim(),
       email: formData.email.trim(),
@@ -56,7 +56,7 @@ const Contact = () => {
         ...trimmedData,
         status: 'unread',
       });
-      
+
       toast.success(isArabic ? 'تم استلام رسالتك بنجاح. سنتواصل معك قريباً.' : 'Transmission received. We will contact you shortly.');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch {
@@ -75,8 +75,8 @@ const Contact = () => {
               {isArabic ? 'تواصل معنا' : 'ESTABLISH CONTACT'}
             </h1>
             <p className="text-muted-foreground">
-              {isArabic 
-                ? 'أرسل لنا استفسارك المباشر أو تفضل بزيارة مقر النادي بالحرم الجامعي.' 
+              {isArabic
+                ? 'أرسل لنا استفسارك المباشر أو تفضل بزيارة مقر النادي بالحرم الجامعي.'
                 : 'Send us a secure transmission or visit our physical coordinates.'
               }
             </p>
@@ -95,8 +95,8 @@ const Contact = () => {
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                       {isArabic ? 'الاسم بالكامل' : 'Full Name'}
                     </label>
-                    <Input 
-                      placeholder={isArabic ? 'أحمد منصور' : 'John Doe'} 
+                    <Input
+                      placeholder={isArabic ? 'أحمد منصور' : 'John Doe'}
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                       required
@@ -106,9 +106,9 @@ const Contact = () => {
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                       {isArabic ? 'البريد الإلكتروني' : 'Email Address'}
                     </label>
-                    <Input 
-                      type="email" 
-                      placeholder={isArabic ? 'student@innovation.edu.eg' : 'john@example.com'} 
+                    <Input
+                      type="email"
+                      placeholder={isArabic ? 'student@innovation.edu.eg' : 'john@example.com'}
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                       required
@@ -119,8 +119,8 @@ const Contact = () => {
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                     {isArabic ? 'موضوع الرسالة' : 'Subject'}
                   </label>
-                  <Input 
-                    placeholder={isArabic ? 'استفسار عام / انضمام للنادي' : 'General Inquiry'} 
+                  <Input
+                    placeholder={isArabic ? 'استفسار عام / انضمام للنادي' : 'General Inquiry'}
                     value={formData.subject}
                     onChange={(e) => setFormData({...formData, subject: e.target.value})}
                     required
@@ -130,7 +130,7 @@ const Contact = () => {
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                     {isArabic ? 'نص الرسالة' : 'Message Body'}
                   </label>
-                  <textarea 
+                  <textarea
                     className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[150px] transition-all focus:border-primary/50 text-white"
                     placeholder={isArabic ? 'اكتب تفاصيل استفسارك أو اقتراحك هنا...' : 'Type your transmission here...'}
                     value={formData.message}
@@ -140,8 +140,8 @@ const Contact = () => {
                 </div>
                 <Button variant="cyber" type="submit" className="w-full py-6 text-lg" disabled={submitting}>
                   <Send className={`w-5 h-5 ${isArabic ? 'ml-2' : 'mr-2'} ${submitting ? 'animate-pulse' : ''}`} />
-                  {submitting 
-                    ? (isArabic ? 'جاري الإرسال...' : 'TRANSMITTING...') 
+                  {submitting
+                    ? (isArabic ? 'جاري الإرسال...' : 'TRANSMITTING...')
                     : (isArabic ? 'إرسال الرسالة' : 'SEND TRANSMISSION')
                   }
                 </Button>
@@ -163,7 +163,7 @@ const Contact = () => {
                     <h4 className="text-sm font-cyber font-bold uppercase tracking-widest text-primary mb-1">
                       {isArabic ? 'البريد الإلكتروني الرسمي' : 'Direct Email'}
                     </h4>
-                    <p className="text-muted-foreground">contact@datacamp.club</p>
+                    <p className="text-muted-foreground">{siteSettings?.contactEmail || (isArabic ? 'غير محدد' : 'Not configured')}</p>
                   </div>
                 </div>
 
@@ -175,7 +175,7 @@ const Contact = () => {
                     <h4 className="text-sm font-cyber font-bold uppercase tracking-widest text-neon-blue mb-1">
                       {isArabic ? 'خط التواصل الهاتفي' : 'Voice Line'}
                     </h4>
-                    <p className="text-muted-foreground" dir="ltr">+20 123 456 7890</p>
+                    <p className="text-muted-foreground" dir="ltr">{siteSettings?.contactPhone || (isArabic ? 'غير محدد' : 'Not configured')}</p>
                   </div>
                 </div>
 
@@ -188,10 +188,7 @@ const Contact = () => {
                       {isArabic ? 'الموقع والمقر' : 'Coordinates'}
                     </h4>
                     <p className="text-muted-foreground">
-                      {isArabic 
-                        ? 'حرم جامعة الابتكار، الجناح التقني، قاعة 404، الحي الرقمي' 
-                        : 'University Campus, Tech Wing, Room 404, Digital District'
-                      }
+                      {siteSettings?.contactAddress || (isArabic ? 'غير محدد' : 'Not configured')}
                     </p>
                   </div>
                 </div>
@@ -210,9 +207,9 @@ const Contact = () => {
                   }
                 </p>
                 {siteSettings?.discordUrl ? (
-                  <a 
-                    href={siteSettings.discordUrl} 
-                    target="_blank" 
+                  <a
+                    href={siteSettings.discordUrl}
+                    target="_blank"
                     rel="noopener noreferrer"
                     aria-label={isArabic ? 'الانضمام لمجتمع Discord الرسمي' : 'Join official Discord community'}
                     className="block w-full"

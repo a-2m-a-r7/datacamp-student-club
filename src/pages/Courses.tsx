@@ -117,7 +117,7 @@ const Courses = () => {
           </h1>
 
           <p className="text-muted-foreground font-mono text-xs sm:text-sm leading-relaxed max-w-2xl">
-            {isArabic 
+            {isArabic
               ? 'مسارات تدريبية تطبيقية صممها خبراء ومهندسون وباحثون أكاديميون. أكمل الدروس البرمجية، واكسب شهادات معتمدة ونقاط XP للتنافس على صدارة الجامعة.'
               : 'Hands-on courses created by senior engineers and university researchers. Complete lessons, ace code assessments, earn verified certificates, and accumulate XP to ascend the club leaderboard.'}
           </p>
@@ -147,7 +147,7 @@ const Courses = () => {
                 {isArabic ? 'وضع إدارة المناهج التعليمية نشط' : 'Curriculum Management Mode Active'}
               </h4>
               <p className="text-xs font-mono text-muted-foreground">
-                {isArabic 
+                {isArabic
                   ? 'لديك صلاحيات إدارة ونشر وتحديث الدروس والمسارات الخاصة بالنادي.'
                   : 'You have administrative authority to publish, update lessons, and manage club courses.'}
               </p>
@@ -234,7 +234,7 @@ const Courses = () => {
             {isArabic ? 'لم يتم العثور على دورات مطابقة' : 'NO_COURSES_MATCHED'}
           </h3>
           <p className="text-xs font-mono text-muted-foreground max-w-sm mx-auto mb-6">
-            {isArabic 
+            {isArabic
               ? 'لا توجد دورات تدريبية تطابق معايير البحث الحالية. جرب إعادة تعيين الفلاتر أو تغيير كلمة البحث.'
               : 'No training modules match your current filter parameters. Try clearing your search query.'}
           </p>
@@ -377,7 +377,7 @@ const Courses = () => {
                             {isArabic ? 'سجل الآن ⚡' : 'ENROLL NOW ⚡'}
                           </Button>
                           <Link to={`/courses/${course.slug}`}>
-                            <Button
+                            <Button aria-label={isArabic ? 'معاينة تفاصيل المنهج' : 'View Course Syllabus'}
                               variant="outline"
                               className="h-9 px-2.5 text-xs font-cyber border-white/10 hover:border-primary/40"
                               title={isArabic ? 'معاينة تفاصيل المنهج' : 'View Course Syllabus'}

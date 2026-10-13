@@ -124,9 +124,9 @@ export async function getAIContextData(): Promise<{
   try {
     const [coursesRes, eventsRes, staffRes, profilesRes, settingsRes] = await Promise.all([
       supabase.from('courses').select('*').limit(20),
-      supabase.from('events').select('*').limit(10),
+      supabase.from('public_events').select('*').limit(10),
       supabase.from('staff').select('*').limit(10),
-      supabase.from('profiles').select('id', { count: 'exact', head: true }),
+      supabase.rpc('public_stats'),
       supabase.from('settings').select('*').limit(1).maybeSingle(),
     ]);
 
@@ -136,7 +136,7 @@ export async function getAIContextData(): Promise<{
       staff: staffRes.data || [],
       settings: settingsRes.data?.value || null,
       stats: {
-        totalUsers: profilesRes.count || 0,
+        totalUsers: profilesRes.data?.members ?? 0,
         totalCourses: (coursesRes.data || []).length,
         totalEvents: (eventsRes.data || []).length,
       },
@@ -168,7 +168,7 @@ export async function getUserLearningContext(userId: string): Promise<{
   try {
     const [enrollRes, pointsRes, achieveRes, certRes] = await Promise.all([
       supabase.from('enrollments').select('*').eq('user_id', userId),
-      supabase.from('points_history').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(20),
+      supabase.from('points_log').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(20),
       supabase.from('user_achievements').select('*').eq('user_id', userId),
       supabase.from('certificates').select('*').eq('user_id', userId),
     ]);

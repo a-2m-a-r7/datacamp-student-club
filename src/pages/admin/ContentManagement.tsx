@@ -4,20 +4,20 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Layout, Save, Target, Info, Globe, MessageSquare, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { demoHomeContent, demoAboutData } from '../../lib/demoData';
+import { defaultHomeContent, defaultAboutData } from '../../lib/defaultContent';
 import { contentService } from '../../services/contentService';
 
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('home');
-  
+
   const pages = [
     { id: 'home', name: 'Home Page', icon: Layout },
     { id: 'about', name: 'About Us', icon: Info },
     { id: 'site', name: 'Discord & Social Links', icon: Share2 },
   ];
 
-  const [homeContent, setHomeContent] = useState(demoHomeContent);
-  const [aboutData, setAboutData] = useState(demoAboutData);
+  const [homeContent, setHomeContent] = useState(defaultHomeContent);
+  const [aboutData, setAboutData] = useState(defaultAboutData);
   const [siteSettings, setSiteSettings] = useState<any>({
     discordUrl: '',
     githubUrl: '',
@@ -104,8 +104,8 @@ const ContentManagement = () => {
             key={page.id}
             onClick={() => setActiveTab(page.id)}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all border ${
-              activeTab === page.id 
-                ? 'bg-primary/10 border-primary text-primary' 
+              activeTab === page.id
+                ? 'bg-primary/10 border-primary text-primary'
                 : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10'
             }`}
           >
@@ -126,27 +126,27 @@ const ContentManagement = () => {
               <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Main Heading</label>
-                  <Input 
-                    value={homeContent.heroTitle} 
+                  <Input
+                    value={homeContent.heroTitle}
                     onChange={(e) => setHomeContent({...homeContent, heroTitle: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Sub-heading</label>
-                  <textarea 
+                  <textarea
                     className="w-full bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[80px]"
                     value={homeContent.heroSubtitle}
                     onChange={(e) => setHomeContent({...homeContent, heroSubtitle: e.target.value})}
                   />
                 </div>
-                
+
                 <div className="space-y-4">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Statistics Counters</label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {homeContent.stats.map((stat, idx) => (
                       <div key={idx} className="p-4 glass rounded-xl border-white/10 space-y-2">
-                        <Input 
-                          value={stat.value} 
+                        <Input
+                          value={stat.value}
                           className="h-8 text-center font-bold"
                           onChange={(e) => {
                             const newStats = [...homeContent.stats];
@@ -154,8 +154,8 @@ const ContentManagement = () => {
                             setHomeContent({...homeContent, stats: newStats});
                           }}
                         />
-                        <Input 
-                          value={stat.label} 
+                        <Input
+                          value={stat.label}
                           className="h-6 text-[10px] text-center uppercase tracking-widest"
                           onChange={(e) => {
                             const newStats = [...homeContent.stats];
@@ -183,7 +183,7 @@ const ContentManagement = () => {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Club Mission</label>
-                    <textarea 
+                    <textarea
                       className="w-full bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[100px]"
                       value={aboutData.mission}
                       onChange={(e) => setAboutData({...aboutData, mission: e.target.value})}
@@ -191,7 +191,7 @@ const ContentManagement = () => {
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Club Vision</label>
-                    <textarea 
+                    <textarea
                       className="w-full bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[100px]"
                       value={aboutData.vision}
                       onChange={(e) => setAboutData({...aboutData, vision: e.target.value})}
@@ -210,7 +210,7 @@ const ContentManagement = () => {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">History Text</label>
-                    <textarea 
+                    <textarea
                       className="w-full bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[150px]"
                       value={aboutData.history}
                       onChange={(e) => setAboutData({...aboutData, history: e.target.value})}
@@ -238,9 +238,9 @@ const ContentManagement = () => {
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                       Discord Invite URL
                     </label>
-                    <Input 
+                    <Input
                       placeholder="https://discord.gg/your-club-invite"
-                      value={siteSettings.discordUrl} 
+                      value={siteSettings.discordUrl}
                       onChange={(e) => setSiteSettings({...siteSettings, discordUrl: e.target.value})}
                     />
                     <p className="text-[11px] text-muted-foreground font-mono">
@@ -264,33 +264,33 @@ const ContentManagement = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">GitHub Organization / Profile</label>
-                      <Input 
+                      <Input
                         placeholder="https://github.com/datacamp-club"
-                        value={siteSettings.githubUrl} 
+                        value={siteSettings.githubUrl}
                         onChange={(e) => setSiteSettings({...siteSettings, githubUrl: e.target.value})}
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">LinkedIn Page</label>
-                      <Input 
+                      <Input
                         placeholder="https://linkedin.com/company/datacamp-club"
-                        value={siteSettings.linkedinUrl} 
+                        value={siteSettings.linkedinUrl}
                         onChange={(e) => setSiteSettings({...siteSettings, linkedinUrl: e.target.value})}
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Twitter / X Profile</label>
-                      <Input 
+                      <Input
                         placeholder="https://x.com/datacamp_club"
-                        value={siteSettings.twitterUrl} 
+                        value={siteSettings.twitterUrl}
                         onChange={(e) => setSiteSettings({...siteSettings, twitterUrl: e.target.value})}
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Facebook Page</label>
-                      <Input 
+                      <Input
                         placeholder="https://facebook.com/datacamp.club"
-                        value={siteSettings.facebookUrl} 
+                        value={siteSettings.facebookUrl}
                         onChange={(e) => setSiteSettings({...siteSettings, facebookUrl: e.target.value})}
                       />
                     </div>

@@ -1,9 +1,11 @@
+import { Dialog } from '../../components/ui/Dialog';
+import { authenticatedPost } from '../../lib/apiClient';
 import React, { useState, useEffect, useMemo } from 'react';
 import { logAction } from '../../lib/logger';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { 
+import {
   Search, Filter, Download, UserPlus, FileSpreadsheet, Trash2, ShieldAlert, Eye, Calendar,
   Shield, Key, Crown, RefreshCw, Radio, LogIn, Clock, ArrowUpDown, ChevronLeft, ChevronRight,
   Activity, Mail, Users, CheckCircle, XCircle
@@ -42,12 +44,12 @@ const normalizeUser = (u: any) => ({
   ...u,
   id: u.id || u.uid,
   fullName: u.full_name || u.fullName || 'Member',
-  memberId: u.member_id || u.memberId || 'DC-000',
-  isVerified: u.is_verified ?? u.isVerified ?? true,
-  createdAt: u.created_at || u.createdAt || new Date().toISOString(),
-  lastSeenAt: u.last_seen_at || u.lastSeenAt || u.last_sign_in_at || u.createdAt || new Date().toISOString(),
+  memberId: u.member_id || u.memberId || '',
+  isVerified: u.is_verified ?? u.isVerified ?? false,
+  createdAt: u.created_at || u.createdAt || null,
+  lastSeenAt: u.last_seen_at || u.lastSeenAt || null,
   lastLoginAt: u.last_sign_in_at || u.lastLoginAt || u.created_at || null,
-  provider: u.provider || (u.email?.includes('gmail') ? 'google' : 'email'),
+  provider: u.provider || '',
   photoURL: u.avatar_url || u.photo_url || u.photoURL || '',
   totalPoints: u.total_points ?? u.totalPoints ?? 0,
   faculty: u.faculty || 'Engineering',
@@ -85,6 +87,7 @@ const UserManagement = () => {
   const [showActivityFeed, setShowActivityFeed] = useState(true);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [fetchError, setFetchError] = useState('');
 
   // Filters, search & sorting
   const [searchTerm, setSearchTerm] = useState('');
@@ -116,54 +119,21 @@ const UserManagement = () => {
 
   // 1. Fetch Users, Enrollments & Auth Events from Supabase
   const fetchData = async () => {
-    if (isSupabaseConfigured) {
-      try {
-        // Query profiles table
-        const { data: profilesData, error: profilesErr } = await supabase
-          .from('profiles')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (!profilesErr && profilesData) {
-          setUsers(profilesData.map(normalizeUser));
-        } else {
-          // Fallback to users table if profiles returned an error
-          const { data: usersData } = await supabase.from('users').select('*').order('created_at', { ascending: false });
-          if (usersData) setUsers(usersData.map(normalizeUser));
-        }
-
-        // Query enrollment counts
-        const { data: enrollmentsData } = await supabase.from('enrollments').select('user_id');
-        if (enrollmentsData) {
-          const counts: Record<string, number> = {};
-          enrollmentsData.forEach((row: any) => {
-            if (row.user_id) counts[row.user_id] = (counts[row.user_id] || 0) + 1;
-          });
-          setEnrollmentCounts(counts);
-        }
-
-        // Query auth_events
-        const { data: eventsData } = await supabase
-          .from('auth_events')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(40);
-        if (eventsData) {
-          setAuthEvents(eventsData as AuthEventItem[]);
-        }
-      } catch (err) {
-        console.warn('Error fetching Supabase user intelligence:', err);
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    setUsers([]);
-    setAuthEvents([]);
-    setEnrollmentCounts({});
-    setLoading(false);
-  };
+ try {
+  setFetchError('');
+  if (!isSupabaseConfigured) throw new Error('Database is not configured');
+  const [profiles, enrollments, events] = await Promise.all([
+   supabase.from('profiles').select('*').order('created_at',{ascending:false}),
+   supabase.from('enrollments').select('user_id'),
+   supabase.from('auth_events').select('*').order('created_at',{ascending:false}).limit(40)
+  ]);
+  for (const result of [profiles,enrollments,events]) if (result.error) throw result.error;
+  setUsers((profiles.data || []).map(normalizeUser));
+  const counts: Record<string,number> = {}; for(const row of enrollments.data || []) counts[row.user_id]=(counts[row.user_id]||0)+1;
+  setEnrollmentCounts(counts); setAuthEvents(events.data || []); return true;
+ } catch (err: any) { setFetchError(err.message || 'Unable to fetch members'); setUsers([]); setAuthEvents([]); setEnrollmentCounts({}); return false; }
+ finally { setLoading(false); }
+};
 
   useEffect(() => {
     fetchData();
@@ -196,11 +166,11 @@ const UserManagement = () => {
   }, []);
 
   const handleManualRefresh = async () => {
-    setRefreshing(true);
-    await fetchData();
-    setRefreshing(false);
-    toast.success(isArabic ? 'تم تحديث البيانات وقائمة الأعضاء بنجاح ⚡' : 'Refreshed cloud operative intel ⚡');
-  };
+ if (refreshing) return; setRefreshing(true);
+ const ok=await fetchData(); setRefreshing(false);
+ if(ok)toast.success('Members refreshed from database');
+ else toast.error('Refresh failed. See the error message.');
+};
 
   // Top Summary Metrics
   const summaryMetrics = useMemo(() => {
@@ -228,7 +198,7 @@ const UserManagement = () => {
     let result = users.filter(user => {
       // 1. Search Query
       const q = searchTerm.toLowerCase().trim();
-      const matchesSearch = !q || 
+      const matchesSearch = !q ||
         String(user.fullName || '').toLowerCase().includes(q) ||
         String(user.email || '').toLowerCase().includes(q) ||
         String(user.memberId || '').toLowerCase().includes(q);
@@ -290,179 +260,55 @@ const UserManagement = () => {
 
   // Execute Role Change (after confirmation dialog)
   const confirmRoleChange = async () => {
-    if (!pendingRoleChange) return;
-    const { user, newRole } = pendingRoleChange;
-
-    const updatePayload: any = { role: newRole };
-    if (newRole === 'super_admin' || newRole === 'admin') {
-      updatePayload.level = 'ARCHITECT';
-      updatePayload.isVerified = true;
-      updatePayload.is_verified = true;
-    }
-
-    // Optimistic local state update
-    setUsers(prev => prev.map(u => u.id === user.id ? { ...u, ...updatePayload } : u));
-    setPendingRoleChange(null);
-
-    if (isSupabaseConfigured) {
-      try {
-        const dbRole = toDatabaseRole(newRole);
-        const usersMirrorRole = toUsersMirrorRole(newRole);
-        const updateData: any = { role: dbRole };
-        if (dbRole === 'admin') {
-          updateData.level = 'ARCHITECT';
-          updateData.is_verified = true;
-        }
-        // Update profiles table
-        const { error: profileErr } = await supabase.from('profiles').update(updateData).eq('id', user.id);
-        // Also update users table for consistency
-        await supabase.from('users').update({ ...updateData, role: usersMirrorRole }).eq('id', user.id);
-
-        if (profileErr) throw profileErr;
-        await logAction('USER_ROLE_CHANGE', 'Admin', `${user.email} -> ${newRole}`, 'success');
-        toast.success(isArabic ? `تم تحديث رتبة العضو إلى ${newRole} بنجاح 👑` : `Role updated to ${newRole} successfully 👑`);
-      } catch (err: any) {
-        console.error('Failed to update role in Supabase:', err);
-        toast.error(isArabic ? 'حدث خطأ أثناء حفظ الرتبة في Supabase' : 'Failed to update role');
-        fetchData(); // Rollback
-      }
-      return;
-    }
-
-    toast.error(isArabic ? 'Supabase غير مفعّل، لا يمكن حفظ تغيير الرول.' : 'Supabase is not configured; role changes cannot be saved.');
-  };
+ if(!pendingRoleChange || loading) return; setLoading(true);
+ const { user,newRole }=pendingRoleChange;
+ try {
+  if(!isSupabaseConfigured)throw new Error('Database is not configured');
+  const { error }=await supabase.rpc('assign_member_role',{ p_user_id:user.id,p_role:toDatabaseRole(newRole) });
+  if(error)throw error;
+  setUsers(prev=>prev.map(row=>row.id===user.id?{...row,role:toUiRole(newRole)}:row));
+  setPendingRoleChange(null); toast.success('Role saved');
+ }catch(err:any){toast.error(err.message||'Role was not saved');}
+ finally{setLoading(false);}
+};
 
   // Toggle user active / inactive status
   const toggleUserStatus = async (userId: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-    setUsers(prev => prev.map(u => u.id === userId ? { ...u, status: newStatus } : u));
-
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from('profiles').update({ status: newStatus } as any).eq('id', userId);
-        await supabase.from('users').update({ status: newStatus }).eq('id', userId);
-        toast.success(`User status changed to ${newStatus}`);
-      } catch {
-        toast.error('Failed to update status');
-      }
-      return;
-    }
-
-    toast.error(isArabic ? 'Supabase غير مفعّل، لا يمكن حفظ حالة الحساب.' : 'Supabase is not configured; status changes cannot be saved.');
-  };
+ if (!isSupabaseConfigured) { toast.error('Database is not configured'); return; }
+ const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+ try {
+  const { data, error } = await supabase.from('profiles').update({ status: newStatus }).eq('id', userId).select('id').single();
+  if (error || !data) throw error || new Error('User was not updated');
+  setUsers(prev => prev.map(u => u.id === userId ? { ...u, status: newStatus } : u));
+  toast.success('Status saved');
+ } catch (err: any) { toast.error(err.message || 'Failed to update status'); }
+};
 
   // Delete user confirmation
   const deleteUser = async (userId: string) => {
-    setUsers(prev => prev.filter(u => u.id !== userId));
-    setShowDeleteConfirm(null);
-
-    if (isSupabaseConfigured) {
-      try {
-        // 1. Try serverless admin endpoint first (handles auth.users & profiles)
-        let handledViaServerless = false;
-        try {
-          const apiRes = await fetch('/api/admin/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'delete', userId }),
-          });
-          if (apiRes.ok) handledViaServerless = true;
-        } catch {}
-
-        // 2. Direct database delete fallback
-        if (!handledViaServerless) {
-          await supabase.from('profiles').delete().eq('id', userId);
-          await supabase.from('users').delete().eq('id', userId);
-        }
-
-        await logAction('USER_DELETED', 'Admin', userId, 'warning');
-        toast.success(isArabic ? 'تم حذف العضو من قاعدة البيانات' : 'User removed from database');
-      } catch {
-        toast.error('Failed to delete user');
-        fetchData();
-      }
-      return;
-    }
-
-    toast.error(isArabic ? 'Supabase غير مفعّل، لا يمكن حذف المستخدم.' : 'Supabase is not configured; user deletion cannot be saved.');
-  };
+ if (loading) return;
+ setLoading(true);
+ try {
+  await authenticatedPost('/api/admin/users', { action: 'delete', userId });
+  setUsers(prev => prev.filter(u => u.id !== userId));
+  setShowDeleteConfirm(null);
+  toast.success(isArabic ? 'تم حذف العضو' : 'User deleted');
+ } catch (err: any) { toast.error(err.message || 'Failed to delete user'); }
+ finally { setLoading(false); }
+};
 
   // Add new user operative
   const handleAddUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
+ e.preventDefault(); if (loading) return;
+ if (!newUser.fullName.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email) || newUser.password.length < 8) { toast.error('Enter a name, valid email and password of at least 8 characters.'); return; }
+ setLoading(true);
+ try {
 
-    const memberId = await generateMemberId(users);
-
-    if (isSupabaseConfigured) {
-      try {
-        let createdUserId = '';
-
-        // 1. Try serverless admin endpoint (avoids client session disruption and uses service role)
-        try {
-          const apiRes = await fetch('/api/admin/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'create',
-              email: newUser.email.trim(),
-              password: newUser.password || 'DataCampClub2025!',
-              fullName: newUser.fullName.trim(),
-              role: newUser.role,
-              faculty: newUser.faculty,
-              memberId,
-            }),
-          });
-          if (apiRes.ok) {
-            const resJson = await apiRes.json().catch(() => ({}));
-            createdUserId = resJson?.userId || '';
-          }
-        } catch {}
-
-        // 2. Fallback: Use isolated client so the admin's active session is NEVER overwritten!
-        if (!createdUserId) {
-          const isolatedClient = createIsolatedAuthClient();
-          const { data, error } = await isolatedClient.auth.signUp({
-            email: newUser.email.trim(),
-            password: newUser.password || 'DataCampClub2025!',
-            options: {
-              data: {
-                full_name: newUser.fullName.trim(),
-              },
-            },
-          });
-          if (error) throw error;
-          if (data.user) {
-            createdUserId = data.user.id;
-            const dbRole = toDatabaseRole(newUser.role);
-            await supabase.from('profiles').update({
-              role: dbRole,
-              faculty: newUser.faculty,
-              member_id: memberId,
-            }).eq('id', createdUserId);
-            await supabase.from('users').update({
-              role: toUsersMirrorRole(newUser.role),
-              faculty: newUser.faculty,
-              member_id: memberId,
-            }).eq('id', createdUserId);
-          }
-        }
-
-        toast.success(isArabic ? 'تمت إضافة العضو بنجاح في Supabase' : 'Operative created successfully in Supabase');
-        setShowAddModal(false);
-        fetchData();
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to create operative');
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    setLoading(false);
-    toast.error(isArabic ? 'Supabase غير مفعّل، لا يمكن إنشاء مستخدم جديد.' : 'Supabase is not configured; new users cannot be created.');
-  };
+  await authenticatedPost('/api/admin/users', { action: 'create', email: newUser.email.trim(), password: newUser.password, fullName: newUser.fullName.trim(), role: newUser.role, faculty: newUser.faculty });
+  setShowAddModal(false); await fetchData(); toast.success('User created successfully');
+ } catch (err: any) { toast.error(err.message || 'Failed to create user'); }
+ finally { setLoading(false); }
+};
 
   // Export to Excel
   const handleExport = () => {
@@ -489,26 +335,33 @@ const UserManagement = () => {
 
   // Import CSV/Excel
   const handleImportCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      try {
-        const bstr = evt.target?.result;
-        const wb = XLSX.read(bstr, { type: 'binary', raw: true });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const rawData: any[] = XLSX.utils.sheet_to_json(ws);
-        toast.info(isArabic ? `تم استيراد ${rawData.length} سجل بنجاح` : `Imported ${rawData.length} records`);
-      } catch {
-        toast.error('Failed to parse file.');
-      }
-    };
-    reader.readAsBinaryString(file);
-  };
+ const file = e.target.files?.[0]; if (!file) return;
+ // This control imports profile metadata, not credentials or silently fabricated accounts.
+ const reader = new FileReader();
+ reader.onerror = () => toast.error('Unable to read file');
+ reader.onload = async evt => {
+  try {
+   if (!isSupabaseConfigured) throw new Error('Database is not configured');
+   const wb = XLSX.read(evt.target?.result, { type: 'array' });
+   const rows: any[] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+   if (!rows.length) throw new Error('No rows found');
+   const updates = rows.map(row => {
+    const member = users.find(u => u.email.toLowerCase() === String(row.Email || '').trim().toLowerCase());
+    if (!member) throw new Error('Every imported email must belong to an existing member');
+    return { id: member.id, full_name: String(row.Name || member.fullName), faculty: String(row.Faculty || member.faculty || '') };
+   });
+   const { error } = await supabase.rpc('import_member_metadata', { p_rows: updates });
+   if (error) throw error;
+   await fetchData(); toast.success('Member metadata saved: ' + updates.length);
+  } catch (err: any) { toast.error(err.message || 'Import failed'); }
+ };
+ reader.readAsArrayBuffer(file);
+ e.target.value = '';
+};
 
   return (
     <div className="space-y-8">
+      {fetchError && <p role="alert" className="text-destructive">{fetchError}</p>}
       {/* Page Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
@@ -521,14 +374,14 @@ const UserManagement = () => {
             </span>
           </div>
           <p className="text-muted-foreground text-sm">
-            {isArabic 
-              ? 'مراقبة الأعضاء، تعقب الأحداث الحية، وتعديل الصلاحيات والرتب من قاعدة البيانات السحابية.' 
+            {isArabic
+              ? 'مراقبة الأعضاء، تعقب الأحداث الحية، وتعديل الصلاحيات والرتب من قاعدة البيانات السحابية.'
               : 'Realtime member control, session tracking, permission grants, and analytics.'}
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={handleManualRefresh}
             disabled={refreshing}
             className="border-primary/40 text-primary hover:bg-primary/10 gap-2 font-cyber text-xs shadow-sm hover:scale-105 transition-all"
@@ -537,8 +390,8 @@ const UserManagement = () => {
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             <span>{isArabic ? 'مزامنة السحابة ⚡' : 'SYNC CLOUD ⚡'}</span>
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setShowActivityFeed(!showActivityFeed)}
             className={`border-neon-blue/40 text-neon-blue hover:bg-neon-blue/10 gap-2 font-cyber text-xs transition-all ${showActivityFeed ? 'bg-neon-blue/10 shadow-[0_0_15px_rgba(0,243,255,0.2)]' : ''}`}
           >
@@ -666,29 +519,29 @@ const UserManagement = () => {
                   const isLogin = ev.event_type === 'login';
                   const isSignup = ev.event_type === 'signup';
                   return (
-                    <div 
-                      key={ev.id} 
+                    <div
+                      key={ev.id}
                       className={`min-w-[220px] p-2.5 rounded-lg border text-xs flex flex-col justify-between shrink-0 transition-all ${
-                        isLogin 
-                          ? 'border-neon-green/30 bg-neon-green/5' 
-                          : isSignup 
-                            ? 'border-neon-blue/30 bg-neon-blue/5' 
+                        isLogin
+                          ? 'border-neon-green/30 bg-neon-green/5'
+                          : isSignup
+                            ? 'border-neon-blue/30 bg-neon-blue/5'
                             : 'border-white/10 bg-white/5'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1.5">
                         <span className={`px-1.5 py-0.5 rounded text-[9px] font-cyber font-bold uppercase tracking-wider ${
-                          isLogin 
-                            ? 'bg-neon-green/20 text-neon-green border border-neon-green/30' 
-                            : isSignup 
-                              ? 'bg-neon-blue/20 text-neon-blue border border-neon-blue/30' 
+                          isLogin
+                            ? 'bg-neon-green/20 text-neon-green border border-neon-green/30'
+                            : isSignup
+                              ? 'bg-neon-blue/20 text-neon-blue border border-neon-blue/30'
                               : 'bg-white/10 text-muted-foreground'
                         }`}>
                           {ev.event_type}
                         </span>
                         <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded ${
-                          ev.provider === 'google' 
-                            ? 'text-red-400 bg-red-500/10 border border-red-500/20' 
+                          ev.provider === 'google'
+                            ? 'text-red-400 bg-red-500/10 border border-red-500/20'
                             : 'text-neon-blue bg-neon-blue/10 border border-neon-blue/20'
                         }`}>
                           {ev.provider}
@@ -751,8 +604,8 @@ const UserManagement = () => {
               {/* Search Box */}
               <div className="relative flex-1 max-w-md">
                 <Search className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                <Input 
-                  placeholder={isArabic ? 'البحث بالاسم، البريد، أو رقم العضوية...' : 'Search by name, ID, or email...'} 
+                <Input
+                  placeholder={isArabic ? 'البحث بالاسم، البريد، أو رقم العضوية...' : 'Search by name, ID, or email...'}
                   className={isArabic ? 'pr-10' : 'pl-10'}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -763,7 +616,7 @@ const UserManagement = () => {
               <label className="cursor-pointer shrink-0">
                 <input type="file" accept=".csv, .xlsx" className="hidden" onChange={handleImportCSV} />
                 <div className="flex items-center px-3 py-2 bg-white/5 border border-white/10 rounded-md text-[10px] font-bold hover:bg-white/10 transition-colors">
-                  <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 text-neon-green" /> 
+                  <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 text-neon-green" />
                   {isArabic ? 'استيراد CSV' : 'IMPORT_CSV'}
                 </div>
               </label>
@@ -777,7 +630,7 @@ const UserManagement = () => {
                 <span className="text-[10px] text-muted-foreground font-cyber mr-1 rtl:mr-0 rtl:ml-1">
                   {isArabic ? 'الرول:' : 'Role:'}
                 </span>
-                <select 
+                <select
                   className="bg-transparent border-none text-[11px] font-bold uppercase tracking-wider outline-none text-foreground cursor-pointer"
                   value={filterRole}
                   onChange={(e) => setFilterRole(e.target.value)}
@@ -799,7 +652,7 @@ const UserManagement = () => {
                 <span className="text-[10px] text-muted-foreground font-cyber mr-1 rtl:mr-0 rtl:ml-1">
                   {isArabic ? 'طريقة الدخول:' : 'Provider:'}
                 </span>
-                <select 
+                <select
                   className="bg-transparent border-none text-[11px] font-bold uppercase tracking-wider outline-none text-foreground cursor-pointer"
                   value={filterProvider}
                   onChange={(e) => setFilterProvider(e.target.value as any)}
@@ -816,7 +669,7 @@ const UserManagement = () => {
                 <span className="text-[10px] text-muted-foreground font-cyber mr-1 rtl:mr-0 rtl:ml-1">
                   {isArabic ? 'الحالة:' : 'Status:'}
                 </span>
-                <select 
+                <select
                   className="bg-transparent border-none text-[11px] font-bold uppercase tracking-wider outline-none text-foreground cursor-pointer"
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value as any)}
@@ -834,7 +687,7 @@ const UserManagement = () => {
                 <span className="text-[10px] text-muted-foreground font-cyber mr-1 rtl:mr-0 rtl:ml-1">
                   {isArabic ? 'ترتيب:' : 'Sort:'}
                 </span>
-                <select 
+                <select
                   className="bg-transparent border-none text-[11px] font-bold uppercase tracking-wider outline-none text-foreground cursor-pointer"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
@@ -898,10 +751,10 @@ const UserManagement = () => {
                                 )}
                               </div>
                               {/* Online live dot badge on avatar */}
-                              <span 
+                              <span
                                 className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-dark-navy ${
                                   online ? 'bg-neon-green ring-2 ring-neon-green/30 animate-pulse' : 'bg-zinc-600'
-                                }`} 
+                                }`}
                                 title={online ? 'Online now' : 'Offline'}
                               />
                             </div>
@@ -990,7 +843,7 @@ const UserManagement = () => {
                             )}
 
                             {/* Dropdown to change role (triggers confirmation dialog) */}
-                            <select 
+                            <select
                               className="bg-dark-navy border border-white/10 rounded px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground outline-none focus:border-primary cursor-pointer max-w-[105px]"
                               value={user.role}
                               onChange={(e) => {
@@ -1012,27 +865,27 @@ const UserManagement = () => {
                         {/* Actions */}
                         <td className="p-4">
                           <div className="flex items-center space-x-1.5 rtl:space-x-reverse">
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
+                            <Button aria-label={isArabic ? 'محرر الصلاحيات' : 'Permissions Editor'}
+                              variant="ghost"
+                              size="icon"
                               className="w-7 h-7 text-amber-400 hover:bg-amber-400/10"
                               onClick={() => setEditingRoleUser(user)}
                               title={isArabic ? 'محرر الصلاحيات' : 'Permissions Editor'}
                             >
                               <Shield className="w-3.5 h-3.5" />
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
+                            <Button aria-label={isArabic ? 'عرض التفاصيل' : 'View Intel'}
+                              variant="ghost"
+                              size="icon"
                               className="w-7 h-7 text-primary hover:bg-primary/10"
                               onClick={() => setViewingUser(user)}
                               title={isArabic ? 'عرض التفاصيل' : 'View Intel'}
                             >
                               <Eye className="w-3.5 h-3.5" />
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
+                            <Button aria-label={isArabic ? 'حذف العضو' : 'Delete Operative'}
+                              variant="ghost"
+                              size="icon"
                               className="w-7 h-7 text-destructive hover:bg-destructive/10"
                               onClick={() => setShowDeleteConfirm(user.id)}
                               title={isArabic ? 'حذف العضو' : 'Delete Operative'}
@@ -1052,13 +905,13 @@ const UserManagement = () => {
             {totalPages > 1 && (
               <div className="p-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                 <span className="text-muted-foreground font-mono">
-                  {isArabic 
-                    ? `عرض ${(currentPage - 1) * pageSize + 1} إلى ${Math.min(currentPage * pageSize, filteredAndSortedUsers.length)} من إجمالي ${filteredAndSortedUsers.length} عضو` 
+                  {isArabic
+                    ? `عرض ${(currentPage - 1) * pageSize + 1} إلى ${Math.min(currentPage * pageSize, filteredAndSortedUsers.length)} من إجمالي ${filteredAndSortedUsers.length} عضو`
                     : `Showing ${(currentPage - 1) * pageSize + 1} to ${Math.min(currentPage * pageSize, filteredAndSortedUsers.length)} of ${filteredAndSortedUsers.length} operatives`}
                 </span>
                 <div className="flex items-center gap-1.5">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     disabled={currentPage <= 1}
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
@@ -1070,8 +923,8 @@ const UserManagement = () => {
                   <span className="px-3 py-1 font-mono text-[11px] bg-white/5 rounded border border-white/10 text-white font-bold">
                     {currentPage} / {totalPages}
                   </span>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     disabled={currentPage >= totalPages}
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
@@ -1141,8 +994,8 @@ const UserManagement = () => {
                 {isArabic ? 'جدول توزيع الصلاحيات حسب الرول' : 'SYSTEM PERMISSIONS MATRIX'}
               </CardTitle>
               <CardDescription>
-                {isArabic 
-                  ? 'مصفوفة تفصيلية لجميع الصلاحيات والأنظمة الفرعية مقابل كل رول داخل نادي DataCamp.' 
+                {isArabic
+                  ? 'مصفوفة تفصيلية لجميع الصلاحيات والأنظمة الفرعية مقابل كل رول داخل نادي DataCamp.'
                   : 'Comprehensive cross-matrix of all functional platform capabilities mapped against assigned clearances.'}
               </CardDescription>
             </CardHeader>
@@ -1204,8 +1057,8 @@ const UserManagement = () => {
                 {isArabic ? 'تأكيد تغيير الرتبة والصلاحية' : 'CONFIRM ROLE CLEARANCE UPDATE'}
               </CardTitle>
               <CardDescription>
-                {isArabic 
-                  ? 'يرجى مراجعة وتأكيد هذا الإجراء قبل حفظه في قاعدة البيانات.' 
+                {isArabic
+                  ? 'يرجى مراجعة وتأكيد هذا الإجراء قبل حفظه في قاعدة البيانات.'
                   : 'Please verify and authorize this clearance modification.'}
               </CardDescription>
             </CardHeader>
@@ -1234,15 +1087,15 @@ const UserManagement = () => {
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   onClick={() => setPendingRoleChange(null)}
                   className="text-xs"
                 >
                   {isArabic ? 'إلغاء' : 'CANCEL'}
                 </Button>
-                <Button 
-                  variant="cyber" 
+                <Button
+                  variant="cyber"
                   onClick={confirmRoleChange}
                   className="text-xs bg-amber-500 text-black hover:bg-amber-400"
                 >
@@ -1256,7 +1109,7 @@ const UserManagement = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+        <Dialog onClose={() => setShowDeleteConfirm(null)} className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
           <Card className="w-full max-w-md border-destructive/40 shadow-[0_0_50px_rgba(239,68,68,0.15)] bg-dark-navy">
             <CardHeader>
               <CardTitle className="text-xl font-cyber text-destructive flex items-center gap-2">
@@ -1266,8 +1119,8 @@ const UserManagement = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                {isArabic 
-                  ? 'هل أنت متأكد من حذف هذا العضو نهائياً من قاعدة البيانات السحابية؟ هذا الإجراء لا يمكن التراجع عنه.' 
+                {isArabic
+                  ? 'هل أنت متأكد من حذف هذا العضو نهائياً من قاعدة البيانات السحابية؟ هذا الإجراء لا يمكن التراجع عنه.'
                   : 'Are you sure you want to remove this operative from Supabase? This action is permanent.'}
               </p>
               <div className="flex justify-end gap-3 pt-2">
@@ -1280,12 +1133,12 @@ const UserManagement = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {/* Add Operative Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+        <Dialog onClose={() => setShowAddModal(false)} className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
           <Card className="w-full max-w-lg border-primary/30 shadow-[0_0_50px_rgba(57,255,20,0.1)] bg-dark-navy">
             <CardHeader>
               <CardTitle className="text-2xl font-cyber">{isArabic ? 'إضافة عضو جديد للنادي' : 'INITIALIZE_NEW_OPERATIVE'}</CardTitle>
@@ -1297,37 +1150,37 @@ const UserManagement = () => {
               <form onSubmit={handleAddUser} className="space-y-4">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'الاسم بالكامل' : 'Full Name'}</label>
-                  <Input 
-                    placeholder="e.g. John Doe" 
-                    value={newUser.fullName} 
-                    onChange={(e) => setNewUser({...newUser, fullName: e.target.value})} 
-                    required 
+                  <Input
+                    placeholder="e.g. John Doe"
+                    value={newUser.fullName}
+                    onChange={(e) => setNewUser({...newUser, fullName: e.target.value})}
+                    required
                   />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'البريد الإلكتروني' : 'Email Address'}</label>
-                  <Input 
+                  <Input
                     type="email"
-                    placeholder="operative@datacamp.club" 
-                    value={newUser.email} 
-                    onChange={(e) => setNewUser({...newUser, email: e.target.value})} 
-                    required 
+                    placeholder="operative@datacamp.club"
+                    value={newUser.email}
+                    onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                    required
                   />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'كلمة المرور المبدئية' : 'Initial Password'}</label>
-                  <Input 
+                  <Input
                     type="password"
-                    placeholder="Set temporary password" 
-                    value={newUser.password} 
-                    onChange={(e) => setNewUser({...newUser, password: e.target.value})} 
-                    required 
+                    placeholder="Set temporary password"
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                    required
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'الرول' : 'Assigned Role'}</label>
-                    <select 
+                    <select
                       className="w-full bg-white/5 border border-white/10 rounded-md p-2 text-xs focus:ring-1 focus:ring-primary outline-none"
                       value={newUser.role}
                       onChange={(e) => setNewUser({...newUser, role: e.target.value})}
@@ -1338,7 +1191,7 @@ const UserManagement = () => {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">{isArabic ? 'الكلية' : 'Faculty'}</label>
-                    <select 
+                    <select
                       className="w-full bg-white/5 border border-white/10 rounded-md p-2 text-xs focus:ring-1 focus:ring-primary outline-none"
                       value={newUser.faculty}
                       onChange={(e) => setNewUser({...newUser, faculty: e.target.value})}
@@ -1361,7 +1214,7 @@ const UserManagement = () => {
               </form>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {/* View User Activity Modal */}
@@ -1424,8 +1277,8 @@ const UserManagement = () => {
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => {
                     const target = viewingUser;
                     setViewingUser(null);

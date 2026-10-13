@@ -132,28 +132,26 @@ const CourseLearning = () => {
   };
 
   const handleQuizSubmit = async () => {
-    if (!currentLesson?.quizQuestions) return;
-    const questions = currentLesson.quizQuestions;
-    let correct = 0;
+ if (!currentLesson?.quizQuestions?.length || completing) return;
+ setCompleting(true);
+ try {
+  const result = await courseService.submitQuiz(currentLesson.id, selectedAnswers);
+  setQuizScore(result.scorePercentage); setQuizSubmitted(true);
+  if (result.passed) {
+   const rows = await courseService.getUserEnrollment(user.id || user.uid, course.id);
+   if (rows) setEnrollment(rows);
+   toast.success(isArabic ? 'تم اجتياز الاختبار وحفظ النتيجة' : 'Assessment passed and result saved');
+  } else toast.error(isArabic ? 'درجة النجاح 80%' : 'Passing score is 80%');
+ } catch (err: any) { toast.error(err.message || 'Unable to save assessment'); }
+ finally { setCompleting(false); }
+};
 
-    questions.forEach(q => {
-      if (selectedAnswers[q.id] === q.correctAnswer) {
-        correct++;
-      }
-    });
-
-    const percentage = Math.round((correct / questions.length) * 100);
-    setQuizScore(percentage);
-    setQuizSubmitted(true);
-
-    if (percentage >= 70) {
-      toast.success(isArabic ? `تم اجتياز الاختبار بنسبة ${percentage}%! عمل رائع!` : `Quiz passed with ${percentage}%! Great job!`);
-      await handleCompleteCurrentLesson();
-    } else {
-      toast.error(isArabic ? `الدرجة: ${percentage}%. تحتاج 70% على الأقل للاجتياز.` : `Score: ${percentage}%. You need at least 70% to pass this unit.`);
-    }
-  };
-
+  if (!loading && (!course || !currentLesson)) {
+    return <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+      <p>{isArabic ? 'لا توجد دروس متاحة لهذا الكورس حالياً.' : 'No lessons are currently available for this course.'}</p>
+      <Link to="/courses" className="text-primary underline">{isArabic ? 'العودة للكورسات' : 'Back to courses'}</Link>
+    </div>;
+  }
   if (loading || !course || !currentLesson) {
     return (
       <div className="h-screen flex flex-col items-center justify-center gap-4 bg-dark-navy">
@@ -303,9 +301,9 @@ const CourseLearning = () => {
                     {isArabic ? 'التحقق من المعرفة والفهم' : 'KNOWLEDGE_VERIFICATION'}
                   </h3>
                   <p className="text-xs font-mono text-muted-foreground">
-                    {isArabic 
-                      ? `أجب على جميع الأسئلة بدقة. يلزم 70% على الأقل لكسب +${currentLesson.pointsReward} XP.` 
-                      : `Answer all questions correctly. Minimum 70% required to claim +${currentLesson.pointsReward} XP.`
+                    {isArabic
+                      ? `أجب على جميع الأسئلة بدقة. يلزم 80% على الأقل لكسب +${currentLesson.pointsReward} XP.`
+                      : `Answer all questions correctly. Minimum 80% required to claim +${currentLesson.pointsReward} XP.`
                     }
                   </p>
                 </div>
@@ -329,7 +327,7 @@ const CourseLearning = () => {
                             let btnStyle = 'border-white/10 hover:border-white/30 text-muted-foreground';
 
                             if (quizSubmitted) {
-                              if (optIndex === q.correctAnswer) {
+                              if (optIndex === (q.correctIndex ?? q.correctAnswer)) {
                                 btnStyle = 'border-emerald-500 bg-emerald-500/10 text-emerald-400 font-bold';
                               } else if (isThisChosen) {
                                 btnStyle = 'border-destructive bg-destructive/10 text-destructive';
@@ -384,7 +382,7 @@ const CourseLearning = () => {
                         setQuizScore(null);
                       }}
                     >
-                      <RotateCcw className={`w-4 h-4 ${isArabic ? 'ml-2' : 'mr-2'}`} /> 
+                      <RotateCcw className={`w-4 h-4 ${isArabic ? 'ml-2' : 'mr-2'}`} />
                       {isArabic ? 'إعادة الاختبار' : 'RETRY_QUIZ'}
                     </Button>
                   )}
@@ -420,7 +418,7 @@ const CourseLearning = () => {
                     className="font-cyber text-xs border-white/10 hover:border-primary/40 gap-2"
                     onClick={() => handleLessonSelect(prevLesson)}
                   >
-                    <ChevronLeft className={`w-4 h-4 ${isArabic ? 'rotate-180' : ''}`} /> 
+                    <ChevronLeft className={`w-4 h-4 ${isArabic ? 'rotate-180' : ''}`} />
                     {isArabic ? 'الدرس السابق' : 'PREVIOUS'}
                   </Button>
                 ) : <div />}
@@ -435,7 +433,7 @@ const CourseLearning = () => {
                 >
                   {isCompleted ? (
                     <span className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" /> 
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       {isArabic ? 'تم إكمال الدرس' : 'LESSON COMPLETED'}
                     </span>
                   ) : completing ? (
@@ -451,7 +449,7 @@ const CourseLearning = () => {
                     className="font-cyber text-xs border-white/10 hover:border-primary/40 gap-2"
                     onClick={() => handleLessonSelect(nextLesson)}
                   >
-                    {isArabic ? 'الدرس التالي' : 'NEXT'} 
+                    {isArabic ? 'الدرس التالي' : 'NEXT'}
                     <ChevronRight className={`w-4 h-4 ${isArabic ? 'rotate-180' : ''}`} />
                   </Button>
                 )}

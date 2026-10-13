@@ -1,3 +1,4 @@
+import { authenticatedPost } from '../../../lib/apiClient';
 /**
  * src/pages/admin/forms/FormResponses.tsx
  * Admin Responses & Analytics hub: Summary Charts, Individual Table, Realtime, Excel Export, Print/PDF
@@ -5,15 +6,15 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { 
-  ArrowLeft, BarChart3, ListFilter, Download, Printer, 
-  Trash2, RefreshCw, FileSpreadsheet, Search, Calendar, 
-  CheckCircle2, AlertCircle, Clock, ExternalLink, Eye, 
+import {
+  ArrowLeft, BarChart3, ListFilter, Download, Printer,
+  Trash2, RefreshCw, FileSpreadsheet, Search, Calendar,
+  CheckCircle2, AlertCircle, Clock, ExternalLink, Eye,
   X, Sparkles, Loader2, Star, UserCheck, Users
 } from 'lucide-react';
-import { 
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, 
-  PieChart, Pie, Cell 
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell
 } from 'recharts';
 import * as XLSX from 'xlsx';
 import { toast } from 'sonner';
@@ -105,35 +106,15 @@ export const FormResponses: React.FC = () => {
 
   // Trigger Google Sheets Resync
   const handleResyncAll = async () => {
-    if (!form) return;
-    setIsResyncing(true);
-    toast.loading(isArabic ? 'جاري مزامنة كافة الردود مع Google Sheets...' : 'Syncing all rows with Google Sheets...', { id: 'resync' });
-    try {
-      const res = await fetch('/api/forms/sync-sheet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ formId: form.id, resyncAll: true }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Sync endpoint failed');
-
-      if (data.spreadsheetUrl) {
-        setForm((prev) => prev ? { ...prev, spreadsheet_url: data.spreadsheetUrl, spreadsheet_id: data.spreadsheetId } : null);
-      }
-
-      toast.success(isArabic ? 'تمت مزامنة Google Sheets بنجاح!' : 'Google Sheets synced successfully!', { id: 'resync' });
-    } catch (err: any) {
-      console.warn('Sheets sync notice:', err);
-      toast.info(
-        isArabic
-          ? 'تم تسجيل طلب المزامنة (تأكد من إعداد بيانات Google Service Account)'
-          : 'Sync triggered (requires Google Service Account credentials)',
-        { id: 'resync' }
-      );
-    } finally {
-      setIsResyncing(false);
-    }
-  };
+ if (!form || isResyncing) return; setIsResyncing(true);
+ try {
+  const data = await authenticatedPost('/api/forms/sync-sheet', { formId: form.id, resyncAll: true });
+  if (!data.spreadsheetUrl) throw new Error('Sync returned no spreadsheet');
+  setForm(prev => prev ? { ...prev, spreadsheet_url: data.spreadsheetUrl, spreadsheet_id: data.spreadsheetId } : null);
+  toast.success(isArabic ? 'تمت المزامنة' : 'Google Sheets synced');
+ } catch (err: any) { toast.error(err.message || 'Sync failed'); }
+ finally { setIsResyncing(false); }
+};
 
   // Export to Excel (.xlsx) using xlsx library
   const handleExportExcel = () => {
@@ -610,7 +591,7 @@ export const FormResponses: React.FC = () => {
                       </td>
                       <td className="p-3.5 text-right rtl:text-left">
                         <div className="flex items-center justify-end rtl:justify-start gap-1" onClick={(e) => e.stopPropagation()}>
-                          <button
+                          <button aria-label={isArabic ? 'عرض التفاصيل' : 'View Details'}
                             type="button"
                             onClick={() => setSelectedResponse(resp)}
                             className="p-1.5 rounded-lg text-primary hover:bg-primary/10 transition-colors"
@@ -618,7 +599,7 @@ export const FormResponses: React.FC = () => {
                           >
                             <Eye className="w-4 h-4" />
                           </button>
-                          <button
+                          <button aria-label={isArabic ? 'حذف الاستجابة' : 'Delete Response'}
                             type="button"
                             onClick={() => handleDeleteResponse(resp.id)}
                             className="p-1.5 rounded-lg text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
@@ -655,7 +636,7 @@ export const FormResponses: React.FC = () => {
                   {new Date(selectedResponse.submitted_at).toLocaleString()} • {selectedResponse.respondent_email || 'Anonymous'}
                 </p>
               </div>
-              <button
+              <button aria-label="Close"
                 onClick={() => setSelectedResponse(null)}
                 className="p-2 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-lg transition-colors"
               >
@@ -690,6 +671,14 @@ export const FormResponses: React.FC = () => {
                           </span>
                         )}
                       </p>
+                      {q.type === 'file_upload' && ans?.value?.path && <button
+                        className="text-primary underline text-sm" onClick={async () => {
+                          try {
+                            const { data, error } = await supabase.storage.from('form-attachments').createSignedUrl(ans.value.path, 60);
+                            if (error || !data?.signedUrl) throw error || new Error('File unavailable');
+                            window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
+                          } catch (err: any) { toast.error(err.message || 'Unable to open attachment'); }
+                        }}>{isArabic ? 'فتح الملف المرفق' : 'Open attachment'}</button>}
                     </div>
                   );
                 })}

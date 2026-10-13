@@ -1,3 +1,4 @@
+import { copyText } from '../lib/clipboard';
 import React, { useRef, useState } from 'react';
 import { Certificate } from '../types';
 import { Button } from './ui/Button';
@@ -755,8 +756,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(verificationUrl);
-    toast.success(isArabic ? 'تم نسخ رابط التحقق إلى الحافظة' : 'Verification URL copied to clipboard');
+    void copyText(verificationUrl, isArabic ? 'تم نسخ رابط التحقق إلى الحافظة' : 'Verification URL copied to clipboard');
   };
 
   return (

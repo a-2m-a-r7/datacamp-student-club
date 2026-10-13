@@ -1,0 +1,7 @@
+.git
+.env*
+node_modules
+qa-audit
+test-results
+playwright-report
+supabase

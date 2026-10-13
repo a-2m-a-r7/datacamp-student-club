@@ -5,9 +5,9 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { 
-  ArrowLeft, Plus, Settings, Palette, Eye, Share2, 
-  Save, Check, AlertCircle, Smartphone, Monitor, 
+import {
+  ArrowLeft, Plus, Settings, Palette, Eye, Share2,
+  Save, Check, AlertCircle, Smartphone, Monitor,
   Send, Sparkles, Loader2, Globe, FileSpreadsheet, Lock
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -57,7 +57,7 @@ export const FormBuilder: React.FC = () => {
 
   const [questions, setQuestions] = useState<FormQuestion[]>([
     {
-      id: `q-${Date.now()}-1`,
+      id: crypto.randomUUID(),
       form_id: '',
       type: 'short_text',
       title: isArabic ? 'الاسم بالكامل' : 'Full Name',
@@ -68,7 +68,7 @@ export const FormBuilder: React.FC = () => {
       settings: { placeholder: isArabic ? 'اكتب اسمك هنا...' : 'Enter your name...' },
     },
     {
-      id: `q-${Date.now()}-2`,
+      id: crypto.randomUUID(),
       form_id: '',
       type: 'email',
       title: isArabic ? 'البريد الإلكتروني' : 'Email Address',
@@ -82,7 +82,7 @@ export const FormBuilder: React.FC = () => {
 
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [loading, setLoading] = useState(!isNew);
-  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'dirty'>('saved');
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'dirty'>(isNew ? 'dirty' : 'saved');
   const [previewMode, setPreviewMode] = useState<'off' | 'desktop' | 'mobile'>('off');
 
   // Modals
@@ -94,10 +94,32 @@ export const FormBuilder: React.FC = () => {
   // Dirty state tracking for autosave debounce
   const isDirtyRef = useRef(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const persistedIdRef = useRef(isNew ? '' : id);
+  const saveQueueRef = useRef<Promise<unknown>>(Promise.resolve());
+  const revisionRef = useRef(0);
+  const createdHereRef = useRef(false);
+  useEffect(() => () => { if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current); }, []);
+
+  const persistForm = useCallback((snapshot: FormRecord, items: FormQuestion[]) => {
+    const operation = saveQueueRef.current.catch(() => undefined).then(async () => {
+      const target = { ...snapshot, id: persistedIdRef.current || snapshot.id };
+      if (!target.id) {
+        const created = await formService.createForm(target, items);
+        persistedIdRef.current = created.id;
+        createdHereRef.current = true;
+        // Keep the editor mounted while later saves or publication are queued.
+        return { form: created, questions: items };
+      }
+      return formService.saveForm(target, items);
+    });
+    saveQueueRef.current = operation;
+    return operation;
+  }, [navigate]);
 
   // Load existing form data if editing
   useEffect(() => {
     if (!isNew && id) {
+      if (createdHereRef.current && persistedIdRef.current === id) return;
       setLoading(true);
       formService
         .getFormById(id)
@@ -124,19 +146,11 @@ export const FormBuilder: React.FC = () => {
   const triggerAutoSave = useCallback(
     async (updatedForm: FormRecord, updatedQuestions: FormQuestion[]) => {
       setSaveStatus('saving');
+      const revision = revisionRef.current;
       try {
-        if (isNew && !updatedForm.id) {
-          // Create new form record
-          const created = await formService.createForm(updatedForm, updatedQuestions);
-          setForm(created);
-          isDirtyRef.current = false;
-          setSaveStatus('saved');
-          // Update URL silently without full reload
-          window.history.replaceState(null, '', `/admin/forms/builder/${created.id}`);
-        } else {
-          // Update existing
-          await formService.updateForm(updatedForm.id, updatedForm);
-          await formService.saveFormQuestions(updatedForm.id, updatedQuestions);
+        const result = await persistForm(updatedForm, updatedQuestions);
+        if (revision === revisionRef.current) {
+          setForm(result.form); setQuestions(result.questions);
           isDirtyRef.current = false;
           setSaveStatus('saved');
         }
@@ -145,11 +159,12 @@ export const FormBuilder: React.FC = () => {
         setSaveStatus('dirty');
       }
     },
-    [isNew]
+    [persistForm]
   );
 
   // Debounce autosave on form or questions change
   const scheduleSave = (newForm: FormRecord, newQuestions: FormQuestion[]) => {
+    revisionRef.current++;
     isDirtyRef.current = true;
     setSaveStatus('dirty');
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
@@ -189,7 +204,7 @@ export const FormBuilder: React.FC = () => {
         : [];
 
     const newQ: FormQuestion = {
-      id: `q-${Date.now()}`,
+      id: crypto.randomUUID(),
       form_id: form.id,
       type,
       title: isArabic ? 'سؤال جديد' : 'New Question',
@@ -211,7 +226,7 @@ export const FormBuilder: React.FC = () => {
     const target = questions[index];
     const cloned: FormQuestion = {
       ...target,
-      id: `q-${Date.now()}`,
+      id: crypto.randomUUID(),
       title: `${target.title} (${isArabic ? 'نسخة' : 'Copy'})`,
       options: (target.options || []).map((o) => ({ ...o, id: `opt-${Date.now()}-${Math.random()}` })),
       position: index + 1,
@@ -281,20 +296,17 @@ export const FormBuilder: React.FC = () => {
       return;
     }
 
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    revisionRef.current++;
     setSaveStatus('saving');
     try {
       const publishedForm: FormRecord = {
         ...form,
         status: 'published',
       };
-      let saved: FormRecord = publishedForm;
-      if (isNew && !form.id) {
-        saved = await formService.createForm(publishedForm, questions);
-      } else {
-        saved = await formService.updateForm(form.id, publishedForm);
-        await formService.saveFormQuestions(form.id, questions);
-      }
-      setForm(saved);
+      const result = await persistForm(publishedForm, questions);
+      setForm(result.form); setQuestions(result.questions);
+      isDirtyRef.current = false;
       setSaveStatus('saved');
       toast.success(isArabic ? 'تم نشر النموذج بنجاح!' : 'Form published successfully!');
       setShowShareModal(true);
@@ -401,7 +413,7 @@ export const FormBuilder: React.FC = () => {
           </div>
 
           {/* Theme Color Picker */}
-          <button
+          <button aria-label={isArabic ? 'تغيير المظهر والألوان' : 'Form Theme'}
             onClick={() => setShowThemePicker(true)}
             className="p-2.5 rounded-xl border border-white/10 text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
             title={isArabic ? 'تغيير المظهر والألوان' : 'Form Theme'}
@@ -410,7 +422,7 @@ export const FormBuilder: React.FC = () => {
           </button>
 
           {/* Settings Modal */}
-          <button
+          <button aria-label={isArabic ? 'إعدادات الوصول والمزامنة' : 'Settings'}
             onClick={() => setShowSettingsModal(true)}
             className="p-2.5 rounded-xl border border-white/10 text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
             title={isArabic ? 'إعدادات الوصول والمزامنة' : 'Settings'}
@@ -431,7 +443,7 @@ export const FormBuilder: React.FC = () => {
 
           {/* Share Button (if already published) */}
           {form.status === 'published' && (
-            <button
+            <button aria-label={isArabic ? 'مشاركة الرابط والـ QR' : 'Share Form'}
               onClick={() => setShowShareModal(true)}
               className="p-2.5 rounded-xl border border-white/10 text-primary hover:bg-primary/10 transition-colors"
               title={isArabic ? 'مشاركة الرابط والـ QR' : 'Share Form'}

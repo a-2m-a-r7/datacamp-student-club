@@ -1,7 +1,8 @@
+import { Dialog } from '../ui/Dialog';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Shield, Check, X, ShieldAlert, Sparkles, Key, CheckCircle2, 
+import {
+  Shield, Check, X, ShieldAlert, Sparkles, Key, CheckCircle2,
   XCircle, ArrowRight, UserCheck, Lock, Unlock, Info
 } from 'lucide-react';
 import { Button } from '../ui/Button';
@@ -54,7 +55,7 @@ export const RoleEditorModal: React.FC<RoleEditorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 bg-dark-navy/90 backdrop-blur-md overflow-y-auto">
+    <Dialog onClose={onClose} className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 bg-dark-navy/90 backdrop-blur-md overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -77,14 +78,14 @@ export const RoleEditorModal: React.FC<RoleEditorModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {isArabic 
-                  ? `تعديل صلاحيات العضو: ${user.fullName} (${user.memberId})` 
+                {isArabic
+                  ? `تعديل صلاحيات العضو: ${user.fullName} (${user.memberId})`
                   : `Configuring operational clearances for: ${user.fullName} (${user.memberId})`}
               </p>
             </div>
           </div>
 
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/10 transition-colors"
           >
@@ -194,8 +195,8 @@ export const RoleEditorModal: React.FC<RoleEditorModalProps> = ({
                     {isArabic ? 'صلاحيات الرول المختار:' : 'Clearances for selected role:'} {isArabic ? selectedRoleInfo.titleAr : selectedRoleInfo.titleEn}
                   </h4>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {isArabic 
-                      ? 'يوضح الجدول التالي الصلاحيات الممنوحة تلقائياً لهذا الرول داخل لوحة التحكم والمنصة.' 
+                    {isArabic
+                      ? 'يوضح الجدول التالي الصلاحيات الممنوحة تلقائياً لهذا الرول داخل لوحة التحكم والمنصة.'
                       : 'Granular system privileges granted to operatives assigned this clearance level.'}
                   </p>
                 </div>
@@ -285,6 +286,6 @@ export const RoleEditorModal: React.FC<RoleEditorModalProps> = ({
           </div>
         </div>
       </motion.div>
-    </div>
+    </Dialog>
   );
 };

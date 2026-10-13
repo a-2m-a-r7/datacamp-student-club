@@ -1,3 +1,4 @@
+import { Dialog } from '../../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -70,7 +71,7 @@ const GalleryManagement = () => {
           <CardDescription>Enter the URL of the image you want to add to the gallery.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <ImagePicker 
+          <ImagePicker
             label="Visual Asset"
             currentImage={newImage.url}
             onImageSelected={(base64) => setNewImage({...newImage, url: base64})}
@@ -78,8 +79,8 @@ const GalleryManagement = () => {
           <div className="flex gap-4 items-end">
             <div className="flex-grow space-y-2">
               <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Caption / Title</label>
-              <Input 
-                placeholder="Event Name" 
+              <Input
+                placeholder="Event Name"
                 value={newImage.title}
                 onChange={(e) => setNewImage({...newImage, title: e.target.value})}
               />
@@ -98,9 +99,9 @@ const GalleryManagement = () => {
             <img src={img.url} alt={img.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-dark-navy/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
               <p className="text-[10px] font-cyber uppercase tracking-widest mb-4">{img.title}</p>
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button aria-label="Delete"
+                variant="ghost"
+                size="icon"
                 className="w-10 h-10 text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/20"
                 onClick={() => setDeleteConfirmId(img.id)}
               >
@@ -112,7 +113,7 @@ const GalleryManagement = () => {
       </div>
 
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
+        <Dialog onClose={() => setDeleteConfirmId(null)} className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
           <Card className="w-full max-w-sm border-destructive/30 shadow-[0_0_50px_rgba(255,0,0,0.1)]">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-destructive/20">
@@ -129,7 +130,7 @@ const GalleryManagement = () => {
               }}>CONFIRM_PURGE</Button>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
     </div>
   );

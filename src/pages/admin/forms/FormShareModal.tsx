@@ -1,12 +1,13 @@
+import { Dialog } from '../../../components/ui/Dialog';
 /**
  * src/pages/admin/forms/FormShareModal.tsx
  * Share modal providing public link, copy button, QR code download, and open button
  */
 
 import React, { useState, useRef } from 'react';
-import { 
-  Share2, Copy, Check, ExternalLink, Download, 
-  QrCode, X, Globe, Sparkles 
+import {
+  Share2, Copy, Check, ExternalLink, Download,
+  QrCode, X, Globe, Sparkles
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
@@ -73,8 +74,8 @@ export const FormShareModal: React.FC<FormShareModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div 
+    <Dialog onClose={onClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+      <div
         className="w-full max-w-lg bg-card/95 border border-white/10 rounded-2xl p-6 shadow-2xl glass cyber-glow"
         onClick={(e) => e.stopPropagation()}
       >
@@ -92,7 +93,7 @@ export const FormShareModal: React.FC<FormShareModalProps> = ({
               </p>
             </div>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-2 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-lg transition-colors"
           >
@@ -133,7 +134,7 @@ export const FormShareModal: React.FC<FormShareModalProps> = ({
                 value={publicUrl}
                 size={130}
                 level="M"
-                includeMargin={false}
+                includeMargin={true}
               />
             </div>
 
@@ -190,6 +191,6 @@ export const FormShareModal: React.FC<FormShareModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 };

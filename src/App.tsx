@@ -12,7 +12,7 @@ import Logo from './components/Logo';
 import Starfield from './components/Starfield';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
-import Home from './pages/Home';
+const Home = React.lazy(() => import('./pages/Home'));
 import { Menu } from 'lucide-react';
 
 // Route-level code splitting & lazy loading
@@ -68,22 +68,30 @@ const GuestRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, refreshProfile, logout } = useAuth();
   const { isArabic } = useLanguage();
   const location = useLocation();
-  
+
   // Wait for both auth state AND profile to be resolved before making decisions
   if (loading) return <div className="h-screen flex items-center justify-center font-cyber text-primary animate-pulse">{isArabic ? 'جاري تهيئة الجلسة...' : 'ESTABLISHING_SESSION...'}</div>;
   if (!user) {
     sessionStorage.setItem('datacamp_auth_redirect', location.pathname + location.search);
     return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   }
-  
+
   // If user exists but profile hasn't loaded yet, show a brief loading state
   if (user && !profile) {
-    return <div className="h-screen flex items-center justify-center font-cyber text-primary animate-pulse">{isArabic ? 'جاري تحميل الملف الشخصي...' : 'LOADING_PROFILE...'}</div>;
+    return <div role="alert" className="p-8 space-y-4 text-center">
+      <p>{isArabic ? 'تعذر تحميل ملفك من قاعدة البيانات. حاول مرة أخرى.' : 'Your profile could not be loaded. Please retry.'}</p>
+      <Button onClick={() => refreshProfile().catch(() => {})}>{isArabic ? 'إعادة المحاولة' : 'Retry'}</Button>
+      <Button variant="outline" onClick={logout}>{isArabic ? 'تسجيل الخروج' : 'Sign out'}</Button>
+    </div>;
   }
-  
+  if (profile?.status !== 'active') return <div role="alert" className="p-8 text-center space-y-4">
+    <p>{isArabic ? 'حسابك غير نشط. تواصل مع إدارة النادي.' : 'Your account is inactive. Contact the club.'}</p>
+    <Button onClick={logout}>{isArabic ? 'تسجيل الخروج' : 'Sign out'}</Button>
+  </div>;
+
   return <>{children}</>;
 };
 
@@ -96,7 +104,7 @@ const ManagerRoute = ({ children }: { children: React.ReactNode }) => {
     sessionStorage.setItem('datacamp_auth_redirect', location.pathname + location.search);
     return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   }
-  
+
   // Enforce email verification
   if (!user.email_confirmed_at && !profile?.isVerified) {
     return <Navigate to="/verify-email" />;
@@ -123,7 +131,7 @@ function AppContent() {
   const { isArabic } = useLanguage();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
-  
+
   if (settings?.maintenanceMode && !isSuperAdmin && !loading && location.pathname !== '/login') {
     return (
       <div className="h-screen w-full bg-dark-navy flex flex-col items-center justify-center text-center p-6 relative overflow-hidden">
@@ -135,8 +143,8 @@ function AppContent() {
               {isArabic ? 'المنصة قيد الصيانة' : 'OFFLINE_FOR_MAINTENANCE'}
             </h1>
             <p className="text-muted-foreground max-w-lg mx-auto uppercase tracking-widest text-xs">
-              {isArabic 
-                ? 'تخضع الشبكة حالياً لتحديثات هامة. تم تعليق الدخول غير الضروري مؤقتاً.' 
+              {isArabic
+                ? 'تخضع الشبكة حالياً لتحديثات هامة. تم تعليق الدخول غير الضروري مؤقتاً.'
                 : 'The grid is currently undergoing critical updates. All non-essential access is temporarily suspended.'}
             </p>
           </div>
@@ -170,10 +178,10 @@ function AppContent() {
     <div className="h-screen w-full bg-transparent relative overflow-hidden">
       <Starfield />
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
-      
-      <div 
+
+      <div
         className="absolute inset-0 flex flex-col min-w-0 h-full overflow-y-auto overflow-x-hidden custom-scrollbar"
-        style={{ 
+        style={{
           left: isArabic ? 0 : 'var(--sidebar-width, 0px)',
           right: isArabic ? 'var(--sidebar-width, 0px)' : 0,
           width: 'calc(100% - var(--sidebar-width, 0px))',
@@ -183,7 +191,8 @@ function AppContent() {
         {/* Mobile Header */}
         <header className="lg:hidden h-16 glass border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-40 shrink-0">
           <div className="flex items-center">
-            <button 
+            <button
+              aria-label="Open navigation"
               onClick={() => setSidebarOpen(true)}
               className="p-2 -ml-2 rtl:-mr-2 rtl:ml-0 text-muted-foreground hover:text-primary transition-colors"
             >
@@ -194,8 +203,8 @@ function AppContent() {
           <LanguageSwitcher variant="toggle" />
         </header>
 
-        {/* Top Floating Language Switcher for Desktop */}
-        <div className="hidden lg:flex fixed top-4 right-6 z-40 rtl:right-auto rtl:left-6 items-center">
+        {/* Reserve space so language controls cannot cover page actions. */}
+        <div className="hidden lg:flex h-16 shrink-0 px-6 justify-end items-center">
           <LanguageSwitcher variant="toggle" />
         </div>
 
@@ -206,8 +215,8 @@ function AppContent() {
               initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
-              transition={{ 
-                duration: 0.5, 
+              transition={{
+                duration: 0.5,
                 ease: [0.22, 1, 0.36, 1] // Custom cubic-bezier for smooth cinematic feel
               }}
               className="w-full h-full"
@@ -312,7 +321,7 @@ export default function App() {
           <PointsProvider>
             <NotificationsProvider>
               <Router>
-                <AppContent />
+                <React.Suspense fallback={<div role="status" className="p-8 text-center">Loading page…</div>}><AppContent /></React.Suspense>
               </Router>
             </NotificationsProvider>
           </PointsProvider>

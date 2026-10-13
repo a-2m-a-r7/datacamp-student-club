@@ -1,3 +1,4 @@
+import { Dialog } from '../../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -8,7 +9,6 @@ import ImagePicker from '../../components/ImagePicker';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { logAction } from '../../lib/logger';
 import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
-import { demoUsers } from '../../lib/demoData';
 import { contentService } from '../../services/contentService';
 
 const StaffManagement = () => {
@@ -42,20 +42,24 @@ const StaffManagement = () => {
         if (data) setUsers(data);
       });
     } else {
-      setUsers(demoUsers);
+      setUsers([]);
     }
 
     return contentService.subscribe('staff', loadStaff);
   }, []);
 
-  const handleSave = () => {
-    toast.success('Roster is saved automatically to Supabase.');
+  const handleSave = async () => {
+    try {
+      if (!isSupabaseConfigured) throw new Error('Database is not configured.');
+      setStaff(await contentService.list('staff', { includeDrafts: true }));
+      toast.success('Roster refreshed from database');
+    } catch (err: any) { toast.error(err.message || 'Refresh failed'); }
   };
 
   const handleAddMember = async () => {
     if (newMember.linkedUser && !validateUserIdentity(newMember.linkedUser, newMember.linkedUserType)) return;
-    
-    const linkedUserLabel = newMember.linkedUser 
+
+    const linkedUserLabel = newMember.linkedUser
       ? (newMember.linkedUserType === 'email' ? newMember.linkedUser : `ID: ${newMember.linkedUser}`)
       : '';
 
@@ -109,7 +113,7 @@ const StaffManagement = () => {
         <div className="flex gap-4">
           <Button variant="outline" onClick={handleSave}>
             <Save className="w-4 h-4 mr-2" />
-            Commit Changes
+            Refresh Roster
           </Button>
           <Button variant="cyber" onClick={() => setShowAddModal(true)}>
             <Plus className="w-4 h-4 mr-2" />
@@ -122,9 +126,9 @@ const StaffManagement = () => {
         {staff.map((member) => (
           <Card key={member.id} className="group relative overflow-hidden">
             <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button aria-label="Delete"
+                variant="ghost"
+                size="icon"
                 className="text-destructive hover:bg-destructive/10"
                 onClick={() => setDeleteConfirmId(member.id)}
               >
@@ -154,7 +158,7 @@ const StaffManagement = () => {
       </div>
 
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
+        <Dialog onClose={() => setDeleteConfirmId(null)} className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
           <Card className="w-full max-w-sm border-destructive/30 shadow-[0_0_50px_rgba(255,0,0,0.1)]">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-destructive/20">
@@ -171,11 +175,11 @@ const StaffManagement = () => {
               }}>CONFIRM_PURGE</Button>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {showAddModal && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 md:p-10 bg-dark-navy/90 backdrop-blur-md overflow-y-auto custom-scrollbar">
+        <Dialog onClose={() => setShowAddModal(false)} className="fixed inset-0 z-[100] flex items-start justify-center p-4 md:p-10 bg-dark-navy/90 backdrop-blur-md overflow-y-auto custom-scrollbar">
           <Card className="w-full max-w-2xl border-primary/30 my-auto">
             <CardHeader>
               <CardTitle className="font-cyber">INITIALIZE_NEW_OPERATIVE</CardTitle>
@@ -194,7 +198,7 @@ const StaffManagement = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Category</label>
-                  <select 
+                  <select
                     className="w-full bg-white/5 border border-white/10 rounded-md p-2 text-sm outline-none focus:border-primary"
                     value={newMember.category}
                     onChange={(e) => setNewMember({...newMember, category: e.target.value})}
@@ -206,7 +210,7 @@ const StaffManagement = () => {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <ImagePicker 
+                  <ImagePicker
                     label="Operative Image"
                     currentImage={newMember.image}
                     onImageSelected={(base64) => setNewMember({...newMember, image: base64})}
@@ -216,7 +220,7 @@ const StaffManagement = () => {
 
               <div className="space-y-2">
                 <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Linked User (Optional)</label>
-                <UserIdentityInput 
+                <UserIdentityInput
                   suggestions={users}
                   onValueChange={(val, type) => setNewMember({...newMember, linkedUser: val, linkedUserType: type})}
                 />
@@ -232,8 +236,8 @@ const StaffManagement = () => {
                 <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
                   {newMember.socials.map((s, idx) => (
                     <div key={idx} className="flex gap-2">
-                      <Input 
-                        placeholder="Platform" 
+                      <Input
+                        placeholder="Platform"
                         className="w-1/3"
                         value={s.platform}
                         onChange={(e) => {
@@ -243,8 +247,8 @@ const StaffManagement = () => {
                           setNewMember({...newMember, socials: updated});
                         }}
                       />
-                      <Input 
-                        placeholder="URL" 
+                      <Input
+                        placeholder="URL"
                         value={s.url}
                         onChange={(e) => {
                           const updated = [...newMember.socials];
@@ -263,7 +267,7 @@ const StaffManagement = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
     </div>
   );

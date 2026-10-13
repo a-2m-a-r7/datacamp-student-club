@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../co
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { toast } from 'sonner';
-import { 
-  User, Mail, Lock, Phone, GraduationCap, Save, 
-  Shield, CheckCircle2, AlertCircle, 
+import {
+  User, Mail, Lock, Phone, GraduationCap, Save,
+  Shield, CheckCircle2, AlertCircle,
   Smartphone, ArrowRight, X, Key, Copy, Check, LogOut, Send, KeyRound
 } from 'lucide-react';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
@@ -23,12 +23,12 @@ import { ROLE_DEFINITIONS } from '../lib/roleDefinitions';
 import { UserRole } from '../types';
 
 const Profile = () => {
-  const { user, profile, setMockUser, logout } = useAuth();
+  const { user, profile, refreshProfile, logout } = useAuth();
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
-  
+
   // Profile Info State
   const [formData, setFormData] = useState({
     fullName: '',
@@ -47,12 +47,12 @@ const Profile = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [attempts, setAttempts] = useState(0);
   const [isBlocked, setIsBlocked] = useState(false);
-  
+
   const MAX_ATTEMPTS = 5;
 
   // Re-auth State
   const [currentPassword, setCurrentPassword] = useState('');
-  
+
   // New Data State
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -86,12 +86,14 @@ const Profile = () => {
     return /^(\+20|0)?1[0125][0-9]{8}$/.test(cleaned);
   };
 
-  const handleCopyId = () => {
+  const handleCopyId = async () => {
     if (profile?.memberId) {
-      navigator.clipboard.writeText(profile.memberId);
+      try {
+      await navigator.clipboard.writeText(profile.memberId);
       setCopiedId(true);
       toast.success(isArabic ? 'تم نسخ رقم العضوية إلى الحافظة' : 'Member ID copied to clipboard');
       setTimeout(() => setCopiedId(false), 2000);
+      } catch { toast.error(isArabic ? 'تعذر النسخ إلى الحافظة' : 'Unable to copy to clipboard'); }
     }
   };
 
@@ -110,7 +112,7 @@ const Profile = () => {
         if (error) throw error;
         toast.success(isArabic ? `تم إرسال رابط استعادة كلمة المرور إلى ${targetEmail}` : `Password recovery link sent to ${targetEmail}`);
       } else {
-        toast.success(isArabic ? `تم إرسال رابط استعادة كلمة المرور إلى ${targetEmail}` : `Password recovery link sent to ${targetEmail}`);
+        throw new Error('Authentication service is not configured.');
       }
     } catch (err: any) {
       toast.error(err.message || (isArabic ? 'فشل إرسال الرابط' : 'Failed to send reset email'));
@@ -125,7 +127,7 @@ const Profile = () => {
 
     try {
       profileSchema.parse(formData);
-      
+
       let finalPhotoURL = formData.photoURL;
 
       if (formData.photoURL.startsWith('data:image')) {
@@ -137,7 +139,7 @@ const Profile = () => {
           const file = new File([blob], `avatar_${Date.now()}.jpg`, { type: 'image/jpeg' });
           finalPhotoURL = await uploadFile(getStoragePath('avatars', activeUid, file.name), file);
         } catch {
-          console.warn("Storage upload fallback");
+          throw new Error('Avatar upload failed. No profile changes were saved.');
         }
       }
 
@@ -158,17 +160,11 @@ const Profile = () => {
             avatar_url: finalPhotoURL,
             photo_url: finalPhotoURL,
             updated_at: new Date().toISOString()
-          }).eq('id', activeId);
+          }).eq('id', activeId).select('id').single();
 
           if (error) throw error;
 
-          if (profile) {
-            profile.fullName = formData.fullName;
-            profile.phoneNumber = formData.phone;
-            profile.faculty = formData.faculty;
-            profile.academicYear = formData.academicYear;
-            profile.photoURL = finalPhotoURL;
-          }
+          await refreshProfile();
 
           toast.success(isArabic ? 'تم حفظ التعديلات بنجاح في قاعدة البيانات' : 'Profile updated successfully in database');
           setLoading(false);
@@ -176,17 +172,7 @@ const Profile = () => {
         }
       }
 
-      if (setMockUser && profile) {
-        setMockUser({
-          ...profile,
-          fullName: formData.fullName,
-          phoneNumber: formData.phone,
-          faculty: formData.faculty,
-          academicYear: formData.academicYear,
-          photoURL: finalPhotoURL,
-        });
-      }
-      toast.success(isArabic ? 'تم تحديث البيانات محلياً' : 'Profile updated locally');
+      throw new Error('Database is not configured. Profile was not saved.');
     } catch (error: any) {
       toast.error(error.message || (isArabic ? 'فشل حفظ التعديلات' : 'Failed to update profile'));
     } finally {
@@ -203,7 +189,7 @@ const Profile = () => {
     }
 
     const target = type === 'email' ? profile?.email : profile?.phoneNumber;
-    
+
     if (!target) {
       toast.error(isArabic ? `لا يوجد ${type === 'email' ? 'بريد' : 'هاتف'} مرتبط بهذا الحساب.` : `No ${type} associated with this account.`);
       return;
@@ -228,7 +214,7 @@ const Profile = () => {
 
   const handleVerifyOTP = async () => {
     if (otpCode.length !== 6 || isBlocked) return;
-    
+
     setLoading(true);
     const isValid = await verifyOTP(otpTarget, otpCode, otpType);
     setLoading(false);
@@ -250,6 +236,7 @@ const Profile = () => {
   };
 
   const finalizeAction = async () => {
+    if (otpStep !== 'success') return toast.error('Verify your identity first.');
     if (otpAction === 'password') {
       const passwordCheck = validatePasswordStrength(newPassword);
       if (!passwordCheck.isValid) {
@@ -271,10 +258,7 @@ const Profile = () => {
         } else if (otpAction === 'email') {
           const { error } = await supabase.auth.updateUser({ email: newEmail });
           if (error) throw error;
-          const activeId = (user as any)?.id || (user as any)?.uid || profile?.uid;
-          if (activeId) {
-            await supabase.from('profiles').update({ email: newEmail }).eq('id', activeId);
-          }
+
           toast.success(isArabic ? 'تم إرسال رابط تأكيد للبريد الإلكتروني الجديد' : 'Confirmation link sent to new email');
         }
         setOtpStep('none');
@@ -287,14 +271,7 @@ const Profile = () => {
         return;
       }
 
-      toast.success(isArabic ? 'تم تأكيد العملية' : 'Action confirmed');
-      
-      setOtpStep('none');
-      setOtpAction('none');
-      setNewPassword('');
-      setConfirmPassword('');
-      setOtpCode('');
-      setCurrentPassword('');
+      throw new Error('Database is not configured.');
     } catch (error: any) {
       toast.error(error.message || (isArabic ? 'فشلت العملية' : 'Action failed'));
     } finally {
@@ -360,7 +337,7 @@ const Profile = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleProfileUpdate} className="space-y-6">
-                <ImagePicker 
+                <ImagePicker
                   label={isArabic ? 'صورة الملف الشخصي' : 'Profile Picture'}
                   currentImage={formData.photoURL}
                   onImageSelected={(base64) => setFormData({ ...formData, photoURL: base64 })}
@@ -373,9 +350,9 @@ const Profile = () => {
                     </label>
                     <div className="relative">
                       <User className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <Input 
-                        value={formData.fullName} 
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} 
+                      <Input
+                        value={formData.fullName}
+                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                         className={isArabic ? 'pr-10' : 'pl-10'}
                       />
                     </div>
@@ -386,9 +363,9 @@ const Profile = () => {
                     </label>
                     <div className="relative">
                       <Phone className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <Input 
-                        value={formData.phone} 
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })} 
+                      <Input
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className={isArabic ? 'pr-10' : 'pl-10'}
                         placeholder="+20 123 456 7890"
                         dir="ltr"
@@ -401,7 +378,7 @@ const Profile = () => {
                     </label>
                     <div className="relative">
                       <GraduationCap className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
-                      <select 
+                      <select
                         className={`flex h-10 w-full rounded-md border border-white/10 bg-white/5 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                           isArabic ? 'pr-10 pl-3' : 'pl-10 pr-3'
                         }`}
@@ -422,7 +399,7 @@ const Profile = () => {
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                       {isArabic ? 'الفرقة الدراسية' : 'Academic Year'}
                     </label>
-                    <select 
+                    <select
                       className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       value={formData.academicYear}
                       onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
@@ -473,9 +450,9 @@ const Profile = () => {
                       {isArabic ? 'كلمة المرور' : 'Password'}
                     </span>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="text-[10px] font-cyber h-8"
                     onClick={() => startOtpFlow('password')}
                   >
@@ -491,9 +468,9 @@ const Profile = () => {
                       {isArabic ? 'البريد الإلكتروني' : 'Email'}
                     </span>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="text-[10px] font-cyber h-8"
                     onClick={() => startOtpFlow('email')}
                   >
@@ -515,9 +492,9 @@ const Profile = () => {
                       </p>
                     </div>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="text-[10px] font-cyber h-8 gap-1.5"
                     onClick={handleSendPasswordReset}
                     disabled={loading}
@@ -544,8 +521,8 @@ const Profile = () => {
               </div>
 
               <div className="pt-2">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   className="w-full text-destructive hover:bg-destructive/10 text-xs font-cyber gap-2 border border-destructive/20 hover:border-destructive/40"
                   onClick={async () => {
                     await logout();
@@ -564,13 +541,13 @@ const Profile = () => {
       {/* OTP Verification Overlay */}
       <AnimatePresence>
         {otpStep !== 'none' && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-dark-navy/90 backdrop-blur-xl"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -578,7 +555,7 @@ const Profile = () => {
             >
               <Card className="border-primary/30 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-neon-blue to-neon-purple" />
-                <button 
+                <button aria-label="Close"
                   onClick={() => setOtpStep('none')}
                   className={`absolute top-4 ${isArabic ? 'left-4' : 'right-4'} text-muted-foreground hover:text-white transition-colors`}
                 >
@@ -590,13 +567,13 @@ const Profile = () => {
                     {otpStep === 'verify' ? <Shield className="w-8 h-8 text-primary" /> : <CheckCircle2 className="w-8 h-8 text-primary" />}
                   </div>
                   <CardTitle className="font-cyber tracking-tighter">
-                    {otpStep === 'verify' 
-                      ? (isArabic ? 'التحقق من الهوية' : 'IDENTITY_VERIFICATION') 
+                    {otpStep === 'verify'
+                      ? (isArabic ? 'التحقق من الهوية' : 'IDENTITY_VERIFICATION')
                       : (isArabic ? 'تم التحقق بنجاح' : 'VERIFICATION_SUCCESS')
                     }
                   </CardTitle>
                   <CardDescription>
-                    {otpStep === 'verify' 
+                    {otpStep === 'verify'
                       ? (isArabic ? `أدخل الرمز المكون من 6 أرقام المرسل إلى ${otpTarget}` : `Enter the 6-digit code sent to ${otpTarget}`)
                       : (isArabic ? `يمكنك الآن استكمال تحديث ${otpAction === 'password' ? 'كلمة المرور' : 'البريد'}.` : `You can now finalize your ${otpAction} update.`)}
                   </CardDescription>
@@ -606,7 +583,7 @@ const Profile = () => {
                   {otpStep === 'verify' ? (
                     <div className="space-y-6">
                       <div className="flex justify-center gap-2">
-                        <Input 
+                        <Input
                           className="text-center text-2xl font-black tracking-[1em] h-14 font-mono"
                           maxLength={6}
                           placeholder="000000"
@@ -621,7 +598,7 @@ const Profile = () => {
                         </Button>
                         <div className="flex justify-between items-center text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                           <span>{isArabic ? 'لم تستلم الرمز؟' : "Didn't receive code?"}</span>
-                          <button 
+                          <button
                             className={`text-primary hover:underline ${timeLeft > 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                             onClick={() => startOtpFlow(otpAction as any, otpType)}
                             disabled={timeLeft > 0}
@@ -630,9 +607,9 @@ const Profile = () => {
                           </button>
                         </div>
                         {otpType === 'email' && profile?.phoneNumber && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             className="text-[10px] font-cyber text-neon-blue"
                             onClick={() => startOtpFlow(otpAction as any, 'phone')}
                           >
@@ -650,7 +627,7 @@ const Profile = () => {
                             <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                               {isArabic ? 'البريد الإلكتروني الجديد' : 'New Email Address'}
                             </label>
-                            <Input 
+                            <Input
                               type="email"
                               value={newEmail}
                               onChange={(e) => setNewEmail(e.target.value)}
@@ -664,7 +641,7 @@ const Profile = () => {
                             <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                               {isArabic ? 'كلمة المرور الجديدة' : 'New Password'}
                             </label>
-                            <Input 
+                            <Input
                               type="password"
                               value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
@@ -675,7 +652,7 @@ const Profile = () => {
                             <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
                               {isArabic ? 'تأكيد كلمة المرور الجديدة' : 'Confirm New Password'}
                             </label>
-                            <Input 
+                            <Input
                               type="password"
                               value={confirmPassword}
                               onChange={(e) => setConfirmPassword(e.target.value)}

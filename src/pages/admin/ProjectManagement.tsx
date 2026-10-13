@@ -1,3 +1,4 @@
+import { Dialog } from '../../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -7,19 +8,18 @@ import { toast } from 'sonner';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { UserIdentityInput } from '../../components/UserIdentityInput';
 import ImagePicker from '../../components/ImagePicker';
-import { demoUsers } from '../../lib/demoData';
 import { contentService } from '../../services/contentService';
 
 const ProjectManagement = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newProject, setNewProject] = useState({ 
-    title: '', 
-    description: '', 
-    tech: '', 
-    link: '', 
-    category: '', 
+  const [newProject, setNewProject] = useState({
+    title: '',
+    description: '',
+    tech: '',
+    link: '',
+    category: '',
     image: '',
     author: ''
   });
@@ -43,19 +43,19 @@ const ProjectManagement = () => {
         if (data) setUsers(data);
       });
     } else {
-      setUsers(demoUsers);
+      setUsers([]);
     }
 
     return contentService.subscribe('projects', loadProjects);
   }, []);
 
   const resetForm = () => {
-    setNewProject({ 
-      title: '', 
-      description: '', 
-      tech: '', 
-      link: '', 
-      category: '', 
+    setNewProject({
+      title: '',
+      description: '',
+      tech: '',
+      link: '',
+      category: '',
       image: '',
       author: ''
     });
@@ -69,14 +69,14 @@ const ProjectManagement = () => {
     }
 
     setIsSubmitting(true);
-    const authorLabel = newProject.author 
+    const authorLabel = newProject.author
       ? (authorType === 'email' ? newProject.author : `ID: ${newProject.author}`)
       : 'Club Member';
-      
-    const projectData = { 
-      ...newProject, 
-      author: authorLabel, 
-      createdAt: new Date().toISOString() 
+
+    const projectData = {
+      ...newProject,
+      author: authorLabel,
+      createdAt: new Date().toISOString()
     };
 
     try {
@@ -127,12 +127,19 @@ const ProjectManagement = () => {
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle className="font-cyber text-lg group-hover:text-primary transition-colors">{project.title}</CardTitle>
-                <Button variant="ghost" size="icon" className="text-destructive" onClick={() => setDeleteConfirmId(project.id)}>
+                <Button aria-label="Delete" variant="ghost" size="icon" className="text-destructive" onClick={() => setDeleteConfirmId(project.id)}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {project.status === 'planning' && <Button onClick={async () => {
+                try {
+                  const saved = await contentService.update('projects', project.id, { ...project, status: 'active' });
+                  setProjects(prev => prev.map(row => row.id === saved.id ? saved : row));
+                  toast.success('Project approved and published');
+                } catch (err: any) { toast.error(err.message || 'Approval failed'); }
+              }}>Approve & Publish</Button>}
               <div className="flex justify-between items-center text-[10px] font-cyber tracking-widest">
                 <span className="text-primary">{project.category || 'NO_CAT'}</span>
                 <span className="text-muted-foreground">BY {project.author || 'UNKNOWN'}</span>
@@ -147,7 +154,7 @@ const ProjectManagement = () => {
       </div>
 
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
+        <Dialog onClose={() => setDeleteConfirmId(null)} className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
           <Card className="w-full max-w-sm border-destructive/30 shadow-[0_0_50px_rgba(255,0,0,0.1)]">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-destructive/20">
@@ -164,11 +171,11 @@ const ProjectManagement = () => {
               }}>CONFIRM_PURGE</Button>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {showAddModal && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 md:p-10 bg-dark-navy/90 backdrop-blur-md overflow-y-auto custom-scrollbar">
+        <Dialog onClose={() => setShowAddModal(false)} className="fixed inset-0 z-[100] flex items-start justify-center p-4 md:p-10 bg-dark-navy/90 backdrop-blur-md overflow-y-auto custom-scrollbar">
           <Card className="w-full max-w-lg border-primary/30 my-auto">
             <CardHeader><CardTitle className="font-cyber">INITIALIZE_PROJECT</CardTitle></CardHeader>
             <CardContent className="space-y-4">
@@ -193,10 +200,10 @@ const ProjectManagement = () => {
                   <Input value={newProject.link} onChange={(e) => setNewProject({...newProject, link: e.target.value})} />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Lead Developer / Author (Optional)</label>
-                <UserIdentityInput 
+                <UserIdentityInput
                   suggestions={users}
                   onValueChange={(val, type) => {
                     setNewProject({...newProject, author: val});
@@ -206,7 +213,7 @@ const ProjectManagement = () => {
               </div>
 
               <div className="space-y-2">
-                <ImagePicker 
+                <ImagePicker
                   label="Project Cover Image"
                   currentImage={newProject.image}
                   onImageSelected={(base64) => setNewProject({...newProject, image: base64})}
@@ -215,7 +222,7 @@ const ProjectManagement = () => {
 
               <div className="space-y-2">
                 <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Description</label>
-                <textarea 
+                <textarea
                   className="w-full bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[100px]"
                   value={newProject.description}
                   onChange={(e) => setNewProject({...newProject, description: e.target.value})}
@@ -229,7 +236,7 @@ const ProjectManagement = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
     </div>
   );

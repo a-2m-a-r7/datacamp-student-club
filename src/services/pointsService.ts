@@ -16,10 +16,6 @@ import {
 
 type Unsubscribe = () => void;
 
-const demoPointsLog: PointsLog[] = [];
-const demoAchievements: Achievement[] = [];
-const demoUserPoints: Record<string, number> = {};
-
 export interface AwardPointsOptions {
   userId: string;
   action: PointAction;
@@ -53,66 +49,18 @@ const mapAchievement = (row: any): Achievement => ({
 });
 
 export const awardPoints = async (opts: AwardPointsOptions): Promise<{ points: number; newTotal: number }> => {
-  const { userId, action, description, customPoints, referenceId, referenceType } = opts;
-
-  const points = action === 'ADMIN_BONUS' || action === 'ADMIN_DEDUCT'
-    ? (customPoints ?? 0)
-    : POINT_VALUES[action];
-
-  if (!isSupabaseConfigured) {
-    demoUserPoints[userId] = (demoUserPoints[userId] ?? 0) + points;
-    demoPointsLog.push({
-      userId,
-      points,
-      action,
-      description,
-      referenceId,
-      referenceType,
-      createdAt: new Date().toISOString(),
-    });
-    return { points, newTotal: demoUserPoints[userId] };
-  }
-
-  const { error: logError } = await supabase.from('points_log').insert({
-    user_id: userId,
-    points,
-    action,
-    description,
-    reference_id: referenceId ?? null,
-    reference_type: referenceType ?? null,
-  });
-
-  if (logError) throw logError;
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('total_points, xp')
-    .eq('id', userId)
-    .maybeSingle();
-
-  const currentTotal = Number((profile as any)?.total_points ?? (profile as any)?.xp ?? 0);
-  const newTotal = currentTotal + points;
-  const nextLevel = getLevelFromPoints(newTotal);
-
-  const updatePayload = {
-    total_points: newTotal,
-    xp: newTotal,
-    level: nextLevel,
-    updated_at: new Date().toISOString(),
-  };
-
-  await Promise.all([
-    supabase.from('profiles').update(updatePayload as any).eq('id', userId),
-    supabase.from('users').update(updatePayload as any).eq('id', userId),
-  ]);
-
-  return { points, newTotal };
+ if (!isSupabaseConfigured) throw new Error('Database is not configured.');
+ const { data, error } = await supabase.rpc('award_points', {
+  p_user_id: opts.userId, p_action: opts.action, p_description: opts.description,
+  p_custom_points: opts.customPoints ?? null, p_reference_id: opts.referenceId ?? null, p_reference_type: opts.referenceType ?? null,
+ });
+ if (error) throw error;
+ if (!data || typeof data.newTotal !== 'number') throw new Error('Points were not saved');
+ return data;
 };
 
 export const getUserPointsLog = async (userId: string, limitCount = 20): Promise<PointsLog[]> => {
-  if (!isSupabaseConfigured) {
-    return demoPointsLog.filter(l => l.userId === userId).slice(-limitCount).reverse();
-  }
+  if (!isSupabaseConfigured) { return []; }
 
   const { data, error } = await supabase
     .from('points_log')
@@ -131,7 +79,7 @@ export const subscribeToPointsLog = (
   limitCount = 10,
 ): Unsubscribe => {
   getUserPointsLog(userId, limitCount).then(callback).catch(console.error);
-  if (!isSupabaseConfigured) return () => {};
+  if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
 
   const channel = supabase
     .channel(`points_log_${userId}`)
@@ -146,18 +94,9 @@ export const subscribeToPointsLog = (
 };
 
 export const getLeaderboard = async (limitCount = 20) => {
-  if (!isSupabaseConfigured) {
-    return Object.entries(demoUserPoints)
-      .map(([userId, totalPoints], i) => ({ userId, totalPoints, rank: i + 1, fullName: userId, level: getLevelFromPoints(totalPoints) }))
-      .sort((a, b) => b.totalPoints - a.totalPoints)
-      .slice(0, limitCount);
-  }
+  if (!isSupabaseConfigured) { return []; }
 
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('id, full_name, photo_url, avatar_url, faculty, total_points, xp')
-    .order('total_points', { ascending: false })
-    .limit(limitCount);
+  const { data, error } = await supabase.rpc('public_leaderboard', { p_limit: limitCount });
 
   if (error) throw error;
   return (data || []).map((row: any, i: number) => {
@@ -167,6 +106,7 @@ export const getLeaderboard = async (limitCount = 20) => {
       fullName: row.full_name || 'Member',
       photoURL: row.photo_url || row.avatar_url,
       faculty: row.faculty,
+      memberId: row.member_id,
       totalPoints,
       level: getLevelFromPoints(totalPoints),
       rank: i + 1,
@@ -178,48 +118,14 @@ export const checkAndAwardBadges = async (
   userId: string,
   stats: UserStats,
 ): Promise<Achievement[]> => {
-  const newlyUnlocked: Achievement[] = [];
-
-  const existing = await getUserAchievements(userId);
-  const earnedIds = new Set(existing.map(item => item.badgeId));
-
-  for (const badge of BADGES_CATALOG) {
-    if (!earnedIds.has(badge.id) && badge.condition(stats)) {
-      const achievement: Achievement = {
-        userId,
-        badgeId: badge.id,
-        badgeName: badge.name,
-        badgeIcon: badge.icon,
-        badgeColor: badge.color,
-        description: badge.description,
-        unlockedAt: new Date().toISOString(),
-        isNew: true,
-      };
-
-      if (isSupabaseConfigured) {
-        const { error } = await supabase.from('user_achievements').insert({
-          user_id: userId,
-          badge_id: badge.id,
-          badge_name: badge.name,
-          badge_icon: badge.icon,
-          badge_color: badge.color,
-          description: badge.description,
-          is_new: true,
-        });
-        if (error) throw error;
-      } else {
-        demoAchievements.push(achievement);
-      }
-
-      newlyUnlocked.push(achievement);
-    }
-  }
-
-  return newlyUnlocked;
+ if (!isSupabaseConfigured) throw new Error('Database is not configured.');
+ const { data, error } = await supabase.rpc('refresh_badges');
+ if (error) throw error;
+ return (data || []).map(mapAchievement);
 };
 
 export const getUserAchievements = async (userId: string): Promise<Achievement[]> => {
-  if (!isSupabaseConfigured) return demoAchievements.filter(a => a.userId === userId);
+  if (!isSupabaseConfigured) { return []; }
 
   const { data, error } = await supabase
     .from('user_achievements')
@@ -235,8 +141,8 @@ export const subscribeToAchievements = (
   userId: string,
   callback: (achievements: Achievement[]) => void,
 ): Unsubscribe => {
-  getUserAchievements(userId).then(callback).catch(console.error);
-  if (!isSupabaseConfigured) return () => {};
+  getUserAchievements(userId).then(async items => { callback(items); if (items.some(item => item.isNew)) await supabase.rpc('acknowledge_badges'); }).catch(console.error);
+  if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
 
   const channel = supabase
     .channel(`achievements_${userId}`)

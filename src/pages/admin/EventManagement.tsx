@@ -1,3 +1,4 @@
+import { Dialog } from '../../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { logAction } from '../../lib/logger';
 import { useAuth } from '../../contexts/AuthContext';
@@ -5,8 +6,8 @@ import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { 
-  Calendar, Plus, Search, MapPin, Users, 
+import {
+  Calendar, Plus, Search, MapPin, Users,
   Clock, MoreVertical, Edit, Trash2, ExternalLink,
   QrCode, Scan, UserPlus, X, Image as ImageIcon
 } from 'lucide-react';
@@ -14,7 +15,6 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { toast } from 'sonner';
 import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
-import { demoUsers, demoEvents } from '../../lib/demoData';
 import { contentService } from '../../services/contentService';
 
 const EventManagement = () => {
@@ -35,7 +35,7 @@ const EventManagement = () => {
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
-      setUsers(demoUsers);
+      setUsers([]);
       return;
     }
     supabase.from('profiles').select('*').then(({ data, error }) => {
@@ -45,22 +45,13 @@ const EventManagement = () => {
   }, []);
 
   const onScanSuccess = React.useCallback(async (decodedText: string) => {
-    toast.info(`Verifying identity: ${decodedText}`);
-    
-    const matchedUser = users.find((candidate: any) =>
-      candidate.email === decodedText ||
-      candidate.memberId === decodedText ||
-      candidate.member_id === decodedText ||
-      candidate.id === decodedText
-    );
+    if (!selectedEvent?.id) return;
+    try {
+      const { data, error } = await supabase.rpc('check_in_event', { p_event_id: selectedEvent.id, p_ticket: decodedText });
+      if (error) throw error; if (!data?.checkedInAt) throw new Error('Attendance was not saved');
+      setShowScanModal(false); toast.success('Attendance saved');
+    } catch (err: any) { toast.error(err.message || 'Ticket verification failed'); }
 
-    if (matchedUser) {
-      const displayName = matchedUser.fullName || matchedUser.full_name || matchedUser.email || matchedUser.id;
-      toast.success(`Access Granted: ${displayName}`);
-      await logAction('EVENT_CHECKIN', profile?.fullName || 'Admin', `${displayName} checked into ${selectedEvent?.title}`, 'success');
-    } else {
-      toast.error('Identity not found in database');
-    }
   }, [profile, selectedEvent, users]);
 
   const onScanError = React.useCallback((err: any) => {
@@ -94,7 +85,7 @@ const EventManagement = () => {
 
     const organizerLabel = identityType === 'email' ? organizerValue : `ID: ${organizerValue}`;
     const updatedOrganizers = [...(selectedEvent.organizers || []), organizerLabel];
-    
+
     try {
       const updatedEvent = { ...selectedEvent, organizers: updatedOrganizers };
       await contentService.update('events', selectedEvent.id, updatedEvent);
@@ -119,10 +110,10 @@ const EventManagement = () => {
     const loadEvents = async () => {
       try {
         const rows = await contentService.list('events', { orderBy: 'created_at', includeDrafts: true });
-        setEvents(rows.length > 0 ? rows : demoEvents);
+        setEvents(rows);
       } catch (error) {
         console.warn('Events listener error in EventManagement:', error);
-        setEvents(demoEvents);
+        setEvents([]);
       } finally {
         setLoading(false);
       }
@@ -189,18 +180,18 @@ const EventManagement = () => {
             <div className="absolute top-0 left-0 w-1 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
             <CardHeader className="relative">
               <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button aria-label="Edit"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setEditingEvent(event)}
                   className="h-9 w-9 bg-black/50 backdrop-blur-md border border-white/10 hover:text-primary hover:border-primary/30"
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => setDeleteConfirmId(event.id)} 
+                <Button aria-label="Delete"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setDeleteConfirmId(event.id)}
                   className="h-9 w-9 bg-black/50 backdrop-blur-md border border-white/10 text-destructive hover:bg-destructive/20 hover:border-destructive/30"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -214,7 +205,7 @@ const EventManagement = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-sm text-muted-foreground line-clamp-2">{event.description}</p>
-              
+
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div className="flex items-center text-muted-foreground">
                   <Calendar className="w-3 h-3 mr-2 text-neon-blue" />
@@ -236,9 +227,9 @@ const EventManagement = () => {
 
               <div className="grid grid-cols-2 gap-2">
                 {canScan && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="text-[10px] h-8 border-primary/30"
                     onClick={() => {
                       setSelectedEvent(event);
@@ -250,9 +241,9 @@ const EventManagement = () => {
                   </Button>
                 )}
                 {isHR && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="text-[10px] h-8 border-neon-purple/30"
                     onClick={() => {
                       setSelectedEvent(event);
@@ -281,7 +272,7 @@ const EventManagement = () => {
       </div>
 
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
+        <Dialog onClose={() => setDeleteConfirmId(null)} className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
           <Card className="w-full max-w-sm border-destructive/30 shadow-[0_0_50px_rgba(255,0,0,0.1)]">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-destructive/20">
@@ -295,11 +286,11 @@ const EventManagement = () => {
               <Button variant="destructive" className="flex-1" onClick={() => handleDeleteEvent(deleteConfirmId)}>PURGE DATA</Button>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {editingEvent && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+        <Dialog onClose={() => setEditingEvent(null)} className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
           <Card className="w-full max-w-lg border-primary/30 shadow-[0_0_50px_rgba(57,255,20,0.1)]">
             <CardHeader>
               <CardTitle className="text-2xl font-cyber">EDIT EVENT PARAMETERS</CardTitle>
@@ -308,15 +299,15 @@ const EventManagement = () => {
               <form onSubmit={handleUpdateEvent} className="space-y-5">
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Event Title</label>
-                  <Input 
-                    value={editingEvent.title} 
-                    onChange={(e) => setEditingEvent({...editingEvent, title: e.target.value})} 
-                    required 
+                  <Input
+                    value={editingEvent.title}
+                    onChange={(e) => setEditingEvent({...editingEvent, title: e.target.value})}
+                    required
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Description</label>
-                  <textarea 
+                  <textarea
                     className="w-full bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[100px]"
                     value={editingEvent.description}
                     onChange={(e) => setEditingEvent({...editingEvent, description: e.target.value})}
@@ -326,19 +317,19 @@ const EventManagement = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Date & Time</label>
-                    <Input 
-                      type="datetime-local" 
-                      value={editingEvent.date} 
-                      onChange={(e) => setEditingEvent({...editingEvent, date: e.target.value})} 
-                      required 
+                    <Input
+                      type="datetime-local"
+                      value={editingEvent.date}
+                      onChange={(e) => setEditingEvent({...editingEvent, date: e.target.value})}
+                      required
                     />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Location</label>
-                    <Input 
-                      value={editingEvent.location} 
-                      onChange={(e) => setEditingEvent({...editingEvent, location: e.target.value})} 
-                      required 
+                    <Input
+                      value={editingEvent.location}
+                      onChange={(e) => setEditingEvent({...editingEvent, location: e.target.value})}
+                      required
                     />
                   </div>
                 </div>
@@ -349,35 +340,35 @@ const EventManagement = () => {
               </form>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {showScanModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+        <Dialog onClose={() => setShowScanModal(false)} className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
           <Card className="w-full max-w-md border-primary/30">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-xl font-cyber">QR SCANNER ACTIVE</CardTitle>
-              <Button variant="ghost" size="icon" onClick={() => setShowScanModal(false)}><X className="w-4 h-4" /></Button>
+              <Button aria-label="Close" variant="ghost" size="icon" onClick={() => setShowScanModal(false)}><X className="w-4 h-4" /></Button>
             </CardHeader>
             <CardContent>
               <div id="reader" className="w-full rounded-lg overflow-hidden border border-white/10"></div>
               <p className="text-center text-xs text-muted-foreground mt-4">Scan visitor QR code to verify registration</p>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {showOrganizersModal && selectedEvent && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+        <Dialog onClose={() => setShowOrganizersModal(false)} className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
           <Card className="w-full max-w-md border-neon-purple/30">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-xl font-cyber">MANAGE ORGANIZERS</CardTitle>
-              <Button variant="ghost" size="icon" onClick={() => setShowOrganizersModal(false)}><X className="w-4 h-4" /></Button>
+              <Button aria-label="Close" variant="ghost" size="icon" onClick={() => setShowOrganizersModal(false)}><X className="w-4 h-4" /></Button>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex gap-2 items-end">
                 <div className="flex-grow">
-                  <UserIdentityInput 
+                  <UserIdentityInput
                     suggestions={users}
                     onValueChange={(val, type) => {
                       setOrganizerValue(val);
@@ -393,9 +384,9 @@ const EventManagement = () => {
                   selectedEvent.organizers.map((label: string, i: number) => (
                     <div key={i} className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
                       <span className="text-xs">{label}</span>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button aria-label="Delete"
+                        variant="ghost"
+                        size="icon"
                         className="h-6 w-6 text-destructive"
                         onClick={async () => {
                           const updated = selectedEvent.organizers.filter((_: any, index: number) => index !== i);
@@ -415,10 +406,10 @@ const EventManagement = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
       {showAddModal && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 md:p-10 bg-dark-navy/90 backdrop-blur-md overflow-y-auto custom-scrollbar">
+        <Dialog onClose={() => setShowAddModal(false)} className="fixed inset-0 z-[100] flex items-start justify-center p-4 md:p-10 bg-dark-navy/90 backdrop-blur-md overflow-y-auto custom-scrollbar">
           <Card className="w-full max-w-lg border-primary/30 shadow-[0_0_50px_rgba(57,255,20,0.1)] my-auto">
             <CardHeader>
               <CardTitle className="text-2xl font-cyber">NEW EVENT INITIALIZATION</CardTitle>
@@ -427,16 +418,16 @@ const EventManagement = () => {
               <form onSubmit={handleAddEvent} className="space-y-5">
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Event Title</label>
-                  <Input 
-                    placeholder="e.g. Data Science Summit" 
-                    value={newEvent.title} 
-                    onChange={(e) => setNewEvent({...newEvent, title: e.target.value})} 
-                    required 
+                  <Input
+                    placeholder="e.g. Data Science Summit"
+                    value={newEvent.title}
+                    onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
+                    required
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Description</label>
-                  <textarea 
+                  <textarea
                     className="w-full bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[100px] transition-all focus:border-primary/50"
                     placeholder="What is this event about?"
                     value={newEvent.description}
@@ -447,20 +438,20 @@ const EventManagement = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Date & Time</label>
-                    <Input 
-                      type="datetime-local" 
-                      value={newEvent.date} 
-                      onChange={(e) => setNewEvent({...newEvent, date: e.target.value})} 
-                      required 
+                    <Input
+                      type="datetime-local"
+                      value={newEvent.date}
+                      onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
+                      required
                     />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Location</label>
-                    <Input 
-                      placeholder="Room or Link" 
-                      value={newEvent.location} 
-                      onChange={(e) => setNewEvent({...newEvent, location: e.target.value})} 
-                      required 
+                    <Input
+                      placeholder="Room or Link"
+                      value={newEvent.location}
+                      onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
+                      required
                     />
                   </div>
                 </div>
@@ -471,7 +462,7 @@ const EventManagement = () => {
               </form>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
     </div>
   );

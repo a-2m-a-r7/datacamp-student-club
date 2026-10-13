@@ -3,6 +3,7 @@ import { useAuth } from './AuthContext';
 import { notificationService } from '../services/notificationService';
 import { Notification, NotificationType } from '../types';
 import { toast } from 'sonner';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 interface NotificationsContextType {
   notifications: Notification[];
@@ -29,7 +30,8 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchNotifs = async () => {
     try {
-      const list = await notificationService.getUserNotifications(profile?.uid || 'demo-user');
+      if (!profile?.uid) { setNotifications([]); return; }
+      const list = await notificationService.getUserNotifications(profile.uid);
       setNotifications(list);
     } catch (err) {
       console.error('Error fetching notifications:', err);
@@ -40,17 +42,25 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchNotifs();
+    if (!profile?.uid || !isSupabaseConfigured) return;
+    const channel = supabase.channel(`notifications_${profile.uid}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, fetchNotifs)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notification_reads', filter: `user_id=eq.${profile.uid}` }, fetchNotifs)
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
   }, [profile]);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   const markAsRead = async (id: string) => {
-    await notificationService.markAsRead(profile?.uid || 'demo-user', id);
+    if (!profile?.uid) throw new Error('Authentication required');
+    await notificationService.markAsRead(profile.uid, id);
     setNotifications(prev => prev.map(n => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
   const markAllAsRead = async () => {
-    await notificationService.markAllAsRead(profile?.uid || 'demo-user');
+    if (!profile?.uid) throw new Error('Authentication required');
+    await notificationService.markAllAsRead(profile.uid);
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
     toast.success('All notifications marked as read');
   };
@@ -62,8 +72,9 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
     refId?: string,
     refType?: string
   ) => {
+    if (!profile?.uid) throw new Error('Authentication required');
     const newNotif = await notificationService.sendNotification(
-      profile?.uid || 'demo-user',
+      profile.uid,
       type,
       title,
       body,

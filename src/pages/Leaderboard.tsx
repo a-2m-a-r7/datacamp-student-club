@@ -31,7 +31,7 @@ interface LeaderboardUser {
 }
 
 const Leaderboard = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, isAdmin } = useAuth();
   const { totalPoints: myTotalPoints, level: myLevel } = usePoints();
   const { isArabic, t } = useLanguage();
 
@@ -42,6 +42,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     const fetchLeaders = async () => {
+      if (!isAdmin) { setLeaders([]); setLoading(false); return; }
       setLoading(true);
       try {
         let list: LeaderboardUser[] = [];
@@ -90,7 +91,7 @@ const Leaderboard = () => {
     };
 
     fetchLeaders();
-  }, [user, profile, myTotalPoints, myLevel]);
+  }, [user, profile, myTotalPoints, myLevel, isAdmin]);
 
   const faculties = ['all', 'Computer Science', 'Engineering', 'Artificial Intelligence', 'Business Informatics', 'Science'];
 
@@ -104,6 +105,11 @@ const Leaderboard = () => {
 
   const topThree = filteredLeaders.slice(0, 3);
   const remaining = filteredLeaders.slice(3);
+
+  if (!isAdmin) return <div className="min-h-screen p-8 space-y-4">
+    <h1>{isArabic ? 'البحث عن أعضاء النادي متاح للإدارة فقط' : 'Club member directory is available to administrators only'}</h1>
+    {user && <p>{isArabic ? 'نقاطك' : 'Your points'}: {myTotalPoints} XP · {myLevel}</p>}
+  </div>;
 
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">

@@ -13,17 +13,24 @@
 
 import { google } from 'googleapis';
 import { createClient } from '@supabase/supabase-js';
+import { authorizeAdmin } from '../_lib/authorize';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
 
-const defaultAdminGmail = 'ammar25030177@gmail.com';
+const defaultAdminGmail = '';
+// A Symbol cannot be supplied through an HTTP request. Only the submission handler uses it.
+export const internalSubmissionSync = Symbol('internalSubmissionSync');
 
 export default async function handler(req: any, res: any) {
   // Allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed. Use POST.' });
   }
+
+  const internal = req[internalSubmissionSync] === true;
+  const authorized = internal ? null : await authorizeAdmin(req, res);
+  if (!internal && !authorized) return;
 
   const { formId, responseId, resyncAll } = req.body || {};
 
@@ -36,9 +43,9 @@ export default async function handler(req: any, res: any) {
   let privateKey = process.env.GOOGLE_PRIVATE_KEY;
   const ownerEmail = process.env.GOOGLE_SPREADSHEET_OWNER_EMAIL || defaultAdminGmail;
 
-  if (!clientEmail || !privateKey) {
+  if (!clientEmail || !privateKey || !ownerEmail) {
     console.warn('[sync-sheet] Google Service Account credentials not found in env vars.');
-    return res.status(200).json({
+    return res.status(503).json({
       success: false,
       configured: false,
       message: 'Google Service Account credentials not yet configured. Please set GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY in .env / Vercel.',
@@ -49,7 +56,7 @@ export default async function handler(req: any, res: any) {
   privateKey = privateKey.replace(/\\n/g, '\n');
 
   // 2. Initialize Supabase Client
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabase = authorized?.client || createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY || '');
 
   // 3. Fetch Form and Questions
   const { data: form, error: formError } = await supabase
@@ -130,7 +137,7 @@ export default async function handler(req: any, res: any) {
       await sheets.spreadsheets.values.update({
         spreadsheetId,
         range: 'Responses!A1',
-        valueInputOption: 'USER_ENTERED',
+        valueInputOption: 'RAW',
         requestBody: {
           values: [headerTitles],
         },
@@ -252,7 +259,7 @@ export default async function handler(req: any, res: any) {
       await sheets.spreadsheets.values.update({
         spreadsheetId,
         range: 'Responses!A1',
-        valueInputOption: 'USER_ENTERED',
+        valueInputOption: 'RAW',
         requestBody: { values: allRows },
       });
 
@@ -286,6 +293,7 @@ export default async function handler(req: any, res: any) {
           profiles:respondent_id (full_name, email)
         `)
         .eq('id', responseId)
+        .eq('form_id', formId)
         .single();
 
       if (singleError || !singleResp) {
@@ -311,7 +319,7 @@ export default async function handler(req: any, res: any) {
       await sheets.spreadsheets.values.append({
         spreadsheetId,
         range: 'Responses!A:A',
-        valueInputOption: 'USER_ENTERED',
+        valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
         requestBody: {
           values: [rowValues],

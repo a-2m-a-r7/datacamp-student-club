@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePoints } from '../../contexts/PointsContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { aiService, AIMessage, isGeminiConfigured, clearChatHistory } from '../../services/aiService';
+import { aiService, AIMessage, setPersonalGeminiKey, isGeminiConfigured, clearChatHistory } from '../../services/aiService';
 import { courseService } from '../../services/courseService';
 import { Course } from '../../types';
 import { Button } from '../ui/Button';
@@ -171,9 +171,7 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
     return {
       id: 'welcome-msg',
       sender: 'assistant',
-      text: isAr
-        ? `مرحباً بك يا ${name}. أنا **NEXUS**، مرشدك الذكي في نادي DataCamp بجامعة الابتكار.\n\n${isSupabaseConfigured ? '🟢 **قاعدة بيانات Supabase متصلة** — وصول مباشر للدورات والفعاليات ونقاط الأعضاء.' : '🟡 **النظام المحلي نشط** — تشغيل قاعدة المعرفة المحلية.'}\n\n${isGeminiConfigured() ? '⚡ **ذكاء Gemini المتطور متصل** — تفكير تحليلي حي فائق السرعة.' : '💡 **ملاحظة**: يعمل بنظام الذكاء المحلي.'}\n\nكيف يمكنني مساعدتك ودعم مسارك التعليمي اليوم؟`
-        : `Hello ${name}! I am **NEXUS**, your AI mentor at DataCamp Student Club.\n\n${isSupabaseConfigured ? '🟢 **Supabase Database Connected** — Live access to courses, events, and member XP.' : '🟡 **Local Runtime Active** — Local knowledge base operating.'}\n\n${isGeminiConfigured() ? '⚡ **Google Gemini Online** — Live ultra-fast reasoning enabled.' : '💡 **Note**: Running on local AI heuristics.'}\n\nHow can I accelerate your learning journey today?`,
+      text: isAr ? `مرحباً يا ${name}. أنا NEXUS. اسألني عن البرمجة أو الدورات المنشورة. الاتصال بالخدمة يُفحص عند إرسال سؤالك.` : `Hello ${name}. I am NEXUS. Ask about programming or published courses. Service availability is checked when you send a message.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       suggestedActions: isAr ? [
         { label: '🗺️ اقترح دورة مناسبة', action: 'ask', payload: 'ما هي أفضل دورة أبدأ بها في النادي؟' },
@@ -202,14 +200,14 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
 
   const [input, setInput] = useState(initialMessage || '');
   const [showApiKeyInput, setShowApiKeyInput] = useState(false);
-  const [apiKey, setApiKey] = useState(localStorage.getItem('datacamp_gemini_api_key') || '');
+  const [apiKey, setApiKey] = useState('');
 
   useEffect(() => {
     if (initialMessage && isOpen) {
       setInput(initialMessage);
     }
   }, [initialMessage, isOpen]);
-  
+
   const [isTyping, setIsTyping] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -224,15 +222,16 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
 
   const handleSaveApiKey = () => {
     if (apiKey.trim()) {
-      localStorage.setItem('datacamp_gemini_api_key', apiKey.trim());
+      setPersonalGeminiKey(apiKey.trim());
+      localStorage.removeItem('datacamp_gemini_api_key');
       setShowApiKeyInput(false);
       // Add confirmation message
       setMessages(prev => [...prev, {
         id: `msg-${Date.now()}`,
         sender: 'assistant',
-        text: isArabic 
+        text: isArabic
           ? '🔑 **تم تفعيل مفتاح Google Gemini API بنجاح!** أصبح NEXUS مدعوماً الآن بنموذج Gemini مع سياق كامل لقاعدة بيانات نادي DataCamp.\n\nتفضل بسؤالي عن أي استفسار تقني أو برمجي أو أكاديمي!'
-          : '🔑 **Google Gemini API Key activated!** NEXUS is now powered by live Google Gemini AI with full RAG database context from DataCamp Club.\n\nAsk me any complex technical, programming, or career question!',
+          : '🔑 **Google Gemini API Key activated!** Your key is saved for this tab only. It will be checked when you send a message.\n\nAsk me any complex technical, programming, or career question!',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }]);
     }
@@ -271,8 +270,8 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
         {
           id: `msg-${Date.now()}`,
           sender: 'assistant',
-          text: isArabic 
-            ? 'عذراً، حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى أو التأكد من اتصال الإنترنت.' 
+          text: isArabic
+            ? 'عذراً، حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى أو التأكد من اتصال الإنترنت.'
             : 'Apologies, an error occurred while processing your query. Please retry or check network connectivity.',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
@@ -300,7 +299,7 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
     }
 
     if (action.action === 'generate_path') {
-      const prompt = isArabic 
+      const prompt = isArabic
         ? `صمم لي خطة دراسية تفصيلية مدتها 4 أسابيع للبدء في مسار ${action.payload === 'data_science' ? 'علم البيانات والذكاء الاصطناعي' : action.payload} مع اقتراح الدورات والمهام العملية اليومية.`
         : `Design a comprehensive 4-week study plan for ${action.payload === 'data_science' ? 'Data Science & AI' : action.payload} including recommended courses and daily practical tasks.`;
       handleSend(prompt);
@@ -321,7 +320,7 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
     setMessages(prev => [...prev, {
       id: `msg-${Date.now()}`,
       sender: 'assistant',
-      text: isArabic 
+      text: isArabic
         ? '🔄 **تم تحديث سياق قاعدة البيانات بنجاح!** تم مزامنة أحدث الدورات والفعاليات ونقاط المتصدرين من السيرفر.'
         : '🔄 **Database context synchronized!** Latest courses, events, and leaderboard stats are updated.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -379,21 +378,21 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
             </div>
 
             <div className="flex items-center gap-1">
-              <button
+              <button aria-label={isArabic ? 'محادثة جديدة' : 'Start new conversation'}
                 onClick={handleNewChat}
                 className="p-2 rounded-lg text-muted-foreground hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"
                 title={isArabic ? 'محادثة جديدة' : 'Start new conversation'}
               >
                 <MessageSquarePlus className="w-4 h-4" />
               </button>
-              <button
+              <button aria-label={isArabic ? 'تحديث سياق قاعدة البيانات' : 'Refresh database context'}
                 onClick={handleRefreshContext}
                 className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-white/5 transition-colors"
                 title={isArabic ? 'تحديث سياق قاعدة البيانات' : 'Refresh database context'}
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
-              <button
+              <button aria-label={isArabic ? 'تهيئة مفتاح Gemini API' : 'Configure Gemini API Key'}
                 onClick={() => setShowApiKeyInput(!showApiKeyInput)}
                 className={`p-2 rounded-lg transition-colors ${hasApiKey ? 'text-blue-400 hover:bg-blue-500/10' : 'text-muted-foreground hover:text-primary hover:bg-white/5'}`}
                 title={isArabic ? 'تهيئة مفتاح Gemini API' : 'Configure Gemini API Key'}
@@ -454,9 +453,9 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
               <div className="flex items-center gap-2">
                 <Zap className="w-3.5 h-3.5 text-primary shrink-0 animate-pulse" />
                 <span className="text-[11px] truncate">
-                  {isArabic 
+                  {isArabic
                     ? <>الوضع المحلي نشط. اربط مفتاح <strong>Google Gemini API</strong> المجاني للتفكير الفوري:</>
-                    : <>Offline mode active. Connect free <strong>Google Gemini API</strong> for live neural reasoning:</>}
+                    : <>Service connection has not been verified yet. You can connect <strong>Google Gemini API</strong> for live neural reasoning:</>}
                 </span>
               </div>
               <button
@@ -521,7 +520,7 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, i
                   <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.2s]" />
                   <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.4s]" />
                   <span className="text-[11px] text-primary/80">
-                    {isArabic 
+                    {isArabic
                       ? (isSupabaseConfigured ? 'جاري استدعاء بيانات النادي...' : 'جاري تحليل وصياغة الإجابة...')
                       : (isSupabaseConfigured ? 'Querying club database...' : 'Synthesizing response...')}
                   </span>

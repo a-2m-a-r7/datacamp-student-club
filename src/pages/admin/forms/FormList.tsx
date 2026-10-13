@@ -5,10 +5,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  Plus, Search, Filter, MoreVertical, Edit, Eye, 
-  Copy, Share2, Trash2, FileSpreadsheet, ExternalLink, 
-  Lock, Globe, CheckCircle2, Clock, AlertCircle, 
+import {
+  Plus, Search, Filter, MoreVertical, Edit, Eye,
+  Copy, Share2, Trash2, FileSpreadsheet, ExternalLink,
+  Lock, Globe, CheckCircle2, Clock, AlertCircle,
   RefreshCw, BarChart3, Users, Sparkles, Loader2
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -359,7 +359,7 @@ export const FormList: React.FC = () => {
                     </Link>
 
                     {/* Share Modal */}
-                    <button
+                    <button aria-label={isArabic ? 'مشاركة الرابط والـ QR' : 'Share Link & QR'}
                       type="button"
                       onClick={() => setSelectedFormForShare(form)}
                       className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/10 transition-colors"
@@ -369,7 +369,7 @@ export const FormList: React.FC = () => {
                     </button>
 
                     {/* Duplicate */}
-                    <button
+                    <button aria-label={isArabic ? 'تكرار النموذج' : 'Duplicate'}
                       type="button"
                       onClick={() => handleDuplicate(form)}
                       className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/10 transition-colors"
@@ -409,7 +409,7 @@ export const FormList: React.FC = () => {
                     </button>
 
                     {/* Delete */}
-                    <button
+                    <button aria-label={isArabic ? 'حذف النموذج' : 'Delete'}
                       type="button"
                       onClick={() => setDeleteConfirmForm(form)}
                       className="p-1.5 rounded-lg text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 transition-colors"

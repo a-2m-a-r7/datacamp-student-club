@@ -34,28 +34,21 @@ export const uploadFile = async (path: string, file: File | Blob): Promise<strin
       const { data, error } = await supabase.storage.from(bucket).upload(filePath, file, {
         upsert: true,
         contentType: file.type || 'image/jpeg',
+        cacheControl: '0',
       });
 
       if (error) {
-        console.warn('Supabase Storage upload warning:', error);
+        throw error;
       } else if (data) {
         const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(data.path);
         return urlData.publicUrl;
       }
     } catch (sbError) {
-      console.warn('Supabase Storage exception:', sbError);
+      throw sbError;
     }
   }
 
-  // Fallback data URL if provided as Blob
-  if (file instanceof Blob) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(file);
-    });
-  }
-  return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEwMTAxMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMzk2ZjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSI+W0RFTU8gTUVESUFdPC90ZXh0Pjwvc3ZnPg==';
+  throw new Error('Storage is not configured or upload returned no file. Nothing was saved.');
 };
 
 export const deleteFile = async (url: string): Promise<void> => {
@@ -67,11 +60,12 @@ export const deleteFile = async (url: string): Promise<void> => {
       if (match) {
         const bucket = match[1];
         const filePath = match[2];
-        await supabase.storage.from(bucket).remove([filePath]);
+        const { error } = await supabase.storage.from(bucket).remove([filePath]);
+        if (error) throw error;
         return;
       }
     } catch (e) {
-      console.error('Failed to delete file from Supabase storage:', e);
+      throw e;
     }
   }
 };

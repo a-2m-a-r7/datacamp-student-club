@@ -43,8 +43,8 @@ const Footer = () => {
               <Logo iconSize={42} />
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              {isArabic 
-                ? 'تمكين الطلاب من إتقان علم البيانات، الذكاء الاصطناعي، وهندسة البرمجيات عبر تعليم تفاعلي وشهادات معتمدة.' 
+              {isArabic
+                ? 'تمكين الطلاب من إتقان علم البيانات، الذكاء الاصطناعي، وهندسة البرمجيات عبر تعليم تفاعلي وشهادات معتمدة.'
                 : (settings?.siteDescription || 'Empowering students with data science, AI, and software engineering skills.')}
             </p>
             {(() => {
@@ -109,15 +109,15 @@ const Footer = () => {
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li className="flex items-center space-x-3 rtl:space-x-reverse">
                 <Mail className="w-4 h-4 text-primary shrink-0" />
-                <span>{settings?.contactEmail || 'contact@datacamp.club'}</span>
+                <span>{settings?.contactEmail || (isArabic ? 'غير محدد' : 'Not configured')}</span>
               </li>
               <li className="flex items-center space-x-3 rtl:space-x-reverse">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
-                <span>{settings?.contactPhone || '+20 123 456 7890'}</span>
+                <span>{settings?.contactPhone || (isArabic ? 'غير محدد' : 'Not configured')}</span>
               </li>
               <li className="flex items-center space-x-3 rtl:space-x-reverse">
                 <MapPin className="w-4 h-4 text-primary shrink-0" />
-                <span>{isArabic ? 'الحرم الجامعي، مبنى التكنولوجيا' : 'University Campus, Tech Building'}</span>
+                <span>{settings?.contactAddress || (isArabic ? 'غير محدد' : 'Not configured')}</span>
               </li>
             </ul>
           </div>
@@ -125,8 +125,8 @@ const Footer = () => {
 
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-muted-foreground gap-4">
           <p>
-            {isArabic 
-              ? 'جميع الحقوق محفوظة © 2026 نادي داتا كامب الطلابي • جامعة الابتكار.' 
+            {isArabic
+              ? 'جميع الحقوق محفوظة © 2026 نادي داتا كامب الطلابي • جامعة الابتكار.'
               : `© 2026 ${settings?.siteName || 'DataCamp Student Club'}. All rights reserved.`}
           </p>
           <div className="flex items-center gap-4">

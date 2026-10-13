@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { awardPoints } from '../../services/pointsService';
-import { demoUsers } from '../../lib/demoData';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -35,99 +34,33 @@ export const PointsManagement = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchMembers = async () => {
-    setLoading(true);
-    try {
-      if (isSupabaseConfigured) {
-        const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
-        if (!error && data && data.length > 0) {
-          const list: MemberItem[] = data.map((d: any) => ({
-            uid: d.id,
-            fullName: d.full_name || 'Operative',
-            email: d.email || '',
-            totalPoints: Number(d.xp || 0),
-            memberId: d.member_id || 'DC-000',
-          }));
-          setMembers(list);
-          setLoading(false);
-          return;
-        }
-      }
-
-      // Demo fallback
-      const demoList: MemberItem[] = demoUsers.map((u: any, idx: number) => ({
-        uid: u.uid || `demo-${idx}`,
-        fullName: u.fullName,
-        email: u.email,
-        totalPoints: (4 - idx) * 350 + 100,
-        memberId: u.memberId,
-      }));
-      setMembers(demoList);
-    } catch (err) {
-      console.error('Error fetching members for points:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+ setLoading(true);
+ try {
+  if (!isSupabaseConfigured) { setMembers([]); return; }
+  const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  setMembers((data || []).map((d: any) => ({ uid: d.id, fullName: d.full_name || '', email: d.email || '', totalPoints: Number(d.total_points ?? d.xp ?? 0), memberId: d.member_id || '' })));
+ } catch (err: any) { toast.error(err.message || 'Failed to load members'); }
+ finally { setLoading(false); }
+};
 
   useEffect(() => {
     fetchMembers();
   }, []);
 
   const handleGrantBonus = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedMember || !pointsAmount) return;
-
-    setIsSubmitting(true);
-    if (isSupabaseConfigured) {
-      try {
-        const { data: prof } = await supabase.from('profiles').select('xp').eq('id', selectedMember.uid).single();
-        const currentPoints = Number(prof?.xp || 0);
-        const newPoints = Math.max(0, currentPoints + pointsAmount);
-        await supabase.from('profiles').update({ xp: newPoints }).eq('id', selectedMember.uid);
-        await supabase.from('audit_logs').insert({
-          user_id: selectedMember.uid,
-          action: 'ADMIN_BONUS',
-          details: { points: pointsAmount, reason: reason || 'Manual Admin XP Bonus' }
-        });
-        toast.success(`Successfully granted +${pointsAmount} XP to ${selectedMember.fullName}!`);
-        setMembers(prev =>
-          prev.map(m =>
-            m.uid === selectedMember.uid ? { ...m, totalPoints: newPoints } : m
-          )
-        );
-        setSelectedMember(null);
-      } catch {
-        toast.error('Failed to grant points in database.');
-      } finally {
-        setIsSubmitting(false);
-      }
-      return;
-    }
-
-    try {
-      await awardPoints({
-        userId: selectedMember.uid,
-        action: 'ADMIN_BONUS',
-        description: reason || 'Manual Admin XP Bonus',
-        customPoints: pointsAmount,
-      });
-
-      toast.success(`Successfully granted +${pointsAmount} XP to ${selectedMember.fullName}!`);
-
-      // Update in-memory state
-      setMembers(prev =>
-        prev.map(m =>
-          m.uid === selectedMember.uid ? { ...m, totalPoints: m.totalPoints + pointsAmount } : m
-        )
-      );
-
-      setSelectedMember(null);
-    } catch {
-      toast.error('Failed to grant points.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+ e.preventDefault();
+ if (!selectedMember || isSubmitting) return;
+ if (!Number.isSafeInteger(pointsAmount) || pointsAmount <= 0 || !reason.trim()) { toast.error('Enter a positive integer amount and reason.'); return; }
+ setIsSubmitting(true);
+ try {
+  const result = await awardPoints({ userId: selectedMember.uid, action: 'ADMIN_BONUS', description: reason.trim(), customPoints: pointsAmount });
+  setMembers(prev => prev.map(m => m.uid === selectedMember.uid ? { ...m, totalPoints: result.newTotal } : m));
+  toast.success('Points saved successfully');
+  setSelectedMember(null);
+ } catch (err: any) { toast.error(err.message || 'Failed to save points'); }
+ finally { setIsSubmitting(false); }
+};
 
   const filtered = members.filter(
     m =>
@@ -235,7 +168,7 @@ export const PointsManagement = () => {
                 <h3 className="font-cyber font-bold text-primary text-base">AWARD_BONUS_XP</h3>
                 <p className="text-xs font-mono text-muted-foreground">Recipient: {selectedMember.fullName}</p>
               </div>
-              <button onClick={() => setSelectedMember(null)} className="text-muted-foreground hover:text-foreground">
+              <button aria-label="Close" onClick={() => setSelectedMember(null)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>

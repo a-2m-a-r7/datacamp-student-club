@@ -1,0 +1,57 @@
+{
+  "passed": 11,
+  "results": [
+    {
+      "check": "anonymous read profiles",
+      "status": 200,
+      "count": 0
+    },
+    {
+      "check": "anonymous read events",
+      "status": 200,
+      "count": 0
+    },
+    {
+      "check": "anonymous read forms",
+      "status": 200,
+      "count": 0
+    },
+    {
+      "check": "anonymous read form_questions",
+      "status": 200,
+      "count": 0
+    },
+    {
+      "check": "anonymous read points_log",
+      "status": 200,
+      "count": 0
+    },
+    {
+      "check": "anonymous read certificates",
+      "status": 200,
+      "count": 0
+    },
+    {
+      "check": "sanitized public events",
+      "status": 206,
+      "count": 2
+    },
+    {
+      "check": "server key reads existing profile count",
+      "status": 206,
+      "count": 5
+    },
+    {
+      "check": "local server visitor rejection /api/admin/users",
+      "status": 401
+    },
+    {
+      "check": "local server visitor rejection /api/admin/backup",
+      "status": 401
+    },
+    {
+      "check": "local server visitor rejection /api/forms/sync-sheet",
+      "status": 401
+    }
+  ]
+}

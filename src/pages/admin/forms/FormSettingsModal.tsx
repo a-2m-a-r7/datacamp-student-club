@@ -1,11 +1,12 @@
+import { Dialog } from '../../../components/ui/Dialog';
 /**
  * src/pages/admin/forms/FormSettingsModal.tsx
  * Settings panel for form configuration, dates, access rules, and Google Sheets sync
  */
 
 import React from 'react';
-import { 
-  Settings, X, Shield, Users, Mail, Calendar, 
+import {
+  Settings, X, Shield, Users, Mail, Calendar,
   CheckCircle, FileSpreadsheet, Lock, Sparkles, Globe
 } from 'lucide-react';
 import { FormRecord } from '../../../types/forms';
@@ -29,8 +30,8 @@ export const FormSettingsModal: React.FC<FormSettingsModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div 
+    <Dialog onClose={onClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+      <div
         className="w-full max-w-xl bg-card/95 border border-white/10 rounded-2xl p-6 shadow-2xl glass cyber-glow max-h-[90vh] overflow-y-auto custom-scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
@@ -48,7 +49,7 @@ export const FormSettingsModal: React.FC<FormSettingsModalProps> = ({
               </p>
             </div>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-2 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-lg transition-colors"
           >
@@ -285,6 +286,6 @@ export const FormSettingsModal: React.FC<FormSettingsModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 };

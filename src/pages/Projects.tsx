@@ -1,12 +1,13 @@
+import { Dialog } from '../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  ExternalLink, 
-  Github, 
-  Eye, 
-  Search, 
-  Plus, 
-  FolderGit2, 
+import {
+  ExternalLink,
+  Github,
+  Eye,
+  Search,
+  Plus,
+  FolderGit2,
   X
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
@@ -15,81 +16,9 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { contentService } from '../services/contentService';
 import { toast } from 'sonner';
 
-const SAMPLE_PROJECTS_EN = [
-  {
-    id: 'proj-1',
-    title: 'NileSense: Agricultural Crop Yield Predictor',
-    category: 'Machine Learning',
-    author: 'Karim Zaki & Omar Khaled',
-    image: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=800&auto=format&fit=crop&q=80',
-    description: 'An end-to-end computer vision and regression system that analyzes multi-spectral satellite imagery to predict Egyptian wheat yield with 94.2% accuracy.',
-    technologies: ['Python', 'PyTorch', 'Rasterio', 'FastAPI', 'React'],
-    githubUrl: 'https://github.com',
-    liveUrl: 'https://demo.datacamp.club',
-    featured: true
-  },
-  {
-    id: 'proj-2',
-    title: 'EGY-Traffic: Real-Time Flow Optimization',
-    category: 'Computer Vision',
-    author: 'Nouran Mostafa',
-    image: 'https://images.unsplash.com/photo-1508873696983-2df5703bc20d?w=800&auto=format&fit=crop&q=80',
-    description: 'Edge-deployed object detection pipeline tracking vehicle density at major Cairo intersections to dynamically calibrate green light intervals.',
-    technologies: ['YOLOv8', 'OpenCV', 'DeepSort', 'Docker'],
-    githubUrl: 'https://github.com',
-    featured: true
-  },
-  {
-    id: 'proj-3',
-    title: 'UniPulse: Student Sentiment & Course Feedback NLP',
-    category: 'Data Science',
-    author: 'DataCamp NLP Cohort',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
-    description: 'BERT-based sentiment classification model fine-tuned on university discussion datasets to aggregate and analyze course feedback.',
-    technologies: ['Transformers', 'HuggingFace', 'Pandas', 'Streamlit'],
-    githubUrl: 'https://github.com',
-    featured: false
-  }
-];
 
-const SAMPLE_PROJECTS_AR = [
-  {
-    id: 'proj-1',
-    title: 'NileSense: التنبؤ بإنتاجية المحاصيل الزراعية',
-    category: 'Machine Learning',
-    categoryAr: 'تعلم الآلة',
-    author: 'كريم زكي وعمر خالد',
-    image: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=800&auto=format&fit=crop&q=80',
-    description: 'نظام متكامل يدمج الرؤية الحاسوبية والانحدار الإحصائي لتحليل صور الأقمار الصناعية متعددة الأطياف للتنبؤ بإنتاجية القمح المصري بدقة 94.2%.',
-    technologies: ['Python', 'PyTorch', 'Rasterio', 'FastAPI', 'React'],
-    githubUrl: 'https://github.com',
-    featured: true
-  },
-  {
-    id: 'proj-2',
-    title: 'EGY-Traffic: تحسين السيولة المرورية في الوقت الفعلي',
-    category: 'Computer Vision',
-    categoryAr: 'رؤية الحاسوب',
-    author: 'نوران مصطفى',
-    image: 'https://images.unsplash.com/photo-1508873696983-2df5703bc20d?w=800&auto=format&fit=crop&q=80',
-    description: 'خط معالجة متقدم لاكتشاف وتتبع كثافة المركبات في تقاطعات القاهرة الكبرى لمعايرة فترات الإشارة الخضراء ديناميكياً على الأجهزة الطرفية.',
-    technologies: ['YOLOv8', 'OpenCV', 'DeepSort', 'Docker'],
-    githubUrl: 'https://github.com',
-    featured: true
-  },
-  {
-    id: 'proj-3',
-    title: 'UniPulse: تحليل مشاعر وآراء الطلاب عبر معالجة اللغات الطبيعية',
-    category: 'Data Science',
-    categoryAr: 'علم البيانات',
-    author: 'فريق معالجة اللغات الطبيعية بالنادي',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
-    description: 'نموذج BERT تم تدريبه وضبطه بدقة على مجموعات بيانات مناقشات واستبيانات الجامعة لتصنيف انطباعات وتقييمات الطلاب حول المقررات.',
-    technologies: ['Transformers', 'HuggingFace', 'Pandas', 'Streamlit'],
-    githubUrl: 'https://github.com',
-    featured: false
-  }
-];
+
+
 
 export const Projects = () => {
   const { user, profile } = useAuth();
@@ -100,7 +29,7 @@ export const Projects = () => {
   const [search, setSearch] = useState('');
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
-  const [showSampleProjects, setShowSampleProjects] = useState(false);
+
 
   // Form submission state
   const [submitForm, setSubmitForm] = useState({
@@ -142,8 +71,8 @@ export const Projects = () => {
     return contentService.subscribe('projects', loadProjects);
   }, [isArabic]);
 
-  const activeSamples = isArabic ? SAMPLE_PROJECTS_AR : SAMPLE_PROJECTS_EN;
-  const displaySource = projects.length > 0 ? projects : (showSampleProjects ? activeSamples : []);
+
+  const displaySource = projects;
 
   const filteredProjects = displaySource.filter(p => {
     const matchesCat = selectedCat === 'ALL' || (p.category && p.category.toLowerCase() === selectedCat.toLowerCase());
@@ -172,14 +101,14 @@ export const Projects = () => {
         technologies: submitForm.technologies.split(',').map(s => s.trim()).filter(Boolean),
         githubUrl: submitForm.githubUrl.trim(),
         liveUrl: submitForm.liveUrl.trim(),
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
-        status: 'active',
+        image: '',
+        status: 'planning',
         createdAt: new Date().toISOString(),
       };
 
       const createdProject = await contentService.create('projects', payload);
-      setProjects(prev => [createdProject, ...prev]);
-      toast.success(isArabic ? 'تم نشر المشروع في مستودع النادي!' : 'Project published to the club repository!');
+
+      toast.success(isArabic ? 'تم إرسال المشروع لمراجعة إدارة النادي.' : 'Project submitted for administrator review.');
 
       setShowSubmitModal(false);
       setSubmitForm({
@@ -204,7 +133,7 @@ export const Projects = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-cyber tracking-widest uppercase mb-4">
-              <FolderGit2 className="w-3.5 h-3.5" /> 
+              <FolderGit2 className="w-3.5 h-3.5" />
               {isArabic ? 'مستودع الأكواد والابتكارات البرمجية' : 'INNOVATION CODEBASE REPOSITORY'}
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-black font-cyber tracking-tighter mb-4 neon-text">
@@ -224,7 +153,7 @@ export const Projects = () => {
             onClick={() => setShowSubmitModal(true)}
             className="gap-2 shrink-0"
           >
-            <Plus className="w-4 h-4" /> 
+            <Plus className="w-4 h-4" />
             {isArabic ? 'أضف مشروعك للتوثيق' : 'SUBMIT YOUR PROJECT'}
           </Button>
         </div>
@@ -281,16 +210,7 @@ export const Projects = () => {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <Button
-                variant="cyber"
-                size="sm"
-                onClick={() => setShowSampleProjects(!showSampleProjects)}
-              >
-                {showSampleProjects 
-                  ? (isArabic ? 'إخفاء المشاريع التجريبية' : 'HIDE SAMPLE PROJECTS')
-                  : (isArabic ? 'معاينة مشاريع تجريبية' : 'PREVIEW SAMPLE PROJECTS')
-                }
-              </Button>
+
               <Button
                 variant="outline"
                 size="sm"
@@ -311,8 +231,8 @@ export const Projects = () => {
                 className="group relative overflow-hidden rounded-3xl border border-white/10 glass hover:border-primary/40 transition-all flex flex-col justify-between"
               >
                 <div className="aspect-video w-full overflow-hidden relative">
-                  <img 
-                    src={project.image || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800'} 
+                  <img
+                    src={project.image || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800'}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"
@@ -347,19 +267,19 @@ export const Projects = () => {
                   )}
 
                   <div className="flex items-center gap-3 pt-4 border-t border-white/5">
-                    <Button 
-                      variant="cyber" 
+                    <Button
+                      variant="cyber"
                       size="sm"
                       onClick={() => setSelectedProject(project)}
                       className="gap-1.5 text-xs font-cyber"
                     >
-                      <Eye className="w-3.5 h-3.5" /> 
+                      <Eye className="w-3.5 h-3.5" />
                       {isArabic ? 'عرض دراسة الحالة' : 'VIEW CASE STUDY'}
                     </Button>
                     {project.githubUrl && (
                       <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" size="sm" className="gap-1.5 text-xs font-cyber">
-                          <Github className="w-3.5 h-3.5" /> 
+                          <Github className="w-3.5 h-3.5" />
                           {isArabic ? 'الكود المصدري' : 'SOURCE'}
                         </Button>
                       </a>
@@ -374,7 +294,7 @@ export const Projects = () => {
         {/* Project Case Study Modal */}
         <AnimatePresence>
           {selectedProject && (
-            <motion.div
+            <Dialog onClose={() => setSelectedProject(null)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -388,7 +308,7 @@ export const Projects = () => {
                 onClick={(e) => e.stopPropagation()}
                 className="max-w-3xl w-full glass p-6 sm:p-10 rounded-3xl border border-primary/30 max-h-[90vh] overflow-y-auto custom-scrollbar relative space-y-6"
               >
-                <button
+                <button aria-label="Close"
                   onClick={() => setSelectedProject(null)}
                   className={`absolute top-6 ${isArabic ? 'left-6' : 'right-6'} p-2 rounded-xl bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-white transition-colors`}
                 >
@@ -420,7 +340,7 @@ export const Projects = () => {
                     {selectedProject.githubUrl && (
                       <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" size="sm" className="gap-2 text-xs font-cyber">
-                          <Github className="w-4 h-4" /> 
+                          <Github className="w-4 h-4" />
                           {isArabic ? 'المستودع على GitHub' : 'VIEW ON GITHUB'}
                         </Button>
                       </a>
@@ -428,7 +348,7 @@ export const Projects = () => {
                     {selectedProject.liveUrl && selectedProject.liveUrl !== '#' && (
                       <a href={selectedProject.liveUrl} target="_blank" rel="noopener noreferrer">
                         <Button variant="cyber" size="sm" className="gap-2 text-xs font-cyber">
-                          <ExternalLink className="w-4 h-4" /> 
+                          <ExternalLink className="w-4 h-4" />
                           {isArabic ? 'المعاينة الحية' : 'LIVE DEPLOYMENT'}
                         </Button>
                       </a>
@@ -439,14 +359,14 @@ export const Projects = () => {
                   </Button>
                 </div>
               </motion.div>
-            </motion.div>
+            </Dialog>
           )}
         </AnimatePresence>
 
         {/* Project Submission Modal */}
         <AnimatePresence>
           {showSubmitModal && (
-            <motion.div
+            <Dialog onClose={() => setShowSubmitModal(false)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -460,7 +380,7 @@ export const Projects = () => {
                 onClick={(e) => e.stopPropagation()}
                 className="max-w-2xl w-full glass p-6 sm:p-10 rounded-3xl border border-primary/30 max-h-[90vh] overflow-y-auto custom-scrollbar relative space-y-6"
               >
-                <button
+                <button aria-label="Close"
                   onClick={() => setShowSubmitModal(false)}
                   className={`absolute top-6 ${isArabic ? 'left-6' : 'right-6'} p-2 rounded-xl bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-white transition-colors`}
                 >
@@ -569,15 +489,15 @@ export const Projects = () => {
                       {isArabic ? 'إلغاء' : 'CANCEL'}
                     </Button>
                     <Button type="submit" variant="cyber" disabled={submitting}>
-                      {submitting 
-                        ? (isArabic ? 'جاري الإرسال...' : 'TRANSMITTING...') 
+                      {submitting
+                        ? (isArabic ? 'جاري الإرسال...' : 'TRANSMITTING...')
                         : (isArabic ? 'إرسال المشروع' : 'TRANSMIT PROJECT')
                       }
                     </Button>
                   </div>
                 </form>
               </motion.div>
-            </motion.div>
+            </Dialog>
           )}
         </AnimatePresence>
 

@@ -1,3 +1,4 @@
+import { Dialog } from '../../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -65,8 +66,8 @@ const MessageManagement = () => {
             </CardContent>
           </Card>
         ) : messages.map((msg) => (
-          <Card 
-            key={msg.id} 
+          <Card
+            key={msg.id}
             className={`group border-white/10 hover:border-primary/30 transition-all ${msg.status === 'unread' ? 'bg-primary/5' : ''}`}
           >
             <CardContent className="p-4 flex items-center justify-between">
@@ -88,10 +89,10 @@ const MessageManagement = () => {
                   <span>{msg.email}</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <Button variant="ghost" size="icon" onClick={() => { setViewingMessage(msg); markAsRead(msg.id); }}>
+                  <Button aria-label="View" variant="ghost" size="icon" onClick={() => { setViewingMessage(msg); markAsRead(msg.id); }}>
                     <Eye className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => setDeleteConfirmId(msg.id)}>
+                  <Button aria-label="Delete" variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => setDeleteConfirmId(msg.id)}>
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
@@ -102,7 +103,7 @@ const MessageManagement = () => {
       </div>
 
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
+        <Dialog onClose={() => setDeleteConfirmId(null)} className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
           <Card className="w-full max-w-sm border-destructive/30 shadow-[0_0_50px_rgba(255,0,0,0.1)]">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-destructive/20">
@@ -119,11 +120,11 @@ const MessageManagement = () => {
               }}>DELETE</Button>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {viewingMessage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
+        <Dialog onClose={() => setViewingMessage(null)} className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-dark-navy/90 backdrop-blur-md">
           <Card className="w-full max-w-lg border-primary/30">
             <CardHeader>
               <div className="flex justify-between items-start">
@@ -148,7 +149,7 @@ const MessageManagement = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
     </div>
   );

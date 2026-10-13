@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { 
-  Users, Calendar, TrendingUp, Activity, 
-  ArrowUpRight, ArrowDownRight, MoreHorizontal 
+import {
+  Users, Calendar, TrendingUp, Activity,
+  ArrowUpRight, ArrowDownRight, MoreHorizontal
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
-import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, 
-  Tooltip, ResponsiveContainer, AreaChart, Area 
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, AreaChart, Area
 } from 'recharts';
-import { demoUsers, demoEvents } from '../../lib/demoData';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
+import { Link } from 'react-router-dom';
 
 const Overview = () => {
   const [counts, setCounts] = useState({
     users: 0,
     events: 0,
     registrations: 0,
-    uptime: '99.9%'
+    uptime: '—'
   });
 
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<{ name: string; users: number; events: number }[]>([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,10 +33,12 @@ const Overview = () => {
 
       if (isSupabaseConfigured) {
         try {
-          const { count: usersTotal } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+          const { count: usersTotal, error: usersError } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+          if (usersError) throw usersError;
           userCount = usersTotal || 0;
 
-          const { count: eventsTotal, data: evList } = await supabase.from('events').select('registered_count');
+          const { count: eventsTotal, data: evList, error: eventsError } = await supabase.from('events').select('registered_count');
+          if (eventsError) throw eventsError;
           eventCount = eventsTotal || (evList?.length ?? 0);
           regCount = (evList || []).reduce((sum: number, ev: any) => sum + (ev.registered_count || 0), 0);
 
@@ -44,57 +48,34 @@ const Overview = () => {
             action: l.action,
             time: l.created_at ? new Date(l.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'
           }));
+          const { data: growth, error: growthError } = await supabase.rpc('admin_growth');
+          if (growthError) throw growthError;
+          setChartData(growth || []);
 
-          if (activity.length === 0) {
-            activity = [
-              { user: 'Supabase', action: 'PostgreSQL Realtime Connected', time: 'Just now' },
-              { user: 'Security', action: 'Row Level Security Active', time: '1m ago' },
-            ];
-          }
+
         } catch (err) {
-          console.error("Error fetching Supabase stats:", err);
+          setError('Analytics could not be loaded. Check database setup.');
         }
-      } else {
-        userCount = demoUsers.length;
-        eventCount = demoEvents.length;
-        demoEvents.forEach((e: any) => regCount += (e.registeredCount || 0));
-
-        // Create dynamic activity from demoUsers/demoEvents
-        if (demoUsers.length > 0) {
-          activity.push({ user: demoUsers[demoUsers.length - 1].fullName, action: 'Initialized terminal access', time: '2h ago' });
-        }
-        if (demoEvents.length > 0) {
-          activity.push({ user: 'Admin', action: `Syncing event: ${demoEvents[0].title}`, time: '5h ago' });
-        }
-        activity.push({ user: 'System', action: 'Secure demo session started', time: '1d ago' });
       }
 
-      setCounts({ users: userCount, events: eventCount, registrations: regCount, uptime: '99.9%' });
-      setRecentActivity(activity.length > 0 ? activity : [
-        { user: 'Admin', action: 'System check complete', time: '10m ago' },
-        { user: 'System', action: 'Logs cleared', time: '1h ago' }
-      ]);
+      setCounts({ users: userCount, events: eventCount, registrations: regCount, uptime: '—' });
+      setRecentActivity(activity);
     };
 
     fetchData();
   }, []);
 
   const stats = [
-    { label: 'Total Members', value: counts.users.toLocaleString(), trend: counts.users > 0 ? '+100%' : '0%', up: true, icon: Users, color: 'text-neon-green' },
-    { label: 'Active Events', value: counts.events.toString(), trend: counts.events > 0 ? `+${counts.events}` : '0', up: true, icon: Calendar, color: 'text-neon-blue' },
-    { label: 'Total Registrations', value: counts.registrations.toString(), trend: counts.registrations > 0 ? '+100%' : '0%', up: true, icon: TrendingUp, color: 'text-neon-purple' },
-    { label: 'System Uptime', value: counts.uptime, trend: 'Stable', up: true, icon: Activity, color: 'text-primary' },
+    { label: 'Total Members', value: counts.users.toLocaleString(), trend: '', up: true, icon: Users, color: 'text-neon-green' },
+    { label: 'Active Events', value: counts.events.toString(), trend: '', up: true, icon: Calendar, color: 'text-neon-blue' },
+    { label: 'Total Registrations', value: counts.registrations.toString(), trend: '', up: true, icon: TrendingUp, color: 'text-neon-purple' },
+    { label: 'System Uptime', value: counts.uptime, trend: '', up: true, icon: Activity, color: 'text-primary' },
   ];
 
-  const chartData = [
-    { name: 'Jan', users: Math.floor(counts.users * 0.3), events: Math.floor(counts.events * 0.2) },
-    { name: 'Feb', users: Math.floor(counts.users * 0.5), events: Math.floor(counts.events * 0.4) },
-    { name: 'Mar', users: Math.floor(counts.users * 0.8), events: Math.floor(counts.events * 0.7) },
-    { name: 'Apr', users: counts.users, events: counts.events },
-  ];
 
   return (
     <div className="space-y-8">
+      {error && <p role="alert" className="text-destructive">{error}</p>}
       <div>
         <h1 className="text-2xl sm:text-3xl font-black font-cyber tracking-tighter">SYSTEM OVERVIEW</h1>
         <p className="text-muted-foreground">Real-time analytics and club performance metrics.</p>
@@ -141,7 +122,7 @@ const Overview = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                 <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ backgroundColor: '#0A0E17', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
                   itemStyle={{ color: '#39FF14' }}
                 />
@@ -155,7 +136,7 @@ const Overview = () => {
         <Card>
           <CardHeader className="flex flex-row justify-between items-center">
             <CardTitle className="text-lg">AUDIT LOGS</CardTitle>
-            <MoreHorizontal className="w-4 h-4 text-muted-foreground cursor-pointer" />
+            <Link to="/admin/security" aria-label="View audit records"><MoreHorizontal className="w-4 h-4 text-muted-foreground" /></Link>
           </CardHeader>
           <CardContent className="space-y-6">
             {recentActivity.map((log, i) => (

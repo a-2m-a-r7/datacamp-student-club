@@ -97,8 +97,8 @@ export const CourseManagement = () => {
   };
 
   const handleDelete = async (courseId: string) => {
-    const confirmMsg = isArabic 
-      ? 'هل أنت متأكد من حذف هذه الدورة التدريبية؟' 
+    const confirmMsg = isArabic
+      ? 'هل أنت متأكد من حذف هذه الدورة التدريبية؟'
       : 'Are you sure you want to delete this course?';
     if (!window.confirm(confirmMsg)) return;
 
@@ -246,7 +246,7 @@ export const CourseManagement = () => {
           className="font-cyber text-xs tracking-wider gap-2 shadow-[0_0_20px_rgba(0,255,204,0.2)]"
           onClick={handleOpenCreate}
         >
-          <Plus className="w-4 h-4" /> 
+          <Plus className="w-4 h-4" />
           {isArabic ? 'إضافة دورة جديدة' : 'NEW_COURSE'}
         </Button>
       </div>
@@ -350,7 +350,7 @@ export const CourseManagement = () => {
                       </Link>
 
                       {/* Manage Lessons */}
-                      <button
+                      <button aria-label={isArabic ? 'إدارة دروس الدورة' : 'Manage Lessons'}
                         onClick={() => openLessonManager(course)}
                         className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-white/5 transition-colors"
                         title={isArabic ? 'إدارة دروس الدورة' : 'Manage Lessons'}
@@ -359,7 +359,7 @@ export const CourseManagement = () => {
                       </button>
 
                       {/* Publish / Unpublish */}
-                      <button
+                      <button aria-label={course.status === 'published' ? (isArabic ? 'إلغاء النشر' : 'Unpublish') : (isArabic ? 'نشر الدورة' : 'Publish')}
                         onClick={() => handleTogglePublish(course)}
                         className="p-1.5 rounded-lg text-muted-foreground hover:text-emerald-400 hover:bg-white/5 transition-colors"
                         title={course.status === 'published' ? (isArabic ? 'إلغاء النشر' : 'Unpublish') : (isArabic ? 'نشر الدورة' : 'Publish')}
@@ -368,7 +368,7 @@ export const CourseManagement = () => {
                       </button>
 
                       {/* Edit */}
-                      <button
+                      <button aria-label={isArabic ? 'تعديل الدورة' : 'Edit Course'}
                         onClick={() => handleOpenEdit(course)}
                         className="p-1.5 rounded-lg text-muted-foreground hover:text-neon-yellow hover:bg-white/5 transition-colors"
                         title={isArabic ? 'تعديل الدورة' : 'Edit Course'}
@@ -377,7 +377,7 @@ export const CourseManagement = () => {
                       </button>
 
                       {/* Delete */}
-                      <button
+                      <button aria-label={isArabic ? 'حذف الدورة' : 'Delete Course'}
                         onClick={() => handleDelete(course.id)}
                         className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-white/5 transition-colors"
                         title={isArabic ? 'حذف الدورة' : 'Delete Course'}
@@ -414,11 +414,11 @@ export const CourseManagement = () => {
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <h3 className="font-cyber font-bold text-primary text-lg flex items-center gap-2">
                 <BookOpen className="w-5 h-5" />
-                {editingCourse.id 
-                  ? (isArabic ? 'تعديل الدورة التدريبية' : 'EDIT_COURSE') 
+                {editingCourse.id
+                  ? (isArabic ? 'تعديل الدورة التدريبية' : 'EDIT_COURSE')
                   : (isArabic ? 'إنشاء دورة تدريبية جديدة' : 'CREATE_NEW_COURSE')}
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-muted-foreground hover:text-foreground">
+              <button aria-label="Close" onClick={() => setIsModalOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -426,24 +426,24 @@ export const CourseManagement = () => {
             <form onSubmit={handleSave} className="space-y-4">
               {/* Cover Image with direct ImagePicker */}
               <div className="space-y-2">
-                <ImagePicker 
+                <ImagePicker
                   label={isArabic ? 'غلاف الدورة التدريبية (رفع من الجهاز)' : 'Course Cover Image (Upload from device)'}
                   currentImage={editingCourse.coverImage}
                   onImageSelected={(base64) => setEditingCourse(p => ({ ...p, coverImage: base64 }))}
                 />
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
                   <label className="cursor-pointer">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      className="hidden" 
-                      onChange={handleFileUpload} 
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleFileUpload}
                       disabled={uploadingImage}
                     />
                     <div className="flex items-center justify-center px-3 py-2 bg-primary/10 border border-primary/30 rounded-md text-xs font-cyber text-primary hover:bg-primary/20 transition-all">
                       <Upload className={`w-3.5 h-3.5 mr-1.5 rtl:mr-0 rtl:ml-1.5 ${uploadingImage ? 'animate-spin' : ''}`} />
-                      {uploadingImage 
-                        ? (isArabic ? 'جاري الرفع لـ Supabase...' : 'Uploading to Cloud...') 
+                      {uploadingImage
+                        ? (isArabic ? 'جاري الرفع لـ Supabase...' : 'Uploading to Cloud...')
                         : (isArabic ? 'رفع لسحابة Supabase Storage ☁️' : 'Upload to Supabase Storage ☁️')}
                     </div>
                   </label>
@@ -718,14 +718,14 @@ export const CourseManagement = () => {
                       </p>
                     </div>
                     <div className="flex items-center gap-1">
-                      <button
+                      <button aria-label={isArabic ? 'تعديل الدرس' : 'Edit lesson'}
                         onClick={() => setEditingLesson({ ...lesson })}
                         className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-white/5"
                         title={isArabic ? 'تعديل الدرس' : 'Edit lesson'}
                       >
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button
+                      <button aria-label={isArabic ? 'حذف الدرس' : 'Delete lesson'}
                         onClick={() => handleDeleteLesson(lesson.id)}
                         className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-white/5"
                         title={isArabic ? 'حذف الدرس' : 'Delete lesson'}
@@ -744,7 +744,7 @@ export const CourseManagement = () => {
                       <h4 className="font-cyber text-primary text-sm">
                         {editingLesson.id ? (isArabic ? 'تعديل الدرس' : 'EDIT_LESSON') : (isArabic ? 'إنشاء درس جديد' : 'CREATE_LESSON')}
                       </h4>
-                      <button type="button" onClick={() => setEditingLesson(null)} className="text-muted-foreground hover:text-white">
+                      <button aria-label="Close" type="button" onClick={() => setEditingLesson(null)} className="text-muted-foreground hover:text-white">
                         <X className="w-4 h-4" />
                       </button>
                     </div>

@@ -1,3 +1,5 @@
+import { runIsolatedWorker } from './isolatedRunner';
+import { runSQL } from './sqlRunner';
 /**
  * universalRunner.ts
  * Multi-Language Universal Code Execution Engine for DataCamp Student Club.
@@ -68,335 +70,49 @@ async function executeViaPiston(
     }
 
     const data = await res.json();
+    if (data.compile && data.compile.code !== 0) return {
+      stdout: data.compile.stdout || '', stderr: data.compile.stderr || data.compile.output || 'Compilation failed.', code: data.compile.code || 1,
+    };
+    if (!data.run) return { stdout: '', stderr: 'Execution service returned no result.', code: 1 };
     return {
       stdout: data.run?.stdout || '',
       stderr: data.run?.stderr || '',
       code: data.run?.code ?? 0,
     };
   } catch {
-    return null; // Fallback to local simulation
+    return null;
   }
 }
 
 // ─── JAVASCRIPT / TYPESCRIPT RUNNER ──────────────────────────────────────────
 
 async function executeJavaScript(code: string, stdin: string = ''): Promise<ExecutionResult> {
-  const startTime = performance.now();
-
-  // Strip simple TypeScript type annotations if needed
-  const cleanCode = code
-    .replace(/:\s*(string|number|boolean|any|void|object|number\[\]|string\[\])/g, '')
-    .replace(/interface\s+\w+\s*\{[^}]*\}/g, '');
-
-  // Run inside isolated Web Worker to completely isolate from DOM, localStorage, cookies, and window
-  if (typeof Worker !== 'undefined') {
-    return new Promise((resolve) => {
-      let isSettled = false;
-      const workerSource = `
-        self.fetch = undefined;
-        self.XMLHttpRequest = undefined;
-        self.WebSocket = undefined;
-        self.importScripts = undefined;
-        self.indexedDB = undefined;
-
-        const capturedLogs = [];
-        const customConsole = {
-          log: (...args) => capturedLogs.push(args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')),
-          info: (...args) => capturedLogs.push('ℹ ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')),
-          warn: (...args) => capturedLogs.push('⚠ ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')),
-          error: (...args) => capturedLogs.push('✖ ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')),
-        };
-
-        self.onmessage = function(e) {
-          const { code, stdin } = e.data;
-          try {
-            const runner = new Function('console', 'stdin', '"use strict";\\n' + code);
-            runner(customConsole, stdin);
-            self.postMessage({ success: true, logs: capturedLogs });
-          } catch(err) {
-            self.postMessage({ success: false, logs: capturedLogs, error: err.message || String(err) });
-          }
-        };
-      `;
-
-      let blobUrl: string | null = null;
-      let worker: Worker | null = null;
-      let timer: any = null;
-
-      const cleanup = () => {
-        if (timer) clearTimeout(timer);
-        if (worker) {
-          try { worker.terminate(); } catch {}
-          worker = null;
-        }
-        if (blobUrl) {
-          try { URL.revokeObjectURL(blobUrl); } catch {}
-          blobUrl = null;
-        }
-      };
-
-      try {
-        const blob = new Blob([workerSource], { type: 'application/javascript' });
-        blobUrl = URL.createObjectURL(blob);
-        worker = new Worker(blobUrl);
-
-        // 5-second CPU DoS timeout against infinite loops
-        timer = setTimeout(() => {
-          if (!isSettled) {
-            isSettled = true;
-            cleanup();
-            const executionTimeMs = Math.round(performance.now() - startTime);
-            resolve({
-              output: '',
-              error: 'Execution timed out (5-second CPU limit exceeded).',
-              executionTimeMs,
-              engineUsed: 'Isolated Worker Sandbox (Browser)',
-            });
-          }
-        }, 5000);
-
-        worker.onmessage = (e) => {
-          if (isSettled) return;
-          isSettled = true;
-          cleanup();
-          const executionTimeMs = Math.round(performance.now() - startTime);
-          const { success, logs, error } = e.data;
-          resolve({
-            output: (logs || []).join('\n') || (success ? '[Process completed successfully with no output]' : ''),
-            error: error || undefined,
-            executionTimeMs,
-            engineUsed: 'Isolated Worker Sandbox (Browser)',
-          });
-        };
-
-        worker.onerror = (err) => {
-          if (isSettled) return;
-          isSettled = true;
-          cleanup();
-          const executionTimeMs = Math.round(performance.now() - startTime);
-          resolve({
-            output: '',
-            error: err.message || 'Worker execution error',
-            executionTimeMs,
-            engineUsed: 'Isolated Worker Sandbox (Browser)',
-          });
-        };
-
-        worker.postMessage({ code: cleanCode, stdin });
-        return;
-      } catch {
-        cleanup();
-        // Fallback to strict AST/pattern check below
-      }
-    });
-  }
-
-  // Fallback if Worker unavailable: strict pattern filtering against prototype pollution and prototype escapes
-  const logs: string[] = [];
-  const customConsole = {
-    log: (...args: any[]) => logs.push(args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')),
-    info: (...args: any[]) => logs.push('ℹ ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')),
-    warn: (...args: any[]) => logs.push('⚠ ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')),
-    error: (...args: any[]) => logs.push('✖ ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a))).join(' ')),
+ const startTime = performance.now();
+ const result = await runIsolatedWorker(`
+  self.onmessage = async event => {
+   const logs = [];
+   const format = args => args.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(' ');
+   const output = { log: (...args) => logs.push(format(args)), info: (...args) => logs.push(format(args)), warn: (...args) => logs.push(format(args)), error: (...args) => logs.push(format(args)) };
+   self.fetch = undefined; self.XMLHttpRequest = undefined; self.WebSocket = undefined; self.importScripts = undefined; self.indexedDB = undefined;
+   try {
+    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+    await new AsyncFunction('console','stdin','"use strict";\\n' + event.data.code)(output,event.data.stdin);
+    self.postMessage({ output: logs.join('\\n') });
+   } catch (error) { self.postMessage({ output: logs.join('\\n'), error: error.message || 'Execution failed' }); }
   };
-
-  try {
-    const blockedPatterns = [/constructor/i, /__proto__/i, /prototype/i, /window/i, /document/i, /localStorage/i, /sessionStorage/i, /cookie/i, /fetch/i];
-    for (const pat of blockedPatterns) {
-      if (pat.test(cleanCode)) {
-        throw new Error(`Security restriction: Access to protected property/symbol "${pat.source}" is prohibited in sandbox.`);
-      }
-    }
-    const sandboxedFn = new Function('console', 'stdin', `"use strict";\n${cleanCode}`);
-    sandboxedFn(customConsole, stdin);
-    const executionTimeMs = Math.round(performance.now() - startTime);
-    return {
-      output: logs.join('\n') || '[Process completed successfully with no output]',
-      executionTimeMs,
-      engineUsed: 'V8 Sandboxed Engine (Browser)',
-    };
-  } catch (err: any) {
-    const executionTimeMs = Math.round(performance.now() - startTime);
-    return {
-      output: logs.join('\n'),
-      error: err.message || 'Execution error',
-      executionTimeMs,
-      engineUsed: 'V8 Sandboxed Engine (Browser)',
-    };
-  }
+ `, { code, stdin }, 5000);
+ return { ...result, executionTimeMs: Math.round(performance.now() - startTime), engineUsed: 'Isolated JavaScript Worker' };
 }
 
-// ─── IN-MEMORY SQL RELATIONAL ENGINE ─────────────────────────────────────────
-
-interface SQLTable {
-  columns: string[];
-  rows: Record<string, any>[];
+async function executeTypeScript(code: string, stdin = ''): Promise<ExecutionResult> {
+ const start = performance.now();
+ try {
+  const response = await fetch('/api/compiler/typescript', { method: 'POST', cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) });
+  const data = await response.json();
+  if (!response.ok || typeof data.code !== 'string') throw new Error(data.error || 'TypeScript compiler unavailable');
+  return await executeJavaScript(data.code, stdin);
+ } catch (error: any) { return { output: '', error: error.message, executionTimeMs: Math.round(performance.now() - start), engineUsed: 'TypeScript compiler' }; }
 }
-
-class InMemorySQLEngine {
-  private tables: Record<string, SQLTable> = {
-    students: {
-      columns: ['id', 'name', 'faculty', 'xp', 'level'],
-      rows: [
-        { id: 1, name: 'Ammar Ahmed', faculty: 'Engineering', xp: 1250, level: 'ANALYST' },
-        { id: 2, name: 'Sara Hassan', faculty: 'Computer Science', xp: 2600, level: 'ENGINEER' },
-        { id: 3, name: 'Omar Khaled', faculty: 'Science', xp: 620, level: 'SPECIALIST' },
-        { id: 4, name: 'Laila Mostafa', faculty: 'Engineering', xp: 3400, level: 'ENGINEER' },
-        { id: 5, name: 'Youssef Ali', faculty: 'Business', xp: 180, level: 'OPERATIVE' },
-      ],
-    },
-    courses: {
-      columns: ['id', 'title', 'category', 'lessons', 'rating'],
-      rows: [
-        { id: 101, title: 'Python Fundamentals', category: 'Data Science', lessons: 12, rating: 4.9 },
-        { id: 102, title: 'SQL & Database Design', category: 'Data Science', lessons: 10, rating: 4.8 },
-        { id: 103, title: 'Machine Learning Basics', category: 'AI', lessons: 16, rating: 4.95 },
-        { id: 104, title: 'Power BI Analytics', category: 'BI', lessons: 8, rating: 4.7 },
-      ],
-    },
-    enrollments: {
-      columns: ['id', 'student_id', 'course_id', 'progress_pct'],
-      rows: [
-        { id: 1, student_id: 1, course_id: 101, progress_pct: 100 },
-        { id: 2, student_id: 1, course_id: 102, progress_pct: 65 },
-        { id: 3, student_id: 2, course_id: 103, progress_pct: 90 },
-        { id: 4, student_id: 3, course_id: 101, progress_pct: 40 },
-        { id: 5, student_id: 4, course_id: 103, progress_pct: 100 },
-      ],
-    },
-  };
-
-  public execute(sqlQuery: string): string {
-    const queries = sqlQuery
-      .split(';')
-      .map(q => q.trim())
-      .filter(q => q.length > 0 && !q.startsWith('--'));
-
-    if (queries.length === 0) return 'No SQL statements executed.';
-
-    const outputs: string[] = [];
-
-    for (const q of queries) {
-      try {
-        const lower = q.toLowerCase();
-
-        // Handle SELECT
-        if (lower.startsWith('select')) {
-          outputs.push(this.handleSelect(q));
-        } else if (lower.startsWith('insert into')) {
-          outputs.push('✓ 1 row affected (INSERT executed into in-memory table).');
-        } else if (lower.startsWith('create table')) {
-          outputs.push('✓ Table created successfully.');
-        } else if (lower.startsWith('update')) {
-          outputs.push('✓ Table updated successfully.');
-        } else {
-          outputs.push(`Executed statement: ${q.slice(0, 40)}... [OK]`);
-        }
-      } catch (err: any) {
-        outputs.push(`SQL ERROR: ${err.message}`);
-      }
-    }
-
-    return outputs.join('\n\n');
-  }
-
-  private handleSelect(query: string): string {
-    // Basic SQL SELECT query parser
-    const fromMatch = query.match(/from\s+([a-zA-Z0-9_]+)/i);
-    if (!fromMatch) {
-      return 'SQL syntax error: Missing FROM clause.';
-    }
-
-    const tableName = fromMatch[1].toLowerCase();
-    const table = this.tables[tableName];
-
-    if (!table) {
-      const available = Object.keys(this.tables).join(', ');
-      return `Table '${tableName}' not found. Available tables in club database: [${available}]`;
-    }
-
-    let rows = [...table.rows];
-
-    // Check WHERE
-    const whereMatch = query.match(/where\s+(.+?)(?:\s+order\s+by|\s+limit|$)/i);
-    if (whereMatch) {
-      const condition = whereMatch[1].trim();
-      const numMatch = condition.match(/([a-zA-Z0-9_]+)\s*(>|<|>=|<=|=|!=)\s*([0-9]+)/);
-      if (numMatch) {
-        const col = numMatch[1];
-        const op = numMatch[2];
-        const val = Number(numMatch[3]);
-        rows = rows.filter(r => {
-          if (op === '>') return r[col] > val;
-          if (op === '<') return r[col] < val;
-          if (op === '>=') return r[col] >= val;
-          if (op === '<=') return r[col] <= val;
-          if (op === '=') return r[col] === val;
-          if (op === '!=') return r[col] !== val;
-          return true;
-        });
-      }
-
-      const strMatch = condition.match(/([a-zA-Z0-9_]+)\s*=\s*['"]([^'"]+)['"]/);
-      if (strMatch) {
-        const col = strMatch[1];
-        const val = strMatch[2];
-        rows = rows.filter(r => String(r[col]).toLowerCase() === val.toLowerCase());
-      }
-    }
-
-    // Check ORDER BY
-    const orderMatch = query.match(/order\s+by\s+([a-zA-Z0-9_]+)(?:\s+(asc|desc))?/i);
-    if (orderMatch) {
-      const col = orderMatch[1];
-      const dir = (orderMatch[2] || 'asc').toLowerCase();
-      rows.sort((a, b) => {
-        if (a[col] < b[col]) return dir === 'asc' ? -1 : 1;
-        if (a[col] > b[col]) return dir === 'asc' ? 1 : -1;
-        return 0;
-      });
-    }
-
-    // Check LIMIT
-    const limitMatch = query.match(/limit\s+([0-9]+)/i);
-    if (limitMatch) {
-      rows = rows.slice(0, Number(limitMatch[1]));
-    }
-
-    // Determine columns to display
-    const selectMatch = query.match(/select\s+(.+?)\s+from/i);
-    let displayCols = table.columns;
-    if (selectMatch && selectMatch[1].trim() !== '*') {
-      const requested = selectMatch[1].split(',').map(c => c.trim());
-      displayCols = table.columns.filter(c => requested.includes(c));
-      if (displayCols.length === 0) displayCols = table.columns;
-    }
-
-    return this.renderTable(displayCols, rows);
-  }
-
-  private renderTable(cols: string[], rows: Record<string, any>[]): string {
-    if (rows.length === 0) return 'Query returned 0 rows.';
-
-    const colWidths: Record<string, number> = {};
-    for (const c of cols) {
-      colWidths[c] = Math.max(c.length, ...rows.map(r => String(r[c] ?? '').length));
-    }
-
-    const header = cols.map(c => c.padEnd(colWidths[c])).join(' | ');
-    const separator = cols.map(c => '-'.repeat(colWidths[c])).join('-+-');
-    const rowLines = rows.map(r => cols.map(c => String(r[c] ?? '').padEnd(colWidths[c])).join(' | '));
-
-    return [
-      `┌─[ RESULTS (${rows.length} rows) ]` + '─'.repeat(Math.max(10, header.length - 20)),
-      header,
-      separator,
-      ...rowLines,
-      '└' + '─'.repeat(Math.max(20, header.length + 2)),
-    ].join('\n');
-  }
-}
-
 // ─── LANGUAGE DEFINITIONS REGISTRY ───────────────────────────────────────────
 
 export const LANGUAGE_CATALOG: LanguageDefinition[] = [
@@ -416,16 +132,16 @@ import math
 def calculate_analytics():
     members = ["Ammar", "Sara", "Omar", "Laila"]
     xp_scores = [1250, 2600, 620, 3400]
-    
+
     total = sum(xp_scores)
     avg = total / len(xp_scores)
-    
+
     print("=" * 45)
     print("📊 DATACAMP CLUB XP ANALYTICS REPORT")
     print("=" * 45)
     for member, xp in zip(members, xp_scores):
         print(f"• {member:<10}: {xp:>4} XP {'(Top Contributor!)' if xp > 2000 else ''}")
-    
+
     print("-" * 45)
     print(f"Total XP: {total} | Average: {avg:.1f}")
     print("✓ Analysis complete.")
@@ -449,13 +165,13 @@ calculate_analytics()
         code: `import math\n\ndef euclidean(p1, p2):\n    return math.sqrt(sum((a - b)**2 for a, b in zip(p1, p2)))\n\nstudent_a = [90, 85, 92]\nstudent_b = [88, 80, 95]\nprint(f"Distance: {euclidean(student_a, student_b):.3f}")`,
       },
     ],
-    run: async (code) => {
-      const res = await runPythonCode(code);
+    run: async (code, stdin) => {
+      const res = await runPythonCode(code, stdin);
       return {
         output: res.output,
         error: res.error || undefined,
         executionTimeMs: res.executionTimeMs,
-        engineUsed: res.engine === 'pyodide' ? 'Pyodide WebAssembly (Python 3.11)' : 'Python Simulated Engine',
+        engineUsed: res.engine === 'pyodide' ? 'Pyodide WebAssembly (Python 3.11)' : 'Unavailable',
       };
     },
   },
@@ -505,7 +221,7 @@ console.log("⭐ Top Tier Operatives:", topTier.map(m => \`\${m.name} (\${m.xp} 
   {
     id: 'typescript',
     name: 'TypeScript',
-    version: '5.3',
+    version: 'TypeScript 5',
     extension: '.ts',
     icon: '🔷',
     color: '#3B82F6',
@@ -535,7 +251,7 @@ operatives.forEach(op => {
         code: `interface Result<T> { success: boolean; data: T; }\nconst res: Result<string> = { success: true, data: "Access Granted" };\nconsole.log("Status:", res);`,
       },
     ],
-    run: executeJavaScript,
+    run: executeTypeScript,
   },
 
   // 4. SQL (RELATIONAL DATABASE)
@@ -548,47 +264,23 @@ operatives.forEach(op => {
     color: '#00FFCC',
     popular: true,
     category: 'database',
-    starterCode: `-- DataCamp Student Club - Relational Database Query
--- Pre-seeded tables: students, courses, enrollments
-
--- 1. Query Top Students by XP
-SELECT name, faculty, xp, level
-FROM students
-WHERE xp >= 500
-ORDER BY xp DESC;
-
--- 2. Query High Rated Data Science Courses
-SELECT title, category, lessons, rating
-FROM courses
-WHERE rating >= 4.8;
-`,
+    starterCode: "SELECT 1 + 1 AS result;",
     templates: [
-      {
-        name: 'Select & Filter by Faculty',
-        description: 'Filter club members by engineering department',
-        code: `SELECT name, faculty, xp FROM students WHERE faculty = 'Engineering' ORDER BY xp DESC;`,
-      },
-      {
-        name: 'Course Catalog Analysis',
-        description: 'List all available courses ordered by rating',
-        code: `SELECT id, title, category, rating FROM courses ORDER BY rating DESC;`,
-      },
-      {
-        name: 'Top Ranked Operatives',
-        description: 'Select top 3 members',
-        code: `SELECT name, xp, level FROM students ORDER BY xp DESC LIMIT 3;`,
-      },
+      { name: 'Arithmetic query', description: 'Evaluate a SQL expression', code: 'SELECT 6 * 7 AS result;' },
+      { name: 'Create and query a table', description: 'A self-contained SQL exercise', code: 'CREATE TABLE measurements(value INTEGER);\nINSERT INTO measurements VALUES (1),(2),(3);\nSELECT SUM(value) AS total FROM measurements;' },
+      { name: 'Recursive sequence', description: 'Generate numbers using a recursive CTE', code: 'WITH RECURSIVE numbers(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM numbers WHERE n<10) SELECT n FROM numbers;' },
     ],
     run: async (code) => {
       const startTime = performance.now();
-      const engine = new InMemorySQLEngine();
-      const output = engine.execute(code);
+      const result = await runSQL(code);
+      const output = result.output;
       const executionTimeMs = Math.round(performance.now() - startTime);
 
       return {
         output,
         executionTimeMs,
-        engineUsed: 'SQLite In-Memory Virtual Engine',
+        error: result.error,
+        engineUsed: 'SQLite WebAssembly',
       };
     },
   },
@@ -597,7 +289,7 @@ WHERE rating >= 4.8;
   {
     id: 'cpp',
     name: 'C++',
-    version: 'C++20 (GCC 13)',
+    version: 'GCC 10.2',
     extension: '.cpp',
     icon: '⚙️',
     color: '#00599C',
@@ -612,14 +304,14 @@ WHERE rating >= 4.8;
 int main() {
     std::cout << "DataCamp Club C++20 High-Performance Engine\\n";
     std::vector<int> scores = {1200, 2400, 850, 3100, 1950};
-    
+
     int total = std::accumulate(scores.begin(), scores.end(), 0);
     int maxScore = *std::max_element(scores.begin(), scores.end());
-    
+
     std::cout << "Total Members: " << scores.size() << "\\n";
     std::cout << "Total XP: " << total << "\\n";
     std::cout << "Peak Score: " << maxScore << " XP\\n";
-    
+
     return 0;
 }
 `,
@@ -642,18 +334,14 @@ int main() {
       if (res) {
         return {
           output: res.stdout || res.stderr || '[Completed with exit code 0]',
-          error: res.code !== 0 ? res.stderr : undefined,
+          error: res.code !== 0 ? (res.stderr || `Process exited with code ${res.code}`) : undefined,
           executionTimeMs: Math.round(performance.now() - startTime),
-          engineUsed: 'GCC 13 / Piston Sandbox',
+          engineUsed: 'GCC 10.2 / Piston Sandbox',
         };
       }
 
       // Offline simulation fallback
-      return {
-        output: `[C++ Compiler Simulation]\nProgram compiled with g++ -std=c++20\nExecution output:\nDataCamp Club C++20 High-Performance Engine\nTotal Members: 5\nTotal XP: 9500\nPeak Score: 3100 XP\n\nProcess finished with exit code 0.`,
-        executionTimeMs: 42,
-        engineUsed: 'Local C++ Simulator (Offline Mode)',
-      };
+      return { output: '', error: 'Execution service unavailable. No code was executed.', executionTimeMs: Math.round(performance.now() - startTime), engineUsed: 'Unavailable' };
     },
   },
 
@@ -661,7 +349,7 @@ int main() {
   {
     id: 'java',
     name: 'Java',
-    version: 'OpenJDK 17',
+    version: 'OpenJDK 15.0.2',
     extension: '.java',
     icon: '☕',
     color: '#EA2D2E',
@@ -673,11 +361,11 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         System.out.println("☕ DataCamp Club Java Environment Running");
-        
+
         List<String> leaders = Arrays.asList("Ammar (3200 XP)", "Sara (2800 XP)", "Omar (1950 XP)");
         System.out.println("Top Club Operatives:");
         leaders.forEach(leader -> System.out.println(" • " + leader));
-        
+
         System.out.println("Execution finished cleanly.");
     }
 }
@@ -696,17 +384,13 @@ public class Main {
       if (res) {
         return {
           output: res.stdout || res.stderr || '[Process finished]',
-          error: res.code !== 0 ? res.stderr : undefined,
+          error: res.code !== 0 ? (res.stderr || `Process exited with code ${res.code}`) : undefined,
           executionTimeMs: Math.round(performance.now() - startTime),
-          engineUsed: 'OpenJDK 17 / Piston Sandbox',
+          engineUsed: 'OpenJDK 15.0.2 / Piston Sandbox',
         };
       }
 
-      return {
-        output: `☕ DataCamp Club Java Environment Running\nTop Club Operatives:\n • Ammar (3200 XP)\n • Sara (2800 XP)\n • Omar (1950 XP)\nExecution finished cleanly.`,
-        executionTimeMs: 65,
-        engineUsed: 'Local Java Simulator (Offline Mode)',
-      };
+      return { output: '', error: 'Execution service unavailable. No code was executed.', executionTimeMs: Math.round(performance.now() - startTime), engineUsed: 'Unavailable' };
     },
   },
 
@@ -714,7 +398,7 @@ public class Main {
   {
     id: 'r',
     name: 'R (Data Science)',
-    version: 'R 4.3',
+    version: 'R 4.1.1',
     extension: '.r',
     icon: '📈',
     color: '#276DC3',
@@ -744,17 +428,13 @@ cat("Max XP:   ", max(scores), "\\n")
       if (res) {
         return {
           output: res.stdout || res.stderr || '[Completed]',
-          error: res.code !== 0 ? res.stderr : undefined,
+          error: res.code !== 0 ? (res.stderr || `Process exited with code ${res.code}`) : undefined,
           executionTimeMs: Math.round(performance.now() - startTime),
-          engineUsed: 'R 4.3 / Piston Sandbox',
+          engineUsed: 'R 4.1.1 / Piston Sandbox',
         };
       }
 
-      return {
-        output: `=== DATACAMP R STATISTICAL SUMMARY ===\nMean XP:   2016.667\nMedian XP: 2175\nStd Dev:   845.89\nMax XP:    3100`,
-        executionTimeMs: 38,
-        engineUsed: 'R Statistics Engine (Simulated)',
-      };
+      return { output: '', error: 'Execution service unavailable. No code was executed.', executionTimeMs: Math.round(performance.now() - startTime), engineUsed: 'Unavailable' };
     },
   },
 
@@ -762,7 +442,7 @@ cat("Max XP:   ", max(scores), "\\n")
   {
     id: 'go',
     name: 'Go',
-    version: '1.21',
+    version: '1.16.2',
     extension: '.go',
     icon: '🐹',
     color: '#00ADD8',
@@ -801,16 +481,12 @@ func main() {
       if (res) {
         return {
           output: res.stdout || res.stderr || '[Completed]',
-          error: res.code !== 0 ? res.stderr : undefined,
+          error: res.code !== 0 ? (res.stderr || `Process exited with code ${res.code}`) : undefined,
           executionTimeMs: Math.round(performance.now() - startTime),
-          engineUsed: 'Go 1.21 / Piston Sandbox',
+          engineUsed: 'Go 1.16.2 / Piston Sandbox',
         };
       }
-      return {
-        output: `🚀 DataCamp Club Go Fast Runtime\n• Ammar    : 3200 XP\n• Sara     : 2800 XP\n• Omar     : 1950 XP`,
-        executionTimeMs: 25,
-        engineUsed: 'Go Runtime Simulator',
-      };
+      return { output: '', error: 'Execution service unavailable. No code was executed.', executionTimeMs: Math.round(performance.now() - startTime), engineUsed: 'Unavailable' };
     },
   },
 
@@ -818,7 +494,7 @@ func main() {
   {
     id: 'rust',
     name: 'Rust',
-    version: '1.75',
+    version: '1.68.2',
     extension: '.rs',
     icon: '🦀',
     color: '#DEA584',
@@ -830,7 +506,7 @@ fn main() {
     let scores = vec![1200, 2400, 850, 3100, 1950];
     let total: i32 = scores.iter().sum();
     let max_val = scores.iter().max().unwrap_or(&0);
-    
+
     println!("Total XP: {}", total);
     println!("Peak Score: {} XP", max_val);
 }
@@ -848,16 +524,12 @@ fn main() {
       if (res) {
         return {
           output: res.stdout || res.stderr || '[Completed]',
-          error: res.code !== 0 ? res.stderr : undefined,
+          error: res.code !== 0 ? (res.stderr || `Process exited with code ${res.code}`) : undefined,
           executionTimeMs: Math.round(performance.now() - startTime),
-          engineUsed: 'Rust 1.75 / Piston Sandbox',
+          engineUsed: 'Rust 1.68.2 / Piston Sandbox',
         };
       }
-      return {
-        output: `🦀 DataCamp Club Rust Safe Runtime\nTotal XP: 9500\nPeak Score: 3100 XP`,
-        executionTimeMs: 32,
-        engineUsed: 'Rust Runtime Simulator',
-      };
+      return { output: '', error: 'Execution service unavailable. No code was executed.', executionTimeMs: Math.round(performance.now() - startTime), engineUsed: 'Unavailable' };
     },
   },
 ];

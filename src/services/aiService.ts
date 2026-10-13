@@ -1,7 +1,7 @@
 /**
  * aiService.ts
  * NEXUS AI Mentor - RAG-powered AI Engine for DataCamp Student Club.
- * 
+ *
  * Architecture:
  * 1. Retrieves live context from Firestore (courses, events, staff, user progress)
  * 2. Builds an enriched system prompt with real database knowledge
@@ -37,30 +37,11 @@ export interface PersonalizedPath {
 
 // ─── RAG CONTEXT BUILDER ─────────────────────────────────────────────────────
 
-let cachedContext: any = null;
-let contextLastFetched = 0;
-const CONTEXT_CACHE_TTL = 3 * 60 * 1000; // 3 minutes
-
-async function fetchDatabaseContext() {
-  const now = Date.now();
-  if (cachedContext && now - contextLastFetched < CONTEXT_CACHE_TTL) {
-    return cachedContext;
-  }
-
-  try {
-    const ctx = await getAIContextData();
-    cachedContext = ctx;
-    contextLastFetched = now;
-    return ctx;
-  } catch (err) {
-    console.warn('RAG context fetch failed:', err);
-    return cachedContext || { courses: [], events: [], staff: [], settings: null, stats: { totalUsers: 0, totalCourses: 0, totalEvents: 0 } };
-  }
-}
+async function fetchDatabaseContext() { return getAIContextData(); }
 
 async function fetchUserContext(userId: string) {
   if (!userId || !isSupabaseConfigured) return null;
-  
+
   try {
     return await getUserLearningContext(userId);
   } catch (err) {
@@ -87,12 +68,12 @@ async function buildRAGSystemPrompt(
 
   // Build course catalog from DB (or fallback to passed courses)
   const realCourses = dbContext.courses.length > 0 ? dbContext.courses : courses;
-  const courseList = realCourses.map((c: any) => 
+  const courseList = realCourses.map((c: any) =>
     `- ${c.title} (Level: ${c.level}, Category: ${c.category}, Duration: ${c.durationHours}h, XP Reward: ${c.pointsReward}, Enrolled: ${c.enrolledCount || 0}, Rating: ${c.rating || 'N/A'})`
   ).join('\n');
 
   // Build events list
-  const eventsList = dbContext.events.length > 0 
+  const eventsList = dbContext.events.length > 0
     ? dbContext.events.map((e: any) => `- ${e.title} (Date: ${e.date}, Location: ${e.location}, Status: ${e.status})`).join('\n')
     : '- No upcoming events currently scheduled in the database.';
 
@@ -104,10 +85,10 @@ async function buildRAGSystemPrompt(
   // Build user learning progress
   let userProgressSection = '';
   if (userContext) {
-    const enrolledCourses = userContext.enrollments.map((e: any) => 
+    const enrolledCourses = userContext.enrollments.map((e: any) =>
       `  - Course: ${e.courseId} | Progress: ${e.progress}% | Status: ${e.status} | Completed Lessons: ${e.completedLessons?.length || 0}`
     ).join('\n');
-    
+
     const recentPoints = userContext.pointsLog.slice(0, 5).map((p: any) =>
       `  - ${p.action}: +${p.points} XP (${p.description})`
     ).join('\n');
@@ -181,285 +162,20 @@ ${userProgressSection}
 
 // ─── DYNAMIC GENERATIVE OFFLINE ENGINE (Fluent Arabic + English Code) ────────────
 
-async function getIntelligentOfflineReply(
-  query: string,
-  profile: UserProfile | null,
-  totalPoints: number,
-  courses: Course[]
-): Promise<{ text: string; suggestedActions?: { label: string; action: string; payload?: any }[] }> {
-  const lower = query.toLowerCase();
-  const name = profile?.fullName?.split(' ')[0] || 'البطل';
-  const userLevel = profile?.level || 'RECRUIT';
 
-  // Fetch real database context
-  const dbContext = await fetchDatabaseContext();
-  const realCourses = dbContext.courses.length > 0 ? dbContext.courses : courses;
-
-  // 1. Python Programming & Syntax
-  if (
-    lower.includes('python') ||
-    lower.includes('بايثون') ||
-    lower.includes('list') ||
-    lower.includes('dict') ||
-    lower.includes('function') ||
-    lower.includes('loop') ||
-    lower.includes('lambda') ||
-    lower.includes('decorator') ||
-    lower.includes('generator') ||
-    lower.includes('class')
-  ) {
-    if (lower.includes('list') || lower.includes('قائمة') || lower.includes('comprehension')) {
-      return {
-        text: `🐍 **توليد القوائم الفعال (List Comprehensions) في بايثون** لمطوّرنا ${name}:\n\nتعتبر الـ List Comprehensions أسرع بكثير في التنفيذ وأكثر نظافة من حلقات \`for\` التقليدية، لأنها تعتمد على كود محسن ومبني بلغة C مباشرة:\n\n\`\`\`python\n# فلترة وتعديل الأرقام في خطوة واحدة سريعة\nnumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\neven_squares = [x**2 for x in numbers if x % 2 == 0]\nprint(even_squares)  # [4, 16, 36, 64, 100]\n\`\`\`\n\n💡 **نصيحة ذهبية:** تجنب دمج أكثر من حلقتين متداخلتين داخل نفس القوس للحفاظ على سهولة قراءة الكود. واستخدم تعبيرات التوليد \`(x for x in ...)\` مع كميات البيانات الضخمة لتوفير استهلاك الذاكرة RAM.`,
-        suggestedActions: [
-          { label: '🔧 فتح محرر الأكواد', action: 'navigate', payload: '/compiler' },
-          { label: '📚 مسار بايثون', action: 'navigate', payload: '/courses' },
-        ],
-      };
-    }
-
-    if (lower.includes('dict') || lower.includes('قاموس') || lower.includes('dictionary')) {
-      return {
-        text: `🐍 **القواميس فائقة الأداء (Python Dictionaries)** للمطور ${name}:\n\nالقواميس في بايثون الحديثة تحافظ على ترتيب العناصر وتعتمد على جداول الـ Hash Tables بزمن وصول قياسي $O(1)$:\n\n\`\`\`python\n# استخدام defaultdict لتفادي الأخطاء وعدّ التكرارات\nfrom collections import defaultdict\n\nword_counts = defaultdict(int)\ntext = "datacamp club innovation university datacamp"\nfor word in text.split():\n    word_counts[word] += 1\n\nprint(dict(word_counts))\n\`\`\`\n\n💡 **نصيحة:** استخدم \`.get(key, default)\` للوصول الآمن للقيم دون التسبب في خطأ \`KeyError\` عند عدم وجود المفتاح.`,
-        suggestedActions: [
-          { label: '🔧 جرّب في المحرر', action: 'navigate', payload: '/compiler' },
-          { label: '📚 التحديات البرمجية', action: 'navigate', payload: '/courses' },
-        ],
-      };
-    }
-
-    return {
-      text: `🐍 **بروتوكول هندسة بايثون للبيانات** للمطور ${name}:\n\nبايثون هي حجر الأساس لعلم البيانات والذكاء الاصطناعي. إليك أهم 3 مبادئ نتبعها في نادي DataCamp:\n\n1. **العمليات المتجهة (Vectorization)**: اعتمد على عمليات NumPy و Pandas بدلاً من الحلقات التكرارية اليدوية \`for\`.\n2. **تحديد الأنواع (Type Annotations)**: تجعل الكود سهل الصيانة وخالياً من الأخطاء الخفية:\n\`\`\`python\ndef calculate_entropy(probabilities: list[float]) -> float:\n    import numpy as np\n    probs = np.array(probabilities)\n    return -float(np.sum(probs * np.log2(probs + 1e-9)))\n\`\`\`\n3. **الهيكلية المعيارية (Modular Design)**: قسّم كود تحليل البيانات إلى مراحل واضحة: جلب البيانات، معالجتها، وبناء النماذج.\n\nيمكنك تجربة وتنفيذ هذه الأكواد فوراً داخل محرر الأكواد المتكامل في الموقع!`,
-      suggestedActions: [
-        { label: '🔧 تشغيل محرر الأكواد', action: 'navigate', payload: '/compiler' },
-        { label: '📚 استكشاف مسارات بايثون', action: 'navigate', payload: '/courses' },
-      ],
-    };
-  }
-
-  // 2. Pandas & Data Analysis
-  if (
-    lower.includes('pandas') ||
-    lower.includes('باندا') ||
-    lower.includes('dataframe') ||
-    lower.includes('numpy') ||
-    lower.includes('eda') ||
-    lower.includes('بيانات') ||
-    lower.includes('cleaning') ||
-    lower.includes('missing') ||
-    lower.includes('csv')
-  ) {
-    return {
-      text: `📊 **هندسة خطوط معالجة البيانات باستخدام Pandas** لـ ${name}:\n\nالتعامل مع البيانات الضخمة يتطلب دقة في إدارة الذاكرة واستخدام الدوال المدمجة:\n\n\`\`\`python\nimport pandas as pd\nimport numpy as np\n\n# إنشاء وتجهيز جدول البيانات\ndf = pd.DataFrame({\n    'student_id': [101, 102, 103, 104],\n    'track': ['AI', 'Data', 'AI', 'BI'],\n    'score': [92.5, np.nan, 88.0, 95.5]\n})\n\n# معالجة القيم المفقودة وحساب المتوسطات حسب المسار\ndf['score'] = df['score'].fillna(df['score'].median())\navg_by_track = df.groupby('track')['score'].agg(['mean', 'count']).reset_index()\nprint(avg_by_track)\n\`\`\`\n\n💡 **نصيحة تحسين السرعة:** تحويل أنواع الأعمدة النصية إلى \`category\` والأرقام الكبيرة إلى \`float32\` يقلل استهلاك الذاكرة بما يصل إلى 70%!`,
-      suggestedActions: [
-        { label: '🔧 اختبار الكود في المحرر', action: 'navigate', payload: '/compiler' },
-        { label: '📚 دورات علم البيانات', action: 'navigate', payload: '/courses' },
-      ],
-    };
-  }
-
-  // 3. Machine Learning & Deep Learning
-  if (
-    lower.includes('machine learning') ||
-    lower.includes('تعلم الآلة') ||
-    lower.includes('deep learning') ||
-    lower.includes('تعلم عميق') ||
-    lower.includes('ai') ||
-    lower.includes('ذكاء') ||
-    lower.includes('neural') ||
-    lower.includes('pytorch') ||
-    lower.includes('scikit') ||
-    lower.includes('model') ||
-    lower.includes('regression') ||
-    lower.includes('classification') ||
-    lower.includes('transformer')
-  ) {
-    return {
-      text: `🤖 **خارطة طريق الذكاء الاصطناعي وتعلم الآلة** لـ ${name} (المستوى: ${userLevel}):\n\nمنهج نادي DataCamp يقسم تعلم الآلة إلى 4 مراحل تصاعدية:\n\n1. **تجهيز وهندسة الخصائص (Feature Engineering)**: القياس المعياري (StandardScaler)، والترميز الفئوي (One-Hot)، ومعالجة اختلال البيانات.\n2. **الخوارزميات الخاضعة للإشراف (Supervised Learning)**: الانحدار الخطي، الغابات العشوائية (Random Forests)، والتعزيز المتدرج (XGBoost).\n3. **تقييم النماذج (Validation)**: تقنية التحقق المتقاطع (K-Fold)، ومنحنى ROC-AUC، ومصفوفة الارتباك.\n4. **التعلم العميق (Deep Learning)**: شبكات PyTorch العصبية، دوال التنشيط، وآليات الانتباه (Attention & Transformers).\n\n\`\`\`python\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\n\n# نموذج تصنيف جاهز وقابل لإعادة الإنتاج\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\nmodel = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42)\nmodel.fit(X_train, y_train)\nprint("Model Accuracy:", model.score(X_test, y_test))\n\`\`\`\n\nهل تود إنشاء خطة دراسية مخصصة لـ 8 أسابيع في الذكاء الاصطناعي؟`,
-      suggestedActions: [
-        { label: '🎯 إنشاء خطة ذكاء اصطناعي', action: 'generate_path', payload: 'ai_ml' },
-        { label: '📚 دورات الذكاء الاصطناعي', action: 'navigate', payload: '/courses' },
-      ],
-    };
-  }
-
-  // 4. SQL & Databases
-  if (
-    lower.includes('sql') ||
-    lower.includes('database') ||
-    lower.includes('قواعد بيانات') ||
-    lower.includes('query') ||
-    lower.includes('join') ||
-    lower.includes('postgres') ||
-    lower.includes('table')
-  ) {
-    return {
-      text: `💾 **تحسين استعلامات قواعد البيانات SQL** لـ ${name}:\n\nتعتبر SQL مهارة لا غنى عنها لأي محلل بيانات أو مهندس برمجيات. إليك استعلام متقدم باستخدام الدوال النافذية (Window Functions):\n\n\`\`\`sql\n-- حساب النقاط التراكمية وترتيب الطلاب حسب الكلية\nSELECT \n    student_name,\n    faculty,\n    xp_points,\n    DENSE_RANK() OVER (PARTITION BY faculty ORDER BY xp_points DESC) AS faculty_rank,\n    SUM(xp_points) OVER (ORDER BY created_at ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_xp\nFROM club_students\nWHERE is_active = TRUE;\n\`\`\`\n\n💡 **قاعدة الأداء:** قم دائماً بتصفية السجلات عبر \`WHERE\` باستخدام الأعمدة المفهرسة (Indexes) قبل إجراء التجميع والربط بين الجداول الكبيرة!`,
-      suggestedActions: [
-        { label: '🔧 كتابة SQL في المحرر', action: 'navigate', payload: '/compiler' },
-        { label: '📚 مسار قواعد البيانات', action: 'navigate', payload: '/courses' },
-      ],
-    };
-  }
-
-  // 5. Courses & Catalog Inquiries
-  if (
-    lower.includes('course') ||
-    lower.includes('دورة') ||
-    lower.includes('دورات') ||
-    lower.includes('curriculum') ||
-    lower.includes('start') ||
-    lower.includes('ابدأ') ||
-    lower.includes('تعلم') ||
-    lower.includes('learn') ||
-    lower.includes('مسار') ||
-    lower.includes('track')
-  ) {
-    if (realCourses.length > 0) {
-      const courseCards = realCourses.slice(0, 3).map((c: any) => 
-        `• **${c.title}** (${c.level})\n  ⏱️ ${c.durationHours} ساعة • ⚡ +${c.pointsReward} XP • 🏷️ ${c.category}\n  _${c.shortDescription || c.description?.substring(0, 90)}..._`
-      ).join('\n\n');
-
-      return {
-        text: `📚 **الدورات التدريبية الموصى بها لـ ${name}**:\n\nبناءً على رتبتك الحالية **${userLevel}** (${totalPoints} نقطة XP)، إليك أبرز المسارات المعتمدة المتاحة الآن:\n\n${courseCards}\n\nتشمل كل دورة تدريبات برمجية عملية، وتحديات تفاعلية، وشهادة إتمام معتمدة قابلة للتحقق.`,
-        suggestedActions: realCourses.slice(0, 3).map((c: any) => ({
-          label: `📖 ${c.title.substring(0, 24)}`,
-          action: 'navigate',
-          payload: `/courses/${c.slug}`,
-        })),
-      };
-    }
-
-    return {
-      text: `🚀 **خارطة الدورات المعتمدة لـ ${name}**:\n\nإليك الأعمدة الأساسية لمسارات النادي المتاحة على المنصة:\n\n1. **Python for Data Science & AI**: الحسابات الموجهة، تنظيف البيانات، Pandas و Matplotlib.\n2. **Machine Learning Fundamentals**: خطوط Scikit-Learn، نماذج التصنيف، وتدريب الخوارزميات.\n3. **Deep Learning with PyTorch**: الشبكات العصبية، والتعلم العميق، ورؤية الحاسوب.\n4. **SQL & Modern Business Analytics**: تحليل الأعمال، بناء لوحات المؤشرات واستعلامات التقارير.\n\nيمكنك البدء فوراً في كتابة الكود عبر **محرر الأكواد المتكامل** وكسب نقاط XP إضافية!`,
-      suggestedActions: [
-        { label: '🔧 فتح محرر الأكواد', action: 'navigate', payload: '/compiler' },
-        { label: '🏆 لوحة المتصدرين', action: 'navigate', payload: '/leaderboard' },
-        { label: '🎯 خطة تعليمية مخصصة', action: 'generate_path', payload: 'data_science' },
-      ],
-    };
-  }
-
-  // 6. XP, Points, Ranks & Leaderboard
-  if (
-    lower.includes('point') ||
-    lower.includes('نقط') ||
-    lower.includes('xp') ||
-    lower.includes('رتب') ||
-    lower.includes('ترتيب') ||
-    lower.includes('rank') ||
-    lower.includes('level') ||
-    lower.includes('leaderboard') ||
-    lower.includes('متصدر')
-  ) {
-    const nextRankMap: Record<string, { next: string; req: number }> = {
-      RECRUIT: { next: 'SPECIALIST', req: 500 },
-      SPECIALIST: { next: 'OPERATIVE', req: 1500 },
-      OPERATIVE: { next: 'ENGINEER', req: 3000 },
-      ENGINEER: { next: 'ARCHITECT', req: 6000 },
-      ARCHITECT: { next: 'CYBER_LEGEND', req: 10000 },
-    };
-
-    const nextInfo = nextRankMap[userLevel] || { next: 'CYBER_LEGEND', req: 10000 };
-    const needed = Math.max(0, nextInfo.req - totalPoints);
-
-    return {
-      text: `⚡ **تقرير المستوى والإنجاز: العضو ${name}**\n\n• نقاطك الحالية: **${totalPoints} XP**\n• رتبتك الحالية: **${userLevel}**\n• الهدف القادم: **${nextInfo.next}** (${needed > 0 ? `متبقي ${needed} XP فقط` : 'مؤهل للترقية الفورية!'})\n\n**أسرع الطرق لكسب نقاط XP:**\n• 🎬 إكمال الدروس التفاعلية: **+10 إلى +35 XP**\n• 🎓 إكمال دورة تدريبية معتمدة: **+500 XP**\n• 🎪 حضور ورش العمل والهاكاثونات: **+50 XP**\n• 🏆 الحصول على الدرجة الكاملة في الاختبارات: **+50 XP**\n• 🚀 تقديم مشروع تطبيقي معتمد: **+150 XP**\n\nتفضل بزيارة لوحة المتصدرين لمعرفة ترتيبك بين زملائك في الجامعة!`,
-      suggestedActions: [
-        { label: '🏆 لوحة المتصدرين', action: 'navigate', payload: '/leaderboard' },
-        { label: '🔧 التدريب في المحرر', action: 'navigate', payload: '/compiler' },
-      ],
-    };
-  }
-
-  // 7. Events & Hackathons
-  if (
-    lower.includes('event') ||
-    lower.includes('فعالي') ||
-    lower.includes('ورش') ||
-    lower.includes('workshop') ||
-    lower.includes('hackathon') ||
-    lower.includes('هاكاثون')
-  ) {
-    if (dbContext.events.length > 0) {
-      const eventCards = dbContext.events.slice(0, 3).map((e: any) =>
-        `• **${e.title}**\n  📅 ${e.date} • 📍 ${e.location} • الحالة: ${e.status}`
-      ).join('\n\n');
-
-      return {
-        text: `📅 **الفعاليات وورش العمل القادمة في النادي**:\n\n${eventCards}\n\nحضور فعاليات النادي يمنحك شهادات مشاركة معتمدة و **+50 XP** تضاف لملفك الشخصي!`,
-        suggestedActions: [
-          { label: '📅 عرض كل الفعاليات', action: 'navigate', payload: '/events' },
-          { label: '🏆 لوحة المتصدرين', action: 'navigate', payload: '/leaderboard' },
-        ],
-      };
-    }
-
-    return {
-      text: `📅 **جدول الفعاليات والهاكاثونات** لـ ${name}:\n\nتستعد لجنة التنظيم لإطلاق حزمة من الورش التطبيقية والهاكاثونات الحضورية والافتراضية في جامعة الابتكار:\n\n• 🏆 **هاكاثون DataCamp البرمجي السنوي** (تحديات تنافسية في الخوارزميات وتحليل البيانات)\n• 🧠 **ماستركلاس الذكاء الاصطناعي ونماذج LLM** (بناء ونشر النماذج عملياً)\n• 💼 **ملتقى التوظيف ومراجعة ملفات الأعمال** (استضافة خبراء من كبرى الشركات)\n\nتابع صفحة الفعاليات لتسجيل حضورك فور فتح باب التسجيل!`,
-      suggestedActions: [
-        { label: '📅 تصفح الفعاليات', action: 'navigate', payload: '/events' },
-        { label: '💬 تواصل مع اللجنة', action: 'navigate', payload: '/contact' },
-      ],
-    };
-  }
-
-  // 8. Certificates & Verification
-  if (
-    lower.includes('certificate') ||
-    lower.includes('شهادة') ||
-    lower.includes('شهادات') ||
-    lower.includes('cert') ||
-    lower.includes('اعتماد')
-  ) {
-    return {
-      text: `🏅 **نظام الشهادات والاعتمادات الرسمية**:\n\nكل شهادة تصدر من نادي DataCamp بجامعة الابتكار تتميز بـ:\n\n• **رمز تحقق إلكتروني فريد (Verification Code)** يمكن التحقق منه أونلاين عبر QR Code.\n• **اعتماد مزدوج**: شعار DataCamp الدولي وشعار جامعة الابتكار الرسمي.\n• **تصدير فوري بصيغة PDF عالية الدقة** جاهزة للطباعة والتقديم.\n• **ربط مباشر بـ LinkedIn**: إضافة الاعتماد لملفك المهني بضغطة زر.\n\n**شرط الاستحقاق:** إتمام وحدات الدورة بالكامل واجتياز التقييم النهائي بنسبة 80% فأكثر.`,
-      suggestedActions: [
-        { label: '🏅 شهاداتي المعتمدة', action: 'navigate', payload: '/certificates' },
-        { label: '📚 استكشاف الدورات', action: 'navigate', payload: '/courses' },
-      ],
-    };
-  }
-
-  // 9. Staff & Leadership
-  if (
-    lower.includes('staff') ||
-    lower.includes('فريق') ||
-    lower.includes('إدارة') ||
-    lower.includes('لجنة') ||
-    lower.includes('mentor') ||
-    lower.includes('من أنت') ||
-    lower.includes('مين انت')
-  ) {
-    return {
-      text: `👥 **هيكل ولجان نادي DataCamp الطلابي**:\n\nيقود النادي نخبة من الطلاب المتميزين تحت إشراف أكاديمي مباشر في جامعة الابتكار:\n\n• **الهيئة الرئاسية والتنفيذية**: التخطيط الاستراتيجي والعلاقات العامة وتطوير النادي.\n• **اللجنة التقنية والأكاديمية**: إعداد الورش والمحتوى التعليمي وتدريب الأعضاء.\n• **لجنة الإعلام والتغطيات الرقمية**: إدارة الهوية البصرية وتوثيق المؤتمرات والفعاليات.\n• **لجنة التنظيم واللوجستيات**: إدارة الفعاليات والهاكاثونات داخل الحرم الجامعي.\n\nهل ترغب بالانضمام للجان النادي في الفصل الدراسي القادم؟`,
-      suggestedActions: [
-        { label: '👥 التعرف على الفريق', action: 'navigate', payload: '/staff' },
-        { label: '✉️ تواصل معنا', action: 'navigate', payload: '/contact' },
-      ],
-    };
-  }
-
-  // 10. General / Conversational Dynamic Fallback
-  return {
-    text: `مرحباً بك يا ${name}! أنا **NEXUS**، مرشدك الذكي في نادي DataCamp بجامعة الابتكار.\n\nأنا هنا لمساعدتك في كل ما يتعلق بـ:\n• 🗺️ **رسم خطط دراسية مخصصة**: مسار أسبوعي متكامل يناسب هدفك المهني.\n• 💻 **مراجعة وشرح الأكواد البرمجية**: بايثون، SQL، خوارزميات الذكاء الاصطناعي ومعالجة البيانات.\n• 📈 **استراتيجيات كسب النقاط**: الصعود في الترتيب والمنافسة على صدارة الجامعة.\n• 🏆 **المشاريع والشهادات**: بناء نماذج معتمدة تدعم سيرتك الذاتية.\n\nاكتب لي أي سؤال برمجي أو تقني وسأجيبك فوراً بكل سرور!`,
-    suggestedActions: [
-      { label: '🎯 إنشاء خطة تعليمية', action: 'generate_path', payload: 'data_science' },
-      { label: '🔧 فتح محرر الأكواد', action: 'navigate', payload: '/compiler' },
-      { label: '🏆 لوحة المتصدرين', action: 'navigate', payload: '/leaderboard' },
-    ],
-  };
-}
 
 // ─── GEMINI API INTEGRATION (Official SDK + REST fallback) ────────────────────
 
+let personalGeminiKey = '';
+let liveAIConnected = false;
+export function setPersonalGeminiKey(key: string) { personalGeminiKey = key.trim(); }
 function getActiveGeminiKey(): string | null {
-  const localKey = typeof window !== 'undefined' ? localStorage.getItem('datacamp_gemini_api_key') : null;
+  const localKey = personalGeminiKey;
   return localKey && localKey !== 'MY_GEMINI_API_KEY' && localKey.trim().length > 10 ? localKey.trim() : null;
 }
 
 export function isGeminiConfigured(): boolean {
-  return true;
+  return liveAIConnected;
 }
 
 // Client-side rate limiting: 10 queries per 60 seconds
@@ -512,6 +228,7 @@ async function callGeminiAPI(prompt: string, systemPrompt: string): Promise<stri
           { role: 'model', parts: [{ text: candidateText.trim() }] }
         );
         if (chatHistory.length > 40) chatHistory = chatHistory.slice(-40);
+        liveAIConnected = true;
         return candidateText.trim();
       }
     }
@@ -602,7 +319,7 @@ export const aiService = {
     }
 
     // Fallback to enhanced dynamic offline engine
-    return getIntelligentOfflineReply(sanitizedQuery, profile, totalPoints, courses);
+    throw new Error('AI service is unavailable. Please try again or ask an administrator to configure the service.');
   },
 
   /**
@@ -738,8 +455,6 @@ export const aiService = {
    * Clear the RAG context cache and chat history (force full refresh)
    */
   clearContextCache() {
-    cachedContext = null;
-    contextLastFetched = 0;
     clearChatHistory();
   },
 

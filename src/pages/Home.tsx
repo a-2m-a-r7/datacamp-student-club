@@ -1,3 +1,4 @@
+import { usePublicStats } from '../lib/usePublicStats';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Code, Database, Cpu, Users, Calendar, Award, Zap } from 'lucide-react';
@@ -10,6 +11,7 @@ import { contentService } from '../services/contentService';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Home = () => {
+  const liveStats = usePublicStats();
   const { user } = useAuth();
   const { isArabic, t } = useLanguage();
   const [settings, setSettings] = useState<any>(null);
@@ -40,36 +42,36 @@ const Home = () => {
   }, []);
 
   const stats = [
-    { 
-      label: isArabic ? 'عضو مسجل' : 'Active Members', 
-      value: '1,200+', 
-      icon: Users, 
-      color: 'text-neon-green' 
+    {
+      label: isArabic ? 'عضو مسجل' : 'Active Members',
+      value: liveStats?.members ?? '—',
+      icon: Users,
+      color: 'text-neon-green'
     },
-    { 
-      label: isArabic ? 'فعالية وورشة' : 'Events Hosted', 
-      value: '45+', 
-      icon: Calendar, 
-      color: 'text-neon-blue' 
+    {
+      label: isArabic ? 'فعالية وورشة' : 'Events Hosted',
+      value: liveStats?.events ?? '—',
+      icon: Calendar,
+      color: 'text-neon-blue'
     },
-    { 
-      label: isArabic ? 'مشروع منجز' : 'Projects Completed', 
-      value: '30+', 
-      icon: Code, 
-      color: 'text-neon-purple' 
+    {
+      label: isArabic ? 'مشروع منجز' : 'Projects Completed',
+      value: liveStats?.projects ?? '—',
+      icon: Code,
+      color: 'text-neon-purple'
     },
-    { 
-      label: isArabic ? 'شهادة معتمدة' : 'Certificates Issued', 
-      value: '850+', 
-      icon: Award, 
-      color: 'text-primary' 
+    {
+      label: isArabic ? 'شهادة معتمدة' : 'Certificates Issued',
+      value: liveStats?.certificates ?? '—',
+      icon: Award,
+      color: 'text-primary'
     },
   ];
 
   const features = [
     {
       title: isArabic ? 'علم البيانات والتحليل' : 'Data Science',
-      desc: isArabic 
+      desc: isArabic
         ? 'إتقان بايثون، ومكتبات Pandas و NumPy وبناء النماذج الإحصائية مع ورش تدريبية متخصصة.'
         : 'Master Python, R, and statistical modeling with our expert-led workshops.',
       icon: Database,
@@ -123,7 +125,7 @@ const Home = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-xl text-muted-foreground leading-relaxed max-w-3xl"
             >
-              {isArabic 
+              {isArabic
                 ? 'انضم إلى مجتمع طلابي نخبوي يتقن هندسة البيانات، والذكاء الاصطناعي، ومحرر الأكواد التفاعلي مع شهادات أكاديمية معتمدة.'
                 : (homeContent?.heroSubtitle || 'Join the elite community of data scientists and software engineers.')}
             </motion.p>
@@ -178,8 +180,8 @@ const Home = () => {
                 initial={{ opacity: 0, y: 30, rotateX: 45 }}
                 whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
-                transition={{ 
-                  duration: 0.8, 
+                transition={{
+                  duration: 0.8,
                   delay: i * 0.1,
                   type: "spring",
                   stiffness: 100
@@ -200,7 +202,7 @@ const Home = () => {
 
       {/* Features Section */}
       <section className="px-4 md:px-12 w-full">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -251,14 +253,14 @@ const Home = () => {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
           <div className="space-y-6">
             <h2 className="text-2xl sm:text-4xl md:text-6xl font-black font-cyber tracking-tighter">
-              {user 
-                ? (isArabic ? 'مرحباً بعودتك إلى المنصة' : 'Welcome back to the grid') 
+              {user
+                ? (isArabic ? 'مرحباً بعودتك إلى المنصة' : 'Welcome back to the grid')
                 : (isArabic ? 'هل أنت مستعد لتطوير مهاراتك البرمجية؟' : 'Ready to upgrade your skills?')}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground">
-              {user 
-                ? (isArabic ? 'تابع رحلتك الأكاديمية وتقدمك في دورات علم البيانات وهندسة الذكاء الاصطناعي.' : 'Continue your journey into the future of data and software engineering.') 
-                : (isArabic ? 'انضم إلى أكثر من 1,000 طالب يتعلمون ويبنون معاً في جامعة الابتكار. العضوية مجانية ومفتوحة لجميع الطلاب.' : 'Join 1,000+ students already learning and building together. Membership is free for all university students.')}
+              {user
+                ? (isArabic ? 'تابع رحلتك الأكاديمية وتقدمك في دورات علم البيانات وهندسة الذكاء الاصطناعي.' : 'Continue your journey into the future of data and software engineering.')
+                : (isArabic ? 'انضم إلى مجتمع الطلاب للتعلم والبناء معاً في جامعة الابتكار. العضوية مجانية ومفتوحة لجميع الطلاب.' : 'Join our student community to learn and build together. Membership is free for all university students.')}
             </p>
             <Link to={user ? "/dashboard" : "/register"} className="inline-block w-full sm:w-auto">
               <Button size="lg" variant="cyber" className="w-full sm:px-16 py-8 text-lg md:text-xl font-bold">

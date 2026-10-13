@@ -121,7 +121,7 @@ const Login = () => {
                   onClick={() => setShowGoogleModal(true)}
                   className="text-[11px] font-mono text-muted-foreground/70 hover:text-primary transition-colors underline decoration-dotted"
                 >
-                  {isArabic ? '⚡ تجربة الحسابات السريعة (حساب المشرف / حساب العضو)' : '⚡ Quick Demo Accounts Switcher'}
+                  {isArabic ? 'اختيار حساب Google' : 'Choose Google Account'}
                 </button>
               </div>
             )}

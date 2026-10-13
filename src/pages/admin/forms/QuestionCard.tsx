@@ -4,9 +4,9 @@
  */
 
 import React, { useState } from 'react';
-import { 
-  Trash2, Copy, ArrowUp, ArrowDown, GripVertical, 
-  Plus, X, Star, Heart, Check, Circle, GitBranch, 
+import {
+  Trash2, Copy, ArrowUp, ArrowDown, GripVertical,
+  Plus, X, Star, Heart, Check, Circle, GitBranch,
   Settings2, HelpCircle, Upload, Calendar, Clock, Hash, Mail
 } from 'lucide-react';
 import { FormQuestion, ChoiceOption, QuestionType } from '../../../types/forms';
@@ -157,7 +157,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
           {/* Quick Reorder and Actions */}
           <div className="flex items-center space-x-1 rtl:space-x-reverse">
-            <button
+            <button aria-label={isArabic ? 'تحريك لأعلى' : 'Move up'}
               type="button"
               disabled={index === 0}
               onClick={(e) => {
@@ -169,7 +169,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             >
               <ArrowUp className="w-4 h-4" />
             </button>
-            <button
+            <button aria-label={isArabic ? 'تحريك لأسفل' : 'Move down'}
               type="button"
               disabled={index === totalQuestions - 1}
               onClick={(e) => {
@@ -181,7 +181,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             >
               <ArrowDown className="w-4 h-4" />
             </button>
-            <button
+            <button aria-label={isArabic ? 'تكرار السؤال' : 'Duplicate'}
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -192,7 +192,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             >
               <Copy className="w-4 h-4" />
             </button>
-            <button
+            <button aria-label={isArabic ? 'حذف السؤال' : 'Delete'}
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -239,7 +239,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 }
                 className="w-full bg-transparent border-b border-white/5 focus:border-primary/30 px-1 py-1 text-xs md:text-sm text-muted-foreground focus:outline-none transition-colors placeholder:text-muted-foreground/40"
               />
-              <button
+              <button aria-label="Close"
                 type="button"
                 onClick={() => {
                   setShowDescription(false);
@@ -312,7 +312,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     </select>
                   )}
 
-                  <button
+                  <button aria-label="Close"
                     type="button"
                     disabled={(question.options || []).length <= 1}
                     onClick={() => handleDeleteOption(opt.id)}

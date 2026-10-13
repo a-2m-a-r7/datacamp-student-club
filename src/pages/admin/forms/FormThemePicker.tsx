@@ -1,3 +1,4 @@
+import { Dialog } from '../../../components/ui/Dialog';
 /**
  * src/pages/admin/forms/FormThemePicker.tsx
  * Visual theme & color palette selector for forms
@@ -86,8 +87,8 @@ export const FormThemePicker: React.FC<FormThemePickerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div 
+    <Dialog onClose={onClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+      <div
         className="w-full max-w-md bg-card/95 border border-white/10 rounded-2xl p-6 shadow-2xl glass cyber-glow"
         onClick={(e) => e.stopPropagation()}
       >
@@ -105,7 +106,7 @@ export const FormThemePicker: React.FC<FormThemePickerProps> = ({
               </p>
             </div>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-2 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-lg transition-colors"
           >
@@ -202,6 +203,6 @@ export const FormThemePicker: React.FC<FormThemePickerProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 };

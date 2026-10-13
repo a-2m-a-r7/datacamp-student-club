@@ -13,9 +13,7 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Method not allowed. Use POST.' });
   }
 
-  const apiKey =
-    process.env.GEMINI_API_KEY ||
-    process.env.VITE_GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey.trim().length < 10) {
     return res.status(503).json({
@@ -26,7 +24,9 @@ export default async function handler(req: any, res: any) {
 
   const { prompt, systemPrompt, history } = req.body || {};
 
-  if (!prompt || typeof prompt !== 'string') {
+  if (!prompt || typeof prompt !== 'string' || prompt.length > 4000 ||
+    (systemPrompt && (typeof systemPrompt !== 'string' || systemPrompt.length > 20000)) ||
+    (history && (!Array.isArray(history) || history.length > 12 || JSON.stringify(history).length > 30000))) {
     return res.status(400).json({ error: 'Missing prompt in request body.' });
   }
 

@@ -1,3 +1,4 @@
+import { Dialog } from '../../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -6,7 +7,6 @@ import { Plus, Trash2, Edit3, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { UserIdentityInput } from '../../components/UserIdentityInput';
-import { demoUsers } from '../../lib/demoData';
 import { contentService } from '../../services/contentService';
 
 const BlogManagement = () => {
@@ -17,6 +17,7 @@ const BlogManagement = () => {
   const [authorType, setAuthorType] = useState<'email' | 'id'>('email');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [editingPost, setEditingPost] = useState<any>(null);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -34,42 +35,48 @@ const BlogManagement = () => {
         if (data) setUsers(data);
       });
     } else {
-      setUsers(demoUsers);
+      setUsers([]);
     }
 
     return contentService.subscribe('blog', loadPosts);
   }, []);
 
   const resetForm = () => {
-    setNewPost({ 
-      title: '', 
-      excerpt: '', 
-      author: '', 
-      date: new Date().toISOString().split('T')[0] 
+    setEditingPost(null);
+    setNewPost({
+      title: '',
+      excerpt: '',
+      author: '',
+      date: new Date().toISOString().split('T')[0]
     });
     setAuthorType('email');
   };
 
   const addPost = async () => {
+    if (isSubmitting) return;
     if (!newPost.title) {
       toast.error('Post title is required');
       return;
     }
 
     setIsSubmitting(true);
-    const authorLabel = newPost.author 
+    const authorLabel = newPost.author
       ? (authorType === 'email' ? newPost.author : `ID: ${newPost.author}`)
       : 'Club Admin';
 
     const postData = { ...newPost, author: authorLabel, createdAt: new Date().toISOString() };
 
     try {
-      const created = await contentService.create('blog', {
+      const payload = {
+        ...editingPost,
         ...postData,
         content: newPost.excerpt,
-        status: 'published',
-      });
-      setPosts(prev => [created, ...prev]);
+        status: editingPost?.status || 'published',
+      };
+      const created = editingPost
+        ? await contentService.update('blog', editingPost.id, payload)
+        : await contentService.create('blog', payload);
+      setPosts(prev => editingPost ? prev.map(post => post.id === created.id ? created : post) : [created, ...prev]);
       setShowAddModal(false);
       resetForm();
       toast.success('Transmission published to Supabase');
@@ -97,7 +104,7 @@ const BlogManagement = () => {
           <h1 className="text-2xl sm:text-3xl font-black font-cyber tracking-tighter">BLOG MANAGEMENT</h1>
           <p className="text-muted-foreground">Manage articles and news transmissions.</p>
         </div>
-        <Button variant="cyber" onClick={() => setShowAddModal(true)}>
+        <Button variant="cyber" onClick={() => { resetForm(); setShowAddModal(true); }}>
           <Plus className="w-4 h-4 mr-2" />
           NEW_POST
         </Button>
@@ -117,8 +124,12 @@ const BlogManagement = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="icon" className="hover:text-primary"><Edit3 className="w-4 h-4" /></Button>
-                <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => setDeleteConfirmId(post.id)}><Trash2 className="w-4 h-4" /></Button>
+                <Button aria-label={`Edit ${post.title}`} variant="ghost" size="icon" className="hover:text-primary" onClick={() => {
+                  setEditingPost(post);
+                  setNewPost({ title: post.title, excerpt: post.content || post.excerpt || '', author: post.author || '', date: post.date });
+                  setAuthorType('email'); setShowAddModal(true);
+                }}><Edit3 className="w-4 h-4" /></Button>
+                <Button aria-label="Delete" variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => setDeleteConfirmId(post.id)}><Trash2 className="w-4 h-4" /></Button>
               </div>
             </CardContent>
           </Card>
@@ -126,7 +137,7 @@ const BlogManagement = () => {
       </div>
 
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
+        <Dialog onClose={() => setDeleteConfirmId(null)} className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-dark-navy/95 backdrop-blur-xl">
           <Card className="w-full max-w-sm border-destructive/30 shadow-[0_0_50px_rgba(255,0,0,0.1)]">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-destructive/20">
@@ -143,21 +154,21 @@ const BlogManagement = () => {
               }}>CONFIRM_PURGE</Button>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
 
       {showAddModal && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 md:p-10 bg-dark-navy/90 backdrop-blur-md overflow-y-auto custom-scrollbar">
+        <Dialog onClose={() => setShowAddModal(false)} className="fixed inset-0 z-[100] flex items-start justify-center p-4 md:p-10 bg-dark-navy/90 backdrop-blur-md overflow-y-auto custom-scrollbar">
           <Card className="w-full max-w-lg border-primary/30 my-auto">
-            <CardHeader><CardTitle className="font-cyber">INITIALIZE_POST</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="font-cyber">{editingPost ? 'EDIT_POST' : 'INITIALIZE_POST'}</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Title</label>
                 <Input value={newPost.title} onChange={(e) => setNewPost({...newPost, title: e.target.value})} />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Excerpt / Summary</label>
-                <textarea 
+                <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Article Content</label>
+                <textarea
                   className="w-full bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:ring-1 focus:ring-primary outline-none min-h-[80px]"
                   value={newPost.excerpt}
                   onChange={(e) => setNewPost({...newPost, excerpt: e.target.value})}
@@ -165,7 +176,7 @@ const BlogManagement = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Author Identification (Optional)</label>
-                <UserIdentityInput 
+                <UserIdentityInput
                   suggestions={users}
                   onValueChange={(val, type) => {
                     setNewPost({...newPost, author: val});
@@ -181,7 +192,7 @@ const BlogManagement = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </Dialog>
       )}
     </div>
   );

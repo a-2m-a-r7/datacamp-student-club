@@ -1,7 +1,6 @@
-import { toast } from 'sonner';
+import { isSupabaseConfigured, supabase } from './supabase';
 
 // In-memory storage for Demo / Verification OTPs
-const demoStore: Record<string, { otp: string; expiresAt: number; attempts: number }> = {};
 
 const hashOTP = async (otp: string) => {
   const msgUint8 = new TextEncoder().encode(otp);
@@ -18,35 +17,22 @@ export const generateOTP = () => {
 };
 
 export const sendOTP = async (target: string, _type: 'email' | 'phone') => {
-  const otp = generateOTP();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-  demoStore[target] = { otp, expiresAt: expiresAt.getTime(), attempts: 0 };
-  toast.info(`رمز التحقق: ${otp}`);
-  return true;
+  if (!isSupabaseConfigured) return false;
+  const { data: identity, error: identityError } = await supabase.auth.getUser();
+  if (identityError || !identity.user) return false;
+  if (_type === 'email' && identity.user.email?.toLowerCase() !== target.trim().toLowerCase()) return false;
+  if (_type === 'phone' && identity.user.phone !== target.trim()) return false;
+  const { error } = await supabase.auth.signInWithOtp(_type === 'email'
+    ? { email: target.trim(), options: { shouldCreateUser: false } }
+    : { phone: target.trim(), options: { shouldCreateUser: false } });
+  return !error;
 };
 
 export const verifyOTP = async (target: string, code: string, _type: 'email' | 'phone' = 'email') => {
-  const saved = demoStore[target];
-  if (!saved) return false;
-
-  if (Date.now() > saved.expiresAt) {
-    delete demoStore[target];
-    return false;
-  }
-
-  if (saved.attempts >= 5) {
-    delete demoStore[target];
-    return false;
-  }
-
-  const isValid = saved.otp === code;
-  if (isValid) {
-    delete demoStore[target];
-    return true;
-  } else {
-    saved.attempts = (saved.attempts || 0) + 1;
-    return false;
-  }
+  if (!isSupabaseConfigured || !/^\d{6}$/.test(code)) return false;
+  const { data, error } = await supabase.auth.verifyOtp(_type === 'email'
+    ? { email: target.trim(), token: code, type: 'email' }
+    : { phone: target.trim(), token: code, type: 'sms' });
+  return !error && Boolean(data.session?.user);
 };
 

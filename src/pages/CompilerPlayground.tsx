@@ -81,8 +81,8 @@ export const CompilerPlayground = () => {
     }
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
+  const handleCopy = async () => {
+    try { await navigator.clipboard.writeText(code); } catch { toast.error('Clipboard permission was denied.'); return; }
     setCopied(true);
     toast.success('Code copied to clipboard');
     setTimeout(() => setCopied(false), 2000);
@@ -130,7 +130,7 @@ export const CompilerPlayground = () => {
               )}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              {isArabic 
+              {isArabic
                 ? 'اكتب، ونفّذ، واختبر أكواد بايثون، جافاسكريبت، تايب سكريبت، SQL، C++، جافا، R، و Rust فورياً بدون أي إعدادات مسبقة.'
                 : 'Write, compile, and run code instantly in Python, JavaScript, TypeScript, SQL, C++, Java, R, Go, & Rust with zero setup.'}
             </p>
@@ -250,14 +250,14 @@ export const CompilerPlayground = () => {
               >
                 {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
               </button>
-              <button
+              <button aria-label="Download Source File"
                 onClick={handleDownload}
                 className="p-1.5 hover:bg-white/10 rounded transition-colors text-muted-foreground hover:text-white"
                 title="Download Source File"
               >
                 <Download className="w-4 h-4" />
               </button>
-              <button
+              <button aria-label="Reset Code"
                 onClick={handleReset}
                 className="p-1.5 hover:bg-white/10 rounded transition-colors text-muted-foreground hover:text-white"
                 title="Reset Code"
@@ -304,7 +304,7 @@ export const CompilerPlayground = () => {
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{isArabic ? 'المحرك: جاهز' : 'Engine: Ready'}</span>
+              <span>{isArabic ? 'المحرر: جاهز' : 'Editor: Ready'}</span>
             </div>
           </div>
         </div>
@@ -350,7 +350,7 @@ export const CompilerPlayground = () => {
                 <div className="space-y-1">
                   <p className="font-cyber text-sm text-white">{isArabic ? 'منصة الأوامر جاهزة' : 'CONSOLE READY'}</p>
                   <p className="text-xs font-mono">
-                    {isArabic 
+                    {isArabic
                       ? `اضغط "تشغيل الكود" لتنفيذ السكربت بلغة ${activeLang.name}.`
                       : `Press 'RUN CODE' to execute your script in ${activeLang.name}.`}
                   </p>

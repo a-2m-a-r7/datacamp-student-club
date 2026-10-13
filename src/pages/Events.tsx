@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
@@ -8,10 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import { Button } from '../components/ui/Button';
 import { toast } from 'sonner';
 import { QRCodeSVG } from 'qrcode.react';
-import { demoEvents } from '../lib/demoData';
 import { contentService } from '../services/contentService';
 
 const Events = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { isArabic, t } = useLanguage();
   const [events, setEvents] = useState<any[]>([]);
@@ -24,10 +24,10 @@ const Events = () => {
     const loadEvents = async () => {
       try {
         const rows = await contentService.list('events', { orderBy: 'date' });
-        setEvents(rows.length > 0 ? rows : demoEvents);
+        setEvents(rows);
       } catch (error) {
         console.warn('Events load error:', error);
-        setEvents(demoEvents);
+        setEvents([]);
       } finally {
         setLoading(false);
       }
@@ -37,7 +37,7 @@ const Events = () => {
     return contentService.subscribe('events', loadEvents);
   }, []);
 
-  const filteredEvents = events.filter(event => 
+  const filteredEvents = events.filter(event =>
     event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     event.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -78,7 +78,7 @@ const Events = () => {
     <div className="min-h-screen pt-20 md:pt-24 pb-20 px-6 lg:px-12">
       <AnimatePresence>
         {showSuccess && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -117,7 +117,7 @@ const Events = () => {
 
       <div className="max-w-7xl mx-auto space-y-12">
         <div className="text-center space-y-4">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl sm:text-5xl md:text-7xl font-black font-cyber tracking-tighter"
@@ -128,13 +128,13 @@ const Events = () => {
               <>Upcoming <span className="text-primary">Events</span></>
             )}
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="text-muted-foreground max-w-2xl mx-auto"
           >
-            {isArabic 
+            {isArabic
               ? 'انضم إلى فعالياتنا ومؤتمراتنا التقنية لفك شفرات المستقبل. من ورش العمل التفاعلية إلى الهاكاثونات السنوية، ابق على اطلاع بأحدث مستجدات الذكاء الاصطناعي وعلم البيانات.'
               : 'Join our missions to decode the future. From workshops to summits, stay updated with the latest in data science and AI.'}
           </motion.p>
@@ -143,9 +143,9 @@ const Events = () => {
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass p-4 rounded-2xl border-white/10">
           <div className="relative w-full md:w-96">
             <Search className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder={isArabic ? 'ابحث في الفعاليات والورش...' : 'Search missions...'} 
+            <input
+              type="text"
+              placeholder={isArabic ? 'ابحث في الفعاليات والورش...' : 'Search missions...'}
               className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 rtl:pl-4 rtl:pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -171,19 +171,19 @@ const Events = () => {
               </div>
               <div className="space-y-2 max-w-lg mx-auto">
                 <h3 className="text-xl sm:text-2xl font-cyber font-bold text-white">
-                  {isArabic ? 'قاعدة البيانات جاهزة • جدول الفعاليات قيد الجدولة' : 'DATABASE READY • MISSIONS SCHEDULE PENDING'}
+                  {isArabic ? 'لا توجد فعاليات متاحة' : 'NO EVENTS AVAILABLE'}
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  {isArabic 
-                    ? 'قاعدة البيانات متصلة وجاهزة لاستقبال فعاليات النادي القادمة. تعكف لجنة التنظيم حالياً على جدولة الورش والهاكاثونات الجديدة.'
-                    : 'The live database is connected and ready to receive upcoming club events. The events committee is scheduling upcoming workshops and hackathons.'}
+                  {isArabic
+                    ? 'لم نعثر على فعاليات تطابق البحث. حاول تغيير الفلاتر أو تواصل مع النادي.'
+                    : 'No events match your search. Change the filters or contact the club.'}
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
                 <Button
                   variant="cyber"
                   size="sm"
-                  onClick={() => setEvents(demoEvents)}
+                  onClick={() => navigate('/contact')}
                 >
                   {isArabic ? 'عرض نماذج الفعاليات' : 'PREVIEW SAMPLE MISSIONS'}
                 </Button>
@@ -220,15 +220,15 @@ const Events = () => {
                   <p className="text-sm text-muted-foreground line-clamp-3">
                     {event.description}
                   </p>
-                  
+
                   <div className="space-y-3">
                     <div className="flex items-center text-xs text-muted-foreground">
                       <Calendar className="w-4 h-4 mr-3 rtl:mr-0 rtl:ml-3 text-primary" />
-                      {new Date(event.date).toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
+                      {new Date(event.date).toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
                       })}
                     </div>
                     <div className="flex items-center text-xs text-muted-foreground">
@@ -246,13 +246,13 @@ const Events = () => {
                   </div>
 
                   <div className="pt-6">
-                    <Button 
-                      variant="cyber" 
+                    <Button
+                      variant="cyber"
                       className="w-full"
                       disabled={registering === event.id || event.registeredCount >= event.capacity}
                       onClick={() => handleRegister(event)}
                     >
-                      {registering === event.id ? (isArabic ? 'جاري المعالجة...' : 'PROCESSING...') : 
+                      {registering === event.id ? (isArabic ? 'جاري المعالجة...' : 'PROCESSING...') :
                        event.registeredCount >= event.capacity ? (isArabic ? 'اكتمل العدد' : 'MISSION FULL') : (isArabic ? 'تأكيد التسجيل في الفعالية' : 'INITIALIZE REGISTRATION')}
                     </Button>
                   </div>

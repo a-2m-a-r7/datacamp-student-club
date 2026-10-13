@@ -20,7 +20,7 @@ interface QuizEngineProps {
   passingScore?: number; // default 80%
   pointsRewardPass?: number;
   pointsRewardPerfect?: number;
-  onComplete: (scorePercentage: number, passed: boolean) => void;
+  onComplete: (scorePercentage: number, passed: boolean, answers: Record<number, number>) => void | Promise<void>;
   onAskAI?: (questionText: string) => void;
 }
 
@@ -36,6 +36,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const currentQ = questions[currentIndex];
   const total = questions.length;
@@ -57,7 +58,8 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
     }
   };
 
-  const handleSubmitQuiz = () => {
+  const handleSubmitQuiz = async () => {
+    if (submitting || submitted || !total) return;
     // Check if any unanswered
     const answeredCount = Object.keys(selectedAnswers).length;
     if (answeredCount < total) {
@@ -69,7 +71,6 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
       if (!confirmSubmit) return;
     }
 
-    setSubmitted(true);
 
     // Calculate score
     let correctCount = 0;
@@ -82,15 +83,14 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
     const scorePct = Math.round((correctCount / total) * 100);
     const passed = scorePct >= passingScore;
 
-    if (scorePct === 100) {
-      toast.success(isArabic ? `🏆 درجة كاملة! 100% (+${pointsRewardPerfect} XP!)` : `🏆 PERFECT SCORE! 100% (+${pointsRewardPerfect} XP awarded!)`);
-    } else if (passed) {
-      toast.success(isArabic ? `🎉 تم اجتياز الاختبار بنجاح! ${scorePct}% (+${pointsRewardPass} XP!)` : `🎉 QUIZ PASSED! ${scorePct}% (+${pointsRewardPass} XP awarded!)`);
-    } else {
-      toast.error(isArabic ? `الدرجة: ${scorePct}%. درجة النجاح هي ${passingScore}%. راجع المنهج وحاول مجدداً!` : `Score: ${scorePct}%. Passing score is ${passingScore}%. Try again!`);
-    }
-
-    onComplete(scorePct, passed);
+    setSubmitting(true);
+    try {
+      await onComplete(scorePct, passed, selectedAnswers);
+      setSubmitted(true);
+      if (passed) toast.success(isArabic ? 'تم اجتياز الاختبار وحفظ النتيجة' : 'Quiz passed and result saved');
+      else toast.error(isArabic ? 'لم تصل إلى درجة النجاح' : 'Passing score not reached');
+    } catch (error: any) { toast.error(error.message || 'Result could not be saved. Please retry.'); }
+    finally { setSubmitting(false); }
   };
 
   const handleRetake = () => {
@@ -106,6 +106,8 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   }).length;
   const scorePct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
   const passed = scorePct >= passingScore;
+
+  if (!total) return <p role="status" className="p-6 text-center text-muted-foreground">{isArabic ? 'لا يوجد اختبار منشور لهذه الدورة بعد.' : 'No assessment has been published for this course.'}</p>;
 
   return (
     <div className="max-w-3xl mx-auto rounded-2xl border border-primary/30 bg-dark-navy/90 backdrop-blur-2xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,255,204,0.12)] space-y-6">
@@ -142,8 +144,8 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
             {isArabic ? `السؤال ${currentIndex + 1} من ${total}` : `Question ${currentIndex + 1} of ${total}`}
           </span>
           <span>
-            {isArabic 
-              ? `تمت الإجابة على ${Object.keys(selectedAnswers).length}` 
+            {isArabic
+              ? `تمت الإجابة على ${Object.keys(selectedAnswers).length}`
               : `${Object.keys(selectedAnswers).length} answered`
             }
           </span>
@@ -208,7 +210,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
               disabled={currentIndex === 0}
               className="font-cyber text-xs border-white/20"
             >
-              <ArrowLeft className={`w-3.5 h-3.5 ${isArabic ? 'ml-1 rotate-180' : 'mr-1'}`} /> 
+              <ArrowLeft className={`w-3.5 h-3.5 ${isArabic ? 'ml-1 rotate-180' : 'mr-1'}`} />
               {isArabic ? 'السابق' : 'PREV'}
             </Button>
 
@@ -217,9 +219,10 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
                 <Button
                   size="sm"
                   onClick={handleSubmitQuiz}
+                  disabled={submitting}
                   className="font-cyber text-xs bg-primary hover:bg-primary/90 text-dark-navy font-bold shadow-[0_0_15px_rgba(0,255,204,0.3)]"
                 >
-                  {isArabic ? 'تسليم الاختبار' : 'SUBMIT ASSESSMENT'} 
+                  {isArabic ? 'تسليم الاختبار' : 'SUBMIT ASSESSMENT'}
                   <CheckCircle2 className={`w-3.5 h-3.5 ${isArabic ? 'mr-1' : 'ml-1'}`} />
                 </Button>
               ) : (
@@ -228,7 +231,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
                   onClick={handleNext}
                   className="font-cyber text-xs bg-primary/80 hover:bg-primary text-dark-navy font-bold"
                 >
-                  {isArabic ? 'التالي' : 'NEXT'} 
+                  {isArabic ? 'التالي' : 'NEXT'}
                   <ArrowRight className={`w-3.5 h-3.5 ${isArabic ? 'mr-1 rotate-180' : 'ml-1'}`} />
                 </Button>
               )}
@@ -247,8 +250,8 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           >
             <div className="text-4xl">{passed ? (scorePct === 100 ? '🏆' : '🎉') : '📚'}</div>
             <h3 className="text-2xl font-cyber font-black text-white">
-              {passed 
-                ? (isArabic ? 'تم اجتياز الاختبار بنجاح!' : 'ASSESSMENT COMPLETED!') 
+              {passed
+                ? (isArabic ? 'تم اجتياز الاختبار بنجاح!' : 'ASSESSMENT COMPLETED!')
                 : (isArabic ? 'بحاجة لمزيد من المراجعة' : 'NEEDS IMPROVEMENT')
               }
             </h3>
@@ -257,7 +260,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
             </div>
             <p className="text-xs font-mono text-muted-foreground max-w-md mx-auto">
               {passed
-                ? (isArabic 
+                ? (isArabic
                     ? `تهانينا! حققت نسبة النجاح (${passingScore}%). تمت إضافة نقاط XP إلى حسابك.`
                     : `Congratulations! You met the passing criteria (${passingScore}%). Your XP bounty has been added to your club record.`)
                 : (isArabic
@@ -328,7 +331,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
               onClick={handleRetake}
               className="font-cyber text-xs border-white/20"
             >
-              <RotateCcw className={`w-3.5 h-3.5 ${isArabic ? 'ml-1' : 'mr-1'}`} /> 
+              <RotateCcw className={`w-3.5 h-3.5 ${isArabic ? 'ml-1' : 'mr-1'}`} />
               {isArabic ? 'إعادة الاختبار' : 'RETAKE QUIZ'}
             </Button>
           </div>

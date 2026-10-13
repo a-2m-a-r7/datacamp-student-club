@@ -1,15 +1,10 @@
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import {
-  demoAboutData,
-  demoBlog,
-  demoEvents,
-  demoGallery,
-  demoHomeContent,
-  demoProjects,
-  demoSettings,
-  demoStaff,
-} from '../lib/demoData';
+  defaultAboutData,
+  defaultHomeContent,
+  defaultSettings,
+} from '../lib/defaultContent';
 
 type TableName =
   | 'events'
@@ -31,20 +26,20 @@ const normalizeSettingsKey = (key: string) => {
 };
 
 const fallbackSettings: Record<string, any> = {
-  general: demoSettings,
-  site: demoSettings,
-  home_content: demoHomeContent,
-  home: demoHomeContent,
-  about_data: demoAboutData,
-  about: demoAboutData,
+  general: defaultSettings,
+  site: defaultSettings,
+  home_content: defaultHomeContent,
+  home: defaultHomeContent,
+  about_data: defaultAboutData,
+  about: defaultAboutData,
 };
 
 const fallbackRows: Record<string, any[]> = {
-  events: demoEvents,
-  staff: demoStaff,
-  projects: demoProjects,
-  blog: demoBlog,
-  gallery: demoGallery,
+  events: [],
+  staff: [],
+  projects: [],
+  blog: [],
+  gallery: [],
   messages: [],
   notifications: [],
 };
@@ -201,7 +196,7 @@ export const contentService = {
 
   async upsertSetting(key: string, value: any): Promise<void> {
     const normalizedKey = normalizeSettingsKey(key);
-    if (!isSupabaseConfigured) return;
+    if (!isSupabaseConfigured) throw new Error('Database is not configured. No changes were saved.');
 
     const { error } = await supabase
       .from('settings')
@@ -214,10 +209,11 @@ export const contentService = {
     if (!isSupabaseConfigured) return [...(fallbackRows[table] || [])];
 
     let query = supabase
-      .from(table)
+      .from(table === 'events' && !options.includeDrafts ? 'public_events' : table)
       .select('*')
       .order(options.orderBy || 'created_at', { ascending: options.ascending ?? false });
 
+    if (!options.includeDrafts && table === 'projects') query = query.eq('status', 'active');
     if (!options.includeDrafts && (table === 'blog' || table === 'events')) {
       query = query.eq('status', 'published');
     }
@@ -228,10 +224,16 @@ export const contentService = {
   },
 
   async create(table: TableName, data: any): Promise<any> {
-    if (!isSupabaseConfigured) return { ...data, id: `local_${Date.now()}`, createdAt: new Date().toISOString() };
+    if (!isSupabaseConfigured) throw new Error('Database is not configured. No changes were saved.');
+    const payload = mapToSupabase(table, data);
+    if (table === 'projects') {
+      const { data: identity, error } = await supabase.auth.getUser();
+      if (error || !identity.user) throw new Error('Sign in before submitting a project.');
+      payload.created_by = identity.user.id;
+    }
     const { data: row, error } = await supabase
       .from(table)
-      .insert(mapToSupabase(table, data))
+      .insert(payload)
       .select()
       .single();
     if (error) throw error;
@@ -239,7 +241,7 @@ export const contentService = {
   },
 
   async update(table: TableName, id: string, data: any): Promise<any> {
-    if (!isSupabaseConfigured) return { ...data, id, createdAt: data.createdAt || new Date().toISOString() };
+    if (!isSupabaseConfigured) throw new Error('Database is not configured. No changes were saved.');
     const { data: row, error } = await supabase
       .from(table)
       .update(mapToSupabase(table, data))
@@ -251,7 +253,7 @@ export const contentService = {
   },
 
   async remove(table: TableName, id: string): Promise<void> {
-    if (!isSupabaseConfigured) return;
+    if (!isSupabaseConfigured) throw new Error('Database is not configured. No changes were saved.');
     const { error } = await supabase.from(table).delete().eq('id', id);
     if (error) throw error;
   },
@@ -283,7 +285,7 @@ export const contentService = {
       qrCode: `REG-${event.id}-${userId}`,
     };
 
-    if (!isSupabaseConfigured) return registrationData;
+    if (!isSupabaseConfigured) throw new Error('Database is not configured. Registration was not saved.');
 
     const { data, error } = await supabase.rpc('register_for_event', { target_event_id: event.id });
     if (error) throw error;

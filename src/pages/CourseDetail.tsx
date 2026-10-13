@@ -1,3 +1,4 @@
+import { copyText } from '../lib/clipboard';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -218,8 +219,8 @@ const CourseDetail = () => {
                 {isEnrolled ? (
                   <Link to={`/courses/${course.slug}/learn`}>
                     <Button variant="cyber" className="w-full h-12 font-cyber tracking-wider text-sm shadow-[0_0_20px_rgba(0,255,204,0.3)]">
-                      {progress >= 100 
-                        ? (isArabic ? 'مراجعة الدورة' : 'REVIEW_COURSE') 
+                      {progress >= 100
+                        ? (isArabic ? 'مراجعة الدورة' : 'REVIEW_COURSE')
                         : (isArabic ? 'استكمال التعلم' : 'CONTINUE_LEARNING')
                       }
                     </Button>
@@ -231,8 +232,8 @@ const CourseDetail = () => {
                     onClick={handleEnroll}
                     disabled={enrolling}
                   >
-                    {enrolling 
-                      ? (isArabic ? 'جاري تفعيل الحساب...' : 'INITIALIZING_ACCESS...') 
+                    {enrolling
+                      ? (isArabic ? 'جاري تفعيل الحساب...' : 'INITIALIZING_ACCESS...')
                       : (isArabic ? 'سجل في المسار (+5 XP)' : 'ENROLL_NOW (+5 XP)')
                     }
                   </Button>
@@ -253,8 +254,7 @@ const CourseDetail = () => {
                   variant="outline"
                   className="w-full h-10 font-cyber text-xs border-white/10 hover:border-primary/40 gap-2"
                   onClick={() => {
-                    navigator.clipboard.writeText(getCanonicalUrl(`/courses/${course.slug}`));
-                    toast.success(isArabic ? 'تم نسخ رابط الدورة إلى الحافظة!' : 'Course link copied to clipboard!');
+                    void copyText(getCanonicalUrl(`/courses/${course.slug}`), isArabic ? 'تم نسخ رابط الدورة إلى الحافظة!' : 'Course link copied to clipboard!');
                   }}
                 >
                   <Share2 className="w-3.5 h-3.5" />

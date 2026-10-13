@@ -1,12 +1,13 @@
+import { Dialog } from '../../../components/ui/Dialog';
 /**
  * src/pages/admin/forms/QuestionTypePicker.tsx
  * Interactive question type selector inspired by Microsoft Forms
  */
 
 import React from 'react';
-import { 
-  Type, AlignLeft, CircleDot, CheckSquare, List, 
-  Star, Sliders, Calendar, Clock, Hash, Mail, 
+import {
+  Type, AlignLeft, CircleDot, CheckSquare, List,
+  Star, Sliders, Calendar, Clock, Hash, Mail,
   UploadCloud, ArrowDownUp, Split, Plus, X
 } from 'lucide-react';
 import { QuestionType } from '../../../types/forms';
@@ -155,8 +156,8 @@ export const QuestionTypePicker: React.FC<QuestionTypePickerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div 
+    <Dialog onClose={onClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+      <div
         className="w-full max-w-2xl bg-card/95 border border-white/10 rounded-2xl p-6 shadow-2xl glass cyber-glow"
         onClick={(e) => e.stopPropagation()}
       >
@@ -174,7 +175,7 @@ export const QuestionTypePicker: React.FC<QuestionTypePickerProps> = ({
               </p>
             </div>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-2 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-lg transition-colors"
           >
@@ -217,6 +218,6 @@ export const QuestionTypePicker: React.FC<QuestionTypePickerProps> = ({
           })}
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 };

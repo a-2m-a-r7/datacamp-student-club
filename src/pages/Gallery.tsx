@@ -1,3 +1,4 @@
+import { Dialog } from '../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Camera, Search } from 'lucide-react';
@@ -5,113 +6,9 @@ import { Button } from '../components/ui/Button';
 import { useLanguage } from '../contexts/LanguageContext';
 import { contentService } from '../services/contentService';
 
-const SAMPLE_GALLERY_EN = [
-  {
-    id: 'gal-1',
-    title: 'Python for AI Bootcamp: Opening Day',
-    category: 'Workshops',
-    url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&auto=format&fit=crop&q=80',
-    date: 'February 2026',
-    description: 'Hands-on practical session at Innovation University Computer Labs introducing students to NumPy vectorization and Pandas.'
-  },
-  {
-    id: 'gal-2',
-    title: 'DataCamp Hackathon 2025: Final Pitching',
-    category: 'Hackathons',
-    url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&auto=format&fit=crop&q=80',
-    date: 'December 2025',
-    description: 'Teams presenting their computer vision solutions to industry judges and university faculty members.'
-  },
-  {
-    id: 'gal-3',
-    title: 'Orientation Day & Welcome Ceremony',
-    category: 'Campus Days',
-    url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&auto=format&fit=crop&q=80',
-    date: 'October 2025',
-    description: 'Welcoming 300+ freshmen and sophomores to the DataCamp Student Club community.'
-  },
-  {
-    id: 'gal-4',
-    title: 'Neural Networks & Deep Learning Masterclass',
-    category: 'Workshops',
-    url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&auto=format&fit=crop&q=80',
-    date: 'January 2026',
-    description: 'Training deep models using PyTorch on cloud GPU accelerators.'
-  },
-  {
-    id: 'gal-5',
-    title: 'Annual Certificates & Honors Awarding',
-    category: 'Ceremonies',
-    url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&auto=format&fit=crop&q=80',
-    date: 'January 2026',
-    description: 'Honoring top leaderboard operatives with certified club credentials and academic medals.'
-  },
-  {
-    id: 'gal-6',
-    title: 'Industry Speaker Session: AI in Egypt & MENA',
-    category: 'Campus Days',
-    url: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&auto=format&fit=crop&q=80',
-    date: 'November 2025',
-    description: 'Guest talk discussing data science hiring trends, remote work, and tech industry standards.'
-  }
-];
 
-const SAMPLE_GALLERY_AR = [
-  {
-    id: 'gal-1',
-    title: 'اليوم الافتتاحي لمعسكر بايثون والذكاء الاصطناعي',
-    category: 'Workshops',
-    categoryAr: 'ورش العمل',
-    url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&auto=format&fit=crop&q=80',
-    date: 'فبراير 2026',
-    description: 'جلسة تدريبية تطبيقية في مختبرات حاسوب جامعة الابتكار لتدريب الطلاب على مكتبات NumPy و Pandas.'
-  },
-  {
-    id: 'gal-2',
-    title: 'هاكاثون DataCamp 2025: العروض التقديمية النهائية',
-    category: 'Hackathons',
-    categoryAr: 'الهاكاثونات',
-    url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&auto=format&fit=crop&q=80',
-    date: 'ديسمبر 2025',
-    description: 'فرق الطلاب تستعرض حلول رؤية الحاسوب والذكاء الاصطناعي أمام لجنة التحكيم وأعضاء هيئة التدريس.'
-  },
-  {
-    id: 'gal-3',
-    title: 'يوم الاستقبال والتعريف بأنشطة النادي',
-    category: 'Campus Days',
-    categoryAr: 'أيام الحرم الجامعي',
-    url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&auto=format&fit=crop&q=80',
-    date: 'أكتوبر 2025',
-    description: 'استقبال أكثر من 300 طالب وطالبة من الفرق الأولى والثانية وتعريفهم بمسارات النادي.'
-  },
-  {
-    id: 'gal-4',
-    title: 'ماستركلاس الشبكات العصبية والتعلم العميق',
-    category: 'Workshops',
-    categoryAr: 'ورش العمل',
-    url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&auto=format&fit=crop&q=80',
-    date: 'يناير 2026',
-    description: 'تدريب مباشر على بناء نماذج التعلم العميق باستخدام مكتبة PyTorch والمعالجات السحابية.'
-  },
-  {
-    id: 'gal-5',
-    title: 'حفل تسليم الشهادات وتكريم المتفوقين',
-    category: 'Ceremonies',
-    categoryAr: 'حفلات التكريم',
-    url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&auto=format&fit=crop&q=80',
-    date: 'يناير 2026',
-    description: 'تكريم متصدري لوحة الأوائل وتوزيع الشهادات الأكاديمية والميداليات المعتمدة.'
-  },
-  {
-    id: 'gal-6',
-    title: 'ندوة خبراء الصناعة: الذكاء الاصطناعي وسوق العمل بمصر',
-    category: 'Campus Days',
-    categoryAr: 'أيام الحرم الجامعي',
-    url: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&auto=format&fit=crop&q=80',
-    date: 'نوفمبر 2025',
-    description: 'لقاء مفتوح مع خبراء تقنيين حول اتجاهات التوظيف في علم البيانات والعمل عن بعد.'
-  }
-];
+
+
 
 export const Gallery = () => {
   const { isArabic } = useLanguage();
@@ -120,7 +17,7 @@ export const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<any | null>(null);
   const [selectedCat, setSelectedCat] = useState('ALL');
   const [search, setSearch] = useState('');
-  const [showSampleGallery, setShowSampleGallery] = useState(false);
+
 
   const categories = isArabic ? [
     { key: 'ALL', label: 'الكل' },
@@ -151,8 +48,8 @@ export const Gallery = () => {
     return contentService.subscribe('gallery', loadGallery);
   }, [isArabic]);
 
-  const activeSamples = isArabic ? SAMPLE_GALLERY_AR : SAMPLE_GALLERY_EN;
-  const displaySource = images.length > 0 ? images : (showSampleGallery ? activeSamples : []);
+
+  const displaySource = images;
 
   const filteredImages = displaySource.filter(img => {
     const matchesCat = selectedCat === 'ALL' || (img.category && img.category.toLowerCase() === selectedCat.toLowerCase());
@@ -169,7 +66,7 @@ export const Gallery = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-cyber tracking-widest uppercase mb-4">
-              <Camera className="w-3.5 h-3.5" /> 
+              <Camera className="w-3.5 h-3.5" />
               {isArabic ? 'السجل الفوتوغرافي والذكريات' : 'VISUAL RECORD & MEMORIES'}
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-black font-cyber tracking-tighter mb-4 neon-text">
@@ -236,16 +133,7 @@ export const Gallery = () => {
             </div>
 
             <div className="flex justify-center pt-2">
-              <Button
-                variant="cyber"
-                size="sm"
-                onClick={() => setShowSampleGallery(!showSampleGallery)}
-              >
-                {showSampleGallery 
-                  ? (isArabic ? 'إخفاء الصور التجريبية' : 'HIDE SAMPLE GALLERY') 
-                  : (isArabic ? 'معاينة لحظات مصورة' : 'PREVIEW SAMPLE MOMENTS')
-                }
-              </Button>
+
             </div>
           </div>
         ) : (
@@ -260,16 +148,16 @@ export const Gallery = () => {
                 className="relative group cursor-pointer overflow-hidden rounded-2xl border border-white/10 glass break-inside-avoid"
                 onClick={() => setSelectedImage(img)}
               >
-                <img 
-                  src={img.url} 
-                  alt={img.title} 
+                <img
+                  src={img.url}
+                  alt={img.title}
                   className="w-full h-auto object-cover transition-all duration-700 group-hover:scale-105"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/broken/800/600?blur=10';
                   }}
                 />
-                
+
                 <div className="absolute inset-0 bg-dark-navy/75 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
                   <div className="transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 space-y-2">
                     <span className="px-2 py-0.5 rounded text-[9px] font-cyber bg-primary/20 text-primary border border-primary/30 uppercase">
@@ -293,14 +181,14 @@ export const Gallery = () => {
         {/* Lightbox Modal */}
         <AnimatePresence>
           {selectedImage && (
-            <motion.div
+            <Dialog onClose={() => setSelectedImage(null)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 bg-dark-navy/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6"
               onClick={() => setSelectedImage(null)}
             >
-              <button 
+              <button aria-label="Close"
                 className={`absolute top-6 ${isArabic ? 'left-6' : 'right-6'} p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors`}
                 onClick={() => setSelectedImage(null)}
               >
@@ -343,7 +231,7 @@ export const Gallery = () => {
                   )}
                 </div>
               </motion.div>
-            </motion.div>
+            </Dialog>
           )}
         </AnimatePresence>
 

@@ -6,11 +6,38 @@ import { Save, Globe, Shield, Bell, Palette, Database, Plus, Trash2 } from 'luci
 import { toast } from 'sonner';
 import ImagePicker from '../../components/ImagePicker';
 
-import { demoSettings } from '../../lib/demoData';
+import { defaultSettings } from '../../lib/defaultContent';
 import { contentService } from '../../services/contentService';
+import { authenticatedPost } from '../../lib/apiClient';
 
 const Settings = () => {
-  const [settings, setSettings] = useState(demoSettings);
+  const [settings, setSettings] = useState(defaultSettings);
+  const [busy, setBusy] = useState(false);
+  const exportRecords = async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const result = await authenticatedPost('/api/admin/backup', {});
+      const url = URL.createObjectURL(new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' }));
+      const link = document.createElement('a'); link.href = url;
+      link.download = `datacamp-records-${new Date().toISOString().slice(0, 10)}.json`;
+      link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast.success('Platform records exported');
+    } catch (err: any) { toast.error(err.message || 'Export failed'); }
+    finally { setBusy(false); }
+  };
+  const clearBrowserCache = async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      if ('caches' in window) await Promise.all((await caches.keys()).map(key => caches.delete(key)));
+      if ('serviceWorker' in navigator) await Promise.all((await navigator.serviceWorker.getRegistrations()).map(worker => worker.unregister()));
+      localStorage.removeItem('datacamp_active_session');
+      localStorage.removeItem('datacamp_gemini_api_key');
+      toast.success('Browser caches cleared');
+    } catch { toast.error('Unable to clear browser caches'); }
+    finally { setBusy(false); }
+  };
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -76,20 +103,20 @@ const Settings = () => {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Platform Main Name (Logo)</label>
-              <Input 
-                value={settings.siteName} 
+              <Input
+                value={settings.siteName}
                 onChange={(e) => setSettings({...settings, siteName: e.target.value})}
               />
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Platform Sub Name</label>
-              <Input 
-                value={settings.siteSubName} 
+              <Input
+                value={settings.siteSubName}
                 onChange={(e) => setSettings({...settings, siteSubName: e.target.value})}
               />
             </div>
             <div className="space-y-2">
-              <ImagePicker 
+              <ImagePicker
                 label="Platform Logo"
                 currentImage={settings.logoUrl}
                 onImageSelected={(base64) => setSettings({...settings, logoUrl: base64})}
@@ -97,24 +124,24 @@ const Settings = () => {
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Tagline / Description</label>
-              <Input 
-                value={settings.siteDescription} 
+              <Input
+                value={settings.siteDescription}
                 onChange={(e) => setSettings({...settings, siteDescription: e.target.value})}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Contact Email</label>
-                <Input 
+                <Input
                   type="email"
-                  value={settings.contactEmail} 
+                  value={settings.contactEmail}
                   onChange={(e) => setSettings({...settings, contactEmail: e.target.value})}
                 />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Contact Phone</label>
-                <Input 
-                  value={settings.contactPhone} 
+                <Input
+                  value={settings.contactPhone}
                   onChange={(e) => setSettings({...settings, contactPhone: e.target.value})}
                 />
               </div>
@@ -142,7 +169,7 @@ const Settings = () => {
                 <div className="flex-grow grid grid-cols-2 gap-2">
                   <div className="space-y-1">
                     <label className="text-[8px] uppercase text-muted-foreground">Platform</label>
-                    <Input 
+                    <Input
                       placeholder="e.g. Facebook"
                       value={link.platform}
                       onChange={(e) => updateSocial(idx, 'platform', e.target.value)}
@@ -150,16 +177,16 @@ const Settings = () => {
                   </div>
                   <div className="space-y-1">
                     <label className="text-[8px] uppercase text-muted-foreground">URL</label>
-                    <Input 
+                    <Input
                       placeholder="https://..."
                       value={link.url}
                       onChange={(e) => updateSocial(idx, 'url', e.target.value)}
                     />
                   </div>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button aria-label="Delete"
+                  variant="ghost"
+                  size="icon"
                   className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => removeSocial(idx)}
                 >
@@ -182,8 +209,8 @@ const Settings = () => {
             <div className="space-y-2">
               <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Primary Neon Color</label>
               <div className="flex items-center space-x-4">
-                <Input 
-                  type="color" 
+                <Input
+                  type="color"
                   className="w-12 h-12 p-1 bg-transparent"
                   value={settings.themeColor}
                   onChange={(e) => setSettings({...settings, themeColor: e.target.value})}
@@ -208,7 +235,7 @@ const Settings = () => {
                 <div className="text-sm font-bold">Open Registration</div>
                 <div className="text-xs text-muted-foreground">Allow new students to initialize accounts.</div>
               </div>
-              <button 
+              <button
                 onClick={() => setSettings({...settings, enableRegistration: !settings.enableRegistration})}
                 className={`w-12 h-6 rounded-full transition-colors relative ${settings.enableRegistration ? 'bg-primary' : 'bg-white/10'}`}
               >
@@ -220,7 +247,7 @@ const Settings = () => {
                 <div className="text-sm font-bold text-destructive">Maintenance Mode</div>
                 <div className="text-xs text-muted-foreground">Lock the platform for system updates.</div>
               </div>
-              <button 
+              <button
                 onClick={() => setSettings({...settings, maintenanceMode: !settings.maintenanceMode})}
                 className={`w-12 h-6 rounded-full transition-colors relative ${settings.maintenanceMode ? 'bg-destructive' : 'bg-white/10'}`}
               >
@@ -236,15 +263,15 @@ const Settings = () => {
               <Database className="w-5 h-5" />
               <CardTitle className="text-lg">Data Management</CardTitle>
             </div>
-            <CardDescription>Backup and system maintenance tasks.</CardDescription>
+            <CardDescription>Export platform records and clear this browser’s caches.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="outline" disabled={busy} onClick={exportRecords} className="w-full justify-start">
               <Save className="w-4 h-4 mr-2" />
-              Download System Backup
+              Export Platform Records
             </Button>
-            <Button variant="ghost" className="w-full justify-start text-destructive hover:bg-destructive/10">
-              Clear System Cache
+            <Button variant="ghost" disabled={busy} onClick={clearBrowserCache} className="w-full justify-start text-destructive hover:bg-destructive/10">
+              Clear Browser Cache
             </Button>
           </CardContent>
         </Card>

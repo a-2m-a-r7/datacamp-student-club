@@ -1,32 +1,34 @@
+import { usePublicStats } from '../lib/usePublicStats';
 import React from 'react';
 import { motion } from 'motion/react';
-import { 
-  Target, 
-  Users, 
-  Zap, 
-  Info, 
-  Eye, 
-  Award, 
-  GraduationCap, 
-  Cpu, 
-  Code2, 
-  Database, 
-  TrendingUp, 
-  BookOpen, 
+import {
+  Target,
+  Users,
+  Zap,
+  Info,
+  Eye,
+  Award,
+  GraduationCap,
+  Cpu,
+  Code2,
+  Database,
+  TrendingUp,
+  BookOpen,
   ShieldCheck,
   Building2,
   Sparkles,
   ArrowRight
 } from 'lucide-react';
-import { demoAboutData } from '../lib/demoData';
+import { defaultAboutData } from '../lib/defaultContent';
 import { contentService } from '../services/contentService';
 import { Button } from '../components/ui/Button';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 
 export const About = () => {
+  const liveStats = usePublicStats();
   const { isArabic } = useLanguage();
-  const [aboutData, setAboutData] = React.useState(demoAboutData);
+  const [aboutData, setAboutData] = React.useState(defaultAboutData);
 
   React.useEffect(() => {
     let mounted = true;
@@ -48,17 +50,17 @@ export const About = () => {
   }, []);
 
   const stats = [
-    { count: '500+', label: isArabic ? 'عضو نشط' : 'ACTIVE MEMBERS', sublabel: isArabic ? 'طالب مسجل' : 'Registered Students' },
-    { count: '24+', label: isArabic ? 'ورشة ومخيم تدريبي' : 'WORKSHOPS & SESSIONS', sublabel: isArabic ? 'مختبرات تطبيقية' : 'Hands-on Labs Conducted' },
-    { count: '100%', label: isArabic ? 'تدريب عملي' : 'PRACTICAL LABS', sublabel: isArabic ? 'مشاريع حقيقية معتمدة' : 'Real-world Applied Projects' },
-    { count: '300+', label: isArabic ? 'شهادة صادرة' : 'CERTIFICATES ISSUED', sublabel: isArabic ? 'موثقة برمجياً برمز QR' : 'Digitally Verified Credentials' }
+    { count: liveStats?.members ?? '—', label: isArabic ? 'عضو نشط' : 'ACTIVE MEMBERS', sublabel: isArabic ? 'طالب مسجل' : 'Registered Students' },
+    { count: liveStats?.events ?? '—', label: isArabic ? 'ورشة ومخيم تدريبي' : 'WORKSHOPS & SESSIONS', sublabel: isArabic ? 'مختبرات تطبيقية' : 'Hands-on Labs Conducted' },
+    { count: liveStats?.projects ?? '—', label: isArabic ? 'تدريب عملي' : 'PRACTICAL LABS', sublabel: isArabic ? 'مشاريع حقيقية معتمدة' : 'Real-world Applied Projects' },
+    { count: liveStats?.certificates ?? '—', label: isArabic ? 'شهادة صادرة' : 'CERTIFICATES ISSUED', sublabel: isArabic ? 'موثقة برمجياً برمز QR' : 'Digitally Verified Credentials' }
   ];
 
   const tracks = [
     {
       icon: Database,
       title: isArabic ? 'علم وتحليل البيانات' : 'Data Science & Analytics',
-      desc: isArabic 
+      desc: isArabic
         ? 'إتقان بايثون، ومكتبات Pandas، ولغة SQL، وأدوات التصور البياني لتحويل البيانات الخام إلى رؤى تنفيذية دقيقة.'
         : 'Master Python, Pandas, SQL, and data visualization tools to transform raw messy datasets into actionable executive insights.',
       skills: ['Python', 'Pandas', 'SQL', 'Tableau', 'EDA']
@@ -90,26 +92,26 @@ export const About = () => {
   ];
 
   const pillars = [
-    { 
-      icon: Target, 
-      title: isArabic ? 'رسالتنا' : 'Our Mission', 
-      desc: isArabic 
+    {
+      icon: Target,
+      title: isArabic ? 'رسالتنا' : 'Our Mission',
+      desc: isArabic
         ? ((aboutData as any).missionAr || 'تمكين طلاب الجامعة من إتقان أحدث مهارات علم البيانات، والذكاء الاصطناعي، وهندسة البرمجيات عبر تعليم تطبيقي ومشاريع حقيقية.')
         : (aboutData.mission || 'To empower students with cutting-edge data science, AI, and software engineering skills through hands-on learning and collaborative projects.')
     },
-    { 
-      icon: Eye, 
-      title: isArabic ? 'رؤيتنا' : 'Our Vision', 
+    {
+      icon: Eye,
+      title: isArabic ? 'رؤيتنا' : 'Our Vision',
       desc: isArabic
         ? ((aboutData as any).visionAr || 'أن نكون المجتمع الطلابي التقني الرائد في مصر والشرق الأوسط، وتخريج كوادر بيانات بمعايير عالمية تنافس كبرى الشركات التقنية.')
         : (aboutData.vision || 'To be the leading student tech community in Egypt and the MENA region, producing world-class data professionals.')
     },
-    { 
-      icon: Info, 
-      title: isArabic ? 'تاريخنا ونشأتنا' : 'Our History', 
+    {
+      icon: Info,
+      title: isArabic ? 'تاريخنا ونشأتنا' : 'Our History',
       desc: isArabic
-        ? ((aboutData as any).historyAr || 'تأسس النادي عام 2024 بجامعة الابتكار، وتطور سريعاً من مجموعة دراسية متخصصة إلى مجتمع تقني يضم أكثر من 500 عضو نشط.')
-        : (aboutData.history || 'Founded in 2024 at Innovation University, DataCamp Student Club has grown from a small study group into a thriving community of 500+ active members.')
+        ? ((aboutData as any).historyAr || 'لم يتم نشر تاريخ النادي بعد.')
+        : (aboutData.history || 'Club history has not been published yet.')
     },
   ];
 
@@ -147,15 +149,15 @@ export const About = () => {
   return (
     <div className="pt-20 md:pt-32 pb-24 min-h-screen">
       <div className="px-6 md:px-12 max-w-7xl mx-auto space-y-28">
-        
+
         {/* 1. Hero Section */}
         <div className="max-w-4xl space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-cyber tracking-widest uppercase">
-            <Building2 className="w-3.5 h-3.5" /> 
+            <Building2 className="w-3.5 h-3.5" />
             {isArabic ? 'جامعة الابتكار • النادي الطلابي الرسمي' : 'INNOVATION UNIVERSITY • OFFICIAL CLUB'}
           </div>
 
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl sm:text-6xl md:text-7xl font-black font-cyber tracking-tighter neon-text leading-[1.1]"
@@ -177,13 +179,13 @@ export const About = () => {
           <div className="flex flex-wrap gap-4 pt-4">
             <Link to="/courses">
               <Button variant="cyber" size="lg" className="gap-2">
-                <BookOpen className="w-4 h-4" /> 
+                <BookOpen className="w-4 h-4" />
                 {isArabic ? 'استكشف المناهج التدريبية' : 'BROWSE CURRICULUM'}
               </Button>
             </Link>
             <Link to="/staff">
               <Button variant="outline" size="lg" className="gap-2">
-                <Users className="w-4 h-4" /> 
+                <Users className="w-4 h-4" />
                 {isArabic ? 'تعرف على فريق العمل' : 'MEET THE TEAM'}
               </Button>
             </Link>
@@ -195,7 +197,7 @@ export const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
             <div className="lg:col-span-2 space-y-4">
               <span className="text-xs font-cyber uppercase tracking-widest text-purple-300 font-bold flex items-center gap-2">
-                <GraduationCap className="w-4 h-4" /> 
+                <GraduationCap className="w-4 h-4" />
                 {isArabic ? 'الرعاية الأكاديمية والاعتماد الجامعي' : 'ACADEMIC SPONSORSHIP & ACCREDITATION'}
               </span>
               <h2 className="text-2xl sm:text-3xl font-cyber font-bold text-white">
@@ -363,7 +365,7 @@ export const About = () => {
               {isArabic ? 'هل أنت مستعد لتطوير مهاراتك البرمجية؟' : 'READY TO ELEVATE YOUR SKILLS?'}
             </h3>
             <p className="text-muted-foreground text-sm sm:text-base">
-              {isArabic 
+              {isArabic
                 ? 'انضم إلى مئات الطلاب المتميزين بجامعة الابتكار وابدأ رحلتك في علم البيانات والذكاء الاصطناعي اليوم.'
                 : 'Join hundreds of fellow students at Innovation University and begin your journey into data science and artificial intelligence today.'
               }
@@ -372,7 +374,7 @@ export const About = () => {
           <div className="flex flex-wrap gap-4 shrink-0">
             <Link to="/register">
               <Button variant="cyber" size="lg" className="gap-2">
-                {isArabic ? 'انضم إلى النادي الآن' : 'JOIN THE CLUB'} 
+                {isArabic ? 'انضم إلى النادي الآن' : 'JOIN THE CLUB'}
                 <ArrowRight className={`w-4 h-4 ${isArabic ? 'rotate-180' : ''}`} />
               </Button>
             </Link>

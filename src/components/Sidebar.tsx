@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Home, Info, Calendar, BookOpen, Code, 
-  FileText, Users, Image as ImageIcon, Mail, 
+import {
+  Home, Info, Calendar, BookOpen, Code,
+  FileText, Users, Image as ImageIcon, Mail,
   LayoutDashboard, LogOut, ChevronLeft, ChevronRight,
   Settings as SettingsIcon, Shield, BarChart3, X, User, Menu,
   Trophy, Sparkles, Bell, Award, UserPlus, LogIn, GraduationCap, ClipboardList
@@ -16,19 +16,19 @@ import Logo from './Logo';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: boolean) => void }) => {
-  const { 
-    user, 
-    profile, 
+  const {
+    user,
+    profile,
     logout,
     isSuperAdmin,
-    isAdmin, 
+    isAdmin,
     isEditor,
-    isHR, 
+    isHR,
     isEventManager,
     isContentManager,
     isFinanceManager,
     isOrganizer,
-    isManager 
+    isManager
   } = useAuth();
   const { t, isArabic } = useLanguage();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -40,7 +40,7 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
     const handleResize = () => {
       const desktop = window.innerWidth >= 1024;
       setIsDesktop(desktop);
-      
+
       // Update global CSS variable for layout spacing
       if (desktop) {
         document.documentElement.style.setProperty('--sidebar-width', isCollapsed ? '80px' : '280px');
@@ -70,7 +70,7 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
     { name: t('nav.courses', 'Courses'), path: '/courses', icon: BookOpen },
     ...(user ? [{ name: isArabic ? 'كورساتي' : 'My Courses', path: '/my-courses', icon: GraduationCap }] : []),
     { name: t('nav.compiler', 'Online Compiler'), path: '/compiler', icon: Code },
-    { name: t('nav.leaderboard', 'Leaderboard'), path: '/leaderboard', icon: Trophy },
+    ...(isAdmin ? [{ name: t('nav.leaderboard', 'Leaderboard'), path: '/leaderboard', icon: Trophy }] : []),
     { name: t('nav.certificates', 'Certificates'), path: '/certificates', icon: Trophy },
     { name: t('nav.notifications', 'Notifications'), path: '/notifications', icon: Bell },
     { name: t('nav.events', 'Events'), path: '/events', icon: Calendar },
@@ -115,9 +115,9 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
         )}
       </AnimatePresence>
 
-      <motion.aside 
+      <motion.aside
         initial={false}
-        animate={{ 
+        animate={{
           width: isDesktop ? (isCollapsed ? '80px' : '280px') : '280px',
           x: isDesktop || isOpen ? 0 : (isArabic ? 280 : -280),
           visibility: isDesktop || isOpen ? 'visible' : 'hidden'
@@ -131,7 +131,7 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
             <Logo isCollapsed={isCollapsed && isDesktop} iconSize={42} />
           </Link>
           {/* Mobile Close Button */}
-          <button onClick={() => setIsOpen(false)} className="lg:hidden ml-auto rtl:ml-0 rtl:mr-auto text-muted-foreground">
+          <button aria-label="Close navigation" onClick={() => setIsOpen(false)} className="lg:hidden ml-auto rtl:ml-0 rtl:mr-auto text-muted-foreground">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -140,7 +140,7 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
         <div className="flex-grow overflow-y-auto overflow-x-hidden px-3 py-6 space-y-2 custom-scrollbar">
           <div className="mb-4">
             {(!isCollapsed || !isDesktop) && (
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 className="text-[10px] font-cyber tracking-widest text-muted-foreground px-4 mb-4"
@@ -159,8 +159,8 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
                   to={link.path}
                   onClick={closeOnMobile}
                   className={`flex items-center ${(isCollapsed && isDesktop) ? 'justify-center' : 'space-x-4 rtl:space-x-reverse px-4'} py-3 rounded-xl transition-all group relative border-2 ${
-                    location.pathname === link.path 
-                    ? 'bg-primary/10 text-primary border-primary/30 shadow-[0_0_15px_rgba(57,255,20,0.1)]' 
+                    location.pathname === link.path
+                    ? 'bg-primary/10 text-primary border-primary/30 shadow-[0_0_15px_rgba(57,255,20,0.1)]'
                     : 'text-muted-foreground hover:bg-white/5 hover:text-white border-transparent hover:border-white/10'
                   }`}
                 >
@@ -171,12 +171,12 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
                     <link.icon className={`w-5 h-5 shrink-0 ${location.pathname === link.path ? 'text-primary' : 'group-hover:text-primary transition-colors'}`} />
                   </motion.div>
                   {(!isCollapsed || !isDesktop) && <span className="font-cyber text-sm tracking-wider">{link.name}</span>}
-                  
+
                   {/* Active Indicator for Collapsed Mode */}
                   {location.pathname === link.path && (isCollapsed && isDesktop) && (
                     <motion.div layoutId="active-dot" className={`absolute ${isArabic ? 'right-0 rounded-l-full' : 'left-0 rounded-r-full'} w-1 h-6 bg-primary shadow-[0_0_10px_#39FF14]`} />
                   )}
-                  
+
                   {/* Tooltip for Collapsed Mode */}
                   {(isCollapsed && isDesktop) && (
                     <div className={`absolute ${isArabic ? 'right-full mr-4' : 'left-full ml-4'} px-3 py-1 bg-dark-navy border border-white/10 rounded text-[10px] font-cyber tracking-widest opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 whitespace-nowrap z-50`}>
@@ -197,18 +197,18 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
                   to={link.path}
                   onClick={closeOnMobile}
                   className={`flex items-center ${(isCollapsed && isDesktop) ? 'justify-center' : 'space-x-4 rtl:space-x-reverse px-4'} py-3 rounded-xl transition-all group relative border-2 ${
-                    (link.path === '/admin' ? location.pathname === '/admin' : location.pathname.startsWith(link.path)) 
-                    ? 'bg-neon-purple/10 text-neon-purple border-neon-purple/30 shadow-[0_0_15px_rgba(188,19,254,0.1)]' 
+                    (link.path === '/admin' ? location.pathname === '/admin' : location.pathname.startsWith(link.path))
+                    ? 'bg-neon-purple/10 text-neon-purple border-neon-purple/30 shadow-[0_0_15px_rgba(188,19,254,0.1)]'
                     : 'text-muted-foreground hover:bg-white/5 hover:text-white border-transparent hover:border-white/10'
                   }`}
                 >
                   <link.icon className={`w-5 h-5 shrink-0 ${
-                    (link.path === '/admin' ? location.pathname === '/admin' : location.pathname.startsWith(link.path)) 
-                    ? 'text-neon-purple' 
+                    (link.path === '/admin' ? location.pathname === '/admin' : location.pathname.startsWith(link.path))
+                    ? 'text-neon-purple'
                     : 'group-hover:text-neon-purple transition-colors'
                   }`} />
                   {(!isCollapsed || !isDesktop) && <span className="font-cyber text-sm tracking-wider">{link.name}</span>}
-                  
+
                   {(isCollapsed && isDesktop) && (
                     <div className={`absolute ${isArabic ? 'right-full mr-4' : 'left-full ml-4'} px-3 py-1 bg-dark-navy border border-white/10 rounded text-[10px] font-cyber tracking-widest opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50`}>
                       {link.name}
@@ -224,7 +224,7 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
         <div className="p-4 border-t border-white/5 space-y-2">
           {user ? (
             <div className="space-y-2">
-              <Link 
+              <Link
                 to="/profile"
                 onClick={closeOnMobile}
                 className={`flex items-center ${(isCollapsed && isDesktop) ? 'justify-center' : 'space-x-3 rtl:space-x-reverse'} p-2 rounded-lg transition-all ${
@@ -250,10 +250,10 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
                   </div>
                 )}
               </Link>
-              
+
               {(!isCollapsed || !isDesktop) && (
-                <button 
-                  onClick={handleLogout} 
+                <button
+                  onClick={handleLogout}
                   className="w-full flex items-center space-x-3 rtl:space-x-reverse p-2 text-muted-foreground hover:text-destructive transition-colors rounded-lg hover:bg-destructive/5"
                 >
                   <LogOut className="w-4 h-4 rtl:rotate-180" />
@@ -263,9 +263,9 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
             </div>
           ) : (
             <div className="space-y-2">
-              <Button 
-                variant="cyber" 
-                className="w-full text-xs font-cyber font-bold tracking-wider h-10 gap-2" 
+              <Button
+                variant="cyber"
+                className="w-full text-xs font-cyber font-bold tracking-wider h-10 gap-2"
                 size="sm"
                 onClick={() => {
                   navigate('/register');
@@ -276,9 +276,9 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
                 {(!isCollapsed || !isDesktop) && (isArabic ? 'إنشاء حساب جديد' : 'INITIALIZE_MEMBERSHIP')}
               </Button>
               {(!isCollapsed || !isDesktop) && (
-                <Button 
-                  variant="outline" 
-                  className="w-full text-xs font-cyber tracking-wider h-9 border-white/10 hover:border-primary/40 text-muted-foreground hover:text-white" 
+                <Button
+                  variant="outline"
+                  className="w-full text-xs font-cyber tracking-wider h-9 border-white/10 hover:border-primary/40 text-muted-foreground hover:text-white"
                   size="sm"
                   onClick={() => {
                     navigate('/login');
@@ -295,12 +295,12 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: bool
           <div className="pt-2">
             <LanguageSwitcher variant="sidebar" isCollapsed={isCollapsed && isDesktop} />
           </div>
-          
-          <button 
+
+          <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="hidden lg:flex w-full items-center justify-center p-2 text-muted-foreground hover:text-primary transition-colors"
           >
-            {isCollapsed 
+            {isCollapsed
               ? (isArabic ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />)
               : (isArabic ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />)}
           </button>

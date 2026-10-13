@@ -9,13 +9,18 @@
     "npm": ">=10.0.0"
   },
   "type": "module",
+  "overrides": {
+    "tsx": { "esbuild": "0.28.2" }
+  },
   "scripts": {
-    "dev": "vite --port=3000 --host=0.0.0.0",
+    "dev": "tsx scripts/dev-server.ts",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "test:qa": "playwright test --config=qa-audit/playwright.config.ts"
+    "test:qa": "playwright test --config=qa-audit/fixes.config.ts",
+    "test:qa:database": "node qa-audit/postgres.spec.mjs",
+    "test:qa:auth": "node --import tsx --test qa-audit/api-auth.test.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
@@ -36,10 +41,11 @@
     "recharts": "^3.8.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
-    "xlsx": "^0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.9",
     "@playwright/test": "^1.64.0",
     "@tailwindcss/vite": "^4.1.14",
     "@types/node": "^22.14.0",

@@ -39,7 +39,7 @@ export const Certificates = () => {
     async function loadData() {
       setLoading(true);
       try {
-        const certs = await certificateService.getUserCertificates(profile?.uid || 'demo-user');
+        const certs = profile?.uid ? await certificateService.getUserCertificates(profile.uid) : [];
         setUserCerts(certs);
         if (certs.length > 0 && !code) {
           setSelectedCert(certs[0]);
@@ -102,7 +102,7 @@ export const Certificates = () => {
               )}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              {isArabic 
+              {isArabic
                 ? 'تحقق من صحة الشهادات إلكترونياً، حمّل نسختك بدقة فائقة PDF، وانشر إنجازاتك مباشرة على LinkedIn.'
                 : 'Verify credentials, download high-resolution certificates, and export your achievements to LinkedIn.'}
             </p>
@@ -180,7 +180,7 @@ export const Certificates = () => {
                   {isArabic ? 'لم تصدر لك أي شهادات حتى الآن' : 'NO CERTIFICATES ISSUED YET'}
                 </h3>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  {isArabic 
+                  {isArabic
                     ? 'أكمل أي مسار تدريبي بنسبة 100% أو شارك في هاكاثونات النادي للحصول على شهادتك المعتمدة تلقائياً!'
                     : 'Complete any course 100% or attend club hackathons to automatically unlock your official verified certificate!'}
                 </p>
@@ -209,7 +209,7 @@ export const Certificates = () => {
                 <ShieldCheck className="w-5 h-5 text-primary" /> {isArabic ? 'التحقق من كود الاعتماد الإلكتروني' : 'VERIFY A CREDENTIAL CODE'}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {isArabic 
+                {isArabic
                   ? 'أدخل رمز التحقق الفريد المطبوع على شهادة نادي DataCamp بجامعة الابتكار (مثال: DC-PY99-X2K4).'
                   : 'Enter the unique verification code printed on any DataCamp Student Club certificate (e.g. DC-PY99-X2K4).'}
               </p>
@@ -245,7 +245,7 @@ export const Certificates = () => {
                           {isArabic ? 'شهادة رسمية موثقة ومعتمدة' : 'AUTHENTIC CREDENTIAL VERIFIED'}
                         </div>
                         <div className="text-xs font-mono text-emerald-300/80">
-                          {isArabic 
+                          {isArabic
                             ? 'هذه الشهادة رسمية ومسجلة في السجل الأكاديمي لنادي DataCamp بجامعة الابتكار.'
                             : 'This certificate is authentic and recorded in the DataCamp Student Club registry.'}
                         </div>
@@ -261,7 +261,7 @@ export const Certificates = () => {
                         {isArabic ? 'لم يتم العثور على الشهادة' : 'CREDENTIAL NOT FOUND'}
                       </div>
                       <div className="text-xs font-mono text-red-300/80">
-                        {isArabic 
+                        {isArabic
                           ? `لم يتم العثور على أي شهادة مسجلة بالكود "${searchCode}" في قاعدة البيانات الرسمية.`
                           : `No certificate matching code "${searchCode}" was found in our verification registry.`}
                       </div>

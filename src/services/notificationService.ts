@@ -6,18 +6,6 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { Notification, NotificationType } from '../types';
 
-const INITIAL_NOTIFICATIONS: Notification[] = [
-  {
-    id: 'notif-welcome',
-    userId: 'demo-user',
-    type: 'points_earned',
-    title: 'Welcome to DataCamp Club! +50 XP',
-    body: 'Your account was verified and your introductory onboarding points were credited.',
-    isRead: false,
-    createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-  },
-];
-
 const mapNotification = (row: any): Notification => ({
   id: row.id,
   userId: row.user_id || '',
@@ -32,19 +20,10 @@ const mapNotification = (row: any): Notification => ({
 
 export const notificationService = {
   async getUserNotifications(userId: string): Promise<Notification[]> {
-    if (!isSupabaseConfigured) {
-      return INITIAL_NOTIFICATIONS.filter(n => n.userId === userId || n.userId === 'demo-user');
-    }
-
-    const { data, error } = await supabase
-      .from('notifications')
-      .select('*')
-      .or(`user_id.eq.${userId},user_id.is.null`)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    return (data || []).map(mapNotification);
-  },
+ if (!isSupabaseConfigured || !userId) return [];
+ const { data, error } = await supabase.rpc('get_notifications');
+ if (error) throw error; return (data || []).map(mapNotification);
+},
 
   async sendNotification(
     userId: string,
@@ -54,19 +33,7 @@ export const notificationService = {
     referenceId?: string,
     referenceType?: string
   ): Promise<Notification> {
-    const fallback: Notification = {
-      id: `notif_${Date.now()}`,
-      userId,
-      type,
-      title,
-      body,
-      isRead: false,
-      referenceId,
-      referenceType,
-      createdAt: new Date().toISOString(),
-    };
-
-    if (!isSupabaseConfigured) return fallback;
+    if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
 
     const { data, error } = await supabase
       .from('notifications')
@@ -87,29 +54,18 @@ export const notificationService = {
   },
 
   async markAsRead(userId: string, notificationId: string): Promise<void> {
-    if (!isSupabaseConfigured) return;
-
-    const { error } = await supabase
-      .from('notifications')
-      .update({ read: true })
-      .eq('id', notificationId)
-      .eq('user_id', userId);
-
-    if (error) throw error;
-  },
+ if (!isSupabaseConfigured) throw new Error('Database is not configured.');
+ const { error } = await supabase.rpc('read_notifications', { p_id: notificationId });
+ if (error) throw error;
+},
 
   async markAllAsRead(userId: string): Promise<void> {
-    if (!isSupabaseConfigured) return;
-
-    const { error } = await supabase
-      .from('notifications')
-      .update({ read: true })
-      .eq('user_id', userId);
-
-    if (error) throw error;
-  },
+ if (!isSupabaseConfigured) throw new Error('Database is not configured.');
+ const { error } = await supabase.rpc('read_notifications', { p_id: null });
+ if (error) throw error;
+},
 
   getLocalNotifications(): Notification[] {
-    return INITIAL_NOTIFICATIONS;
+    return [];
   },
 };

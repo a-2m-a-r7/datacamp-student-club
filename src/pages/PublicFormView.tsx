@@ -7,9 +7,9 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { 
-  CheckCircle2, AlertCircle, Clock, Lock, ArrowRight, 
-  ArrowLeft, Upload, Star, Heart, Check, Circle, 
+import {
+  CheckCircle2, AlertCircle, Clock, Lock, ArrowRight,
+  ArrowLeft, Upload, Star, Heart, Check, Circle,
   Sparkles, Loader2, Globe, Shield, RefreshCw, Send,
   FileText, LogIn
 } from 'lucide-react';
@@ -284,18 +284,6 @@ export const PublicFormView: React.FC = () => {
         referenceId: result.response_id,
         message: result.success_message || form.success_message,
       });
-
-      // Trigger automatic background Google Sheets sync
-      if (result.sheets_sync_enabled) {
-        fetch('/api/forms/sync-sheet', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            formId: form.id,
-            responseId: result.response_id,
-          }),
-        }).catch((err) => console.warn('Background sheets sync trigger:', err));
-      }
 
       setSubmissionSuccess(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });

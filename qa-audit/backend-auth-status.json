@@ -1,0 +1,6 @@
+{
+  "authSettingsStatus": 200,
+  "googleEnabled": true,
+  "emailEnabled": true,
+  "signupDisabled": false
+}

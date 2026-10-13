@@ -6,189 +6,18 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { FormRecord, FormQuestion, FormResponse, FormStatus, ChoiceOption, QuestionSettings } from '../types/forms';
 
-// In-memory mock storage for local testing when Supabase credentials are unset
-let mockForms: FormRecord[] = [
-  {
-    id: 'f-demo-001',
-    title: 'DataCamp AI BootCamp 2026 Registration',
-    description: 'Welcome to the flagship AI & Data Science BootCamp. Please complete this form to reserve your seat and specify your workshop tracks.',
-    slug: 'ai-bootcamp-2026',
-    status: 'published',
-    theme: {
-      primaryColor: '#6366f1',
-      accentColor: '#06b6d4',
-      backgroundStyle: 'cyber',
-      coverImage: null,
-    },
-    allow_anonymous: true,
-    one_response_per_user: true,
-    collect_email: true,
-    opens_at: null,
-    closes_at: null,
-    success_message: 'Your registration has been submitted successfully! See you at the BootCamp.',
-    sheets_sync_enabled: true,
-    spreadsheet_id: 'mock-sheet-123',
-    spreadsheet_url: 'https://docs.google.com/spreadsheets/d/mock-sheet-123/edit',
-    created_by: 'usr_ammar_tahoun_adm',
-    created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
-    updated_at: new Date(Date.now() - 86400000).toISOString(),
-    response_count: 14,
-  },
-  {
-    id: 'f-demo-002',
-    title: 'Member Feedback & Course Requests Q1',
-    description: 'Help us shape the upcoming tracks by sharing your thoughts on our latest machine learning workshops.',
-    slug: 'q1-member-feedback',
-    status: 'draft',
-    theme: {
-      primaryColor: '#ec4899',
-      accentColor: '#8b5cf6',
-      backgroundStyle: 'glow',
-      coverImage: null,
-    },
-    allow_anonymous: false,
-    one_response_per_user: true,
-    collect_email: true,
-    opens_at: null,
-    closes_at: null,
-    success_message: 'Thank you for your valuable feedback!',
-    sheets_sync_enabled: false,
-    spreadsheet_id: null,
-    spreadsheet_url: null,
-    created_by: 'usr_ammar_tahoun_adm',
-    created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
-    updated_at: new Date().toISOString(),
-    response_count: 0,
-  },
-];
-
-let mockQuestions: Record<string, FormQuestion[]> = {
-  'f-demo-001': [
-    {
-      id: 'q-1',
-      form_id: 'f-demo-001',
-      type: 'short_text',
-      title: 'Full Name',
-      description: 'As you want it printed on your certificate of attendance',
-      required: true,
-      position: 0,
-      options: [],
-      settings: { placeholder: 'e.g. Alex Turing' },
-    },
-    {
-      id: 'q-2',
-      form_id: 'f-demo-001',
-      type: 'email',
-      title: 'University / Personal Email',
-      description: 'We will send confirmation details and workshop materials here',
-      required: true,
-      position: 1,
-      options: [],
-      settings: { placeholder: 'you@university.edu' },
-    },
-    {
-      id: 'q-3',
-      form_id: 'f-demo-001',
-      type: 'single_choice',
-      title: 'Experience Level in Machine Learning',
-      description: 'Select the option that best reflects your current background',
-      required: true,
-      position: 2,
-      options: [
-        { id: 'opt-1', text: 'Beginner (Basic Python syntax, no ML experience)' },
-        { id: 'opt-2', text: 'Intermediate (Scikit-Learn, Pandas, basic models)' },
-        { id: 'opt-3', text: 'Advanced (PyTorch, Deep Learning, LLM fine-tuning)' },
-      ],
-      settings: {},
-    },
-    {
-      id: 'q-4',
-      form_id: 'f-demo-001',
-      type: 'multiple_choice',
-      title: 'Workshops You Plan to Attend',
-      description: 'Choose all tracks that interest you',
-      required: false,
-      position: 3,
-      options: [
-        { id: 'opt-w1', text: 'Prompt Engineering & Agentic AI with Gemini' },
-        { id: 'opt-w2', text: 'Computer Vision with YOLOv11' },
-        { id: 'opt-w3', text: 'Data Engineering with DuckDB & dbt' },
-        { id: 'opt-w4', text: 'MLOps & Model Deployment with Docker' },
-      ],
-      settings: {},
-    },
-    {
-      id: 'q-5',
-      form_id: 'f-demo-001',
-      type: 'rating',
-      title: 'How excited are you for the BootCamp?',
-      description: '',
-      required: false,
-      position: 4,
-      options: [],
-      settings: { ratingIcon: 'star', maxRating: 5 },
-    },
-    {
-      id: 'q-6',
-      form_id: 'f-demo-001',
-      type: 'long_text',
-      title: 'Any specific questions or topics you would like covered?',
-      description: 'Optional',
-      required: false,
-      position: 5,
-      options: [],
-      settings: { placeholder: 'Write your thoughts here...' },
-    },
-  ],
-};
-
-let mockResponses: Record<string, FormResponse[]> = {
-  'f-demo-001': [
-    {
-      id: 'resp-001',
-      form_id: 'f-demo-001',
-      respondent_id: 'usr-sara-01',
-      respondent_email: 'sara@example.com',
-      submitted_at: new Date(Date.now() - 3600000 * 5).toISOString(),
-      metadata: { browser: 'Chrome 122', os: 'Windows 11', completionSeconds: 78 },
-      respondent_profile: { full_name: 'Sara Hassan', email: 'sara@example.com' },
-      answers: [
-        { question_id: 'q-1', value: 'Sara Hassan' },
-        { question_id: 'q-2', value: 'sara@example.com' },
-        { question_id: 'q-3', value: 'Intermediate (Scikit-Learn, Pandas, basic models)' },
-        { question_id: 'q-4', value: ['Prompt Engineering & Agentic AI with Gemini', 'MLOps & Model Deployment with Docker'] },
-        { question_id: 'q-5', value: 5 },
-        { question_id: 'q-6', value: 'Looking forward to building autonomous agents!' },
-      ],
-    },
-    {
-      id: 'resp-002',
-      form_id: 'f-demo-001',
-      respondent_id: null,
-      respondent_email: 'omar.k@gmail.com',
-      submitted_at: new Date(Date.now() - 3600000 * 12).toISOString(),
-      metadata: { browser: 'Safari 17', os: 'macOS', completionSeconds: 110 },
-      respondent_profile: { full_name: 'Omar Khaled', email: 'omar.k@gmail.com' },
-      answers: [
-        { question_id: 'q-1', value: 'Omar Khaled' },
-        { question_id: 'q-2', value: 'omar.k@gmail.com' },
-        { question_id: 'q-3', value: 'Beginner (Basic Python syntax, no ML experience)' },
-        { question_id: 'q-4', value: ['Prompt Engineering & Agentic AI with Gemini'] },
-        { question_id: 'q-5', value: 4 },
-        { question_id: 'q-6', value: '' },
-      ],
-    },
-  ],
-};
-
 export const formService = {
+ async saveForm(form: FormRecord, questions: FormQuestion[]) {
+  if (!isSupabaseConfigured) throw new Error('Database is not configured.');
+  const { data, error } = await supabase.rpc('save_form', { p_form: form, p_questions: questions });
+  if (error) throw error; if (!data?.form) throw new Error('Form was not saved.');
+  return data as { form: FormRecord; questions: FormQuestion[] };
+ },
   /**
    * Fetch all forms for the admin list
    */
   async getForms(): Promise<FormRecord[]> {
-    if (!isSupabaseConfigured) {
-      return [...mockForms].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-    }
+    if (!isSupabaseConfigured) { return []; }
 
     try {
       const { data, error } = await supabase
@@ -203,22 +32,14 @@ export const formService = {
         theme: typeof row.theme === 'string' ? JSON.parse(row.theme) : row.theme || {},
         response_count: row.form_responses?.[0]?.count ?? 0,
       }));
-    } catch (err) {
-      console.warn('[formService.getForms] Falling back to mock data:', err);
-      return [...mockForms];
-    }
+    } catch (err) { throw err; }
   },
 
   /**
    * Fetch a single form by its ID
    */
   async getFormById(id: string): Promise<{ form: FormRecord; questions: FormQuestion[] } | null> {
-    if (!isSupabaseConfigured) {
-      const form = mockForms.find((f) => f.id === id);
-      if (!form) return null;
-      const questions = mockQuestions[id] || [];
-      return { form, questions };
-    }
+    if (!isSupabaseConfigured) { return null; }
 
     try {
       const { data: form, error: formError } = await supabase
@@ -249,24 +70,14 @@ export const formService = {
       }));
 
       return { form: formattedForm, questions: formattedQuestions };
-    } catch (err) {
-      console.warn(`[formService.getFormById] Falling back for ID ${id}:`, err);
-      const form = mockForms.find((f) => f.id === id);
-      if (!form) return null;
-      return { form, questions: mockQuestions[id] || [] };
-    }
+    } catch (err) { throw err; }
   },
 
   /**
    * Fetch a published form by slug for public respondent page
    */
   async getFormBySlug(slug: string): Promise<{ form: FormRecord; questions: FormQuestion[] } | null> {
-    if (!isSupabaseConfigured) {
-      const form = mockForms.find((f) => f.slug === slug);
-      if (!form) return null;
-      const questions = mockQuestions[form.id] || [];
-      return { form, questions };
-    }
+    if (!isSupabaseConfigured) { return null; }
 
     try {
       const { data: form, error: formError } = await supabase
@@ -297,128 +108,27 @@ export const formService = {
       }));
 
       return { form: formattedForm, questions: formattedQuestions };
-    } catch (err) {
-      console.warn(`[formService.getFormBySlug] Error for slug ${slug}:`, err);
-      const form = mockForms.find((f) => f.slug === slug);
-      if (!form) return null;
-      return { form, questions: mockQuestions[form.id] || [] };
-    }
+    } catch (err) { throw err; }
   },
 
   /**
    * Create a new form
    */
   async createForm(formPayload: Partial<FormRecord>, initialQuestions: FormQuestion[] = []): Promise<FormRecord> {
-    const slug =
-      formPayload.slug?.trim() ||
-      formPayload.title
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '') + `-${Date.now().toString(36)}`;
-
-    if (!isSupabaseConfigured) {
-      const newForm: FormRecord = {
-        id: `f-${Date.now()}`,
-        title: formPayload.title || 'Untitled Form',
-        description: formPayload.description || '',
-        slug,
-        status: formPayload.status || 'draft',
-        theme: formPayload.theme || {
-          primaryColor: '#6366f1',
-          accentColor: '#06b6d4',
-          backgroundStyle: 'cyber',
-          coverImage: null,
-        },
-        allow_anonymous: formPayload.allow_anonymous ?? true,
-        one_response_per_user: formPayload.one_response_per_user ?? false,
-        collect_email: formPayload.collect_email ?? false,
-        opens_at: formPayload.opens_at || null,
-        closes_at: formPayload.closes_at || null,
-        success_message: formPayload.success_message || 'Thank you! Your response has been recorded.',
-        sheets_sync_enabled: formPayload.sheets_sync_enabled ?? false,
-        spreadsheet_id: null,
-        spreadsheet_url: null,
-        created_by: formPayload.created_by || null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        response_count: 0,
-      };
-
-      mockForms.unshift(newForm);
-      mockQuestions[newForm.id] = initialQuestions.map((q, idx) => ({
-        ...q,
-        id: q.id || `q-${Date.now()}-${idx}`,
-        form_id: newForm.id,
-        position: idx,
-      }));
-
-      return newForm;
-    }
-
-    const { data: user } = await supabase.auth.getUser();
-
-    const { data, error } = await supabase
-      .from('forms')
-      .insert({
-        title: formPayload.title || 'Untitled Form',
-        description: formPayload.description || '',
-        slug,
-        status: formPayload.status || 'draft',
-        theme: formPayload.theme || {
-          primaryColor: '#6366f1',
-          accentColor: '#06b6d4',
-          backgroundStyle: 'cyber',
-        },
-        allow_anonymous: formPayload.allow_anonymous ?? true,
-        one_response_per_user: formPayload.one_response_per_user ?? false,
-        collect_email: formPayload.collect_email ?? false,
-        opens_at: formPayload.opens_at || null,
-        closes_at: formPayload.closes_at || null,
-        success_message: formPayload.success_message || 'Thank you! Your response has been recorded.',
-        sheets_sync_enabled: formPayload.sheets_sync_enabled ?? false,
-        created_by: user?.user?.id || null,
-      })
-      .select('*')
-      .single();
-
-    if (error) throw error;
-
-    if (initialQuestions.length > 0) {
-      const qInserts = initialQuestions.map((q, idx) => ({
-        form_id: data.id,
-        type: q.type,
-        title: q.title,
-        description: q.description || '',
-        required: q.required ?? false,
-        position: idx,
-        options: q.options || [],
-        settings: q.settings || {},
-      }));
-
-      await supabase.from('form_questions').insert(qInserts);
-    }
-
-    return {
-      ...data,
-      theme: typeof data.theme === 'string' ? JSON.parse(data.theme) : data.theme,
-      response_count: 0,
-    };
-  },
+ if (!isSupabaseConfigured) throw new Error('Database is not configured.');
+ const remap = new Map(initialQuestions.map(q => [q.id, formPayload.id ? crypto.randomUUID() : (q.id || crypto.randomUUID())]));
+ const questions = initialQuestions.map(q => ({ ...q, id: remap.get(q.id), options: (q.options || []).map(o => ({ ...o, ...(o.goToQuestionId ? { goToQuestionId: remap.get(o.goToQuestionId) || o.goToQuestionId } : {}) })) }));
+ const payload = { ...formPayload, id: '', slug: formPayload.slug?.trim() || 'form-' + crypto.randomUUID() };
+ const { data, error } = await supabase.rpc('save_form', { p_form: payload, p_questions: questions });
+ if (error) throw error; if (!data?.form) throw new Error('Form was not saved.');
+ return data.form;
+},
 
   /**
    * Update an existing form
    */
   async updateForm(id: string, updates: Partial<FormRecord>): Promise<FormRecord> {
-    if (!isSupabaseConfigured) {
-      const idx = mockForms.findIndex((f) => f.id === id);
-      if (idx === -1) throw new Error('Form not found');
-      mockForms[idx] = {
-        ...mockForms[idx],
-        ...updates,
-        updated_at: new Date().toISOString(),
-      };
-      return mockForms[idx];
-    }
+    if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
 
     const { data, error } = await supabase
       .from('forms')
@@ -441,41 +151,11 @@ export const formService = {
    * Save questions for a form (atomic replace of questions order and properties)
    */
   async saveFormQuestions(formId: string, questions: FormQuestion[]): Promise<FormQuestion[]> {
-    if (!isSupabaseConfigured) {
-      mockQuestions[formId] = questions.map((q, idx) => ({
-        ...q,
-        position: idx,
-        form_id: formId,
-      }));
-      return mockQuestions[formId];
-    }
-
-    // Delete existing questions and re-insert in ordered batch
-    const { error: delError } = await supabase.from('form_questions').delete().eq('form_id', formId);
-    if (delError) throw delError;
-
-    if (questions.length === 0) return [];
-
-    const qInserts = questions.map((q, idx) => ({
-      form_id: formId,
-      type: q.type,
-      title: q.title,
-      description: q.description || '',
-      required: q.required ?? false,
-      position: idx,
-      options: q.options || [],
-      settings: q.settings || {},
-    }));
-
-    const { data, error: insError } = await supabase
-      .from('form_questions')
-      .insert(qInserts)
-      .select('*')
-      .order('position', { ascending: true });
-
-    if (insError) throw insError;
-    return data || [];
-  },
+ if (!isSupabaseConfigured) throw new Error('Database is not configured.');
+ const { data, error } = await supabase.rpc('save_form_questions', { p_form_id: formId, p_questions: questions });
+ if (error) throw error;
+ return data || [];
+},
 
   /**
    * Duplicate a form with all its questions
@@ -504,12 +184,7 @@ export const formService = {
    * Delete a form
    */
   async deleteForm(id: string): Promise<void> {
-    if (!isSupabaseConfigured) {
-      mockForms = mockForms.filter((f) => f.id !== id);
-      delete mockQuestions[id];
-      delete mockResponses[id];
-      return;
-    }
+    if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
 
     const { error } = await supabase.from('forms').delete().eq('id', id);
     if (error) throw error;
@@ -519,9 +194,7 @@ export const formService = {
    * Fetch all responses for a form (Admin view)
    */
   async getFormResponses(formId: string): Promise<FormResponse[]> {
-    if (!isSupabaseConfigured) {
-      return mockResponses[formId] || [];
-    }
+    if (!isSupabaseConfigured) { return []; }
 
     try {
       const { data, error } = await supabase
@@ -564,22 +237,14 @@ export const formService = {
             }
           : undefined,
       }));
-    } catch (err) {
-      console.warn(`[formService.getFormResponses] Mock fallback for form ${formId}:`, err);
-      return mockResponses[formId] || [];
-    }
+    } catch (err) { throw err; }
   },
 
   /**
    * Delete a single response
    */
   async deleteResponse(responseId: string): Promise<void> {
-    if (!isSupabaseConfigured) {
-      for (const formId in mockResponses) {
-        mockResponses[formId] = mockResponses[formId].filter((r) => r.id !== responseId);
-      }
-      return;
-    }
+    if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
 
     const { error } = await supabase.from('form_responses').delete().eq('id', responseId);
     if (error) throw error;
@@ -589,11 +254,7 @@ export const formService = {
    * Check if current user has already responded to a form
    */
   async checkHasUserResponded(formId: string, email?: string): Promise<boolean> {
-    if (!isSupabaseConfigured) {
-      const resps = mockResponses[formId] || [];
-      if (!email) return false;
-      return resps.some((r) => r.respondent_email?.toLowerCase() === email.toLowerCase());
-    }
+    if (!isSupabaseConfigured) { throw new Error('Database is not configured.'); }
 
     try {
       const { data, error } = await supabase.rpc('has_user_responded', {
@@ -618,68 +279,40 @@ export const formService = {
     respondentEmail?: string,
     metadata: any = {}
   ): Promise<{ success: boolean; response_id: string; success_message: string; sheets_sync_enabled: boolean }> {
-    if (!isSupabaseConfigured) {
-      const newRespId = `resp-${Date.now()}`;
-      const newResponse: FormResponse = {
-        id: newRespId,
-        form_id: formId,
-        respondent_id: null,
-        respondent_email: respondentEmail || null,
-        submitted_at: new Date().toISOString(),
-        metadata,
-        answers: answers.map((a) => ({ question_id: a.question_id, value: a.value })),
-      };
+    if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
 
-      if (!mockResponses[formId]) mockResponses[formId] = [];
-      mockResponses[formId].unshift(newResponse);
-
-      const form = mockForms.find((f) => f.id === formId);
-      if (form) form.response_count = (form.response_count || 0) + 1;
-
-      return {
-        success: true,
-        response_id: newRespId,
-        success_message: form?.success_message || 'Thank you! Your response has been recorded.',
-        sheets_sync_enabled: Boolean(form?.sheets_sync_enabled),
-      };
-    }
-
-    const { data, error } = await supabase.rpc('submit_form_response', {
-      p_form_id: formId,
-      p_answers: answers,
-      p_respondent_email: respondentEmail || null,
-      p_metadata: metadata,
+    const { data } = await supabase.auth.getSession();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (data.session) headers.Authorization = `Bearer ${data.session.access_token}`;
+    const response = await fetch('/api/forms/submit', {
+      method: 'POST', cache: 'no-store', headers,
+      body: JSON.stringify({ formId, answers, respondentEmail, metadata }),
     });
-
-    if (error) throw error;
-    return data as any;
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.success || !result.response_id) throw new Error(result?.error || 'Submission failed.');
+    return result;
   },
 
   /**
    * Upload attachment to Supabase Storage
    */
-  async uploadAttachment(formId: string, file: File): Promise<{ url: string; name: string; size: number }> {
-    if (!isSupabaseConfigured) {
-      return {
-        url: URL.createObjectURL(file),
-        name: file.name,
-        size: file.size,
-      };
-    }
+  async uploadAttachment(formId: string, file: File): Promise<{ url: string; path: string; name: string; size: number }> {
+    if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
+    if (file.size > 10 * 1024 * 1024) throw new Error('Maximum attachment size is 10 MB.');
+    if (!['image/png', 'image/jpeg', 'image/webp', 'application/pdf', 'text/plain'].includes(file.type)) throw new Error('This attachment type is not supported.');
 
     const fileExt = file.name.split('.').pop();
     const fileName = `${formId}/${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
 
     const { error: uploadError } = await supabase.storage
       .from('form-attachments')
-      .upload(fileName, file, { cacheControl: '3600', upsert: false });
+      .upload(fileName, file, { cacheControl: '0', upsert: false });
 
     if (uploadError) throw uploadError;
 
-    const { data: urlData } = supabase.storage.from('form-attachments').getPublicUrl(fileName);
-
     return {
-      url: urlData.publicUrl,
+      url: fileName,
+      path: fileName,
       name: file.name,
       size: file.size,
     };
