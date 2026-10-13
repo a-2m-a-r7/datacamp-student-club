@@ -31,6 +31,7 @@ const MyCourses = React.lazy(() => import('./pages/MyCourses'));
 const CourseDetail = React.lazy(() => import('./pages/CourseDetail'));
 const CourseLearning = React.lazy(() => import('./pages/CourseLearning'));
 const Leaderboard = React.lazy(() => import('./pages/Leaderboard'));
+const VerifyMembership = React.lazy(() => import('./pages/VerifyMembership'));
 const CompilerPlayground = React.lazy(() => import('./pages/CompilerPlayground'));
 const CourseQuiz = React.lazy(() => import('./pages/CourseQuiz'));
 const Certificates = React.lazy(() => import('./pages/Certificates'));
@@ -249,6 +250,7 @@ function AppContent() {
                 <Route path="/certificates" element={<Certificates />} />
                 <Route path="/verify-certificate" element={<Certificates />} />
                 <Route path="/verify-certificate/:code" element={<Certificates />} />
+                <Route path="/verify-membership/:token" element={<VerifyMembership />} />
                 <Route path="/notifications" element={
                   <ProtectedRoute>
                     <Notifications />

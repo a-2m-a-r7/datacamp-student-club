@@ -22,7 +22,10 @@ import {
   Users,
   Crown
 } from 'lucide-react';
-import html2canvas from 'html2canvas';
+import {supabase} from '../lib/supabase';
+import {getSiteUrl} from '../lib/siteUrl';
+import {downloadMemberCard} from '../lib/memberCard';
+import {toast} from 'sonner';
 
 const Dashboard = () => {
   const { profile, isSuperAdmin, isAdmin } = useAuth();
@@ -38,6 +41,13 @@ const Dashboard = () => {
   } = usePoints();
 
   const [enrolledCourses, setEnrolledCourses] = useState<{ course: Course; enrollment: Enrollment }[]>([]);
+  const [cardUrl,setCardUrl]=useState('');
+  const [cardError,setCardError]=useState('');
+  const [downloading,setDownloading]=useState(false);
+  const [cardAttempt,setCardAttempt]=useState(0);
+  useEffect(()=>{let active=true;setCardUrl('');setCardError('');if(!profile)return;
+    supabase.rpc('get_own_member_card').then(({data,error})=>{if(!active)return;if(error||!data?.token)setCardError(isArabic?'تعذر إصدار البطاقة. تأكد من تفعيل بريدك ثم أعد المحاولة.':'Unable to issue card. Verify your email and retry.');else setCardUrl(`${getSiteUrl()}/verify-membership/${data.token}`);});
+    return()=>{active=false};},[profile?.uid,isArabic,cardAttempt]);
 
   useEffect(() => {
     if (!profile) return;
@@ -54,13 +64,11 @@ const Dashboard = () => {
   }, [profile]);
 
   const downloadIDCard = async () => {
-    const element = document.getElementById('id-card');
-    if (!element) return;
-    const canvas = await html2canvas(element, { backgroundColor: null });
-    const link = document.createElement('a');
-    link.download = `DataCamp-ID-${profile?.memberId}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
+    if(downloading||!profile||!cardUrl)return;
+    setDownloading(true);
+    try {const qr=document.querySelector<SVGSVGElement>('#id-card svg');if(!qr)throw Error('QR image is unavailable');await downloadMemberCard(profile,qr);toast.success(isArabic?'تم تنزيل بطاقة العضوية':'Membership card downloaded');}
+    catch(error:any){toast.error(error.message||(isArabic?'تعذر تنزيل البطاقة':'Card download failed'));}
+    finally {setDownloading(false);}
   };
 
   if (!profile) {
@@ -307,7 +315,7 @@ const Dashboard = () => {
             <CardContent>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
                 {BADGES_CATALOG.slice(0, 8).map(b => {
-                  const isUnlocked = achievements.some(a => a.badgeId === b.id) || totalPoints >= 50;
+                  const isUnlocked = achievements.some(a => a.badgeId === b.id);
 
                   return (
                     <div
@@ -447,34 +455,34 @@ const Dashboard = () => {
               {isArabic ? 'بطاقة العضوية الرقمية' : 'Digital ID Card'}
             </h2>
             
-            <div id="id-card" className="relative w-full aspect-[1.586/1] bg-dark-navy rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_30px_rgba(57,255,20,0.1)]">
+            <div id="id-card" className="relative w-full min-h-[270px] aspect-[1.586/1] bg-dark-navy rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_30px_rgba(57,255,20,0.1)]">
               {/* Card Background Patterns */}
               <div className="absolute inset-0 cyber-grid opacity-20" />
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-neon-blue/10 rounded-full blur-3xl" />
               
-              <div className="relative h-full p-6 flex flex-col justify-between">
+              <div className="relative h-full min-h-[270px] p-4 md:p-6 flex flex-col justify-between">
                 <div className="flex justify-between items-start">
                   <Logo iconSize={24} textSize="text-xs" subtextSize="text-[6px]" />
                   <div className="text-[10px] font-mono text-primary/70">
-                    {isArabic ? 'عضو معتمد' : 'VERIFIED_MEMBER'}
+                    {cardUrl?(isArabic ? 'عضوية سارية' : 'ACTIVE MEMBERSHIP'):(isArabic?'بانتظار التحقق':'AWAITING VERIFICATION')}
                   </div>
                 </div>
 
                 <div className="flex items-end justify-between">
-                  <div className="space-y-4">
+                  <div className="space-y-4 min-w-0 flex-1 pr-3">
                     <div>
                       <div className="text-[8px] text-muted-foreground uppercase tracking-widest">
                         {isArabic ? 'الاسم بالكامل' : 'Full Name'}
                       </div>
-                      <div className="text-lg font-black font-cyber leading-none uppercase">{profile.fullName}</div>
+                      <div className="text-lg font-black font-cyber leading-tight uppercase break-words">{profile.fullName}</div>
                     </div>
-                    <div className="flex space-x-6 gap-4">
+                    <div className="flex flex-wrap gap-4">
                       <div>
                         <div className="text-[8px] text-muted-foreground uppercase tracking-widest">
                           {isArabic ? 'رقم العضوية' : 'ID Number'}
                         </div>
-                        <div className="text-xs font-mono font-bold text-neon-blue">{profile.memberId}</div>
+                        <div className="text-xs font-mono font-bold text-neon-blue break-all">{profile.memberId}</div>
                       </div>
                       <div>
                         <div className="text-[8px] text-muted-foreground uppercase tracking-widest">
@@ -485,14 +493,16 @@ const Dashboard = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-white p-1 rounded-lg">
-                    <QRCodeSVG value={profile.memberId} size={60} level="H" />
+                  <div className="bg-white p-1 rounded-lg shrink-0">
+                    {cardUrl && <QRCodeSVG value={cardUrl} size={88} level="M" marginSize={4} />}
                   </div>
                 </div>
               </div>
             </div>
 
-            <Button variant="cyber" className="w-full" onClick={downloadIDCard}>
+            {cardError && <p role="alert" className="text-sm text-red-300">{cardError}</p>}
+            {cardError && <Button variant="outline" className="w-full" onClick={()=>setCardAttempt(value=>value+1)}>{isArabic?'إعادة محاولة إصدار البطاقة':'Retry card issuance'}</Button>}
+            <Button variant="cyber" className="w-full" onClick={downloadIDCard} disabled={!cardUrl||downloading}>
               <Download className={`w-4 h-4 ${isArabic ? 'ml-2' : 'mr-2'}`} />
               {isArabic ? 'تحميل بطاقة الهوية' : 'Download ID Card'}
             </Button>

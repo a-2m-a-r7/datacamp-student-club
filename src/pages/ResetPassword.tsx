@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../co
 import { toast } from 'sonner';
 import { Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import {validatePasswordStrength} from '../lib/utils';
 
 export const ResetPassword = () => {
   const { isArabic } = useLanguage();
@@ -19,8 +20,9 @@ export const ResetPassword = () => {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password || password.length < 6) {
-      toast.error(isArabic ? 'كلمة المرور يجب أن لا تقل عن 6 أحرف' : 'Password must be at least 6 characters');
+    const strength=validatePasswordStrength(password);
+    if (!strength.isValid) {
+      toast.error(strength.message);
       return;
     }
     if (password !== confirmPassword) {

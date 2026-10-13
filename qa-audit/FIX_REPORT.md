@@ -5,8 +5,8 @@ The user authorized repairs after the initial discovery and explicitly authorize
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: 213; results: {"passed":213}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
-- PostgreSQL: 37 passed, zero failed in an isolated in-memory PostgreSQL database. All ten migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
+- Browser scenarios: 234; results: {"passed":234}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
+- PostgreSQL: 45 passed, zero failed in an isolated in-memory PostgreSQL database. All eleven migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
 - TypeScript check and production build passed; npm audit reported zero known vulnerabilities. Zero audit findings does not guarantee absence of all defects.
@@ -46,15 +46,19 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 | 13 | Admin blog | Medium | src/pages/admin/BlogManagement.tsx:1 | Edit control had no saving workflow | Dialog edits and PATCH persist the submitted fields | Browser click, PATCH payload, UI update and dialog close |
 | 14 | Admin settings | Medium | src/pages/admin/Settings.tsx:271 | Export and clear-cache controls had empty handlers | Protected platform-record JSON download and actual browser cache clearing | Browser download contents and CacheStorage removal |
 | 15 | Admin staff / security | Medium | src/pages/admin/Security.tsx:10 | Pretend commit, firewall state, security logs and uptime implied backend actions | Real roster refresh, actual audit records and password-reset request; unavailable uptime stays unknown | Route rendering; live reset email delivery remains untested |
-| 16 | Builder desktop header | High | src/App.tsx:206 | Floating language control intercepted clicks on Publish | Language control has reserved layout space | Delayed autosave/publish browser click test |
+| 16 | Builder desktop header | High | src/App.tsx:207 | Floating language control intercepted clicks on Publish | Language control has reserved layout space | Delayed autosave/publish browser click test |
 | 17 | Contact / footer | Medium | src/pages/Contact.tsx:166 | Invented email, telephone and address shown when not configured | Configured contact data or explicit Not configured state | Source correction and final route checks |
 | 18 | Dialogs / share / QR | Medium | src/components/ui/Dialog.tsx:6 | Conditional dialogs lacked consistent focus/Escape behavior; QR lacked quiet margin | Portaled accessible dialogs, focus restore, awaited clipboard, decodable QR margin | Browser Escape/focus, badge/form/certificate QR and PNG download |
 | 19 | Data refresh | Medium | src/lib/supabase.ts:22 | Cached RAG context and browser data could show stale or fake records | Fresh database context and no-store; personal AI key is memory-only | Browser legacy-session/cache rejection; realtime delivery needs live role session |
 | 20 | Dependencies | High | package.json:12 | Known vulnerable SheetJS/qs/esbuild versions | Official SheetJS 0.20.3 distribution and patched transitive packages | npm audit: zero known vulnerabilities |
+| 21 | Profile security | High | src/pages/Profile.tsx:153 | Login OTP was incorrectly reused for credential changes, with unsupported SMS text | Real recovery emails and confirmed email changes; no premature profile email writes | Browser request/error/retry checks; actual mailbox delivery unverified |
+| 22 | Dashboard card download | High | src/lib/memberCard.ts:1 | html2canvas failed on Tailwind color formats | Direct Canvas PNG export with real member data and embedded decodable QR | Actual 1586×1000 PNG download and QR pixel decode at three sizes |
+| 23 | Membership QR | High | supabase/migrations/20261013000010_member_cards.sql:4 | Member number displayed as unexplained scan text | Random token verification URL and protected admin ticket resolution | SQL permissions, inactive/unknown tokens and browser verification |
+| 24 | Dashboard badges | Medium | src/pages/Dashboard.tsx:318 | Fifty points displayed every catalog badge as earned | Only persisted achievements unlock badges | Source repair; badge issuance remains SQL verified |
 
 ## QR results
 
-Browser tests decode the actual member-badge SVG, public-form SVG, downloaded form PNG, and certificate SVG/canvas. Badge value matches the displayed member ID; form value matches http://127.0.0.1:3100/f/qa-test-form and opens that form; certificate value matches the selected verification code at the test origin. Production-domain correctness, event-ticket print/download and a physical camera scan remain unverified. No broken QR result is claimed without a failing decode.
+Browser tests decode the member-card SVG and the QR in the downloaded 1586×1000 PNG. Its value is a verification URL with a random token, and opening it displays membership validity and the member number without personal contact data. Form SVG/PNG and certificate SVG/canvas also decode to their matching URLs. The card uses Canvas image export instead of html2canvas, which failed with Tailwind color formats. Event-ticket print/download and physical camera scans remain unverified. See SECURITY_CARD_FIXES.md for the deployed regression evidence.
 
 ## Permissions and remaining integration work
 
@@ -62,7 +66,7 @@ Local SQL tests reject self-assigned admin roles/XP, forged badges, unknown/dupl
 
 Still unverified or blocked:
 
-1. A real member and admin session in the application: Google/email login, signup, logout, reset/OTP delivery, profile saves and admin create/delete require a private QA environment/account; dashboard sign-in alone does not log into the app.
+1. A real member and admin session in the application: Google/email login, signup, logout, recovery/email-confirmation delivery, profile saves and admin create/delete require a private QA environment/account; dashboard sign-in alone does not log into the app. Profile security now uses real email recovery and email-change confirmation, with no fabricated OTP or SMS fallback.
 2. Google Sheets synchronization requires GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY and GOOGLE_SPREADSHEET_OWNER_EMAIL plus spreadsheet permissions. No credentials were fabricated and no sheet was created/shared.
 3. Production is deployed at https://datacamp-student-club.vercel.app from GitHub main (application commit e78f6f1). Vercel reports Ready. The server key is configured privately in Production, and VITE_GEMINI_API_KEY was removed. Three admin endpoints were verified to return401 for visitors after repairing an ESM import failure; the TypeScript endpoint returns200.
 4. Live realtime delivery and file uploads, storage download, CSV/Excel/PDF/print variants, notification actions, all dynamic filters/sorting/pagination/drag/drop, and exhaustive keyboard/mobile hit-target checks for all 685 declarations are not fully exercised. Untested declarations retain Not tested status in the original inventory.
@@ -219,90 +223,111 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | TypeScript compiles real types and runs the resulting code | 375 | passed | public.spec.ts:109 |
 | backend compilation failure is surfaced even when HTTP returns 200 | 375 | passed | public.spec.ts:116 |
 | nonzero runtime exit without stderr is treated as an error | 375 | passed | public.spec.ts:123 |
-| member cannot search or download the club member directory | 1440 | passed | roles.spec.ts:45 |
-| profile saves edited name, rejects invalid phone and logs out | 1440 | passed | roles.spec.ts:55 |
-| form publish waits for autosave and reuses the created ID | 1440 | passed | roles.spec.ts:66 |
-| member direct admin URL stays outside admin controls | 1440 | passed | roles.spec.ts:89 |
-| authenticated fixture renders /admin | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/users | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/events | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/staff | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/gallery | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/content | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/projects | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/blog | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/messages | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/courses | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/points | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/forms | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/forms/new | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/security | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/settings | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /dashboard | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /profile | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /my-courses | 1440 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /notifications | 1440 | passed | roles.spec.ts:99 |
-| blog edit opens, saves via PATCH and closes | 1440 | passed | roles.spec.ts:110 |
-| modal Escape closes and restores trigger focus | 1440 | passed | roles.spec.ts:121 |
-| record export downloads actual returned JSON and cache button clears browser cache | 1440 | passed | roles.spec.ts:128 |
-| member badge QR decodes to the displayed member ID | 1440 | passed | roles.spec.ts:156 |
-| form QR has correct URL and download is a decodable PNG | 1440 | passed | roles.spec.ts:162 |
-| certificate SVG and canvas QR decode to the matching verification URL | 1440 | passed | roles.spec.ts:185 |
-| member cannot search or download the club member directory | 768 | passed | roles.spec.ts:45 |
-| profile saves edited name, rejects invalid phone and logs out | 768 | passed | roles.spec.ts:55 |
-| form publish waits for autosave and reuses the created ID | 768 | passed | roles.spec.ts:66 |
-| member direct admin URL stays outside admin controls | 768 | passed | roles.spec.ts:89 |
-| authenticated fixture renders /admin | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/users | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/events | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/staff | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/gallery | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/content | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/projects | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/blog | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/messages | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/courses | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/points | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/forms | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/forms/new | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/security | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/settings | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /dashboard | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /profile | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /my-courses | 768 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /notifications | 768 | passed | roles.spec.ts:99 |
-| blog edit opens, saves via PATCH and closes | 768 | passed | roles.spec.ts:110 |
-| modal Escape closes and restores trigger focus | 768 | passed | roles.spec.ts:121 |
-| record export downloads actual returned JSON and cache button clears browser cache | 768 | passed | roles.spec.ts:128 |
-| member badge QR decodes to the displayed member ID | 768 | passed | roles.spec.ts:156 |
-| form QR has correct URL and download is a decodable PNG | 768 | passed | roles.spec.ts:162 |
-| certificate SVG and canvas QR decode to the matching verification URL | 768 | passed | roles.spec.ts:185 |
-| member cannot search or download the club member directory | 375 | passed | roles.spec.ts:45 |
-| profile saves edited name, rejects invalid phone and logs out | 375 | passed | roles.spec.ts:55 |
-| form publish waits for autosave and reuses the created ID | 375 | passed | roles.spec.ts:66 |
-| member direct admin URL stays outside admin controls | 375 | passed | roles.spec.ts:89 |
-| authenticated fixture renders /admin | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/users | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/events | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/staff | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/gallery | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/content | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/projects | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/blog | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/messages | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/courses | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/points | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/forms | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/forms/new | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/security | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /admin/settings | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /dashboard | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /profile | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /my-courses | 375 | passed | roles.spec.ts:99 |
-| authenticated fixture renders /notifications | 375 | passed | roles.spec.ts:99 |
-| blog edit opens, saves via PATCH and closes | 375 | passed | roles.spec.ts:110 |
-| modal Escape closes and restores trigger focus | 375 | passed | roles.spec.ts:121 |
-| record export downloads actual returned JSON and cache button clears browser cache | 375 | passed | roles.spec.ts:128 |
-| member badge QR decodes to the displayed member ID | 375 | passed | roles.spec.ts:156 |
-| form QR has correct URL and download is a decodable PNG | 375 | passed | roles.spec.ts:162 |
-| certificate SVG and canvas QR decode to the matching verification URL | 375 | passed | roles.spec.ts:185 |
+| member cannot search or download the club member directory | 1440 | passed | roles.spec.ts:47 |
+| profile saves edited name, rejects invalid phone and logs out | 1440 | passed | roles.spec.ts:57 |
+| form publish waits for autosave and reuses the created ID | 1440 | passed | roles.spec.ts:73 |
+| member direct admin URL stays outside admin controls | 1440 | passed | roles.spec.ts:96 |
+| authenticated fixture renders /admin | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/users | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/events | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/staff | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/gallery | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/content | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/projects | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/blog | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/messages | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/courses | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/points | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/forms | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/forms/new | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/security | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/settings | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /dashboard | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /profile | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /my-courses | 1440 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /notifications | 1440 | passed | roles.spec.ts:106 |
+| blog edit opens, saves via PATCH and closes | 1440 | passed | roles.spec.ts:117 |
+| modal Escape closes and restores trigger focus | 1440 | passed | roles.spec.ts:128 |
+| record export downloads actual returned JSON and cache button clears browser cache | 1440 | passed | roles.spec.ts:135 |
+| member card downloads a real PNG whose QR opens private-safe verification | 1440 | passed | roles.spec.ts:163 |
+| profile security sends recovery link and requests email confirmation without profile overwrite | 1440 | passed | roles.spec.ts:178 |
+| profile email-change rejection stays visible and does not claim success | 1440 | passed | roles.spec.ts:192 |
+| form QR has correct URL and download is a decodable PNG | 1440 | passed | roles.spec.ts:201 |
+| certificate SVG and canvas QR decode to the matching verification URL | 1440 | passed | roles.spec.ts:224 |
+| member cannot search or download the club member directory | 768 | passed | roles.spec.ts:47 |
+| profile saves edited name, rejects invalid phone and logs out | 768 | passed | roles.spec.ts:57 |
+| form publish waits for autosave and reuses the created ID | 768 | passed | roles.spec.ts:73 |
+| member direct admin URL stays outside admin controls | 768 | passed | roles.spec.ts:96 |
+| authenticated fixture renders /admin | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/users | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/events | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/staff | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/gallery | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/content | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/projects | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/blog | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/messages | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/courses | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/points | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/forms | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/forms/new | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/security | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/settings | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /dashboard | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /profile | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /my-courses | 768 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /notifications | 768 | passed | roles.spec.ts:106 |
+| blog edit opens, saves via PATCH and closes | 768 | passed | roles.spec.ts:117 |
+| modal Escape closes and restores trigger focus | 768 | passed | roles.spec.ts:128 |
+| record export downloads actual returned JSON and cache button clears browser cache | 768 | passed | roles.spec.ts:135 |
+| member card downloads a real PNG whose QR opens private-safe verification | 768 | passed | roles.spec.ts:163 |
+| profile security sends recovery link and requests email confirmation without profile overwrite | 768 | passed | roles.spec.ts:178 |
+| profile email-change rejection stays visible and does not claim success | 768 | passed | roles.spec.ts:192 |
+| form QR has correct URL and download is a decodable PNG | 768 | passed | roles.spec.ts:201 |
+| certificate SVG and canvas QR decode to the matching verification URL | 768 | passed | roles.spec.ts:224 |
+| member cannot search or download the club member directory | 375 | passed | roles.spec.ts:47 |
+| profile saves edited name, rejects invalid phone and logs out | 375 | passed | roles.spec.ts:57 |
+| form publish waits for autosave and reuses the created ID | 375 | passed | roles.spec.ts:73 |
+| member direct admin URL stays outside admin controls | 375 | passed | roles.spec.ts:96 |
+| authenticated fixture renders /admin | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/users | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/events | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/staff | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/gallery | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/content | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/projects | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/blog | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/messages | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/courses | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/points | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/forms | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/forms/new | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/security | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /admin/settings | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /dashboard | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /profile | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /my-courses | 375 | passed | roles.spec.ts:106 |
+| authenticated fixture renders /notifications | 375 | passed | roles.spec.ts:106 |
+| blog edit opens, saves via PATCH and closes | 375 | passed | roles.spec.ts:117 |
+| modal Escape closes and restores trigger focus | 375 | passed | roles.spec.ts:128 |
+| record export downloads actual returned JSON and cache button clears browser cache | 375 | passed | roles.spec.ts:135 |
+| member card downloads a real PNG whose QR opens private-safe verification | 375 | passed | roles.spec.ts:163 |
+| profile security sends recovery link and requests email confirmation without profile overwrite | 375 | passed | roles.spec.ts:178 |
+| profile email-change rejection stays visible and does not claim success | 375 | passed | roles.spec.ts:192 |
+| form QR has correct URL and download is a decodable PNG | 375 | passed | roles.spec.ts:201 |
+| certificate SVG and canvas QR decode to the matching verification URL | 375 | passed | roles.spec.ts:224 |
+| card issuance failure disables download and retry recovers | 1440 | passed | roles.spec.ts:237 |
+| password recovery rejection is visible and retry works | 1440 | passed | roles.spec.ts:248 |
+| malformed membership URL is rejected without database lookup | 1440 | passed | roles.spec.ts:257 |
+| unknown membership token exposes no personal details | 1440 | passed | roles.spec.ts:263 |
+| password reset validates strength and surfaces authentication rejection | 1440 | passed | roles.spec.ts:270 |
+| card issuance failure disables download and retry recovers | 768 | passed | roles.spec.ts:237 |
+| password recovery rejection is visible and retry works | 768 | passed | roles.spec.ts:248 |
+| malformed membership URL is rejected without database lookup | 768 | passed | roles.spec.ts:257 |
+| unknown membership token exposes no personal details | 768 | passed | roles.spec.ts:263 |
+| password reset validates strength and surfaces authentication rejection | 768 | passed | roles.spec.ts:270 |
+| card issuance failure disables download and retry recovers | 375 | passed | roles.spec.ts:237 |
+| password recovery rejection is visible and retry works | 375 | passed | roles.spec.ts:248 |
+| malformed membership URL is rejected without database lookup | 375 | passed | roles.spec.ts:257 |
+| unknown membership token exposes no personal details | 375 | passed | roles.spec.ts:263 |
+| password reset validates strength and surfaces authentication rejection | 375 | passed | roles.spec.ts:270 |

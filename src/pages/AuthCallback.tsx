@@ -37,7 +37,7 @@ export const AuthCallback: React.FC = () => {
         if (sessionError) throw sessionError;
 
         if (session && mounted) {
-          toast.success(isArabic ? 'تم تأكيد الدخول بحساب Google بنجاح 🚀' : 'Google authentication verified successfully 🚀');
+          toast.success(isArabic ? 'تم تأكيد جلسة الحساب بنجاح' : 'Account session confirmed successfully');
           const destination = sessionStorage.getItem('datacamp_auth_redirect') || '/dashboard';
           sessionStorage.removeItem('datacamp_auth_redirect');
           navigate(destination.startsWith('/') ? destination : '/dashboard', { replace: true });
@@ -52,7 +52,7 @@ export const AuthCallback: React.FC = () => {
         console.error('[AuthCallback] Verification error:', err);
         if (mounted) {
           setErrorMsg(err.message || 'Failed to complete authentication.');
-          toast.error(isArabic ? 'فشل إتمام المصادقة مع Google' : 'Failed to complete Google authentication');
+          toast.error(isArabic ? 'تعذر إتمام تأكيد الحساب' : 'Failed to complete account confirmation');
           setTimeout(() => navigate('/login', { replace: true }), 3000);
         }
       }

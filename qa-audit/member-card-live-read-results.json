@@ -1,0 +1,21 @@
+{
+  "passed": 4,
+  "results": [
+    {
+      "name": "Unknown card is invalid",
+      "status": 200
+    },
+    {
+      "name": "Visitor cannot issue a card",
+      "status": 401
+    },
+    {
+      "name": "Visitor cannot enumerate cards",
+      "status": 200
+    },
+    {
+      "name": "Visitor cannot resolve attendance identity",
+      "status": 401
+    }
+  ]
+}

@@ -12,6 +12,8 @@ function visit(suite, parents=[]) {
   for (const child of suite.suites || []) visit(child,chain);
 }
 for (const suite of browser.suites || []) visit(suite);
+const extraFile=path.join(root,'security-failure-results.json');
+if(fs.existsSync(extraFile))for(const suite of JSON.parse(fs.readFileSync(extraFile,'utf8')).suites||[])visit(suite);
 const defects = [
  ['Login / all roles','Critical','AuthContext.tsx','Cached fake accounts and role shortcuts could enter protected UI','Real Supabase session, verified identity, active database role; mock shortcuts removed','Browser guards + server auth tests + SQL RLS'],
  ['Admin users','Critical','api/admin/users.ts','Administrative requests relied on unsafe fallback account creation','Bearer identity and database role checked server-side; no default password','Server authorization tests; live account CRUD remains untested'],
@@ -53,6 +55,12 @@ const locations=[
  ['src/lib/supabase.ts','global:'],['package.json','overrides'],
 ];
 locations.forEach(([file,needle],index)=>defects[index][2]=source(file,needle));
+defects.push(
+ ['Profile security','High',source('src/pages/Profile.tsx','handleEmailUpdate'),'Login OTP was incorrectly reused for credential changes, with unsupported SMS text','Real recovery emails and confirmed email changes; no premature profile email writes','Browser request/error/retry checks; actual mailbox delivery unverified'],
+ ['Dashboard card download','High',source('src/lib/memberCard.ts','downloadMemberCard'),'html2canvas failed on Tailwind color formats','Direct Canvas PNG export with real member data and embedded decodable QR','Actual 1586×1000 PNG download and QR pixel decode at three sizes'],
+ ['Membership QR','High',source('supabase/migrations/20261013000010_member_cards.sql','get_own_member_card'),'Member number displayed as unexplained scan text','Random token verification URL and protected admin ticket resolution','SQL permissions, inactive/unknown tokens and browser verification'],
+ ['Dashboard badges','Medium',source('src/pages/Dashboard.tsx','const isUnlocked'),'Fifty points displayed every catalog badge as earned','Only persisted achievements unlock badges','Source repair; badge issuance remains SQL verified']
+);
 const q=value=>'"'+String(value).replaceAll('"','""')+'"';
 fs.writeFileSync(path.join(root,'broken-buttons.csv'),[ ['Page / tab','Severity','Source / selector','Before','After','Evidence / limitation'].map(q).join(','), ...defects.map(row=>row.map(q).join(','))].join('\n'));
 fs.writeFileSync(path.join(root,'tested-elements.csv'),[ ['Scenario','Viewport','Status','Source','Duration ms'].map(q).join(','), ...rows.map(r=>[r.scenario,r.viewport,r.status,r.source,r.duration].map(q).join(','))].join('\n'));
@@ -66,7 +74,7 @@ The user authorized repairs after the initial discovery and explicitly authorize
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
 - Browser scenarios: ${rows.length}; results: ${JSON.stringify(counts)}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
-- PostgreSQL: 37 passed, zero failed in an isolated in-memory PostgreSQL database. All ten migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
+- PostgreSQL: 45 passed, zero failed in an isolated in-memory PostgreSQL database. All eleven migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
 - TypeScript check and production build passed; npm audit reported zero known vulnerabilities. Zero audit findings does not guarantee absence of all defects.
@@ -95,7 +103,7 @@ ${table}
 
 ## QR results
 
-Browser tests decode the actual member-badge SVG, public-form SVG, downloaded form PNG, and certificate SVG/canvas. Badge value matches the displayed member ID; form value matches http://127.0.0.1:3100/f/qa-test-form and opens that form; certificate value matches the selected verification code at the test origin. Production-domain correctness, event-ticket print/download and a physical camera scan remain unverified. No broken QR result is claimed without a failing decode.
+Browser tests decode the member-card SVG and the QR in the downloaded 1586×1000 PNG. Its value is a verification URL with a random token, and opening it displays membership validity and the member number without personal contact data. Form SVG/PNG and certificate SVG/canvas also decode to their matching URLs. The card uses Canvas image export instead of html2canvas, which failed with Tailwind color formats. Event-ticket print/download and physical camera scans remain unverified. See SECURITY_CARD_FIXES.md for the deployed regression evidence.
 
 ## Permissions and remaining integration work
 
@@ -103,7 +111,7 @@ Local SQL tests reject self-assigned admin roles/XP, forged badges, unknown/dupl
 
 Still unverified or blocked:
 
-1. A real member and admin session in the application: Google/email login, signup, logout, reset/OTP delivery, profile saves and admin create/delete require a private QA environment/account; dashboard sign-in alone does not log into the app.
+1. A real member and admin session in the application: Google/email login, signup, logout, recovery/email-confirmation delivery, profile saves and admin create/delete require a private QA environment/account; dashboard sign-in alone does not log into the app. Profile security now uses real email recovery and email-change confirmation, with no fabricated OTP or SMS fallback.
 2. Google Sheets synchronization requires GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY and GOOGLE_SPREADSHEET_OWNER_EMAIL plus spreadsheet permissions. No credentials were fabricated and no sheet was created/shared.
 3. Production is deployed at https://datacamp-student-club.vercel.app from GitHub main (application commit e78f6f1). Vercel reports Ready. The server key is configured privately in Production, and VITE_GEMINI_API_KEY was removed. Three admin endpoints were verified to return401 for visitors after repairing an ESM import failure; the TypeScript endpoint returns200.
 4. Live realtime delivery and file uploads, storage download, CSV/Excel/PDF/print variants, notification actions, all dynamic filters/sorting/pagination/drag/drop, and exhaustive keyboard/mobile hit-target checks for all 685 declarations are not fully exercised. Untested declarations retain Not tested status in the original inventory.

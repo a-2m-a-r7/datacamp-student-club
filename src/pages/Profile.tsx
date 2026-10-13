@@ -8,14 +8,11 @@ import { Input } from '../components/ui/Input';
 import { toast } from 'sonner';
 import {
   User, Mail, Lock, Phone, GraduationCap, Save,
-  Shield, CheckCircle2, AlertCircle,
-  Smartphone, ArrowRight, X, Key, Copy, Check, LogOut, Send, KeyRound
+  Shield, AlertCircle, Copy, Check, LogOut, Send, KeyRound
 } from 'lucide-react';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import ImagePicker from '../components/ImagePicker';
-import { sendOTP, verifyOTP } from '../lib/otp';
-import { motion, AnimatePresence } from 'motion/react';
-import { validatePasswordStrength } from '../lib/utils';
+import { Dialog } from '../components/ui/Dialog';
 
 import { profileSchema } from '../lib/schemas';
 import { getSiteUrl } from '../lib/siteUrl';
@@ -38,25 +35,8 @@ const Profile = () => {
     photoURL: '',
   });
 
-  // OTP Flow State
-  const [otpStep, setOtpStep] = useState<'none' | 'verify' | 'success'>('none');
-  const [otpAction, setOtpAction] = useState<'password' | 'email' | 'none'>('none');
-  const [otpTarget, setOtpTarget] = useState('');
-  const [otpType, setOtpType] = useState<'email' | 'phone'>('email');
-  const [otpCode, setOtpCode] = useState('');
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [attempts, setAttempts] = useState(0);
-  const [isBlocked, setIsBlocked] = useState(false);
-
-  const MAX_ATTEMPTS = 5;
-
-  // Re-auth State
-  const [currentPassword, setCurrentPassword] = useState('');
-
-  // New Data State
-  const [newEmail, setNewEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [emailDialogOpen,setEmailDialogOpen]=useState(false);
+  const [newEmail,setNewEmail]=useState('');
 
   useEffect(() => {
     if (profile) {
@@ -70,16 +50,6 @@ const Profile = () => {
       setNewEmail(profile.email || '');
     }
   }, [profile]);
-
-  useEffect(() => {
-    let timer: any;
-    if (timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [timeLeft]);
 
   const validatePhone = (phone: string) => {
     const cleaned = phone.replace(/[\s-]/g, '');
@@ -180,103 +150,20 @@ const Profile = () => {
     }
   };
 
-  const startOtpFlow = async (action: 'password' | 'email', type: 'email' | 'phone' = 'email') => {
-    if (isBlocked) {
-      return toast.error(isArabic ? 'تم استنفاد المحاولات. يرجى المحاولة لاحقاً.' : 'Too many failed attempts. Please try again later.');
-    }
-    if (timeLeft > 0) {
-      return toast.error(isArabic ? `يرجى الانتظار ${timeLeft} ثانية قبل طلب رمز جديد.` : `Please wait ${timeLeft}s before requesting a new code.`);
-    }
-
-    const target = type === 'email' ? profile?.email : profile?.phoneNumber;
-
-    if (!target) {
-      toast.error(isArabic ? `لا يوجد ${type === 'email' ? 'بريد' : 'هاتف'} مرتبط بهذا الحساب.` : `No ${type} associated with this account.`);
-      return;
-    }
-
-    setLoading(true);
-    const success = await sendOTP(target, type);
-    setLoading(false);
-
-    if (success) {
-      setOtpAction(action);
-      setOtpTarget(target);
-      setOtpType(type);
-      setOtpStep('verify');
-      setTimeLeft(60);
-      setAttempts(0);
-      toast.success(isArabic ? `تم إرسال الرمز إلى ${target}` : `OTP sent to ${target}`);
-    } else {
-      toast.error(isArabic ? 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقاً.' : 'Failed to send OTP. Please try again.');
-    }
-  };
-
-  const handleVerifyOTP = async () => {
-    if (otpCode.length !== 6 || isBlocked) return;
-
-    setLoading(true);
-    const isValid = await verifyOTP(otpTarget, otpCode, otpType);
-    setLoading(false);
-
-    if (isValid) {
-      setOtpStep('success');
-      toast.success(isArabic ? 'تم تأكيد الهوية بنجاح' : 'Identity verified');
-    } else {
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
-      if (newAttempts >= MAX_ATTEMPTS) {
-        setIsBlocked(true);
-        toast.error(isArabic ? 'تم استنفاد الحد الأقصى للمحاولات.' : 'Maximum attempts reached. Access blocked.');
-      } else {
-        toast.error(isArabic ? `رمز غير صالح. متبقي ${MAX_ATTEMPTS - newAttempts} محاولات.` : `Invalid or expired OTP. ${MAX_ATTEMPTS - newAttempts} attempts remaining.`);
-      }
-      setOtpCode('');
-    }
-  };
-
-  const finalizeAction = async () => {
-    if (otpStep !== 'success') return toast.error('Verify your identity first.');
-    if (otpAction === 'password') {
-      const passwordCheck = validatePasswordStrength(newPassword);
-      if (!passwordCheck.isValid) {
-        return toast.error(passwordCheck.message);
-      }
-      if (newPassword !== confirmPassword) {
-        toast.error(isArabic ? 'كلمات المرور غير متطابقة' : 'Passwords do not match');
-        return;
-      }
-    }
-
+  const handleEmailUpdate = async (event: React.FormEvent) => {
+    event.preventDefault(); if(loading)return;
+    const email=newEmail.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254)return toast.error(isArabic?'اكتب بريدًا إلكترونيًا صحيحًا':'Enter a valid email address');
+    if(email.toLowerCase()===(user?.email||profile?.email||'').toLowerCase())return toast.error(isArabic?'البريد الجديد مطابق للحالي':'New email matches the current email');
     setLoading(true);
     try {
-      if (isSupabaseConfigured) {
-        if (otpAction === 'password') {
-          const { error } = await supabase.auth.updateUser({ password: newPassword });
-          if (error) throw error;
-          toast.success(isArabic ? 'تم تحديث كلمة المرور بنجاح' : 'Password updated successfully');
-        } else if (otpAction === 'email') {
-          const { error } = await supabase.auth.updateUser({ email: newEmail });
-          if (error) throw error;
-
-          toast.success(isArabic ? 'تم إرسال رابط تأكيد للبريد الإلكتروني الجديد' : 'Confirmation link sent to new email');
-        }
-        setOtpStep('none');
-        setOtpAction('none');
-        setNewPassword('');
-        setConfirmPassword('');
-        setOtpCode('');
-        setCurrentPassword('');
-        setLoading(false);
-        return;
-      }
-
-      throw new Error('Database is not configured.');
-    } catch (error: any) {
-      toast.error(error.message || (isArabic ? 'فشلت العملية' : 'Action failed'));
-    } finally {
-      setLoading(false);
-    }
+      if(!isSupabaseConfigured)throw Error('Authentication service is not configured.');
+      const {error}=await supabase.auth.updateUser({email},{emailRedirectTo:getSiteUrl()+'/auth/callback'});
+      if(error)throw error;
+      toast.success(isArabic?'تم إرسال رسالة تأكيد التغيير. بريدك الحالي يظل كما هو حتى التأكيد.':'Confirmation sent. Your current email remains unchanged until confirmed.');
+      setEmailDialogOpen(false);
+    } catch(error:any){toast.error(error.message||'Unable to request email change');}
+    finally {setLoading(false);}
   };
 
   return (
@@ -287,7 +174,7 @@ const Profile = () => {
             {isArabic ? 'الملف الشخصي' : 'USER'} <span className="text-primary neon-text">{isArabic ? 'للعضو' : 'PROFILE'}</span>
           </h1>
           <p className="text-muted-foreground">
-            {isArabic ? 'إدارة بياناتك الشخصية، وبيانات الكلية، وتأمين حسابك عبر رمز OTP.' : 'Manage your identity and security settings.'}
+            {isArabic ? 'إدارة بياناتك الشخصية وتأمين حسابك عبر رسائل تأكيد البريد.' : 'Manage your identity and security settings.'}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -436,7 +323,7 @@ const Profile = () => {
                 </CardTitle>
               </div>
               <CardDescription>
-                {isArabic ? 'إدارة بيانات الدخول وتحديث كلمة المرور بأمان عبر OTP.' : 'Manage your access credentials securely via OTP.'}
+                {isArabic ? 'تغيير البريد وتحديث كلمة المرور عبر رسائل تأكيد آمنة.' : 'Update your email and password through secure confirmation emails.'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -454,9 +341,9 @@ const Profile = () => {
                     variant="outline"
                     size="sm"
                     className="text-[10px] font-cyber h-8"
-                    onClick={() => startOtpFlow('password')}
+                    aria-label={isArabic ? "إرسال رابط تغيير كلمة المرور" : "Send password reset link"} disabled={loading} onClick={handleSendPasswordReset}
                   >
-                    {isArabic ? 'تغيير' : 'CHANGE'}
+                    {isArabic ? 'إرسال رابط' : 'SEND LINK'}
                   </Button>
                 </div>
                 <div className="flex items-center justify-between">
@@ -472,7 +359,7 @@ const Profile = () => {
                     variant="outline"
                     size="sm"
                     className="text-[10px] font-cyber h-8"
-                    onClick={() => startOtpFlow('email')}
+                    aria-label={isArabic ? "تغيير البريد الإلكتروني" : "Change email address"} disabled={loading} onClick={() => {setNewEmail(user?.email||profile?.email||'');setEmailDialogOpen(true);}}
                   >
                     {isArabic ? 'تغيير' : 'CHANGE'}
                   </Button>
@@ -514,8 +401,8 @@ const Profile = () => {
                 </div>
                 <p className="text-[10px] text-muted-foreground leading-relaxed">
                   {isArabic
-                    ? 'الإجراءات الحساسة تتطلب التحقق من الهوية برمز تأكيد. إذا تعذر الوصول لبريدك، يمكنك استخدام رمز التحقق عبر الرسائل النصية SMS.'
-                    : 'Sensitive actions require identity verification. If you cannot access your email, use the SMS fallback option.'
+                    ? 'افتح رسالة التأكيد على بريدك لإتمام التغيير. لن يتغير بريد الحساب قبل التأكيد. إذا فقدت الوصول إلى بريدك، تواصل مع إدارة النادي.'
+                    : 'Open the confirmation email to finish the change. Your account email stays unchanged until confirmation. Contact club administration if you lose access to your email.'
                   }
                 </p>
               </div>
@@ -538,142 +425,17 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* OTP Verification Overlay */}
-      <AnimatePresence>
-        {otpStep !== 'none' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-dark-navy/90 backdrop-blur-xl"
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="w-full max-w-md"
-            >
-              <Card className="border-primary/30 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-neon-blue to-neon-purple" />
-                <button aria-label="Close"
-                  onClick={() => setOtpStep('none')}
-                  className={`absolute top-4 ${isArabic ? 'left-4' : 'right-4'} text-muted-foreground hover:text-white transition-colors`}
-                >
-                  <X className="w-5 h-5" />
-                </button>
+      {emailDialogOpen && <Dialog onClose={()=>setEmailDialogOpen(false)} aria-label={isArabic?'تغيير البريد الإلكتروني':'Change email address'} className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md"><CardHeader><CardTitle>{isArabic?'تغيير البريد الإلكتروني':'Change email address'}</CardTitle></CardHeader><CardContent>
+          <form onSubmit={handleEmailUpdate} className="space-y-4">
+            <p>{isArabic?'يلزم تأكيد التغيير عبر رسالة البريد قبل تحديث بيانات حسابك.':'Confirm the change by email before your account email is updated.'}</p>
+            <Input aria-label="New email address" type="email" required value={newEmail} onChange={e=>setNewEmail(e.target.value)} />
+            <Button type="submit" disabled={loading}>{isArabic?'إرسال رسالة التأكيد':'Send confirmation'}</Button>
+            <Button type="button" variant="outline" onClick={()=>setEmailDialogOpen(false)}>{isArabic?'إلغاء':'Cancel'}</Button>
+          </form>
+        </CardContent></Card>
+      </Dialog>}
 
-                <CardHeader className="text-center">
-                  <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                    {otpStep === 'verify' ? <Shield className="w-8 h-8 text-primary" /> : <CheckCircle2 className="w-8 h-8 text-primary" />}
-                  </div>
-                  <CardTitle className="font-cyber tracking-tighter">
-                    {otpStep === 'verify'
-                      ? (isArabic ? 'التحقق من الهوية' : 'IDENTITY_VERIFICATION')
-                      : (isArabic ? 'تم التحقق بنجاح' : 'VERIFICATION_SUCCESS')
-                    }
-                  </CardTitle>
-                  <CardDescription>
-                    {otpStep === 'verify'
-                      ? (isArabic ? `أدخل الرمز المكون من 6 أرقام المرسل إلى ${otpTarget}` : `Enter the 6-digit code sent to ${otpTarget}`)
-                      : (isArabic ? `يمكنك الآن استكمال تحديث ${otpAction === 'password' ? 'كلمة المرور' : 'البريد'}.` : `You can now finalize your ${otpAction} update.`)}
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent className="space-y-6">
-                  {otpStep === 'verify' ? (
-                    <div className="space-y-6">
-                      <div className="flex justify-center gap-2">
-                        <Input
-                          className="text-center text-2xl font-black tracking-[1em] h-14 font-mono"
-                          maxLength={6}
-                          placeholder="000000"
-                          value={otpCode}
-                          onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                          dir="ltr"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-3">
-                        <Button variant="cyber" className="w-full" onClick={handleVerifyOTP} disabled={loading || otpCode.length !== 6}>
-                          {isArabic ? 'تأكيد الرمز' : 'VERIFY_CODE'}
-                        </Button>
-                        <div className="flex justify-between items-center text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
-                          <span>{isArabic ? 'لم تستلم الرمز؟' : "Didn't receive code?"}</span>
-                          <button
-                            className={`text-primary hover:underline ${timeLeft > 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            onClick={() => startOtpFlow(otpAction as any, otpType)}
-                            disabled={timeLeft > 0}
-                          >
-                            {timeLeft > 0 ? (isArabic ? `إعادة الإرسال (${timeLeft}ث)` : `RESEND (${timeLeft}s)`) : (isArabic ? 'إعادة الإرسال' : 'RESEND')}
-                          </button>
-                        </div>
-                        {otpType === 'email' && profile?.phoneNumber && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-[10px] font-cyber text-neon-blue"
-                            onClick={() => startOtpFlow(otpAction as any, 'phone')}
-                          >
-                            <Smartphone className={`w-3 h-3 ${isArabic ? 'ml-2' : 'mr-2'}`} />
-                            {isArabic ? 'استخدام رسالة نصية SMS' : 'USE SMS FALLBACK'}
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-6">
-                      {otpAction === 'email' ? (
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
-                              {isArabic ? 'البريد الإلكتروني الجديد' : 'New Email Address'}
-                            </label>
-                            <Input
-                              type="email"
-                              value={newEmail}
-                              onChange={(e) => setNewEmail(e.target.value)}
-                              placeholder="new@example.com"
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
-                              {isArabic ? 'كلمة المرور الجديدة' : 'New Password'}
-                            </label>
-                            <Input
-                              type="password"
-                              value={newPassword}
-                              onChange={(e) => setNewPassword(e.target.value)}
-                              placeholder="••••••••"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
-                              {isArabic ? 'تأكيد كلمة المرور الجديدة' : 'Confirm New Password'}
-                            </label>
-                            <Input
-                              type="password"
-                              value={confirmPassword}
-                              onChange={(e) => setConfirmPassword(e.target.value)}
-                              placeholder="••••••••"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      <Button variant="cyber" className="w-full" onClick={finalizeAction} disabled={loading}>
-                        {isArabic ? 'تأكيد التحديث' : 'FINALIZE_UPDATE'}
-                        <ArrowRight className={`w-4 h-4 ${isArabic ? 'mr-2 rotate-180' : 'ml-2'}`} />
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

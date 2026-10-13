@@ -9,12 +9,13 @@ if(!origin?.startsWith('https://'))throw Error('Deployment URL required');
   const context=await browser.newContext({viewport:{width,height:900}});
   await context.addInitScript(()=>localStorage.setItem('datacamp_language','en'));
   const page=await context.newPage();activePage=page;
-  for(const route of ['/','/about','/courses','/events','/projects','/blog','/staff','/gallery','/contact','/leaderboard','/login','/profile','/admin/users']) {
+  for(const route of ['/','/about','/courses','/events','/projects','/blog','/staff','/gallery','/contact','/leaderboard','/login','/profile','/admin/users','/verify-membership/00000000-0000-4000-8000-000000000020']) {
    const errors=[];const listener=e=>errors.push(e.message);page.on('pageerror',listener);
    currentCheck={route,width};console.log(JSON.stringify(currentCheck));
    const response=await page.goto(origin+route,{waitUntil:'domcontentloaded'});await page.locator('main').first().waitFor({state:'visible'});
    if(['/leaderboard','/staff'].includes(route)) await page.getByText('Club member directory is available to administrators only').waitFor();
    if(['/profile','/admin/users'].includes(route))await page.waitForURL('**/login**');
+   if(route.startsWith('/verify-membership/'))await page.getByText('Invalid card or inactive membership',{exact:true}).waitFor();
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
    results.push({route,width,status:response.status(),cache:response.headers()['cache-control'],errors,overflow});
    page.off('pageerror',listener);

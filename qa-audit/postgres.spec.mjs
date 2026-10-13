@@ -86,6 +86,18 @@ try {
  await check('administrator can query member directory',async()=>assert.ok(Array.isArray((await db.query('SELECT public_leaderboard() AS r')).rows[0].r)));
  await db.exec('RESET ROLE;');await db.query("SELECT set_config('qa.uid',$1,false)",[member]);await db.exec('SET ROLE authenticated;');
  await check('member cannot query directory RPC directly',async()=>await assert.rejects(db.query('SELECT public_leaderboard()')));
+ const card=(await db.query('SELECT get_own_member_card() AS r')).rows[0].r;
+ await check('member card token persists and is idempotent',async()=>assert.equal((await db.query('SELECT get_own_member_card() AS r')).rows[0].r.token,card.token));
+ await check('member cannot enumerate card tokens',async()=>assert.equal((await db.query('SELECT * FROM member_cards')).rows.length,0));
+ await check('member cannot resolve other membership cards for attendance',async()=>await assert.rejects(db.query('SELECT resolve_member_card_ticket($1)',[`https://example.invalid/verify-membership/${card.token}`])));
+ await db.exec('RESET ROLE; SET ROLE anon;');
+ await check('public card verification shows status and number without private profile',async()=>{const r=(await db.query('SELECT verify_member_card($1) AS r',[card.token])).rows[0].r;assert.equal(r.valid,true);assert.deepEqual(Object.keys(r).sort(),['member_id','valid']);});
+ await check('unknown card does not validate',async()=>assert.equal((await db.query('SELECT verify_member_card($1) AS r',[crypto.randomUUID()])).rows[0].r.valid,false));
+ await check('visitor cannot issue membership card',async()=>await assert.rejects(db.query('SELECT get_own_member_card()')));
+ await db.exec('RESET ROLE;');await db.query("SELECT set_config('qa.uid',$1,false)",[admin]);await db.exec('SET ROLE authenticated;');
+ await check('admin resolves membership QR for attendance',async()=>{const r=(await db.query('SELECT resolve_member_card_ticket($1) AS r',[`https://example.invalid/verify-membership/${card.token}`])).rows[0].r;assert.ok(r.startsWith('DC-'));});
+ await db.query("UPDATE profiles SET status='inactive' WHERE id=$1",[member]);
+ await check('inactive member card no longer verifies',async()=>assert.equal((await db.query('SELECT verify_member_card($1) AS r',[card.token])).rows[0].r.valid,false));
  await db.exec('RESET ROLE; SET ROLE anon;');
  await check('visitor cannot query directory RPC directly',async()=>await assert.rejects(db.query('SELECT public_leaderboard()')));
  fs.writeFileSync('qa-audit/postgres-results.json',JSON.stringify({passed,failed:0,environment:'isolated in-memory PostgreSQL'},null,2));

@@ -47,7 +47,9 @@ const EventManagement = () => {
   const onScanSuccess = React.useCallback(async (decodedText: string) => {
     if (!selectedEvent?.id) return;
     try {
-      const { data, error } = await supabase.rpc('check_in_event', { p_event_id: selectedEvent.id, p_ticket: decodedText });
+      const resolved = await supabase.rpc('resolve_member_card_ticket',{p_ticket:decodedText});
+      if(resolved.error)throw resolved.error;
+      const { data, error } = await supabase.rpc('check_in_event', { p_event_id: selectedEvent.id, p_ticket: resolved.data });
       if (error) throw error; if (!data?.checkedInAt) throw new Error('Attendance was not saved');
       setShowScanModal(false); toast.success('Attendance saved');
     } catch (err: any) { toast.error(err.message || 'Ticket verification failed'); }
