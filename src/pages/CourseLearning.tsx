@@ -114,7 +114,7 @@ const CourseLearning = () => {
       toast.success(isArabic ? `تم إكمال الدرس! +${res.pointsAwarded} XP أضيفت لحسابك.` : `Lesson completed! +${res.pointsAwarded} XP claimed.`);
 
       if (res.isCourseFinished) {
-        toast.success(isArabic ? `🏆 مبروك! أتممت الدورة وحصلت على الشهادة المعتمدة و 500 XP إضافية!` : `🏆 COURSE COMPLETED! You unlocked the Master Certificate & 500 Bonus XP!`, {
+        toast.success(isArabic ? 'مبروك! أتممت الكورس وتم إصدار شهادتك وحفظها.' : 'Course completed! Your certificate has been issued and saved.', {
           duration: 8000,
         });
       }
@@ -124,8 +124,8 @@ const CourseLearning = () => {
       if (currentIndex < lessons.length - 1) {
         handleLessonSelect(lessons[currentIndex + 1]);
       }
-    } catch {
-      toast.error(isArabic ? 'فشل حفظ إتمام الدرس.' : 'Failed to complete lesson.');
+    } catch (error: any) {
+      toast.error(error.message || (isArabic ? 'فشل حفظ إتمام الدرس.' : 'Failed to complete lesson.'));
     } finally {
       setCompleting(false);
     }
@@ -141,6 +141,7 @@ const CourseLearning = () => {
    const rows = await courseService.getUserEnrollment(user.id || user.uid, course.id);
    if (rows) setEnrollment(rows);
    toast.success(isArabic ? 'تم اجتياز الاختبار وحفظ النتيجة' : 'Assessment passed and result saved');
+   if (result.progress?.isCourseFinished && rows?.certificateId) toast.success(isArabic ? 'تم إصدار شهادة الكورس تلقائيًا' : 'Your course certificate was issued automatically');
   } else toast.error(isArabic ? 'درجة النجاح 80%' : 'Passing score is 80%');
  } catch (err: any) { toast.error(err.message || 'Unable to save assessment'); }
  finally { setCompleting(false); }
@@ -221,21 +222,21 @@ const CourseLearning = () => {
                       {isArabic ? 'تم إكمال منهج الدورة بالكامل!' : 'COURSE CURRICULUM COMPLETED!'}
                     </h4>
                     <p className="text-xs font-mono text-muted-foreground">
-                      {isArabic ? 'لقد فتحت شهادتك الرسمية المعتمدة ويمكنك استعراضها الآن.' : 'You have unlocked your official verifiable certificate.'}
+                      {enrollment?.certificateId ? (isArabic ? 'تم إصدار الشهادة وحفظها ويمكنك عرضها الآن.' : 'Your certificate has been issued and saved. You can view it now.') : (isArabic ? 'لم يتأكد إصدار الشهادة بعد. أعد تحميل الصفحة أو تواصل مع الإدارة.' : 'Certificate issuance is not confirmed. Reload or contact administration.')}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Link to={`/courses/${course.slug}/quiz`}>
+                  {lessons.some(lesson => lesson.quizQuestions?.length) && <Link to={`/courses/${course.slug}/quiz`}>
                     <Button variant="outline" className="text-xs font-cyber h-9 px-3 border-amber-500/40 text-amber-400 hover:bg-amber-500/10">
-                      {isArabic ? 'خوض الاختبار النهائي (+50 XP)' : 'TAKE FINAL QUIZ (+50 XP)'}
+                      {isArabic ? 'مراجعة الاختبار' : 'REVIEW ASSESSMENT'}
                     </Button>
-                  </Link>
-                  <Link to="/certificates">
+                  </Link>}
+                  {enrollment?.certificateId && <Link to={`/certificates?course=${course.id}`}>
                     <Button variant="cyber" className="text-xs font-cyber h-9 px-4">
                       {isArabic ? 'عرض الشهادة' : 'VIEW CERTIFICATE'}
                     </Button>
-                  </Link>
+                  </Link>}
                 </div>
               </div>
             )}

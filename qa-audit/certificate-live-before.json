@@ -1,0 +1,8 @@
+{
+  "mode": "pre-migration read-only audit",
+  "enrollments": 1,
+  "certificates": 0,
+  "eligibleCompletedCourses": 1,
+  "unlinkedEligibleCompletions": 1,
+  "duplicates": 0
+}

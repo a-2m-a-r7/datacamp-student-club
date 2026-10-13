@@ -1,0 +1,10 @@
+{
+  "mode": "post-migration read-only verification",
+  "enrollments": 1,
+  "certificates": 1,
+  "eligibleCompletedCourses": 1,
+  "unlinkedEligibleCompletions": 0,
+  "duplicates": 0,
+  "privateRoutineVisitorStatus": 401,
+  "unknownCertificateIsInvalid": true
+}

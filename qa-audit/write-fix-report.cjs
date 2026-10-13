@@ -14,6 +14,10 @@ function visit(suite, parents=[]) {
 for (const suite of browser.suites || []) visit(suite);
 const extraFile=path.join(root,'security-failure-results.json');
 if(fs.existsSync(extraFile))for(const suite of JSON.parse(fs.readFileSync(extraFile,'utf8')).suites||[])visit(suite);
+const seen=new Set();
+rows.splice(0,rows.length,...rows.filter(row=>{const key=row.scenario+'|'+row.viewport;if(seen.has(key))return false;seen.add(key);return true;}));
+const sqlResults=JSON.parse(fs.readFileSync(path.join(root,'postgres-results.json'),'utf8'));
+const migrationCount=fs.readdirSync(path.join(root,'..','supabase','migrations')).filter(file=>file.startsWith('20261013')).length;
 const defects = [
  ['Login / all roles','Critical','AuthContext.tsx','Cached fake accounts and role shortcuts could enter protected UI','Real Supabase session, verified identity, active database role; mock shortcuts removed','Browser guards + server auth tests + SQL RLS'],
  ['Admin users','Critical','api/admin/users.ts','Administrative requests relied on unsafe fallback account creation','Bearer identity and database role checked server-side; no default password','Server authorization tests; live account CRUD remains untested'],
@@ -23,7 +27,7 @@ const defects = [
  ['Forms response','High','submit_form_response RPC','Client validation/fallback results could imply an unsaved submission succeeded','Server validates ownership, required fields, types, schedule and repeat-response policy','PostgreSQL validation tests'],
  ['Course quiz','High','submit_course_quiz RPC','Client-selected success could grant completion and XP','Server grades stored questions; completion requires passing score','PostgreSQL fail/pass and bypass checks'],
  ['Event scanner','High','check_in_event RPC','Access-granted output did not prove attendance persisted','Registered ticket matched, attendance saved, duplicates rejected','PostgreSQL unknown/valid/duplicate checks; physical camera untested'],
- ['Certificates','High','certificateService.ts','Sample or unverified certificates could appear as real','Only persisted completion issues a certificate; public verification omits account fields','PostgreSQL issuance + QR browser decode'],
+ ['Certificates','High','certificateService.ts','Completed courses could claim a certificate in the UI without automatic issuance','Completion transaction issues one matching persisted certificate and links its enrollment; public verification omits account fields','PostgreSQL atomic rollback/idempotency + browser backed by real isolated SQL + PNG/PDF/QR'],
  ['Notifications / badges','High','notificationService.ts / verified_badges.sql','Fabricated alerts and client-derived achievements; global read state shared','Actual rows, per-member read records, badges derived from persisted progress','PostgreSQL independent reads and forged-badge rejection'],
  ['Google Sheets','High','api/forms/sync-sheet.ts','Public sync endpoint and misleading success on missing configuration','Admin authorization, real failure status, RAW sheet values, no hardcoded sharing recipient','Visitor rejection verified; Google service account integration blocked'],
  ['Compiler','High','universalRunner.ts','Service failure returned invented successful language output','Actual workers/WASM/services; compilation and nonzero runtime failures surfaced','Real JavaScript/TypeScript execution + mocked failure responses'],
@@ -61,6 +65,7 @@ defects.push(
  ['Membership QR','High',source('supabase/migrations/20261013000010_member_cards.sql','get_own_member_card'),'Member number displayed as unexplained scan text','Random token verification URL and protected admin ticket resolution','SQL permissions, inactive/unknown tokens and browser verification'],
  ['Dashboard badges','Medium',source('src/pages/Dashboard.tsx','const isUnlocked'),'Fifty points displayed every catalog badge as earned','Only persisted achievements unlock badges','Source repair; badge issuance remains SQL verified']
 );
+defects.push(['Course completion / certificates','High',source('supabase/migrations/20261013000011_automatic_course_certificates.sql','CREATE TRIGGER'),'Completing a lesson or quiz did not automatically issue/link a course certificate','Atomic database trigger, unique certificate per user/course, safe historical repair, matching course selection and export QR snapshot','Browser operations execute actual PostgreSQL routines in an isolated database; real historical completion repaired in production']);
 const q=value=>'"'+String(value).replaceAll('"','""')+'"';
 fs.writeFileSync(path.join(root,'broken-buttons.csv'),[ ['Page / tab','Severity','Source / selector','Before','After','Evidence / limitation'].map(q).join(','), ...defects.map(row=>row.map(q).join(','))].join('\n'));
 fs.writeFileSync(path.join(root,'tested-elements.csv'),[ ['Scenario','Viewport','Status','Source','Duration ms'].map(q).join(','), ...rows.map(r=>[r.scenario,r.viewport,r.status,r.source,r.duration].map(q).join(','))].join('\n'));
@@ -74,7 +79,7 @@ The user authorized repairs after the initial discovery and explicitly authorize
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
 - Browser scenarios: ${rows.length}; results: ${JSON.stringify(counts)}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
-- PostgreSQL: 45 passed, zero failed in an isolated in-memory PostgreSQL database. All eleven migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
+- PostgreSQL: ${sqlResults.passed} passed, ${sqlResults.failed} failed in an isolated in-memory PostgreSQL database. All ${migrationCount} repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
 - TypeScript check and production build passed; npm audit reported zero known vulnerabilities. Zero audit findings does not guarantee absence of all defects.

@@ -94,6 +94,7 @@ export const courseService = {
     if (!isSupabaseConfigured) throw new Error('Database is not configured.');
     const { data, error } = await supabase.rpc('submit_course_quiz', { p_lesson_id: lessonId, p_answers: answers });
     if (error) throw error;
+    if (data?.progress?.isCourseFinished && !data.progress.enrollment?.certificate_id) throw new Error('Course completed, but certificate issuance was not confirmed. Please reload.');
     return data as { scorePercentage: number; passed: boolean; progress: any };
   },
   /**
@@ -287,6 +288,7 @@ export const courseService = {
  if (identity.user?.id !== userId) throw new Error('You can only update your own progress.');
  const { data, error } = await supabase.rpc('complete_course_lesson', { p_course_id: courseId, p_lesson_id: lessonId });
  if (error) throw error; if (!data?.enrollment) throw new Error('Progress was not saved.');
+ if (data.isCourseFinished && !data.enrollment.certificate_id) throw new Error('Course completed, but certificate issuance was not confirmed. Please reload.');
  return { enrollment: mapDatabaseEnrollment(data.enrollment), isCourseFinished: data.isCourseFinished, pointsAwarded: data.pointsAwarded };
 },
 

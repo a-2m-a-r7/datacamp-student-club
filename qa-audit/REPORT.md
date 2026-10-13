@@ -5,8 +5,8 @@ The user authorized repairs after the initial discovery and explicitly authorize
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: 234; results: {"passed":234}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
-- PostgreSQL: 45 passed, zero failed in an isolated in-memory PostgreSQL database. All eleven migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
+- Browser scenarios: 246; results: {"passed":246}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
+- PostgreSQL: 56 passed, 0 failed in an isolated in-memory PostgreSQL database. All 12 repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
 - TypeScript check and production build passed; npm audit reported zero known vulnerabilities. Zero audit findings does not guarantee absence of all defects.
@@ -34,12 +34,12 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 | 1 | Login / all roles | Critical | src/contexts/AuthContext.tsx:194 | Cached fake accounts and role shortcuts could enter protected UI | Real Supabase session, verified identity, active database role; mock shortcuts removed | Browser guards + server auth tests + SQL RLS |
 | 2 | Admin users | Critical | api/admin/users.ts:1 | Administrative requests relied on unsafe fallback account creation | Bearer identity and database role checked server-side; no default password | Server authorization tests; live account CRUD remains untested |
 | 3 | Home / About / content pages | High | src/lib/defaultContent.ts:2 | Invented metrics and sample people/articles/projects replaced missing data | No sample collections; real statistics RPC; unavailable values displayed honestly | Browser checks + live read-only RPC |
-| 4 | Courses / learning | High | src/services/courseService.ts:270 | Enrollment/progress could be simulated and repeated XP awarded | Locked persistent enrollment/completion RPC and idempotent rewards | Isolated PostgreSQL persistence tests |
+| 4 | Courses / learning | High | src/services/courseService.ts:271 | Enrollment/progress could be simulated and repeated XP awarded | Locked persistent enrollment/completion RPC and idempotent rewards | Isolated PostgreSQL persistence tests |
 | 5 | Forms builder | High | src/pages/admin/forms/FormBuilder.tsx:103 | Separate saves and regenerated IDs could lose historical answers; autosave could race publication | Atomic parent/questions transaction, stable IDs, serial saves | PostgreSQL rollback tests + browser delayed-save scenario |
 | 6 | Forms response | High | supabase/migrations/20261013000002_atomic_forms.sql:60 | Client validation/fallback results could imply an unsaved submission succeeded | Server validates ownership, required fields, types, schedule and repeat-response policy | PostgreSQL validation tests |
 | 7 | Course quiz | High | supabase/migrations/20261013000004_verified_quizzes.sql:2 | Client-selected success could grant completion and XP | Server grades stored questions; completion requires passing score | PostgreSQL fail/pass and bypass checks |
 | 8 | Event scanner | High | supabase/migrations/20261013000001_real_operations.sql:223 | Access-granted output did not prove attendance persisted | Registered ticket matched, attendance saved, duplicates rejected | PostgreSQL unknown/valid/duplicate checks; physical camera untested |
-| 9 | Certificates | High | src/services/certificateService.ts:48 | Sample or unverified certificates could appear as real | Only persisted completion issues a certificate; public verification omits account fields | PostgreSQL issuance + QR browser decode |
+| 9 | Certificates | High | src/services/certificateService.ts:48 | Completed courses could claim a certificate in the UI without automatic issuance | Completion transaction issues one matching persisted certificate and links its enrollment; public verification omits account fields | PostgreSQL atomic rollback/idempotency + browser backed by real isolated SQL + PNG/PDF/QR |
 | 10 | Notifications / badges | High | src/services/notificationService.ts:58 | Fabricated alerts and client-derived achievements; global read state shared | Actual rows, per-member read records, badges derived from persisted progress | PostgreSQL independent reads and forged-badge rejection |
 | 11 | Google Sheets | High | api/forms/sync-sheet.ts:16 | Public sync endpoint and misleading success on missing configuration | Admin authorization, real failure status, RAW sheet values, no hardcoded sharing recipient | Visitor rejection verified; Google service account integration blocked |
 | 12 | Compiler | High | src/lib/universalRunner.ts:44 | Service failure returned invented successful language output | Actual workers/WASM/services; compilation and nonzero runtime failures surfaced | Real JavaScript/TypeScript execution + mocked failure responses |
@@ -55,6 +55,7 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 | 22 | Dashboard card download | High | src/lib/memberCard.ts:1 | html2canvas failed on Tailwind color formats | Direct Canvas PNG export with real member data and embedded decodable QR | Actual 1586×1000 PNG download and QR pixel decode at three sizes |
 | 23 | Membership QR | High | supabase/migrations/20261013000010_member_cards.sql:4 | Member number displayed as unexplained scan text | Random token verification URL and protected admin ticket resolution | SQL permissions, inactive/unknown tokens and browser verification |
 | 24 | Dashboard badges | Medium | src/pages/Dashboard.tsx:318 | Fifty points displayed every catalog badge as earned | Only persisted achievements unlock badges | Source repair; badge issuance remains SQL verified |
+| 25 | Course completion / certificates | High | supabase/migrations/20261013000011_automatic_course_certificates.sql:48 | Completing a lesson or quiz did not automatically issue/link a course certificate | Atomic database trigger, unique certificate per user/course, safe historical repair, matching course selection and export QR snapshot | Browser operations execute actual PostgreSQL routines in an isolated database; real historical completion repaired in production |
 
 ## QR results
 
@@ -97,6 +98,18 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 
 | Scenario | Viewport | Status | Source |
 |---|---|---|---|
+| last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course | 1440 | passed | course-certificates.spec.ts:67 |
+| partial completion and failed inline assessment do not issue; passing final assessment does | 1440 | passed | course-certificates.spec.ts:93 |
+| standalone final quiz creates and opens the matching persisted certificate | 1440 | passed | course-certificates.spec.ts:103 |
+| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 1440 | passed | course-certificates.spec.ts:109 |
+| last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course | 768 | passed | course-certificates.spec.ts:67 |
+| partial completion and failed inline assessment do not issue; passing final assessment does | 768 | passed | course-certificates.spec.ts:93 |
+| standalone final quiz creates and opens the matching persisted certificate | 768 | passed | course-certificates.spec.ts:103 |
+| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 768 | passed | course-certificates.spec.ts:109 |
+| last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course | 375 | passed | course-certificates.spec.ts:67 |
+| partial completion and failed inline assessment do not issue; passing final assessment does | 375 | passed | course-certificates.spec.ts:93 |
+| standalone final quiz creates and opens the matching persisted certificate | 375 | passed | course-certificates.spec.ts:103 |
+| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 375 | passed | course-certificates.spec.ts:109 |
 | public route renders without exceptions: / | 1440 | passed | public.spec.ts:16 |
 | public route renders without exceptions: /about | 1440 | passed | public.spec.ts:16 |
 | public route renders without exceptions: /courses | 1440 | passed | public.spec.ts:16 |
@@ -251,9 +264,14 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | record export downloads actual returned JSON and cache button clears browser cache | 1440 | passed | roles.spec.ts:135 |
 | member card downloads a real PNG whose QR opens private-safe verification | 1440 | passed | roles.spec.ts:163 |
 | profile security sends recovery link and requests email confirmation without profile overwrite | 1440 | passed | roles.spec.ts:178 |
-| profile email-change rejection stays visible and does not claim success | 1440 | passed | roles.spec.ts:192 |
-| form QR has correct URL and download is a decodable PNG | 1440 | passed | roles.spec.ts:201 |
-| certificate SVG and canvas QR decode to the matching verification URL | 1440 | passed | roles.spec.ts:224 |
+| profile email-change rejection stays visible and does not claim success | 1440 | passed | roles.spec.ts:193 |
+| form QR has correct URL and download is a decodable PNG | 1440 | passed | roles.spec.ts:202 |
+| certificate SVG and canvas QR decode to the matching verification URL | 1440 | passed | roles.spec.ts:225 |
+| card issuance failure disables download and retry recovers | 1440 | passed | roles.spec.ts:237 |
+| password recovery rejection is visible and retry works | 1440 | passed | roles.spec.ts:248 |
+| malformed membership URL is rejected without database lookup | 1440 | passed | roles.spec.ts:257 |
+| unknown membership token exposes no personal details | 1440 | passed | roles.spec.ts:263 |
+| password reset validates strength and surfaces authentication rejection | 1440 | passed | roles.spec.ts:270 |
 | member cannot search or download the club member directory | 768 | passed | roles.spec.ts:47 |
 | profile saves edited name, rejects invalid phone and logs out | 768 | passed | roles.spec.ts:57 |
 | form publish waits for autosave and reuses the created ID | 768 | passed | roles.spec.ts:73 |
@@ -282,9 +300,14 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | record export downloads actual returned JSON and cache button clears browser cache | 768 | passed | roles.spec.ts:135 |
 | member card downloads a real PNG whose QR opens private-safe verification | 768 | passed | roles.spec.ts:163 |
 | profile security sends recovery link and requests email confirmation without profile overwrite | 768 | passed | roles.spec.ts:178 |
-| profile email-change rejection stays visible and does not claim success | 768 | passed | roles.spec.ts:192 |
-| form QR has correct URL and download is a decodable PNG | 768 | passed | roles.spec.ts:201 |
-| certificate SVG and canvas QR decode to the matching verification URL | 768 | passed | roles.spec.ts:224 |
+| profile email-change rejection stays visible and does not claim success | 768 | passed | roles.spec.ts:193 |
+| form QR has correct URL and download is a decodable PNG | 768 | passed | roles.spec.ts:202 |
+| certificate SVG and canvas QR decode to the matching verification URL | 768 | passed | roles.spec.ts:225 |
+| card issuance failure disables download and retry recovers | 768 | passed | roles.spec.ts:237 |
+| password recovery rejection is visible and retry works | 768 | passed | roles.spec.ts:248 |
+| malformed membership URL is rejected without database lookup | 768 | passed | roles.spec.ts:257 |
+| unknown membership token exposes no personal details | 768 | passed | roles.spec.ts:263 |
+| password reset validates strength and surfaces authentication rejection | 768 | passed | roles.spec.ts:270 |
 | member cannot search or download the club member directory | 375 | passed | roles.spec.ts:47 |
 | profile saves edited name, rejects invalid phone and logs out | 375 | passed | roles.spec.ts:57 |
 | form publish waits for autosave and reuses the created ID | 375 | passed | roles.spec.ts:73 |
@@ -313,19 +336,9 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | record export downloads actual returned JSON and cache button clears browser cache | 375 | passed | roles.spec.ts:135 |
 | member card downloads a real PNG whose QR opens private-safe verification | 375 | passed | roles.spec.ts:163 |
 | profile security sends recovery link and requests email confirmation without profile overwrite | 375 | passed | roles.spec.ts:178 |
-| profile email-change rejection stays visible and does not claim success | 375 | passed | roles.spec.ts:192 |
-| form QR has correct URL and download is a decodable PNG | 375 | passed | roles.spec.ts:201 |
-| certificate SVG and canvas QR decode to the matching verification URL | 375 | passed | roles.spec.ts:224 |
-| card issuance failure disables download and retry recovers | 1440 | passed | roles.spec.ts:237 |
-| password recovery rejection is visible and retry works | 1440 | passed | roles.spec.ts:248 |
-| malformed membership URL is rejected without database lookup | 1440 | passed | roles.spec.ts:257 |
-| unknown membership token exposes no personal details | 1440 | passed | roles.spec.ts:263 |
-| password reset validates strength and surfaces authentication rejection | 1440 | passed | roles.spec.ts:270 |
-| card issuance failure disables download and retry recovers | 768 | passed | roles.spec.ts:237 |
-| password recovery rejection is visible and retry works | 768 | passed | roles.spec.ts:248 |
-| malformed membership URL is rejected without database lookup | 768 | passed | roles.spec.ts:257 |
-| unknown membership token exposes no personal details | 768 | passed | roles.spec.ts:263 |
-| password reset validates strength and surfaces authentication rejection | 768 | passed | roles.spec.ts:270 |
+| profile email-change rejection stays visible and does not claim success | 375 | passed | roles.spec.ts:193 |
+| form QR has correct URL and download is a decodable PNG | 375 | passed | roles.spec.ts:202 |
+| certificate SVG and canvas QR decode to the matching verification URL | 375 | passed | roles.spec.ts:225 |
 | card issuance failure disables download and retry recovers | 375 | passed | roles.spec.ts:237 |
 | password recovery rejection is visible and retry works | 375 | passed | roles.spec.ts:248 |
 | malformed membership URL is rejected without database lookup | 375 | passed | roles.spec.ts:257 |

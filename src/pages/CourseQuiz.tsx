@@ -7,6 +7,7 @@ import { courseService } from '../services/courseService';
 import { Course, CourseLesson, QuizQuestion } from '../types';
 import { QuizEngine } from '../components/QuizEngine';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 export const CourseQuiz = () => {
   const { slug, lessonId } = useParams<{ slug: string; lessonId?: string }>();
@@ -19,11 +20,13 @@ export const CourseQuiz = () => {
   const [lesson, setLesson] = useState<CourseLesson | null>(null);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [certificateId, setCertificateId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadQuiz() {
       if (!slug) return;
       setLoading(true);
+      setCertificateId(null);
       try {
         const c = await courseService.getCourseBySlug(slug);
         if (!c || !c.id) {
@@ -63,6 +66,7 @@ export const CourseQuiz = () => {
  const payload = Object.fromEntries(questions.map((question, index) => [question.id, answers[index]]).filter(([, answer]) => answer !== undefined));
  const saved = await courseService.submitQuiz(lesson.id, payload as Record<string, number>);
  if (saved.scorePercentage !== scorePct || saved.passed !== passed) throw new Error('Assessment changed. Reload and retry.');
+ if (saved.progress?.isCourseFinished) setCertificateId(saved.progress.enrollment.certificate_id);
 };
 
   if (loading) {
@@ -91,6 +95,10 @@ export const CourseQuiz = () => {
         </div>
 
         {/* Interactive Quiz Engine */}
+        {certificateId && <div role="status" className="rounded-xl border border-primary/40 p-4 space-y-3">
+          <p>{isArabic ? 'أتممت الكورس وتم إصدار شهادتك تلقائيًا.' : 'Course completed. Your certificate was issued automatically.'}</p>
+          <Link to={`/certificates?course=${course?.id}`}><Button>{isArabic ? 'عرض الشهادة' : 'VIEW CERTIFICATE'}</Button></Link>
+        </div>}
         <QuizEngine
           quizTitle={lesson?.title ? `${lesson.title} — ${isArabic ? 'اختبار' : 'Quiz'}` : `${course?.title} — ${isArabic ? 'تقييم شامل' : 'Assessment'}`}
           questions={questions}

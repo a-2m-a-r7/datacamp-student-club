@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { certificateService } from '../services/certificateService';
@@ -21,6 +21,8 @@ import { toast } from 'sonner';
 
 export const Certificates = () => {
   const { code } = useParams<{ code?: string }>();
+  const [params] = useSearchParams();
+  const courseId = params.get('course');
   const { profile } = useAuth();
   const { isArabic, t } = useLanguage();
 
@@ -28,6 +30,8 @@ export const Certificates = () => {
   const [userCerts, setUserCerts] = useState<Certificate[]>([]);
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   // Verification state
   const [searchCode, setSearchCode] = useState(code || '');
@@ -36,22 +40,27 @@ export const Certificates = () => {
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
+    let active = true;
     async function loadData() {
       setLoading(true);
+      setLoadError('');
+      setSelectedCert(null);
       try {
         const certs = profile?.uid ? await certificateService.getUserCertificates(profile.uid) : [];
+        if (!active) return;
         setUserCerts(certs);
         if (certs.length > 0 && !code) {
-          setSelectedCert(certs[0]);
+          setSelectedCert(courseId ? certs.find(cert => cert.courseId === courseId) || null : certs[0]);
         }
       } catch (err) {
-        console.error(err);
+        if (active) {setUserCerts([]);setLoadError(isArabic ? 'تعذر تحميل الشهادات من قاعدة البيانات.' : 'Unable to load certificates from the database.');}
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }
     loadData();
-  }, [profile, code]);
+    return () => {active = false;};
+  }, [profile, code, courseId, loadAttempt, isArabic]);
 
   useEffect(() => {
     if (code) {
@@ -67,6 +76,7 @@ export const Certificates = () => {
     }
 
     setVerifying(true);
+    setVerifiedCert(null);
     setHasSearched(true);
     try {
       const result = await certificateService.verifyCertificate(target);
@@ -91,7 +101,7 @@ export const Certificates = () => {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-cyber uppercase tracking-wider bg-primary/20 text-primary border border-primary/30 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" /> {isArabic ? 'الاعتمادات الرسمية الموثقة' : 'OFFICIAL ACCREDITATION'}
+                <ShieldCheck className="w-3 h-3" /> {isArabic ? 'شهادات الإكمال المسجلة' : 'REGISTERED CERTIFICATES'}
               </span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-cyber font-black tracking-tight text-white flex items-center gap-3">
@@ -137,15 +147,17 @@ export const Certificates = () => {
         {activeTab === 'my_certs' && (
           <div className="space-y-8">
             {/* Certificate selector cards */}
-            {userCerts.length > 0 ? (
+            {loadError ? <div role="alert" className="p-6 space-y-3"><p>{loadError}</p><Button onClick={() => setLoadAttempt(value => value + 1)}>{isArabic ? 'إعادة المحاولة' : 'Retry loading certificates'}</Button></div> : userCerts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {userCerts.map((cert) => {
                   const isSelected = selectedCert?.id === cert.id;
                   return (
-                    <div
+                    <button
+                      type="button"
+                      aria-label={`${isArabic ? 'عرض شهادة' : 'View certificate for'} ${cert.courseTitle || cert.eventTitle}`}
                       key={cert.id}
                       onClick={() => setSelectedCert(cert)}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                      className={`p-4 rounded-xl border text-start cursor-pointer transition-all ${
                         isSelected
                           ? 'border-primary bg-primary/10 shadow-[0_0_20px_rgba(0,255,204,0.2)]'
                           : 'border-white/10 bg-dark-navy/60 hover:border-white/20'
@@ -169,7 +181,7 @@ export const Certificates = () => {
                             : new Date(String(cert.issuedAt)).toLocaleDateString(isArabic ? 'ar-EG' : 'en-US')
                         }
                       </p>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -181,8 +193,8 @@ export const Certificates = () => {
                 </h3>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
                   {isArabic
-                    ? 'أكمل أي مسار تدريبي بنسبة 100% أو شارك في هاكاثونات النادي للحصول على شهادتك المعتمدة تلقائياً!'
-                    : 'Complete any course 100% or attend club hackathons to automatically unlock your official verified certificate!'}
+                    ? 'أكمل دروس الكورس واجتز اختباراته للحصول على شهادة الكورس تلقائيًا.'
+                    : 'Complete every course lesson and pass its assessments to receive your course certificate automatically.'}
                 </p>
                 <Link to="/courses">
                   <Button variant="cyber" className="text-xs font-cyber">
@@ -193,6 +205,7 @@ export const Certificates = () => {
             )}
 
             {/* Selected Certificate Preview */}
+            {!loadError && !loading && courseId && !selectedCert && userCerts.length > 0 && <p role="status">{isArabic ? 'لم تصدر شهادة لهذا الكورس بعد.' : 'No certificate has been issued for this course yet.'}</p>}
             {selectedCert && (
               <div className="pt-4">
                 <CertificateView certificate={selectedCert} />

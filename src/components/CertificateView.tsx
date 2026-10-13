@@ -92,7 +92,7 @@ function drawGoldenSeal(ctx: CanvasRenderingContext2D, cx: number, cy: number, r
   ctx.font = 'bold 11px monospace';
   ctx.fillText('★ OFFICIAL SEAL ★', cx, cy - 28);
   ctx.font = 'bold 9px monospace';
-  ctx.fillText('ACADEMIC EXCELLENCE', cx, cy - 14);
+  ctx.fillText('REGISTERED CREDENTIAL', cx, cy - 14);
 
   // Center Emblem Star
   ctx.font = '36px serif';
@@ -111,6 +111,15 @@ async function generateCertificateCanvas(
   cert: Certificate,
   qrCanvasElement?: HTMLCanvasElement | null
 ): Promise<HTMLCanvasElement> {
+  if (!qrCanvasElement) throw new Error('Certificate QR is unavailable');
+  // Keep the QR attached to the certificate whose export was started, even
+  // when the member selects another certificate while images/fonts load.
+  const qrSnapshot = document.createElement('canvas');
+  qrSnapshot.width = qrCanvasElement.width;
+  qrSnapshot.height = qrCanvasElement.height;
+  const qrContext = qrSnapshot.getContext('2d');
+  if (!qrContext) throw new Error('Certificate QR export is unavailable');
+  qrContext.drawImage(qrCanvasElement, 0, 0);
   // Ensure web fonts are completely ready before rasterizing
   if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
     try {
@@ -266,10 +275,10 @@ async function generateCertificateCanvas(
 
   ctx.font = 'bold 15px "Cinzel", "Space Grotesk", sans-serif';
   ctx.fillStyle = '#03EF62';
-  ctx.fillText('★  OFFICIAL ACADEMIC CREDENTIAL  ★', W / 2, 165);
+  ctx.fillText('★  REGISTERED CLUB CREDENTIAL  ★', W / 2, 165);
   ctx.font = '500 12px "JetBrains Mono", monospace';
   ctx.fillStyle = '#94A3B8';
-  ctx.fillText('JOINT ACCREDITATION & REGISTRY SYSTEM', W / 2, 202);
+  ctx.fillText('DATACAMP STUDENT CLUB CERTIFICATE REGISTRY', W / 2, 202);
 
   // Right: Innovation University Emblem Card
   ctx.fillStyle = '#45287c';
@@ -294,7 +303,7 @@ async function generateCertificateCanvas(
   ctx.fillText('INNOVATION UNIVERSITY', W - 248, 160);
   ctx.font = '600 13px "JetBrains Mono", monospace';
   ctx.fillStyle = '#94A3B8';
-  ctx.fillText('ACADEMIC ACCREDITATION PARTNER', W - 248, 188);
+  ctx.fillText('STUDENT CLUB CAMPUS', W - 248, 188);
 
   // 6. Header Separator Line
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
@@ -309,7 +318,7 @@ async function generateCertificateCanvas(
   ctx.font = '600 18px "Cinzel", "Space Grotesk", serif';
   ctx.fillStyle = '#F59E0B';
   ctx.letterSpacing = '6px';
-  ctx.fillText('—  DIPLOMA OF EXCELLENCE  —', W / 2, 305);
+  ctx.fillText('—  COURSE COMPLETION  —', W / 2, 305);
   ctx.letterSpacing = '0px';
 
   // Measure and render "CERTIFICATE OF ACHIEVEMENT" seamlessly side-by-side
@@ -339,7 +348,7 @@ async function generateCertificateCanvas(
   ctx.font = '600 16px "JetBrains Mono", monospace';
   ctx.fillStyle = '#94A3B8';
   ctx.letterSpacing = '4px';
-  ctx.fillText('VERIFIED ACADEMIC & TECHNICAL ACCREDITATION', W / 2, 430);
+  ctx.fillText('VERIFIABLE DATACAMP STUDENT CLUB CREDENTIAL', W / 2, 430);
   ctx.letterSpacing = '0px';
 
   // Decorative Golden Divider with Center Diamond Jewels
@@ -426,7 +435,7 @@ async function generateCertificateCanvas(
   ctx.font = '500 24px "Inter", "JetBrains Mono", sans-serif';
   ctx.fillStyle = '#CBD5E1';
   ctx.fillText(
-    'for successfully completing the curriculum, rigorous coding assessments, and practical challenges in',
+    cert.type === 'course' ? 'for successfully completing the course' : 'in recognition of participation in',
     W / 2,
     760
   );
@@ -456,10 +465,10 @@ async function generateCertificateCanvas(
   ctx.fillText(courseTitle, W / 2, 870);
   ctx.shadowBlur = 0;
 
-  // Academic Partnership Subtitle
+  // Issuing organization
   ctx.font = '500 18px "JetBrains Mono", monospace';
   ctx.fillStyle = '#C084FC';
-  ctx.fillText('Under the Academic Accreditation & Partnership of Innovation University', W / 2, 945);
+  ctx.fillText('Issued by DataCamp Student Club', W / 2, 945);
 
   // 12. Bottom Security & Signatures Section
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
@@ -511,14 +520,7 @@ async function generateCertificateCanvas(
   ctx.stroke();
   ctx.shadowBlur = 0;
 
-  if (qrCanvasElement) {
-    try {
-      ctx.drawImage(qrCanvasElement, qrX, qrY, qrSize, qrSize);
-    } catch {
-      ctx.fillStyle = '#0B132B';
-      ctx.fillRect(qrX, qrY, qrSize, qrSize);
-    }
-  }
+  ctx.drawImage(qrSnapshot, qrX, qrY, qrSize, qrSize);
 
   ctx.font = 'bold 14px "JetBrains Mono", monospace';
   ctx.fillStyle = '#03EF62';
@@ -527,7 +529,7 @@ async function generateCertificateCanvas(
   ctx.fillStyle = '#94A3B8';
   ctx.fillText('SCAN TO VERIFY', qrX + qrSize / 2, 1515);
 
-  // Column 4: Right Signature (Innovation University Academic Council)
+  // Column 4: Persisted issue date
   const issueDateStr = cert.issuedAt && typeof (cert.issuedAt as any).toDate === 'function'
     ? (cert.issuedAt as any).toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     : new Date(String(cert.issuedAt)).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -537,7 +539,7 @@ async function generateCertificateCanvas(
   ctx.fillStyle = '#E9D5FF';
   ctx.shadowColor = 'rgba(192, 132, 252, 0.4)';
   ctx.shadowBlur = 8;
-  ctx.fillText('Academic Council', 1980, 1335);
+  ctx.fillText('Date of issue', 1980, 1335);
   ctx.shadowBlur = 0;
 
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
@@ -549,18 +551,18 @@ async function generateCertificateCanvas(
 
   ctx.font = 'bold 20px "Cinzel", "Space Grotesk", sans-serif';
   ctx.fillStyle = '#FFFFFF';
-  ctx.fillText('ACADEMIC COUNCIL', 1980, 1402);
+  ctx.fillText('REGISTERED COMPLETION', 1980, 1402);
   ctx.font = '600 14px "JetBrains Mono", monospace';
   ctx.fillStyle = '#C084FC';
   ctx.fillText(`INNOVATION UNIVERSITY • ${issueDateStr}`, 1980, 1428);
 
-  // 13. Bottom Registry Hash Bar
+  // 13. Persisted verification code, with no invented hash or signature.
   ctx.font = '500 12px "JetBrains Mono", monospace';
   ctx.fillStyle = 'rgba(148, 163, 184, 0.75)';
   ctx.fillText(
-    `OFFICIALLY RECOGNIZED CREDENTIAL • SHA-256 REGISTRY: ${cert.verificationCode}-EIU2026 • DIGITAL VERIFICATION: ${getSiteUrl().toUpperCase()}/VERIFY-CERTIFICATE`,
+    `CERTIFICATE ID: ${cert.verificationCode} • VERIFY ONLINE USING THE QR CODE`,
     W / 2,
-    1620
+    1595
   );
 
   return canvas;
@@ -768,6 +770,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
           value={verificationUrl}
           size={300}
           level="H"
+          marginSize={4}
           bgColor="#FFFFFF"
           fgColor="#000000"
         />
@@ -919,7 +922,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
               <Award className="w-4 h-4 text-neon-green" /> OFFICIAL CREDENTIAL
             </div>
             <div className="text-[10px] font-mono text-slate-400 mt-1">
-              JOINT ACADEMIC ACCREDITATION
+              DATACAMP CERTIFICATE REGISTRY
             </div>
           </div>
 
@@ -930,7 +933,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
                 INNOVATION UNIVERSITY
               </div>
               <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                ACADEMIC ACCREDITATION PARTNER
+                STUDENT CLUB CAMPUS
               </div>
             </div>
             <div className="h-14 w-14 rounded-2xl bg-[#45287c] border border-purple-400/60 flex items-center justify-center shadow-[0_0_20px_rgba(147,51,234,0.3)] shrink-0 p-1.5 overflow-hidden">
@@ -942,13 +945,13 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
         {/* Certificate Title */}
         <div className="space-y-1 relative z-10">
           <p className="text-[12px] font-serif-luxury tracking-[0.3em] text-amber-400 uppercase font-bold">
-            — DIPLOMA OF EXCELLENCE —
+            — COURSE COMPLETION —
           </p>
           <h2 className="text-3xl sm:text-5xl font-serif-luxury font-black tracking-wide text-white uppercase">
             CERTIFICATE OF <span className="text-primary neon-text">ACHIEVEMENT</span>
           </h2>
           <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground font-mono">
-            VERIFIED ACADEMIC & TECHNICAL ACCREDITATION
+            VERIFIABLE DATACAMP STUDENT CLUB CREDENTIAL
           </p>
         </div>
 
@@ -974,7 +977,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
           </div>
 
           <p className="max-w-2xl mx-auto text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
-            for successfully completing the curriculum, rigorous coding assessments, and practical challenges in
+            {certificate.type === 'course' ? 'for successfully completing the course' : 'in recognition of participation in'}
           </p>
 
           <div className="inline-block px-8 py-3 rounded-2xl bg-white/5 border border-primary/40 backdrop-blur-md shadow-[0_0_20px_rgba(3,239,98,0.15)]">
@@ -984,7 +987,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
           </div>
 
           <p className="text-[11px] font-mono text-purple-300/80">
-            Under the Academic Partnership with Innovation University
+            Issued by DataCamp Student Club
           </p>
         </div>
 
@@ -1025,19 +1028,19 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
             </span>
           </div>
 
-          {/* 4. Signature 2: University Academic Board */}
+          {/* 4. Recorded issue date */}
           <div className="text-center space-y-1">
             <div className="font-script text-3xl sm:text-4xl text-purple-300 font-bold border-b border-white/20 pb-1 max-w-[150px] mx-auto tracking-wide">
-              Academic Council
+              Date of issue
             </div>
-            <div className="text-[11px] font-serif-luxury text-purple-200 uppercase font-bold">ACADEMIC COUNCIL</div>
+            <div className="text-[11px] font-serif-luxury text-purple-200 uppercase font-bold">REGISTERED COMPLETION</div>
             <div className="text-[9px] font-mono text-muted-foreground">{formattedDate}</div>
           </div>
         </div>
 
         {/* Bottom Hash */}
-        <div className="mt-6 text-[9px] font-mono text-muted-foreground/60 tracking-wider">
-          OFFICIALLY RECOGNIZED CREDENTIAL • SHA-256 REGISTRY HASH: {certificate.verificationCode}-EIU2026
+        <div className="mt-6 text-[9px] font-mono text-muted-foreground/60 tracking-wider break-all">
+          REGISTERED CERTIFICATE • VERIFICATION CODE: {certificate.verificationCode}
         </div>
       </div>
     </div>
