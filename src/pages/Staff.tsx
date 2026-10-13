@@ -16,6 +16,7 @@ import { contentService } from '../services/contentService';
 import { Button } from '../components/ui/Button';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 
 
@@ -38,6 +39,7 @@ const COMMITTEES_AR = [
 ];
 
 export const Staff = () => {
+  const { isAdmin } = useAuth();
   const { isArabic } = useLanguage();
   const [staff, setStaff] = useState<any[]>([]);
   const [, setLoading] = useState(true);
@@ -46,6 +48,7 @@ export const Staff = () => {
 
 
   useEffect(() => {
+    if (!isAdmin) { setStaff([]); setLoading(false); return; }
     let mounted = true;
     const load = async () => {
       try {
@@ -64,7 +67,7 @@ export const Staff = () => {
       mounted = false;
       unsubscribe();
     };
-  }, [isArabic]);
+  }, [isArabic, isAdmin]);
 
   const getIcon = (iconName: string) => {
     switch (iconName?.toLowerCase()) {
@@ -107,6 +110,8 @@ export const Staff = () => {
   });
 
   const activeCommittees = isArabic ? COMMITTEES_AR : COMMITTEES_EN;
+
+  if (!isAdmin) return <div className="min-h-screen p-8">{isArabic ? 'دليل أعضاء النادي متاح للإدارة فقط' : 'Club member directory is available to administrators only'}</div>;
 
   return (
     <div className="pt-20 md:pt-32 pb-24 min-h-screen">
