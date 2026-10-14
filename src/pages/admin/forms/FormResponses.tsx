@@ -1,3 +1,4 @@
+import { Dialog } from '../../../components/ui/Dialog';
 import { watchQuery } from '../../../lib/watchQuery';
 import { authenticatedPost } from '../../../lib/apiClient';
 /**
@@ -605,7 +606,7 @@ export const FormResponses: React.FC = () => {
       {/* INDIVIDUAL RESPONSE DETAIL MODAL                         */}
       {/* ======================================================== */}
       {selectedResponse && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+        <Dialog onClose={() => setSelectedResponse(null)} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
           <div
             className="w-full max-w-2xl bg-card border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl glass max-h-[85vh] overflow-y-auto custom-scrollbar space-y-6"
             onClick={(e) => e.stopPropagation()}
@@ -686,7 +687,7 @@ export const FormResponses: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
+        </Dialog>
       )}
     </div>
   );

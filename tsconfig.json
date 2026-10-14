@@ -22,5 +22,7 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "api/**/*.ts", "scripts/**/*.ts", "qa-audit/**/*.ts", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", "qa-audit/site-build", "qa-audit/fix-results", "qa-audit/.runtime"]
 }

@@ -1,3 +1,4 @@
+import { AssetImage } from '../components/AssetImage';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import {
@@ -41,6 +42,7 @@ const COMMITTEES_AR = [
 export const Staff = () => {
   const { isAdmin } = useAuth();
   const { isArabic } = useLanguage();
+  const [loadError, setLoadError] = useState('');
   const [staff, setStaff] = useState<any[]>([]);
   const [, setLoading] = useState(true);
   const [selectedCat, setSelectedCat] = useState('ALL');
@@ -55,6 +57,7 @@ export const Staff = () => {
         const docs = await contentService.list('staff', { orderBy: 'created_at' });
         if (mounted) setStaff(docs);
       } catch (error) {
+        setLoadError('Unable to load staff directory. Please retry.');
         console.warn('Staff Supabase load error:', error);
       } finally {
         if (mounted) setLoading(false);
@@ -111,7 +114,8 @@ export const Staff = () => {
 
   const activeCommittees = isArabic ? COMMITTEES_AR : COMMITTEES_EN;
 
-  if (!isAdmin) return <div className="min-h-screen p-8">{isArabic ? 'دليل أعضاء النادي متاح للإدارة فقط' : 'Club member directory is available to administrators only'}</div>;
+  if (!isAdmin) return <div className="min-h-screen p-8">
+      {loadError && <div role="alert" className="p-4 text-destructive">{loadError} <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button></div>}{isArabic ? 'دليل أعضاء النادي متاح للإدارة فقط' : 'Club member directory is available to administrators only'}</div>;
 
   return (
     <div className="pt-20 md:pt-32 pb-24 min-h-screen">
@@ -243,8 +247,8 @@ export const Staff = () => {
                 className="group glass rounded-3xl border border-white/10 hover:border-primary/40 transition-all overflow-hidden flex flex-col justify-between"
               >
                 <div className="aspect-square relative overflow-hidden bg-white/5">
-                  <img
-                    src={member.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'}
+                  <AssetImage
+                    src={member.image}
                     alt={member.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"

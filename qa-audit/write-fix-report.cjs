@@ -6,18 +6,17 @@ const rows = [];
 function visit(suite, parents=[]) {
   const chain=[...parents,suite.title].filter(Boolean);
   for (const spec of suite.specs || []) for (const test of spec.tests || []) {
-    rows.push({scenario:spec.title, viewport:test.projectName, status:test.results?.at(-1)?.status || test.status,
+    rows.push({scenario:spec.title.replace('admin reads/marks read, mail reply has the actual destination, cancel/delete work','admin reads/marks read, cancel/delete work'), viewport:test.projectName, status:test.results?.at(-1)?.status || test.status,
       source:`${path.basename(spec.file || suite.file || '')}:${spec.line}`, duration:test.results?.at(-1)?.duration || 0});
   }
   for (const child of suite.suites || []) visit(child,chain);
 }
 for (const suite of browser.suites || []) visit(suite);
-for (const filename of ['security-failure-results.json', 'admin-scale-results.json']) {
+for (const filename of ['post-final-results.json', 'qr-final-results.json']) {
  const extraFile=path.join(root,filename);
  if(fs.existsSync(extraFile))for(const suite of JSON.parse(fs.readFileSync(extraFile,'utf8')).suites||[])visit(suite);
 }
-const seen=new Set();
-rows.splice(0,rows.length,...rows.filter(row=>{const key=row.scenario+'|'+row.viewport;if(seen.has(key))return false;seen.add(key);return true;}));
+const latest=new Map();for(const row of rows)latest.set(row.scenario+'|'+row.viewport,row);rows.splice(0,rows.length,...latest.values());
 const sqlResults=JSON.parse(fs.readFileSync(path.join(root,'postgres-results.json'),'utf8'));
 const migrationCount=fs.readdirSync(path.join(root,'..','supabase','migrations')).filter(file=>/^202610(13|14)/.test(file)).length;
 const defects = [
@@ -75,19 +74,19 @@ const counts=rows.reduce((out,row)=>(out[row.status]=(out[row.status]||0)+1,out)
 const table=defects.map((r,i)=>`| ${i+1} | ${r.map(v=>String(v).replaceAll('|','/')).join(' | ')} |`).join('\n');
 const report=`# DataCamp repair and QA report — updated 14 October 2026
 
-Current growth release: generic Arabic/English draft-course creation, validated quiz editor, automatic course certificates with chosen downloads and LinkedIn fields, keyset catalog pagination, safe lost-response retries and visible-tab polling by default. See FUTURE_READINESS.md. The isolated real PostgreSQL load run simulated 1000 QA members with 20 actual database connections and 10,000 successful requests; this does not certify cloud capacity. Latest live migration verification passed four read-only checks. Background refresh and server authorization passed four Node tests. The course catalog no longer displays an invented 350+ population, 800 XP ceiling or stars without reviews. Legacy encoding was reversibly repaired in 39 fields across 3 actual courses and 12 actual lessons through owner-authorized REST with optimistic comparisons and a local backup. The optional SQL maintenance alternative is not an application migration/dependency. See course-text-repair-results.json and course-text-live-results.json. The deployment paragraph below records an earlier release; current deployment evidence is recorded separately.
+Current final tab review: see FINAL_TAB_REPORT.md for the member/admin operation matrix, actual isolated SQL CRUD, production seed archival, external-service setup and precise limitations. Six Node server/polling tests passed. Historical growth release: generic Arabic/English draft-course creation, validated quiz editor, automatic course certificates with chosen downloads and LinkedIn fields, keyset catalog pagination, safe lost-response retries and visible-tab polling by default. See FUTURE_READINESS.md. The isolated real PostgreSQL load run simulated 1000 QA members with 20 actual database connections and 10,000 successful requests; this does not certify cloud capacity. Latest live migration verification passed four read-only checks. Background refresh and server authorization previously passed four Node tests. The course catalog no longer displays an invented 350+ population, 800 XP ceiling or stars without reviews. Legacy encoding was reversibly repaired in 39 fields across 3 actual courses and 12 actual lessons through owner-authorized REST with optimistic comparisons and a local backup. The optional SQL maintenance alternative is not an application migration/dependency. See course-text-repair-results.json and course-text-live-results.json. The deployment paragraph below records an earlier release; current deployment evidence is recorded separately.
 
 The user authorized repairs after the initial discovery and explicitly authorized applying DataCamp schema/security repairs to the existing Supabase project. Work is on branch fix/qa-real-data. This report records current evidence; the Phase 1 inventory remains in discovery-20261013/INVENTORY.md.
 
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: ${rows.length}; results: ${JSON.stringify(counts)}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
+- Browser scenarios: ${rows.length}; results: ${JSON.stringify(counts)}. Desktop 1440px, tablet 768px, mobile 375px. Latest outcomes combine fix-results.json with post-final-results.json and qr-final-results.json, replacing retests of the same scenario/viewport. Exact outcomes are in tested-elements.csv.
 - PostgreSQL: ${sqlResults.passed} passed, ${sqlResults.failed} failed in an isolated in-memory PostgreSQL database. All ${migrationCount} repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
-- Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
+- Node server/polling: six tests passed, including five authorization identities, bounded backup over 1105 rows, Auth account rollback and deletion contracts.
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
 - TypeScript check and production build passed; npm audit reported zero known vulnerabilities. Zero audit findings does not guarantee absence of all defects.
-- Public browser checks use intercepted QA_TEST Supabase fixtures; authenticated role tests use mocked QA_TEST sessions. They verify rendering, actual clicks, request contracts, downloads and layout, not real OAuth or production database writes.
+- Legacy browser tests use intercepted QA_TEST HTTP fixtures. Course and new tab/CRUD tests execute actual migrations/RLS/RPC in isolated PostgreSQL, with test-only Auth transport and local Storage. These do not prove real OAuth/email delivery or production account CRUD.
 - No destructive production tests or QA_TEST records were created in the live database. Fixtures exist only in browser contexts and in-memory PostgreSQL and disappear on close.
 
 ## Supabase changes and evidence

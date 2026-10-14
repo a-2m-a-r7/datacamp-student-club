@@ -47,7 +47,7 @@ export const FormBuilder: React.FC = () => {
     success_message: isArabic
       ? 'شكراً لك! تم تسجيل ردك بنجاح.'
       : 'Thank you! Your response has been recorded.',
-    sheets_sync_enabled: true,
+    sheets_sync_enabled: false,
     spreadsheet_id: null,
     spreadsheet_url: null,
     created_by: null,
@@ -94,6 +94,7 @@ export const FormBuilder: React.FC = () => {
   // Dirty state tracking for autosave debounce
   const isDirtyRef = useRef(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestForm = useRef(form); latestForm.current = form;
   const persistedIdRef = useRef(isNew ? '' : id);
   const saveQueueRef = useRef<Promise<unknown>>(Promise.resolve());
   const revisionRef = useRef(0);
@@ -276,7 +277,8 @@ export const FormBuilder: React.FC = () => {
 
   // Form info changes
   const handleFormChange = (updates: Partial<FormRecord>) => {
-    const newForm = { ...form, ...updates };
+    const newForm = { ...latestForm.current, ...updates };
+    latestForm.current = newForm;
     setForm(newForm);
     scheduleSave(newForm, questions);
   };

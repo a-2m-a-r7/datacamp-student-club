@@ -1,3 +1,4 @@
+import { AssetImage } from '../components/AssetImage';
 import { Dialog } from '../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -23,6 +24,7 @@ import { toast } from 'sonner';
 export const Projects = () => {
   const { user, profile } = useAuth();
   const { isArabic } = useLanguage();
+  const [loadError, setLoadError] = useState('');
   const [projects, setProjects] = useState<any[]>([]);
   const [, setLoading] = useState(true);
   const [selectedCat, setSelectedCat] = useState('ALL');
@@ -61,6 +63,7 @@ export const Projects = () => {
       try {
         setProjects(await contentService.list('projects', { orderBy: 'created_at' }));
       } catch (error) {
+        setLoadError('Unable to load projects. Please retry.');
         console.warn('Projects load error:', error);
       } finally {
         setLoading(false);
@@ -128,6 +131,7 @@ export const Projects = () => {
 
   return (
     <div className="pt-20 md:pt-32 pb-24 min-h-screen">
+      {loadError && <div role="alert" className="p-4 text-destructive">{loadError} <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button></div>}
       <div className="container mx-auto px-6 max-w-6xl space-y-12">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
@@ -231,8 +235,8 @@ export const Projects = () => {
                 className="group relative overflow-hidden rounded-3xl border border-white/10 glass hover:border-primary/40 transition-all flex flex-col justify-between"
               >
                 <div className="aspect-video w-full overflow-hidden relative">
-                  <img
-                    src={project.image || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800'}
+                  <AssetImage
+                    src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     referrerPolicy="no-referrer"
@@ -328,7 +332,7 @@ export const Projects = () => {
                 </div>
 
                 <div className="rounded-2xl overflow-hidden aspect-video border border-white/10">
-                  <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
+                  <AssetImage src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
                 </div>
 
                 <div className="space-y-4 text-sm text-muted-foreground leading-relaxed whitespace-pre-line border-t border-b border-white/10 py-6">

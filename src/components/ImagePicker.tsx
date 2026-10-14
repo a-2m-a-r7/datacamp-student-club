@@ -1,3 +1,4 @@
+import { AssetImage } from './AssetImage';
 import React, { useRef } from 'react';
 import { motion } from 'motion/react';
 import { Upload, Camera, Image as ImageIcon, X } from 'lucide-react';
@@ -44,7 +45,7 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage
         <div className="relative w-32 h-32 rounded-2xl border-2 border-dashed border-white/10 glass flex items-center justify-center overflow-hidden group">
           {currentImage ? (
             <>
-              <img src={currentImage} alt="Preview" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              <AssetImage src={currentImage} alt="Preview" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               <div className="absolute inset-0 bg-dark-navy/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <Button type="button" aria-label="Close" variant="ghost" size="icon" onClick={() => onImageSelected('')} className="text-destructive">
                   <X className="w-5 h-5" />

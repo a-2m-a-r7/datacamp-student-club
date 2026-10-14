@@ -17,6 +17,13 @@ import { toast } from 'sonner';
 import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
 import { contentService } from '../../services/contentService';
 
+const localDateInput = (value: string) => {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return '';
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+  return date.toISOString().slice(0, 16);
+};
+
 const EventManagement = () => {
   const { profile, isHR, isSuperAdmin } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
@@ -179,9 +186,9 @@ const EventManagement = () => {
           </div>
         ) : events.map((event) => (
           <Card key={event.id} className="group relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute top-0 left-0 w-1 h-full bg-primary opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity" />
             <CardHeader className="relative">
-              <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+              <div className="absolute top-4 right-4 flex space-x-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10">
                 <Button aria-label="Edit"
                   variant="ghost"
                   size="icon"
@@ -208,7 +215,7 @@ const EventManagement = () => {
             <CardContent className="space-y-6">
               <p className="text-sm text-muted-foreground line-clamp-2">{event.description}</p>
 
-              <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="flex items-center text-muted-foreground">
                   <Calendar className="w-3 h-3 mr-2 text-neon-blue" />
                   {new Date(event.date).toLocaleDateString()}
@@ -259,13 +266,9 @@ const EventManagement = () => {
               </div>
 
               <div className="pt-4 border-t border-white/5 flex justify-between items-center">
-                <Button variant="ghost" size="sm" className="text-[10px] h-8" onClick={() => window.open(`/events/${event.id}`, '_blank')}>
+                <Button variant="ghost" size="sm" className="text-[10px] h-8" onClick={() => window.open(`/events?event=${event.id}`, '_blank')}>
                   <ExternalLink className="w-3.5 h-3.5 mr-2" />
                   PUBLIC LINK
-                </Button>
-                <Button variant="ghost" size="sm" className="text-[10px] h-8">
-                  <ImageIcon className="w-3.5 h-3.5 mr-2" />
-                  VIEW POSTER
                 </Button>
               </div>
             </CardContent>
@@ -316,12 +319,12 @@ const EventManagement = () => {
                     required
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Date & Time</label>
                     <Input
                       type="datetime-local"
-                      value={editingEvent.date}
+                      value={localDateInput(editingEvent.date)}
                       onChange={(e) => setEditingEvent({...editingEvent, date: e.target.value})}
                       required
                     />
@@ -335,6 +338,9 @@ const EventManagement = () => {
                     />
                   </div>
                 </div>
+                <label className="block text-sm">Capacity
+                  <Input aria-label="Event capacity" type="number" min={Math.max(1, editingEvent.registeredCount || 0)} value={editingEvent.capacity} onChange={event => setEditingEvent({ ...editingEvent, capacity: Number(event.target.value) })} required />
+                </label>
                 <div className="flex justify-end gap-4 pt-6">
                   <Button variant="ghost" type="button" onClick={() => setEditingEvent(null)}>ABORT</Button>
                   <Button variant="cyber" type="submit">UPDATE PARAMETERS</Button>
@@ -391,11 +397,13 @@ const EventManagement = () => {
                         size="icon"
                         className="h-6 w-6 text-destructive"
                         onClick={async () => {
-                          const updated = selectedEvent.organizers.filter((_: any, index: number) => index !== i);
-                          const updatedEvent = { ...selectedEvent, organizers: updated };
-                          await contentService.update('events', selectedEvent.id, updatedEvent);
-                          setEvents(prev => prev.map(e => e.id === selectedEvent.id ? updatedEvent : e));
-                          setSelectedEvent(updatedEvent);
+                          try {
+                            const updated = selectedEvent.organizers.filter((_: any, index: number) => index !== i);
+                            const updatedEvent = { ...selectedEvent, organizers: updated };
+                            await contentService.update('events', selectedEvent.id, updatedEvent);
+                            setEvents(prev => prev.map(e => e.id === selectedEvent.id ? updatedEvent : e));
+                            setSelectedEvent(updatedEvent);
+                          } catch (error: any) { toast.error(error.message || 'Failed to remove organizer'); }
                         }}
                       >
                         <Trash2 className="w-3 h-3" />
@@ -437,7 +445,7 @@ const EventManagement = () => {
                     required
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Date & Time</label>
                     <Input
@@ -457,6 +465,9 @@ const EventManagement = () => {
                     />
                   </div>
                 </div>
+                <label className="block text-sm">Capacity
+                  <Input aria-label="Event capacity" type="number" min={1} value={newEvent.capacity} onChange={event => setNewEvent({ ...newEvent, capacity: Number(event.target.value) })} required />
+                </label>
                 <div className="flex justify-end gap-4 pt-6">
                   <Button variant="ghost" type="button" onClick={() => setShowAddModal(false)}>ABORT MISSION</Button>
                   <Button variant="cyber" type="submit">PUBLISH TO GRID</Button>

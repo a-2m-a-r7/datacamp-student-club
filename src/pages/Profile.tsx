@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { imageDataToBlob } from '../lib/imageData';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -25,6 +26,8 @@ const Profile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
+  const dirty = useRef(false);
+  const editingUid = useRef('');
 
   // Profile Info State
   const [formData, setFormData] = useState({
@@ -40,6 +43,8 @@ const Profile = () => {
 
   useEffect(() => {
     if (profile) {
+      if (editingUid.current !== profile.uid) { editingUid.current = profile.uid; dirty.current = false; }
+      if (dirty.current) return;
       setFormData({
         fullName: profile.fullName || '',
         phone: profile.phoneNumber || '',
@@ -102,11 +107,10 @@ const Profile = () => {
 
       if (formData.photoURL.startsWith('data:image')) {
         try {
-          const response = await fetch(formData.photoURL);
-          const blob = await response.blob();
+          const blob = imageDataToBlob(formData.photoURL);
           const { uploadFile, getStoragePath } = await import('../services/storageService');
           const activeUid = (user as any)?.id || (user as any)?.uid || 'user';
-          const file = new File([blob], `avatar_${Date.now()}.jpg`, { type: 'image/jpeg' });
+          const file = new File([blob], `avatar_${Date.now()}.${blob.type.split('/')[1]}`, { type: blob.type });
           finalPhotoURL = await uploadFile(getStoragePath('avatars', activeUid, file.name), file);
         } catch {
           throw new Error('Avatar upload failed. No profile changes were saved.');
@@ -134,6 +138,7 @@ const Profile = () => {
 
           if (error) throw error;
 
+          dirty.current = false;
           await refreshProfile();
 
           toast.success(isArabic ? 'تم حفظ التعديلات بنجاح في قاعدة البيانات' : 'Profile updated successfully in database');
@@ -223,11 +228,11 @@ const Profile = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleProfileUpdate} className="space-y-6">
+              <form onSubmit={handleProfileUpdate} onChange={() => { dirty.current = true; }} className="space-y-6">
                 <ImagePicker
                   label={isArabic ? 'صورة الملف الشخصي' : 'Profile Picture'}
                   currentImage={formData.photoURL}
-                  onImageSelected={(base64) => setFormData({ ...formData, photoURL: base64 })}
+                  onImageSelected={(base64) => { dirty.current = true; setFormData(previous => ({ ...previous, photoURL: base64 })); }}
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

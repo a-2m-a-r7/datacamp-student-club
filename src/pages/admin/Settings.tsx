@@ -13,6 +13,7 @@ import { authenticatedPost } from '../../lib/apiClient';
 const Settings = () => {
   const [settings, setSettings] = useState(defaultSettings);
   const [busy, setBusy] = useState(false);
+  const [ready, setReady] = useState(false);
   const exportRecords = async () => {
     if (busy) return;
     setBusy(true);
@@ -40,17 +41,20 @@ const Settings = () => {
   };
 
   useEffect(() => {
+    let active = true;
     const loadSettings = async () => {
       try {
         const data = await contentService.getSetting('site');
+        if (!active) return;
         if (data) setSettings(prev => ({ ...prev, ...data }));
+        setReady(true);
       } catch (error) {
         console.warn('Settings load error:', error);
       }
     };
 
     loadSettings();
-    return contentService.subscribe('settings', loadSettings);
+    return () => { active = false; };
   }, []);
 
   const handleAddSocial = () => {
@@ -74,11 +78,15 @@ const Settings = () => {
   };
 
   const handleSave = async () => {
+    if (!ready || busy) return;
+    setBusy(true);
     try {
       await contentService.upsertSetting('site', settings);
       toast.success('System settings saved to Supabase');
     } catch (err: any) {
       toast.error(err.message || 'Failed to update settings');
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -278,7 +286,7 @@ const Settings = () => {
       </div>
 
       <div className="flex justify-end pt-8 border-t border-white/10">
-        <Button variant="cyber" size="lg" onClick={handleSave}>
+        <Button variant="cyber" size="lg" onClick={handleSave} disabled={!ready || busy}>
           <Save className="w-4 h-4 mr-2" />
           Commit Changes
         </Button>

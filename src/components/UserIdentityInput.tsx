@@ -32,13 +32,14 @@ export const UserIdentityInput: React.FC<UserIdentityInputProps> = ({
     setShowSuggestions(false);
   };
 
-  const filteredSuggestions = suggestions.filter(s => {
+  const normalizedSuggestions = suggestions.map(s => ({ ...s, fullName: s.fullName || s.full_name || '', memberId: s.memberId || s.member_id || '' }));
+  const filteredSuggestions = normalizedSuggestions.filter(s => {
     if (!value) return false;
     const searchVal = value.toLowerCase();
     if (type === 'email') {
       return s.email?.toLowerCase().includes(searchVal) || s.fullName?.toLowerCase().includes(searchVal);
     } else {
-      return s.memberId?.toString().includes(searchVal) || s.fullName?.toLowerCase().includes(searchVal);
+      return s.memberId?.toString().toLowerCase().includes(searchVal) || s.fullName?.toLowerCase().includes(searchVal);
     }
   }).slice(0, 5);
 
@@ -108,8 +109,8 @@ export const validateUserIdentity = (value: string, type: 'email' | 'id'): boole
       return false;
     }
   } else {
-    if (!/^\d+$/.test(value)) {
-      toast.error('ID must be numeric');
+    if (!/^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$/.test(value)) {
+      toast.error('Enter a valid member ID');
       return false;
     }
   }

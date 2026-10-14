@@ -1,5 +1,7 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { watchQuery } from '../lib/watchQuery';
+import { uploadFile } from './storageService';
+import { imageDataToBlob } from '../lib/imageData';
 import {
   defaultAboutData,
   defaultHomeContent,
@@ -175,6 +177,38 @@ const mapFromSupabase = (table: TableName, row: any) => {
   };
 };
 
+async function persistImage(source: string, folder: string): Promise<string> {
+  if (!source?.startsWith('data:')) return source || '';
+  const file = imageDataToBlob(source);
+  return uploadFile(`${folder}/${crypto.randomUUID()}.${file.type.split('/')[1]}`, file);
+}
+
+async function preparePayload(table: TableName, data: any) {
+  const payload = mapToSupabase(table, data);
+  const required: Partial<Record<TableName, string[]>> = {
+    staff: ['name', 'role'], projects: ['title', 'description'], blog: ['title', 'content'],
+    gallery: ['url'], messages: ['name', 'email', 'subject', 'message'], events: ['title', 'date', 'location'],
+  };
+  for (const key of required[table] || []) {
+    if (!String(data[key] ?? (key === 'content' ? data.excerpt : '') ?? '').trim()) throw new Error(`${key} is required`);
+  }
+  if (table === 'events') {
+    const date = new Date(data.date);
+    if (!Number.isFinite(date.getTime())) throw new Error('Enter a valid event date.');
+    payload.date = date.toISOString();
+    if (!Number.isSafeInteger(payload.capacity) || payload.capacity < 1 || payload.capacity < payload.registered_count) throw new Error('Capacity must accommodate all registered members.');
+  }
+  for (const key of ['github_url', 'live_url']) {
+    if (payload[key]) {
+      try { if (!['https:', 'http:'].includes(new URL(payload[key]).protocol)) throw new Error(); }
+      catch { throw new Error('Enter a valid HTTP or HTTPS project URL.'); }
+    }
+  }
+  const imageKey = table === 'gallery' ? 'url' : ['staff', 'projects', 'blog'].includes(table) ? 'image' : null;
+  if (imageKey) payload[imageKey] = await persistImage(payload[imageKey], table);
+  return payload;
+}
+
 export const contentService = {
   isConfigured: isSupabaseConfigured,
 
@@ -195,6 +229,13 @@ export const contentService = {
   async upsertSetting(key: string, value: any): Promise<void> {
     const normalizedKey = normalizeSettingsKey(key);
     if (!isSupabaseConfigured) throw new Error('Database is not configured. No changes were saved.');
+
+    // Content and branding editors share this record; preserve fields the editor did not change.
+    if (normalizedKey === 'general') {
+      const existing = await this.getSetting(normalizedKey);
+      value = { ...existing, ...value };
+      if (value.logoUrl) value = { ...value, logoUrl: await persistImage(value.logoUrl, 'branding') };
+    }
 
     const { error } = await supabase
       .from('settings')
@@ -218,12 +259,18 @@ export const contentService = {
 
     const { data, error } = await query;
     if (error) throw error;
-    return (data || []).map(row => mapFromSupabase(table, row));
+    return (data || []).filter(row => table !== 'gallery' || options.includeDrafts || row.category !== 'Archived samples').map(row => mapFromSupabase(table, row));
   },
 
   async create(table: TableName, data: any): Promise<any> {
     if (!isSupabaseConfigured) throw new Error('Database is not configured. No changes were saved.');
-    const payload = mapToSupabase(table, data);
+    const payload = await preparePayload(table, data);
+    if (table === 'messages') {
+      // Public senders cannot SELECT inbox records. Minimal return keeps the admin inbox private.
+      const { error } = await supabase.from(table).insert(payload);
+      if (error) throw error;
+      return null;
+    }
     if (table === 'projects') {
       const { data: identity, error } = await supabase.auth.getUser();
       if (error || !identity.user) throw new Error('Sign in before submitting a project.');
@@ -240,9 +287,15 @@ export const contentService = {
 
   async update(table: TableName, id: string, data: any): Promise<any> {
     if (!isSupabaseConfigured) throw new Error('Database is not configured. No changes were saved.');
+    const payload = await preparePayload(table, data);
+    if (table === 'events') {
+      // Registration RPCs own tickets/counters; an old editor snapshot must never overwrite them.
+      delete payload.registered_count;
+      delete payload.registrations;
+    }
     const { data: row, error } = await supabase
       .from(table)
-      .update(mapToSupabase(table, data))
+      .update(payload)
       .eq('id', id)
       .select()
       .single();

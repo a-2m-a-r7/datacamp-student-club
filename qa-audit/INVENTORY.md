@@ -1,3 +1,5 @@
+> Historical discovery inventory. Current verified tab operations and limits: [FINAL_TAB_REPORT.md](FINAL_TAB_REPORT.md). This initial inventory is not a 100% test-pass claim.
+
 # Phase 1: Comprehensive Project Audit & Interactive Elements Inventory
 **Project:** DataCamp Student Club Web Platform (`datacamp-student-club`)  
 **Auditor:** Senior QA Automation Engineer & Full-Stack Debugger  

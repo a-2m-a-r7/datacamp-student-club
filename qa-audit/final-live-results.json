@@ -1,0 +1,87 @@
+{
+  "checkedAt": "2026-10-14T17:04:23.664Z",
+  "mode": "read-only production",
+  "checks": [
+    {
+      "table": "courses",
+      "status": 206,
+      "rows": 3
+    },
+    {
+      "table": "lessons",
+      "status": 206,
+      "rows": 12
+    },
+    {
+      "table": "events",
+      "status": 206,
+      "rows": 2
+    },
+    {
+      "table": "staff",
+      "status": 206,
+      "rows": 2
+    },
+    {
+      "table": "gallery",
+      "status": 206,
+      "rows": 5
+    },
+    {
+      "table": "projects",
+      "status": 206,
+      "rows": 1
+    },
+    {
+      "table": "blog",
+      "status": 206,
+      "rows": 1
+    },
+    {
+      "table": "forms",
+      "status": 200,
+      "rows": 0
+    },
+    {
+      "table": "form_questions",
+      "status": 200,
+      "rows": 0
+    },
+    {
+      "table": "form_responses",
+      "status": 200,
+      "rows": 0
+    },
+    {
+      "table": "messages",
+      "status": 200,
+      "rows": 0
+    },
+    {
+      "table": "notifications",
+      "status": 200,
+      "rows": 0
+    },
+    {
+      "table": "settings",
+      "status": 206,
+      "rows": 3
+    },
+    {
+      "table": "profiles",
+      "status": 206,
+      "rows": 5
+    },
+    {
+      "table": "certificates",
+      "status": 206,
+      "rows": 1
+    }
+  ],
+  "knownSeedContactPlaceholders": {
+    "contactEmail": false,
+    "contactPhone": false
+  },
+  "localGoogleSheetsConfigured": false,
+  "productionMutations": 0
+}

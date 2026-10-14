@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-14T17:04:18.705Z",
+  "mode": "apply",
+  "matchedRows": 13,
+  "appliedRows": 13,
+  "tables": {
+    "settings": 3,
+    "staff": 2,
+    "gallery": 5,
+    "projects": 1,
+    "blog": 1,
+    "events": 1
+  },
+  "deletedRows": 0,
+  "accountsChanged": 0,
+  "learningRecordsChanged": 0,
+  "backupCreated": true
+}

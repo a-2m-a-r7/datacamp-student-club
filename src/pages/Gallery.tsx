@@ -1,3 +1,4 @@
+import { AssetImage } from '../components/AssetImage';
 import { Dialog } from '../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -12,6 +13,7 @@ import { contentService } from '../services/contentService';
 
 export const Gallery = () => {
   const { isArabic } = useLanguage();
+  const [loadError, setLoadError] = useState('');
   const [images, setImages] = useState<any[]>([]);
   const [, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<any | null>(null);
@@ -38,6 +40,7 @@ export const Gallery = () => {
       try {
         setImages(await contentService.list('gallery', { orderBy: 'created_at' }));
       } catch (error) {
+        setLoadError('Unable to load gallery. Please retry.');
         console.warn('Gallery load error:', error);
       } finally {
         setLoading(false);
@@ -61,6 +64,7 @@ export const Gallery = () => {
 
   return (
     <div className="pt-20 md:pt-32 pb-24 min-h-screen">
+      {loadError && <div role="alert" className="p-4 text-destructive">{loadError} <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button></div>}
       <div className="container mx-auto px-6 max-w-6xl space-y-12">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
@@ -141,21 +145,22 @@ export const Gallery = () => {
             {filteredImages.map((img, idx) => (
               <motion.div
                 key={img.id || idx}
+                role="button"
+                tabIndex={0}
+                aria-label={`${isArabic ? 'عرض الصورة' : 'View image'}: ${img.title}`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.06 }}
                 whileHover={{ scale: 1.02 }}
-                className="relative group cursor-pointer overflow-hidden rounded-2xl border border-white/10 glass break-inside-avoid"
+                className="relative group cursor-pointer overflow-hidden rounded-2xl border border-white/10 glass break-inside-avoid min-h-40"
                 onClick={() => setSelectedImage(img)}
+                onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedImage(img); } }}
               >
-                <img
+                <AssetImage
                   src={img.url}
                   alt={img.title}
                   className="w-full h-auto object-cover transition-all duration-700 group-hover:scale-105"
                   referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/broken/800/600?blur=10';
-                  }}
                 />
 
                 <div className="absolute inset-0 bg-dark-navy/75 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
@@ -203,7 +208,7 @@ export const Gallery = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="overflow-hidden flex items-center justify-center max-h-[70vh] bg-black/40">
-                  <img
+                  <AssetImage
                     src={selectedImage.url}
                     alt={selectedImage.title}
                     className="max-w-full max-h-[70vh] object-contain"

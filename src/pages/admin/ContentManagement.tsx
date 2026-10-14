@@ -9,6 +9,8 @@ import { contentService } from '../../services/contentService';
 
 const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState('home');
+  const [ready, setReady] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const pages = [
     { id: 'home', name: 'Home Page', icon: Layout },
@@ -28,6 +30,7 @@ const ContentManagement = () => {
   });
 
   useEffect(() => {
+    let active = true;
     const loadContent = async () => {
       try {
         const [home, about, site] = await Promise.all([
@@ -35,6 +38,7 @@ const ContentManagement = () => {
           contentService.getSetting('about'),
           contentService.getSetting('site'),
         ]);
+        if (!active) return;
         if (home) setHomeContent(home);
         if (about) setAboutData(about);
         if (site) {
@@ -53,20 +57,23 @@ const ContentManagement = () => {
             siteDescription: site.siteDescription || '',
           });
         }
+        setReady(true);
       } catch (err) {
         console.error('Content settings fetch error:', err);
       }
     };
 
     loadContent();
-    return contentService.subscribe('settings', loadContent);
+    return () => { active = false; };
   }, []);
 
   const handleSave = async () => {
+    if (!ready || saving) return;
+    setSaving(true);
     try {
-      if (activeTab === 'home') await contentService.upsertSetting('home', homeContent);
-      if (activeTab === 'about') await contentService.upsertSetting('about', aboutData);
-      if (activeTab === 'site') {
+      await contentService.upsertSetting('home', homeContent);
+      await contentService.upsertSetting('about', aboutData);
+      {
         const socialLinks = [
           siteSettings.githubUrl ? { platform: 'github', url: siteSettings.githubUrl } : null,
           siteSettings.linkedinUrl ? { platform: 'linkedin', url: siteSettings.linkedinUrl } : null,
@@ -79,9 +86,11 @@ const ContentManagement = () => {
           socialLinks,
         });
       }
-      toast.success(`Content for ${activeTab} updated in database`);
+      toast.success('All content changes saved to database');
     } catch (error) {
-      toast.error(`Failed to update ${activeTab} content`);
+      toast.error('Unable to save all content changes. Please retry.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -92,7 +101,7 @@ const ContentManagement = () => {
           <h1 className="text-2xl sm:text-3xl font-black font-cyber tracking-tighter">CONTENT CONTROL</h1>
           <p className="text-muted-foreground">Manage the text and media across all public pages.</p>
         </div>
-        <Button variant="cyber" onClick={handleSave}>
+        <Button variant="cyber" onClick={handleSave} disabled={!ready || saving}>
           <Save className="w-4 h-4 mr-2" />
           Save All Changes
         </Button>
@@ -141,31 +150,7 @@ const ContentManagement = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Statistics Counters</label>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {homeContent.stats.map((stat, idx) => (
-                      <div key={idx} className="p-4 glass rounded-xl border-white/10 space-y-2">
-                        <Input
-                          value={stat.value}
-                          className="h-8 text-center font-bold"
-                          onChange={(e) => {
-                            const newStats = [...homeContent.stats];
-                            newStats[idx].value = e.target.value;
-                            setHomeContent({...homeContent, stats: newStats});
-                          }}
-                        />
-                        <Input
-                          value={stat.label}
-                          className="h-6 text-[10px] text-center uppercase tracking-widest"
-                          onChange={(e) => {
-                            const newStats = [...homeContent.stats];
-                            newStats[idx].label = e.target.value;
-                            setHomeContent({...homeContent, stats: newStats});
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
+                  <p className="text-sm text-muted-foreground">Statistics are calculated from database records.</p>
                 </div>
               </CardContent>
             </Card>

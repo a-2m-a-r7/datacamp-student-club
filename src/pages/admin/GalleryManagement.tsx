@@ -1,3 +1,4 @@
+import { AssetImage } from '../../components/AssetImage';
 import { Dialog } from '../../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
@@ -11,7 +12,8 @@ import { contentService } from '../../services/contentService';
 
 const GalleryManagement = () => {
   const [images, setImages] = useState<any[]>([]);
-  const [newImage, setNewImage] = useState({ url: '', title: '' });
+  const [newImage, setNewImage] = useState({ url: '', title: '', category: 'Campus Days' });
+  const [saving, setSaving] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,7 +30,9 @@ const GalleryManagement = () => {
   }, []);
 
   const handleAdd = async () => {
-    if (!newImage.url) return;
+    if (saving) return;
+    if (!newImage.url) { toast.error('Choose an image before adding it.'); return; }
+    setSaving(true);
 
     try {
       const created = await contentService.create('gallery', {
@@ -36,21 +40,24 @@ const GalleryManagement = () => {
         title: newImage.title || 'DataCamp Archive',
       });
       setImages(prev => [created, ...prev]);
-      setNewImage({ url: '', title: '' });
+      setNewImage({ url: '', title: '', category: 'Campus Days' });
       toast.success('Visual asset added to Supabase archive');
     } catch (err: any) {
       toast.error(err.message || 'Failed to add asset');
+    } finally {
+      setSaving(false);
     }
   };
 
   const removeImage = async (id: string) => {
     try {
       const itemToDelete = images.find(img => img.id === id);
+      await contentService.remove('gallery', id);
       if (itemToDelete?.url) {
         const { deleteFile } = await import('../../services/storageService');
-        await deleteFile(itemToDelete.url);
+        try { await deleteFile(itemToDelete.url); } catch { toast.warning('Entry removed; unused image cleanup is pending.'); }
       }
-      await contentService.remove('gallery', id);
+
       setImages(prev => prev.filter(img => img.id !== id));
       toast.success('Asset removed from Supabase');
     } catch (error) {
@@ -76,7 +83,7 @@ const GalleryManagement = () => {
             currentImage={newImage.url}
             onImageSelected={(base64) => setNewImage({...newImage, url: base64})}
           />
-          <div className="flex gap-4 items-end">
+          <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
             <div className="flex-grow space-y-2">
               <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Caption / Title</label>
               <Input
@@ -85,19 +92,24 @@ const GalleryManagement = () => {
                 onChange={(e) => setNewImage({...newImage, title: e.target.value})}
               />
             </div>
-            <Button variant="cyber" onClick={handleAdd}>
+            <Button variant="cyber" onClick={handleAdd} disabled={saving}>
               <Plus className="w-4 h-4 mr-2" />
               ADD TO GRID
             </Button>
           </div>
+          <label className="block text-sm">Category
+            <select aria-label="Gallery category" value={newImage.category} onChange={e => setNewImage({ ...newImage, category: e.target.value })} className="block w-full mt-2 bg-dark-navy border border-white/10 rounded p-2">
+              {['Campus Days', 'Workshops', 'Hackathons', 'Ceremonies'].map(category => <option key={category}>{category}</option>)}
+            </select>
+          </label>
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {images.map((img) => (
           <div key={img.id} className="group relative aspect-square rounded-2xl overflow-hidden border border-white/10 glass">
-            <img src={img.url} alt={img.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-            <div className="absolute inset-0 bg-dark-navy/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
+            <AssetImage src={img.url} alt={img.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <div className="absolute inset-0 bg-dark-navy/80 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
               <p className="text-[10px] font-cyber uppercase tracking-widest mb-4">{img.title}</p>
               <Button aria-label="Delete"
                 variant="ghost"

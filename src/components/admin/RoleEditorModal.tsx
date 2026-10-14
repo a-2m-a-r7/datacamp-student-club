@@ -143,7 +143,11 @@ export const RoleEditorModal: React.FC<RoleEditorModalProps> = ({
                 return (
                   <div
                     key={role.id}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={isArabic ? role.titleAr : role.titleEn}
                     onClick={() => setSelectedRole(role.id)}
+                    onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedRole(role.id); } }}
                     className={`relative p-4 rounded-xl cursor-pointer transition-all border text-left rtl:text-right flex flex-col justify-between ${
                       isSelected
                         ? 'bg-primary/10 border-primary shadow-[0_0_20px_rgba(57,255,20,0.2)] ring-1 ring-primary'

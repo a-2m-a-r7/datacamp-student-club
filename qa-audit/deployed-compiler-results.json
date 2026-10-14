@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-10-14T17:07:23.309Z",
+  "base": "https://datacamp-student-club.vercel.app",
+  "mockedRequests": false,
+  "results": [
+    {
+      "language": "JavaScript",
+      "passed": true,
+      "status": "real execution verified",
+      "output": "42"
+    },
+    {
+      "language": "TypeScript",
+      "passed": true,
+      "status": "real execution verified",
+      "output": "42"
+    },
+    {
+      "language": "Python",
+      "passed": true,
+      "status": "real execution verified",
+      "output": "42"
+    },
+    {
+      "language": "SQL",
+      "passed": true,
+      "status": "real execution verified",
+      "output": "42"
+    },
+    {
+      "language": "C++",
+      "passed": false,
+      "status": "external execution unavailable",
+      "output": "Execution service unavailable. No code was executed."
+    }
+  ]
+}

@@ -11,7 +11,7 @@ export interface RolePermission {
 
 export const ALL_PERMISSIONS: RolePermission[] = [
   { id: 'settings:write', nameEn: 'Manage System Settings', nameAr: 'إدارة إعدادات النظام', descriptionEn: 'Configure site-wide toggles, branding, and maintenance mode.', descriptionAr: 'التحكم في إعدادات المنصة ووضع الصيانة.', category: 'system' },
-  { id: 'security:manage', nameEn: 'Security & Audit Logs', nameAr: 'الأمان وسجلات التدقيق', descriptionEn: 'Access firewall, blocked IPs, and audit trails.', descriptionAr: 'الوصول لإعدادات الأمان وسجلات النشاط.', category: 'system' },
+  { id: 'security:manage', nameEn: 'Security & Audit Logs', nameAr: 'الأمان وسجلات التدقيق', descriptionEn: 'Read audit records and request account recovery.', descriptionAr: 'قراءة سجلات التدقيق وطلب استعادة الحساب.', category: 'system' },
   { id: 'users:manage', nameEn: 'Manage Users & Members', nameAr: 'إدارة الأعضاء والبيانات', descriptionEn: 'Create, update, activate, and delete user accounts.', descriptionAr: 'إضافة وتعديل وحذف حسابات الأعضاء.', category: 'users' },
   { id: 'roles:assign', nameEn: 'Assign & Edit Roles', nameAr: 'تعديل وتعيين الرولات', descriptionEn: 'Grant or revoke roles and access levels to operatives.', descriptionAr: 'منح وسحب الرولات والصلاحيات من المستخدمين.', category: 'users' },
   { id: 'staff:manage', nameEn: 'Manage Staff Roster', nameAr: 'إدارة فريق العمل والقيادة', descriptionEn: 'Edit club leadership, directors, and core committee roster.', descriptionAr: 'تعديل أعضاء الكادر واللجان الإشرافية.', category: 'users' },
@@ -19,8 +19,8 @@ export const ALL_PERMISSIONS: RolePermission[] = [
   { id: 'content:publish', nameEn: 'Publish Blog & Projects', nameAr: 'نشر المقالات والمشاريع', descriptionEn: 'Author articles, publish student projects, and upload gallery.', descriptionAr: 'نشر المقالات والمشاريع ومعرض الصور.', category: 'content' },
   { id: 'events:manage', nameEn: 'Manage Events & Workshops', nameAr: 'إدارة الفعاليات والورش', descriptionEn: 'Create hackathons, schedule workshops, and manage capacity.', descriptionAr: 'إنشاء الفعاليات والهاكاثونات وتحديد الطاقة الاستيعابية.', category: 'events' },
   { id: 'attendance:scan', nameEn: 'Scan Event Attendance', nameAr: 'مسح تذاكر الحضور (QR)', descriptionEn: 'Check in participants on-site using the QR ticket scanner.', descriptionAr: 'تسجيل حضور المشاركين بمسح كود الـ QR.', category: 'events' },
-  { id: 'points:manage', nameEn: 'Manage Points & Leaderboard', nameAr: 'إدارة النقاط والترتيب', descriptionEn: 'Award XP points, grant badges, and reset leaderboard seasons.', descriptionAr: 'منح وتعديل نقاط الـ XP وأوسمة الإنجاز.', category: 'finance' },
-  { id: 'certificates:issue', nameEn: 'Issue & Verify Certificates', nameAr: 'إصدار واعتماد الشهادات', descriptionEn: 'Generate cryptographically verified completion certificates.', descriptionAr: 'إصدار واعتماد الشهادات الأكاديمية الرسمية.', category: 'finance' },
+  { id: 'points:manage', nameEn: 'Manage Points & Leaderboard', nameAr: 'إدارة النقاط والترتيب', descriptionEn: 'Award XP points and review earned achievements.', descriptionAr: 'منح وتعديل نقاط الـ XP وأوسمة الإنجاز.', category: 'finance' },
+  { id: 'certificates:issue', nameEn: 'Issue & Verify Certificates', nameAr: 'إصدار واعتماد الشهادات', descriptionEn: 'Issue completion certificates with database verification.', descriptionAr: 'إصدار واعتماد الشهادات الأكاديمية الرسمية.', category: 'finance' },
 ];
 
 export interface RoleDetail {

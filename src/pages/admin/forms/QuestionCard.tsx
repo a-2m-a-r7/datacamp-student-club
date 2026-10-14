@@ -395,9 +395,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               {/* Live Preview */}
               <div className="flex items-center gap-2 pt-1 text-amber-400">
                 {Array.from({ length: question.settings?.maxRating || 5 }).map((_, i) => (
-                  <button
+                  <span
                     key={i}
-                    type="button"
+                    aria-label="Rating preview"
                     className="p-1 rounded hover:scale-110 transition-transform"
                   >
                     {question.settings?.ratingIcon === 'heart' ? (
@@ -409,7 +409,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     ) : (
                       <Star className="w-6 h-6 fill-amber-400/20" />
                     )}
-                  </button>
+                  </span>
                 ))}
               </div>
             </div>

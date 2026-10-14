@@ -15,6 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import { NotificationType } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { toast } from 'sonner';
 
 export const Notifications = () => {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
@@ -105,7 +106,7 @@ export const Notifications = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={markAllAsRead}
+                onClick={() => { void markAllAsRead().catch(error => toast.error(error.message || 'Unable to mark notifications as read')); }}
                 className="font-cyber text-xs border-primary/30 text-primary hover:bg-primary/10"
               >
                 <CheckCheck className={`w-3.5 h-3.5 ${isArabic ? 'ml-1.5' : 'mr-1.5'}`} /> 
@@ -159,7 +160,7 @@ export const Notifications = () => {
               return (
                 <div
                   key={notif.id}
-                  onClick={() => !notif.isRead && notif.id && markAsRead(notif.id)}
+                  onClick={() => { if (!notif.isRead && notif.id) void markAsRead(notif.id).catch(error => toast.error(error.message || 'Unable to mark notification as read')); }}
                   className={`p-4 sm:p-5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer ${
                     notif.isRead
                       ? 'border-white/5 bg-dark-navy/40 opacity-75 hover:opacity-100'

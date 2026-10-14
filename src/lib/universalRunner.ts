@@ -39,7 +39,7 @@ export interface LanguageDefinition {
 
 // ─── PISTON API RUNNER (FOR COMPILED & SYSTEM LANGUAGES) ───────────────────────
 
-const PISTON_API_URL = 'https://emkc.org/api/v2/piston/execute';
+const PISTON_API_URL = (import.meta as any).env.VITE_PISTON_API_URL || 'https://emkc.org/api/v2/piston/execute';
 
 async function executeViaPiston(
   language: string,

@@ -110,7 +110,7 @@ const ProjectManagement = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black font-cyber tracking-tighter">PROJECT MANAGEMENT</h1>
           <p className="text-muted-foreground">Manage the club's technical portfolio.</p>
@@ -179,7 +179,7 @@ const ProjectManagement = () => {
           <Card className="w-full max-w-lg border-primary/30 my-auto">
             <CardHeader><CardTitle className="font-cyber">INITIALIZE_PROJECT</CardTitle></CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Project Title</label>
                   <Input value={newProject.title} onChange={(e) => setNewProject({...newProject, title: e.target.value})} />
@@ -190,7 +190,7 @@ const ProjectManagement = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Tech Stack</label>
                   <Input value={newProject.tech} onChange={(e) => setNewProject({...newProject, tech: e.target.value})} />

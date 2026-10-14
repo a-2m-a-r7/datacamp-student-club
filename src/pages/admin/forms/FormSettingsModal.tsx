@@ -221,8 +221,8 @@ export const FormSettingsModal: React.FC<FormSettingsModalProps> = ({
                   </p>
                   <p className="text-[11px] text-muted-foreground">
                     {isArabic
-                      ? 'إنشاء جدول تلقائي وحفظ الردود لحظياً ومشاركته مع ammar25030177@gmail.com'
-                      : 'Auto-creates sheet, appends rows via service account, shared with ammar25030177@gmail.com'}
+                      ? 'يتطلب إعداد حساب خدمة Google وصلاحيات الجدول على الخادم. تُحفظ الردود في قاعدة البيانات حتى إن لم تُفعّل المزامنة.'
+                      : 'Requires a configured Google service account and spreadsheet access. Responses are saved in the database independently of sync.'}
                   </p>
                 </div>
               </div>

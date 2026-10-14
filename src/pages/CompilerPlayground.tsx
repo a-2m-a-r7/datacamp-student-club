@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   getRegisteredLanguages,
   getLanguage,
@@ -81,6 +81,14 @@ export const CompilerPlayground = () => {
     }
   };
 
+  useEffect(() => {
+    const runShortcut = (event: KeyboardEvent) => {
+      if (event.key === 'F5') { event.preventDefault(); void handleRun(); }
+    };
+    window.addEventListener('keydown', runShortcut);
+    return () => window.removeEventListener('keydown', runShortcut);
+  }, [code, stdin, selectedLangId, isRunning]);
+
   const handleCopy = async () => {
     try { await navigator.clipboard.writeText(code); } catch { toast.error('Clipboard permission was denied.'); return; }
     setCopied(true);
@@ -119,7 +127,7 @@ export const CompilerPlayground = () => {
                 <Cpu className="w-3 h-3" /> {isArabic ? 'بيئة تشغيل افتراضية متعددة اللغات' : 'MULTI-LANGUAGE VIRTUAL RUNTIME'}
               </span>
               <span className="text-xs text-muted-foreground font-mono">
-                {isArabic ? `${languages.length} لغات مدعومة` : `${languages.length} Languages Supported`}
+                {isArabic ? `${languages.length} لغات في المحرر` : `${languages.length} Editor Languages`}
               </span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-cyber font-black tracking-tight text-white flex items-center gap-3">
@@ -131,8 +139,8 @@ export const CompilerPlayground = () => {
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
               {isArabic
-                ? 'اكتب، ونفّذ، واختبر أكواد بايثون، جافاسكريبت، تايب سكريبت، SQL، C++، جافا، R، و Rust فورياً بدون أي إعدادات مسبقة.'
-                : 'Write, compile, and run code instantly in Python, JavaScript, TypeScript, SQL, C++, Java, R, Go, & Rust with zero setup.'}
+                ? 'نفّذ بايثون، جافاسكريبت، تايب سكريبت وSQL. تشغيل C++ وجافا وR وGo وRust يحتاج خادم تنفيذ مُعدًا للمنصة.'
+                : 'Run Python, JavaScript, TypeScript and SQL. C++, Java, R, Go and Rust require a configured execution server.'}
             </p>
           </div>
 

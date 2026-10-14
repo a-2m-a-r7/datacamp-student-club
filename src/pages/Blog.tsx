@@ -1,3 +1,4 @@
+import { AssetImage } from '../components/AssetImage';
 import { copyText } from '../lib/clipboard';
 import { Dialog } from '../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
@@ -30,6 +31,7 @@ import { getCanonicalUrl } from '../lib/siteUrl';
 export const Blog = () => {
   const { isEditor } = useAuth();
   const { isArabic } = useLanguage();
+  const [loadError, setLoadError] = useState('');
   const [posts, setPosts] = useState<any[]>([]);
   const [, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -60,6 +62,7 @@ export const Blog = () => {
         const docs = await contentService.list('blog', { orderBy: 'created_at' });
         if (mounted) setPosts(docs);
       } catch (error) {
+        setLoadError('Unable to load articles. Please retry.');
         console.warn('Blog Supabase load error:', error);
       } finally {
         if (mounted) setLoading(false);
@@ -96,6 +99,7 @@ export const Blog = () => {
 
   return (
     <div className="pt-20 md:pt-32 pb-24 min-h-screen">
+      {loadError && <div role="alert" className="p-4 text-destructive">{loadError} <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button></div>}
       <div className="container mx-auto px-6 max-w-6xl space-y-12">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/10">
@@ -172,8 +176,8 @@ export const Blog = () => {
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 {isArabic
-                  ? 'قاعدة بيانات Supabase متصلة وجاهزة للمقالات. يمكن للمحررين نشر المقالات من لوحة التحكم، أو يمكنك معاينة نماذج المقالات أدناه.'
-                  : 'The Supabase database is connected and ready for articles. Club editors can publish articles from the Admin Panel, or you can preview sample articles below.'
+                  ? 'قاعدة بيانات Supabase متصلة وجاهزة للمقالات. يمكن للمحررين نشر المقالات من لوحة التحكم.'
+                  : 'The Supabase database is connected and ready for articles. Club editors can publish articles from the Admin Panel.'
                 }
               </p>
             </div>
@@ -207,8 +211,8 @@ export const Blog = () => {
                 className="group glass p-6 md:p-8 rounded-3xl border border-white/10 hover:border-primary/40 transition-all flex flex-col md:flex-row gap-8 cursor-pointer relative overflow-hidden"
               >
                 <div className="w-full md:w-1/3 aspect-video bg-white/5 rounded-2xl overflow-hidden shrink-0 relative">
-                  <img
-                    src={post.image || `https://picsum.photos/seed/techblog${idx}/800/600`}
+                  <AssetImage
+                    src={post.image}
                     alt={post.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     referrerPolicy="no-referrer"
@@ -304,7 +308,7 @@ export const Blog = () => {
 
                 {readingPost.image && (
                   <div className="rounded-2xl overflow-hidden aspect-video border border-white/10">
-                    <img src={readingPost.image} alt={readingPost.title} className="w-full h-full object-cover" />
+                    <AssetImage src={readingPost.image} alt={readingPost.title} className="w-full h-full object-cover" />
                   </div>
                 )}
 

@@ -206,7 +206,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (nextSession?.user) {
       const nextProfile = await fetchProfile(nextSession.user);
-      if (revision !== sessionRevision.current) return;
+      if (revision !== sessionRevision.current) return false;
       const compatibleUser = {
         ...nextSession.user,
         uid: nextSession.user.id,
@@ -223,6 +223,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setProfile(null);
       activeAccessTokenRef.current = null;
     }
+    return true;
   };
 
   // 1. Initial Session Check & Realtime Auth Listener
@@ -238,10 +239,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // A. Check initial session
     supabase.auth.getSession().then(async ({ data }) => {
       if (!mounted) return;
-      if (data?.session) {
-        await applySession(data.session);
-      } else { await applySession(null); }
-      setLoading(false);
+      const applied = await applySession(data?.session || null);
+      if (mounted && applied) setLoading(false);
     });
 
     // B. Real-time auth state listener
@@ -250,7 +249,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } = supabase.auth.onAuthStateChange((event, nextSession) => {
       setTimeout(async () => {
       if (!mounted) return;
-      await applySession(nextSession);
+      const applied = await applySession(nextSession);
+      if (!mounted || !applied) return;
 
       if (event === 'SIGNED_IN' && nextSession?.user) {
         const prov = getProvider(nextSession.user);

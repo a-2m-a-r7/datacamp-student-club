@@ -9,14 +9,18 @@ import { Button } from '../components/ui/Button';
 import { toast } from 'sonner';
 import { QRCodeSVG } from 'qrcode.react';
 import { contentService } from '../services/contentService';
+import { Dialog } from '../components/ui/Dialog';
 
 const Events = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isArabic, t } = useLanguage();
+  const [loadError, setLoadError] = useState('');
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [availability, setAvailability] = useState('all');
   const [registering, setRegistering] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState<any>(null);
 
@@ -26,8 +30,8 @@ const Events = () => {
         const rows = await contentService.list('events', { orderBy: 'date' });
         setEvents(rows);
       } catch (error) {
+        setLoadError('Unable to load events. Please retry.');
         console.warn('Events load error:', error);
-        setEvents([]);
       } finally {
         setLoading(false);
       }
@@ -38,8 +42,8 @@ const Events = () => {
   }, []);
 
   const filteredEvents = events.filter(event =>
-    event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.description.toLowerCase().includes(searchTerm.toLowerCase())
+    (event.title.toLowerCase().includes(searchTerm.toLowerCase()) || event.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (availability === 'all' || (availability === 'available' && event.registeredCount < event.capacity) || (availability === 'upcoming' && new Date(event.date).getTime() >= Date.now()))
   );
 
   const handleRegister = async (event: any) => {
@@ -66,7 +70,6 @@ const Events = () => {
       const confirmedRegistration = await contentService.registerEvent(event, activeUserId, activeUserEmail);
       setEvents(events.map(e => e.id === event.id ? { ...e, registeredCount: (e.registeredCount || 0) + 1 } : e));
       setShowSuccess(confirmedRegistration || registrationData);
-      toast.success(isArabic ? 'تم تأكيد التسجيل بنجاح! تم إنشاء رمز الدخول.' : 'Registration Confirmed! QR code generated.');
     } catch (error: any) {
       toast.error(error.message || (isArabic ? 'فشل التسجيل في الفعالية.' : 'Registration failed.'));
     } finally {
@@ -76,9 +79,12 @@ const Events = () => {
 
   return (
     <div className="min-h-screen pt-20 md:pt-24 pb-20 px-6 lg:px-12">
+      {loadError && <div role="alert" className="p-4 text-destructive">{loadError} <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button></div>}
       <AnimatePresence>
         {showSuccess && (
-          <motion.div
+          <Dialog
+            onClose={() => setShowSuccess(null)}
+            aria-label={isArabic ? 'تذكرة الفعالية' : 'Event ticket'}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -111,7 +117,7 @@ const Events = () => {
                 </Button>
               </CardContent>
             </Card>
-          </motion.div>
+          </Dialog>
         )}
       </AnimatePresence>
 
@@ -152,12 +158,18 @@ const Events = () => {
             />
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <Button variant="ghost" size="sm" className="flex-grow md:flex-grow-0">
+            <Button variant="ghost" size="sm" className="flex-grow md:flex-grow-0" onClick={() => setShowFilters(value => !value)} aria-expanded={showFilters}>
               <Filter className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2" />
               {isArabic ? 'تصفية' : 'FILTER'}
             </Button>
           </div>
         </div>
+
+        {showFilters && <select aria-label={isArabic ? 'تصفية الفعاليات' : 'Event availability'} className="bg-dark-navy border border-white/10 rounded p-2" value={availability} onChange={event => setAvailability(event.target.value)}>
+          <option value="all">{isArabic ? 'كل الفعاليات' : 'All events'}</option>
+          <option value="available">{isArabic ? 'متاح للتسجيل' : 'Available places'}</option>
+          <option value="upcoming">{isArabic ? 'الفعاليات القادمة' : 'Upcoming events'}</option>
+        </select>}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (

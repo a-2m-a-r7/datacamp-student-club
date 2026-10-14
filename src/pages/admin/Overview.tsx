@@ -67,7 +67,7 @@ const Overview = () => {
 
   const stats = [
     { label: 'Total Members', value: counts.users.toLocaleString(), trend: '', up: true, icon: Users, color: 'text-neon-green' },
-    { label: 'Active Events', value: counts.events.toString(), trend: '', up: true, icon: Calendar, color: 'text-neon-blue' },
+    { label: 'Total Events', value: counts.events.toString(), trend: '', up: true, icon: Calendar, color: 'text-neon-blue' },
     { label: 'Total Registrations', value: counts.registrations.toString(), trend: '', up: true, icon: TrendingUp, color: 'text-neon-purple' },
     { label: 'System Uptime', value: counts.uptime, trend: '', up: true, icon: Activity, color: 'text-primary' },
   ];

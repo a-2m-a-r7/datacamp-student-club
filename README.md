@@ -225,3 +225,7 @@ npm run test:qa
 ## 📜 License | حقوق الملكية
 
 هذا البرنامج محمي بحقوق ملكية خاصة حصرية لصالح **نادي DataCamp الطلابي وجامعة الابتكار** (All Rights Reserved). انظر ملف [LICENSE](LICENSE) لمزيد من التفاصيل.
+
+## Final tab review
+
+See [qa-audit/FINAL_TAB_REPORT.md](qa-audit/FINAL_TAB_REPORT.md) for the final member/admin operation matrix, persisted database tests, production seed archival and external setup limits. Compiled languages require an independently hosted Piston server; set the public VITE_PISTON_API_URL endpoint and its CSP hostname after provisioning. Do not put credentials in client variables.

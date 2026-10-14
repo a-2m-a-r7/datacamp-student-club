@@ -1,3 +1,4 @@
+import { AssetImage } from '../../components/AssetImage';
 import { Dialog } from '../../components/ui/Dialog';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
@@ -6,24 +7,21 @@ import { Input } from '../../components/ui/Input';
 import { Plus, Trash2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import ImagePicker from '../../components/ImagePicker';
-import { isSupabaseConfigured, supabase } from '../../lib/supabase';
+import { isSupabaseConfigured } from '../../lib/supabase';
 import { logAction } from '../../lib/logger';
-import { UserIdentityInput, validateUserIdentity } from '../../components/UserIdentityInput';
 import { contentService } from '../../services/contentService';
 
 const StaffManagement = () => {
   const [staff, setStaff] = useState<any[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [newMember, setNewMember] = useState({
     name: '',
     role: '',
-    category: 'Leaders',
+    category: 'High Board',
     image: '',
     socials: [] as any[],
-    linkedUser: '',
-    linkedUserType: 'email' as 'email' | 'id'
   });
 
   useEffect(() => {
@@ -37,14 +35,6 @@ const StaffManagement = () => {
 
     loadStaff();
 
-    if (isSupabaseConfigured) {
-      supabase.from('profiles').select('*').then(({ data }) => {
-        if (data) setUsers(data);
-      });
-    } else {
-      setUsers([]);
-    }
-
     return contentService.subscribe('staff', loadStaff);
   }, []);
 
@@ -57,37 +47,35 @@ const StaffManagement = () => {
   };
 
   const handleAddMember = async () => {
-    if (newMember.linkedUser && !validateUserIdentity(newMember.linkedUser, newMember.linkedUserType)) return;
+    if (saving) return;
+    setSaving(true);
 
-    const linkedUserLabel = newMember.linkedUser
-      ? (newMember.linkedUserType === 'email' ? newMember.linkedUser : `ID: ${newMember.linkedUser}`)
-      : '';
-
-    const memberData = { ...newMember, linkedUser: linkedUserLabel, createdAt: new Date().toISOString() };
+    const memberData = { ...newMember, createdAt: new Date().toISOString() };
 
     try {
       const created = await contentService.create('staff', {
         ...memberData,
-        image: newMember.image || 'https://picsum.photos/seed/pres/400/400',
+        image: newMember.image,
       });
       await logAction('STAFF_MEMBER_ADDED', 'Admin', memberData.name, 'success');
       setStaff(prev => [created, ...prev]);
       setShowAddModal(false);
-      setNewMember({ name: '', role: '', category: 'Leaders', image: '', socials: [], linkedUser: '', linkedUserType: 'email' });
+      setNewMember({ name: '', role: '', category: 'High Board', image: '', socials: [] });
       toast.success('New operative initialized in Supabase');
     } catch (err: any) {
       toast.error(err.message || 'Failed to initialize operative');
-    }
+    } finally { setSaving(false); }
   };
 
   const removeMember = async (id: string) => {
     try {
       const memberToDelete = staff.find(s => s.id === id);
+      await contentService.remove('staff', id);
       if (memberToDelete?.image) {
         const { deleteFile } = await import('../../services/storageService');
-        await deleteFile(memberToDelete.image);
+        try { await deleteFile(memberToDelete.image); } catch { toast.warning('Entry removed; unused image cleanup is pending.'); }
       }
-      await contentService.remove('staff', id);
+
       await logAction('STAFF_MEMBER_REMOVED', 'Admin', id, 'warning');
       setStaff(prev => prev.filter(s => s.id !== id));
       toast.success('Operative decommissioned from Supabase');
@@ -125,7 +113,7 @@ const StaffManagement = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {staff.map((member) => (
           <Card key={member.id} className="group relative overflow-hidden">
-            <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute top-4 right-4 z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
               <Button aria-label="Delete"
                 variant="ghost"
                 size="icon"
@@ -137,7 +125,7 @@ const StaffManagement = () => {
             </div>
             <CardHeader className="flex flex-row items-center space-x-4">
               <div className="w-16 h-16 rounded-xl overflow-hidden border border-white/10">
-                <img src={member.image || 'https://picsum.photos/seed/placeholder/200/200'} alt={member.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                <AssetImage src={member.image} alt={member.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
               <div>
                 <CardTitle className="text-lg">{member.name}</CardTitle>
@@ -165,7 +153,7 @@ const StaffManagement = () => {
                 <Trash2 className="w-8 h-8 text-destructive" />
               </div>
               <CardTitle className="text-xl font-cyber">DECOMMISSION_OPERATIVE</CardTitle>
-              <p className="text-sm text-muted-foreground mt-2">Are you sure you want to remove this operative from the roster? Access to the command grid will be revoked for this profile.</p>
+              <p className="text-sm text-muted-foreground mt-2">Are you sure you want to remove this operative from the roster? The associated user account will keep its existing access.</p>
             </CardHeader>
             <CardContent className="flex gap-4 pt-4">
               <Button variant="ghost" className="flex-1" onClick={() => setDeleteConfirmId(null)}>ABORT</Button>
@@ -185,7 +173,7 @@ const StaffManagement = () => {
               <CardTitle className="font-cyber">INITIALIZE_NEW_OPERATIVE</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Full Name</label>
                   <Input value={newMember.name} onChange={(e) => setNewMember({...newMember, name: e.target.value})} />
@@ -195,7 +183,7 @@ const StaffManagement = () => {
                   <Input value={newMember.role} onChange={(e) => setNewMember({...newMember, role: e.target.value})} />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Category</label>
                   <select
@@ -203,10 +191,7 @@ const StaffManagement = () => {
                     value={newMember.category}
                     onChange={(e) => setNewMember({...newMember, category: e.target.value})}
                   >
-                    <option value="Leaders" className="bg-dark-navy">Leaders</option>
-                    <option value="Technical" className="bg-dark-navy">Technical</option>
-                    <option value="HR & Events" className="bg-dark-navy">HR & Events</option>
-                    <option value="Mentors" className="bg-dark-navy">Mentors</option>
+                    {['High Board', 'Academic Committee', 'Tech & Development', 'Media & PR', 'HR & Operations'].map(category => <option key={category} value={category} className="bg-dark-navy">{category}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -218,13 +203,6 @@ const StaffManagement = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">Linked User (Optional)</label>
-                <UserIdentityInput
-                  suggestions={users}
-                  onValueChange={(val, type) => setNewMember({...newMember, linkedUser: val, linkedUserType: type})}
-                />
-              </div>
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -263,7 +241,7 @@ const StaffManagement = () => {
 
               <div className="flex justify-end gap-4 pt-6">
                 <Button variant="ghost" onClick={() => setShowAddModal(false)}>ABORT</Button>
-                <Button variant="cyber" onClick={handleAddMember}>INITIALIZE</Button>
+                <Button variant="cyber" onClick={handleAddMember} disabled={saving}>INITIALIZE</Button>
               </div>
             </CardContent>
           </Card>

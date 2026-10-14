@@ -1,18 +1,18 @@
 # DataCamp repair and QA report — updated 14 October 2026
 
-Current growth release: generic Arabic/English draft-course creation, validated quiz editor, automatic course certificates with chosen downloads and LinkedIn fields, keyset catalog pagination, safe lost-response retries and visible-tab polling by default. See FUTURE_READINESS.md. The isolated real PostgreSQL load run simulated 1000 QA members with 20 actual database connections and 10,000 successful requests; this does not certify cloud capacity. Latest live migration verification passed four read-only checks. Background refresh and server authorization passed four Node tests. The course catalog no longer displays an invented 350+ population, 800 XP ceiling or stars without reviews. Legacy encoding was reversibly repaired in 39 fields across 3 actual courses and 12 actual lessons through owner-authorized REST with optimistic comparisons and a local backup. The optional SQL maintenance alternative is not an application migration/dependency. See course-text-repair-results.json and course-text-live-results.json. The deployment paragraph below records an earlier release; current deployment evidence is recorded separately.
+Current final tab review: see FINAL_TAB_REPORT.md for the member/admin operation matrix, actual isolated SQL CRUD, production seed archival, external-service setup and precise limitations. Six Node server/polling tests passed. Historical growth release: generic Arabic/English draft-course creation, validated quiz editor, automatic course certificates with chosen downloads and LinkedIn fields, keyset catalog pagination, safe lost-response retries and visible-tab polling by default. See FUTURE_READINESS.md. The isolated real PostgreSQL load run simulated 1000 QA members with 20 actual database connections and 10,000 successful requests; this does not certify cloud capacity. Latest live migration verification passed four read-only checks. Background refresh and server authorization previously passed four Node tests. The course catalog no longer displays an invented 350+ population, 800 XP ceiling or stars without reviews. Legacy encoding was reversibly repaired in 39 fields across 3 actual courses and 12 actual lessons through owner-authorized REST with optimistic comparisons and a local backup. The optional SQL maintenance alternative is not an application migration/dependency. See course-text-repair-results.json and course-text-live-results.json. The deployment paragraph below records an earlier release; current deployment evidence is recorded separately.
 
 The user authorized repairs after the initial discovery and explicitly authorized applying DataCamp schema/security repairs to the existing Supabase project. Work is on branch fix/qa-real-data. This report records current evidence; the Phase 1 inventory remains in discovery-20261013/INVENTORY.md.
 
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: 276; results: {"passed":276}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
+- Browser scenarios: 324; results: {"passed":324}. Desktop 1440px, tablet 768px, mobile 375px. Latest outcomes combine fix-results.json with post-final-results.json and qr-final-results.json, replacing retests of the same scenario/viewport. Exact outcomes are in tested-elements.csv.
 - PostgreSQL: 56 passed, 0 failed in an isolated in-memory PostgreSQL database. All 13 repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
-- Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
+- Node server/polling: six tests passed, including five authorization identities, bounded backup over 1105 rows, Auth account rollback and deletion contracts.
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
 - TypeScript check and production build passed; npm audit reported zero known vulnerabilities. Zero audit findings does not guarantee absence of all defects.
-- Public browser checks use intercepted QA_TEST Supabase fixtures; authenticated role tests use mocked QA_TEST sessions. They verify rendering, actual clicks, request contracts, downloads and layout, not real OAuth or production database writes.
+- Legacy browser tests use intercepted QA_TEST HTTP fixtures. Course and new tab/CRUD tests execute actual migrations/RLS/RPC in isolated PostgreSQL, with test-only Auth transport and local Storage. These do not prove real OAuth/email delivery or production account CRUD.
 - No destructive production tests or QA_TEST records were created in the live database. Fixtures exist only in browser contexts and in-memory PostgreSQL and disappear on close.
 
 ## Supabase changes and evidence
@@ -37,7 +37,7 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 | 2 | Admin users | Critical | api/admin/users.ts:1 | Administrative requests relied on unsafe fallback account creation | Bearer identity and database role checked server-side; no default password | Server authorization tests; live account CRUD remains untested |
 | 3 | Home / About / content pages | High | src/lib/defaultContent.ts:2 | Invented metrics and sample people/articles/projects replaced missing data | No sample collections; real statistics RPC; unavailable values displayed honestly | Browser checks + live read-only RPC |
 | 4 | Courses / learning | High | src/services/courseService.ts:281 | Enrollment/progress could be simulated and repeated XP awarded | Locked persistent enrollment/completion RPC and idempotent rewards | Isolated PostgreSQL persistence tests |
-| 5 | Forms builder | High | src/pages/admin/forms/FormBuilder.tsx:103 | Separate saves and regenerated IDs could lose historical answers; autosave could race publication | Atomic parent/questions transaction, stable IDs, serial saves | PostgreSQL rollback tests + browser delayed-save scenario |
+| 5 | Forms builder | High | src/pages/admin/forms/FormBuilder.tsx:104 | Separate saves and regenerated IDs could lose historical answers; autosave could race publication | Atomic parent/questions transaction, stable IDs, serial saves | PostgreSQL rollback tests + browser delayed-save scenario |
 | 6 | Forms response | High | supabase/migrations/20261013000002_atomic_forms.sql:60 | Client validation/fallback results could imply an unsaved submission succeeded | Server validates ownership, required fields, types, schedule and repeat-response policy | PostgreSQL validation tests |
 | 7 | Course quiz | High | supabase/migrations/20261013000004_verified_quizzes.sql:2 | Client-selected success could grant completion and XP | Server grades stored questions; completion requires passing score | PostgreSQL fail/pass and bypass checks |
 | 8 | Event scanner | High | supabase/migrations/20261013000001_real_operations.sql:223 | Access-granted output did not prove attendance persisted | Registered ticket matched, attendance saved, duplicates rejected | PostgreSQL unknown/valid/duplicate checks; physical camera untested |
@@ -46,14 +46,14 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 | 11 | Google Sheets | High | api/forms/sync-sheet.ts:16 | Public sync endpoint and misleading success on missing configuration | Admin authorization, real failure status, RAW sheet values, no hardcoded sharing recipient | Visitor rejection verified; Google service account integration blocked |
 | 12 | Compiler | High | src/lib/universalRunner.ts:44 | Service failure returned invented successful language output | Actual workers/WASM/services; compilation and nonzero runtime failures surfaced | Real JavaScript/TypeScript execution + mocked failure responses |
 | 13 | Admin blog | Medium | src/pages/admin/BlogManagement.tsx:1 | Edit control had no saving workflow | Dialog edits and PATCH persist the submitted fields | Browser click, PATCH payload, UI update and dialog close |
-| 14 | Admin settings | Medium | src/pages/admin/Settings.tsx:271 | Export and clear-cache controls had empty handlers | Protected platform-record JSON download and actual browser cache clearing | Browser download contents and CacheStorage removal |
+| 14 | Admin settings | Medium | src/pages/admin/Settings.tsx:279 | Export and clear-cache controls had empty handlers | Protected platform-record JSON download and actual browser cache clearing | Browser download contents and CacheStorage removal |
 | 15 | Admin staff / security | Medium | src/pages/admin/Security.tsx:10 | Pretend commit, firewall state, security logs and uptime implied backend actions | Real roster refresh, actual audit records and password-reset request; unavailable uptime stays unknown | Route rendering; live reset email delivery remains untested |
 | 16 | Builder desktop header | High | src/App.tsx:207 | Floating language control intercepted clicks on Publish | Language control has reserved layout space | Delayed autosave/publish browser click test |
 | 17 | Contact / footer | Medium | src/pages/Contact.tsx:166 | Invented email, telephone and address shown when not configured | Configured contact data or explicit Not configured state | Source correction and final route checks |
 | 18 | Dialogs / share / QR | Medium | src/components/ui/Dialog.tsx:6 | Conditional dialogs lacked consistent focus/Escape behavior; QR lacked quiet margin | Portaled accessible dialogs, focus restore, awaited clipboard, decodable QR margin | Browser Escape/focus, badge/form/certificate QR and PNG download |
 | 19 | Data refresh | Medium | src/lib/supabase.ts:22 | Cached RAG context and browser data could show stale or fake records | Fresh database context and no-store; personal AI key is memory-only | Browser legacy-session/cache rejection; realtime delivery needs live role session |
 | 20 | Dependencies | High | package.json:12 | Known vulnerable SheetJS/qs/esbuild versions | Official SheetJS 0.20.3 distribution and patched transitive packages | npm audit: zero known vulnerabilities |
-| 21 | Profile security | High | src/pages/Profile.tsx:153 | Login OTP was incorrectly reused for credential changes, with unsupported SMS text | Real recovery emails and confirmed email changes; no premature profile email writes | Browser request/error/retry checks; actual mailbox delivery unverified |
+| 21 | Profile security | High | src/pages/Profile.tsx:158 | Login OTP was incorrectly reused for credential changes, with unsupported SMS text | Real recovery emails and confirmed email changes; no premature profile email writes | Browser request/error/retry checks; actual mailbox delivery unverified |
 | 22 | Dashboard card download | High | src/lib/memberCard.ts:1 | html2canvas failed on Tailwind color formats | Direct Canvas PNG export with real member data and embedded decodable QR | Actual 1586×1000 PNG download and QR pixel decode at three sizes |
 | 23 | Membership QR | High | supabase/migrations/20261013000010_member_cards.sql:4 | Member number displayed as unexplained scan text | Random token verification URL and protected admin ticket resolution | SQL permissions, inactive/unknown tokens and browser verification |
 | 24 | Dashboard badges | Medium | src/pages/Dashboard.tsx:320 | Fifty points displayed every catalog badge as earned | Only persisted achievements unlock badges | Source repair; badge issuance remains SQL verified |
@@ -118,18 +118,21 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 1440 | passed | course-growth.spec.ts:90 |
 | catalog displays actual Arabic text without invented population or unrated stars | 1440 | passed | course-growth.spec.ts:98 |
 | lost course response retries the same draft and image tools never submit the form | 1440 | passed | course-growth.spec.ts:105 |
+| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 1440 | passed | course-growth.spec.ts:112 |
 | admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate | 768 | passed | course-growth.spec.ts:68 |
 | duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data | 768 | passed | course-growth.spec.ts:78 |
 | catalog pages, debounced search, cancellation and honest retry use bounded database requests | 768 | passed | course-growth.spec.ts:84 |
 | future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 768 | passed | course-growth.spec.ts:90 |
 | catalog displays actual Arabic text without invented population or unrated stars | 768 | passed | course-growth.spec.ts:98 |
 | lost course response retries the same draft and image tools never submit the form | 768 | passed | course-growth.spec.ts:105 |
+| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 768 | passed | course-growth.spec.ts:112 |
 | admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate | 375 | passed | course-growth.spec.ts:68 |
 | duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data | 375 | passed | course-growth.spec.ts:78 |
 | catalog pages, debounced search, cancellation and honest retry use bounded database requests | 375 | passed | course-growth.spec.ts:84 |
 | future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 375 | passed | course-growth.spec.ts:90 |
 | catalog displays actual Arabic text without invented population or unrated stars | 375 | passed | course-growth.spec.ts:98 |
 | lost course response retries the same draft and image tools never submit the form | 375 | passed | course-growth.spec.ts:105 |
+| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 375 | passed | course-growth.spec.ts:112 |
 | certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate | 1440 | passed | linkedin.spec.ts:32 |
 | dashboard shares only persisted earned badges, without private directory or invented credential | 1440 | passed | linkedin.spec.ts:66 |
 | Arabic sharing keeps data selectable when clipboard permission fails | 1440 | passed | linkedin.spec.ts:83 |
@@ -139,6 +142,51 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate | 375 | passed | linkedin.spec.ts:32 |
 | dashboard shares only persisted earned badges, without private directory or invented credential | 375 | passed | linkedin.spec.ts:66 |
 | Arabic sharing keeps data selectable when clipboard permission fails | 375 | passed | linkedin.spec.ts:83 |
+| Forms: publish actual questions/theme/restrictions, submit through real API handler and export persisted responses, duplicate/close/delete | 1440 | passed | platform-forms-users.spec.ts:11 |
+| Users: search, actual XLSX export/import, member detail, role confirmation/status persist, API failure never pretends to create an account | 1440 | passed | platform-forms-users.spec.ts:36 |
+| Profile: member photo and fields persist in SQL and Storage; denied upload leaves existing profile untouched | 1440 | passed | platform-forms-users.spec.ts:44 |
+| Forms: publish actual questions/theme/restrictions, submit through real API handler and export persisted responses, duplicate/close/delete | 768 | passed | platform-forms-users.spec.ts:11 |
+| Users: search, actual XLSX export/import, member detail, role confirmation/status persist, API failure never pretends to create an account | 768 | passed | platform-forms-users.spec.ts:36 |
+| Profile: member photo and fields persist in SQL and Storage; denied upload leaves existing profile untouched | 768 | passed | platform-forms-users.spec.ts:44 |
+| Forms: publish actual questions/theme/restrictions, submit through real API handler and export persisted responses, duplicate/close/delete | 375 | passed | platform-forms-users.spec.ts:11 |
+| Users: search, actual XLSX export/import, member detail, role confirmation/status persist, API failure never pretends to create an account | 375 | passed | platform-forms-users.spec.ts:36 |
+| Profile: member photo and fields persist in SQL and Storage; denied upload leaves existing profile untouched | 375 | passed | platform-forms-users.spec.ts:44 |
+| session race never redirects an authenticated admin or destroys fast unsaved form edits | 1440 | passed | platform-regressions.spec.ts:7 |
+| event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values | 1440 | passed | platform-regressions.spec.ts:14 |
+| event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera | 1440 | passed | platform-regressions.spec.ts:19 |
+| temporary content and notification failures display honest retry/error and preserve unread records | 1440 | passed | platform-regressions.spec.ts:24 |
+| session race never redirects an authenticated admin or destroys fast unsaved form edits | 768 | passed | platform-regressions.spec.ts:7 |
+| event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values | 768 | passed | platform-regressions.spec.ts:14 |
+| event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera | 768 | passed | platform-regressions.spec.ts:19 |
+| temporary content and notification failures display honest retry/error and preserve unread records | 768 | passed | platform-regressions.spec.ts:24 |
+| session race never redirects an authenticated admin or destroys fast unsaved form edits | 375 | passed | platform-regressions.spec.ts:7 |
+| event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values | 375 | passed | platform-regressions.spec.ts:14 |
+| event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera | 375 | passed | platform-regressions.spec.ts:19 |
+| temporary content and notification failures display honest retry/error and preserve unread records | 375 | passed | platform-regressions.spec.ts:24 |
+| Staff: validates blank input, saves real roster, persists reload, filters admin directory and blocks members | 1440 | passed | platform-tabs.spec.ts:12 |
+| Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists | 1440 | passed | platform-tabs.spec.ts:23 |
+| Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data | 1440 | passed | platform-tabs.spec.ts:31 |
+| Contact/Messages: visitor submission saves SQL record, admin reads/marks read, cancel/delete work | 1440 | passed | platform-tabs.spec.ts:41 |
+| Projects: member proposal stays private until admin approval, links/detail/search work and removal persists | 1440 | passed | platform-tabs.spec.ts:46 |
+| Blog: create/read/share/edit/delete persist across administrator and member sessions without random covers | 1440 | passed | platform-tabs.spec.ts:52 |
+| Points/Notifications/Leaderboard/Overview/Security: actual bonus updates own XP, read state is private, analytics/audit persist and forbidden access is rejected | 1440 | passed | platform-tabs.spec.ts:58 |
+| Events: administrator creates/edits event, member registration saves one ticket, public link resolves and deletion persists | 1440 | passed | platform-tabs.spec.ts:65 |
+| Staff: validates blank input, saves real roster, persists reload, filters admin directory and blocks members | 768 | passed | platform-tabs.spec.ts:12 |
+| Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists | 768 | passed | platform-tabs.spec.ts:23 |
+| Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data | 768 | passed | platform-tabs.spec.ts:31 |
+| Contact/Messages: visitor submission saves SQL record, admin reads/marks read, cancel/delete work | 768 | passed | platform-tabs.spec.ts:41 |
+| Projects: member proposal stays private until admin approval, links/detail/search work and removal persists | 768 | passed | platform-tabs.spec.ts:46 |
+| Blog: create/read/share/edit/delete persist across administrator and member sessions without random covers | 768 | passed | platform-tabs.spec.ts:52 |
+| Points/Notifications/Leaderboard/Overview/Security: actual bonus updates own XP, read state is private, analytics/audit persist and forbidden access is rejected | 768 | passed | platform-tabs.spec.ts:58 |
+| Events: administrator creates/edits event, member registration saves one ticket, public link resolves and deletion persists | 768 | passed | platform-tabs.spec.ts:65 |
+| Staff: validates blank input, saves real roster, persists reload, filters admin directory and blocks members | 375 | passed | platform-tabs.spec.ts:12 |
+| Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists | 375 | passed | platform-tabs.spec.ts:23 |
+| Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data | 375 | passed | platform-tabs.spec.ts:31 |
+| Contact/Messages: visitor submission saves SQL record, admin reads/marks read, cancel/delete work | 375 | passed | platform-tabs.spec.ts:41 |
+| Projects: member proposal stays private until admin approval, links/detail/search work and removal persists | 375 | passed | platform-tabs.spec.ts:46 |
+| Blog: create/read/share/edit/delete persist across administrator and member sessions without random covers | 375 | passed | platform-tabs.spec.ts:52 |
+| Points/Notifications/Leaderboard/Overview/Security: actual bonus updates own XP, read state is private, analytics/audit persist and forbidden access is rejected | 375 | passed | platform-tabs.spec.ts:58 |
+| Events: administrator creates/edits event, member registration saves one ticket, public link resolves and deletion persists | 375 | passed | platform-tabs.spec.ts:65 |
 | public route renders without exceptions: / | 1440 | passed | public.spec.ts:16 |
 | public route renders without exceptions: /about | 1440 | passed | public.spec.ts:16 |
 | public route renders without exceptions: /courses | 1440 | passed | public.spec.ts:16 |
@@ -373,6 +421,6 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | malformed membership URL is rejected without database lookup | 375 | passed | roles.spec.ts:257 |
 | unknown membership token exposes no personal details | 375 | passed | roles.spec.ts:263 |
 | password reset validates strength and surfaces authentication rejection | 375 | passed | roles.spec.ts:270 |
-| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 1440 | passed | course-growth.spec.ts:112 |
-| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 768 | passed | course-growth.spec.ts:112 |
-| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 375 | passed | course-growth.spec.ts:112 |
+| compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template | 1440 | passed | platform-regressions.spec.ts:31 |
+| compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template | 768 | passed | platform-regressions.spec.ts:31 |
+| compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template | 375 | passed | platform-regressions.spec.ts:31 |
