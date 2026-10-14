@@ -272,3 +272,6 @@
 "malformed membership URL is rejected without database lookup","375","passed","roles.spec.ts:257","411"
 "unknown membership token exposes no personal details","375","passed","roles.spec.ts:263","428"
 "password reset validates strength and surfaces authentication rejection","375","passed","roles.spec.ts:270","1399"
+"administrator searches beyond 1000 actual member rows and enrollment counts are not truncated","1440","passed","course-growth.spec.ts:112","2942"
+"administrator searches beyond 1000 actual member rows and enrollment counts are not truncated","768","passed","course-growth.spec.ts:112","2753"
+"administrator searches beyond 1000 actual member rows and enrollment counts are not truncated","375","passed","course-growth.spec.ts:112","3214"

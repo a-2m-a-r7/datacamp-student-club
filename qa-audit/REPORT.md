@@ -7,7 +7,7 @@ The user authorized repairs after the initial discovery and explicitly authorize
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: 273; results: {"passed":273}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
+- Browser scenarios: 276; results: {"passed":276}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
 - PostgreSQL: 56 passed, 0 failed in an isolated in-memory PostgreSQL database. All 13 repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
@@ -373,3 +373,6 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | malformed membership URL is rejected without database lookup | 375 | passed | roles.spec.ts:257 |
 | unknown membership token exposes no personal details | 375 | passed | roles.spec.ts:263 |
 | password reset validates strength and surfaces authentication rejection | 375 | passed | roles.spec.ts:270 |
+| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 1440 | passed | course-growth.spec.ts:112 |
+| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 768 | passed | course-growth.spec.ts:112 |
+| administrator searches beyond 1000 actual member rows and enrollment counts are not truncated | 375 | passed | course-growth.spec.ts:112 |

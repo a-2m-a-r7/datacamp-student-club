@@ -36,7 +36,7 @@ async function connect(page:Page,uid=admin){
     }
     if(!['profiles','courses','lessons','enrollments','certificates','points_log','user_achievements'].includes(table))return [];
     const args:any[]=[],where:string[]=[];
-    for(const column of ['id','course_id','user_id','slug','updated_at']){const value=url.searchParams.get(column);if(!value)continue;if(value.startsWith('eq.')){args.push(value.slice(3));where.push(`${column}${column==='updated_at'?'':'::text'}=$${args.length}${column==='updated_at'?'::timestamptz':''}`);}else if(value.startsWith('in.(')){args.push(value.slice(4,-1).split(','));where.push(`${column}::text=ANY($${args.length}::text[])`);}}
+    for(const column of ['id','course_id','user_id','slug','updated_at']){const value=url.searchParams.get(column);if(!value)continue;if(value.startsWith('eq.')){args.push(value.slice(3));where.push(`${column}${column==='updated_at'?'':'::text'}=$${args.length}${column==='updated_at'?'::timestamptz':''}`);}else if(value.startsWith('gt.')){args.push(value.slice(3));where.push(column+'::text>$'+args.length);}else if(value.startsWith('in.(')){args.push(value.slice(4,-1).split(','));where.push(`${column}::text=ANY($${args.length}::text[])`);}}
     let rows:any[];
     if(request.method()==='POST'){
      const payload=Array.isArray(body)?body[0]:body,keys=Object.keys(payload).filter(key=>/^[a-z_]+$/.test(key));
@@ -107,4 +107,17 @@ test('lost course response retries the same draft and image tools never submit t
  const file=page.waitForEvent('filechooser');await page.getByRole('button',{name:'IMPORT_FROM_DEVICE',exact:true}).click();await(await file).setFiles({name:'QA_TEST_COVER.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64')});expect((await db.query('SELECT * FROM courses')).rows).toHaveLength(0);
  let dropped=false;await page.route('**/rest/v1/courses*',async route=>{if(route.request().method()==='POST'&&!dropped){dropped=true;const body=route.request().postDataJSON();await db.query(`INSERT INTO courses(id,title,slug,is_published,thumbnail_url,description,short_description,instructor_name,instructor_title,category,level,language,duration_hours,points_reward,tags,skills,prerequisites,is_featured,is_locked,updated_at) SELECT id,title,slug,is_published,thumbnail_url,description,short_description,instructor_name,instructor_title,category,level,language,duration_hours,points_reward,tags,skills,prerequisites,is_featured,is_locked,updated_at FROM jsonb_populate_record(NULL::courses,$1)`,[JSON.stringify(body)]);return await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({message:'QA_TEST_LOST_RESPONSE'})});}await route.fallback();});
  await page.getByRole('button',{name:'SAVE_COURSE',exact:true}).click();await expect(page.getByText('QA_TEST_LOST_RESPONSE',{exact:true})).toBeVisible();await page.getByRole('button',{name:'SAVE_COURSE',exact:true}).click();await expect(page.getByText('Course saved successfully.',{exact:true})).toBeVisible();const rows=(await db.query<any>('SELECT * FROM courses')).rows;expect(rows).toHaveLength(1);expect(rows[0].slug).toMatch(/^course-[a-f0-9-]+$/);expect(rows[0].thumbnail_url).toContain('/storage/v1/object/public/course-thumbnails/');expect(rows[0].thumbnail_url).not.toContain('data:');expect(calls.some(call=>call.url.includes('/storage/v1/object/course-thumbnails/'))).toBe(true);
+});
+
+test('administrator searches beyond 1000 actual member rows and enrollment counts are not truncated',async({page})=>{
+ await database();
+ await db.exec("INSERT INTO auth.users(id,email,email_confirmed_at,raw_user_meta_data) SELECT md5('QA_TEST_SCALE_'||n)::uuid,'QA_TEST_SCALE_'||n||'@example.invalid',now(),jsonb_build_object('full_name','QA_TEST_SCALE_'||n) FROM generate_series(1,1105) n;");
+ const cid=crypto.randomUUID();await db.query("INSERT INTO courses(id,title,slug,is_published) VALUES($1,'QA_TEST_SCALE_COURSE','qa-test-scale-course',true)",[cid]);
+ await db.query("INSERT INTO enrollments(id,user_id,course_id) SELECT id,id,$1 FROM profiles WHERE full_name LIKE 'QA_TEST_SCALE_%'",[cid]);
+ const target=(await db.query<any>('SELECT id,full_name FROM profiles ORDER BY id OFFSET 1104 LIMIT 1')).rows[0];
+ const calls=await connect(page);await page.goto('/admin/users');await expect(page.locator('main')).toContainText('1107');
+ await page.getByPlaceholder('Search by name, ID, or email...').fill(target.full_name);const row=page.getByRole('row').filter({hasText:target.full_name});await expect(row).toBeVisible();await expect(row.getByText('1 courses',{exact:true})).toBeVisible();
+ expect(calls.filter(call=>call.table==='profiles'&&new URL(call.url).searchParams.get('id')?.startsWith('gt.')).length).toBeGreaterThanOrEqual(2);
+ expect(calls.filter(call=>call.table==='enrollments'&&new URL(call.url).searchParams.get('id')?.startsWith('gt.')).length).toBeGreaterThanOrEqual(2);
+ await expect(page.getByText('Within the last 40 authentication events',{exact:true})).toBeVisible();
 });

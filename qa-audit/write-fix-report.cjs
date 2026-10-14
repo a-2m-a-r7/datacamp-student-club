@@ -12,8 +12,10 @@ function visit(suite, parents=[]) {
   for (const child of suite.suites || []) visit(child,chain);
 }
 for (const suite of browser.suites || []) visit(suite);
-const extraFile=path.join(root,'security-failure-results.json');
-if(fs.existsSync(extraFile))for(const suite of JSON.parse(fs.readFileSync(extraFile,'utf8')).suites||[])visit(suite);
+for (const filename of ['security-failure-results.json', 'admin-scale-results.json']) {
+ const extraFile=path.join(root,filename);
+ if(fs.existsSync(extraFile))for(const suite of JSON.parse(fs.readFileSync(extraFile,'utf8')).suites||[])visit(suite);
+}
 const seen=new Set();
 rows.splice(0,rows.length,...rows.filter(row=>{const key=row.scenario+'|'+row.viewport;if(seen.has(key))return false;seen.add(key);return true;}));
 const sqlResults=JSON.parse(fs.readFileSync(path.join(root,'postgres-results.json'),'utf8'));

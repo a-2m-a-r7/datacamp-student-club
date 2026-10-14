@@ -1,0 +1,20 @@
+{
+  "passed": 8,
+  "origin": "https://datacamp-student-club.vercel.app",
+  "results": [
+    {
+      "width": 1440,
+      "noInventedFigures": true,
+      "noLegacyEncoding": true,
+      "noUnratedStars": true,
+      "noOverflow": true
+    },
+    {
+      "width": 375,
+      "noInventedFigures": true,
+      "noLegacyEncoding": true,
+      "noUnratedStars": true,
+      "noOverflow": true
+    }
+  ]
+}

@@ -119,17 +119,32 @@ const UserManagement = () => {
   });
 
   // 1. Fetch Users, Enrollments & Auth Events from Supabase
+  const readDirectoryRows = async (table: 'profiles' | 'enrollments', columns: string) => {
+    const rows: any[] = [];
+    let cursor: string | null = null;
+    for (;;) {
+      let query = supabase.from(table).select(columns).order('id', { ascending: true }).limit(500);
+      if (cursor) query = query.gt('id', cursor);
+      const { data, error } = await query;
+      if (error) throw error;
+      rows.push(...(data || []));
+      if (!data || data.length < 500) return { data: rows, error: null };
+      const next = (data as any[])[data.length - 1]?.id;
+      if (!next || next === cursor) throw new Error('Unable to continue loading members. Please retry.');
+      cursor = next;
+    }
+  };
   const fetchData = async () => {
  try {
   setFetchError('');
   if (!isSupabaseConfigured) throw new Error('Database is not configured');
   const [profiles, enrollments, events] = await Promise.all([
-   supabase.from('profiles').select('*').order('created_at',{ascending:false}),
-   supabase.from('enrollments').select('user_id'),
+   readDirectoryRows('profiles', '*'),
+   readDirectoryRows('enrollments', 'id,user_id'),
    supabase.from('auth_events').select('*').order('created_at',{ascending:false}).limit(40)
   ]);
   for (const result of [profiles,enrollments,events]) if (result.error) throw result.error;
-  setUsers((profiles.data || []).map(normalizeUser));
+  setUsers((profiles.data || []).map(normalizeUser).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
   const counts: Record<string,number> = {}; for(const row of enrollments.data || []) counts[row.user_id]=(counts[row.user_id]||0)+1;
   setEnrollmentCounts(counts); setAuthEvents(events.data || []); return true;
  } catch (err: any) { setFetchError(err.message || 'Unable to fetch members'); setUsers([]); setAuthEvents([]); setEnrollmentCounts({}); return false; }
@@ -458,7 +473,7 @@ const UserManagement = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[10px] font-cyber uppercase tracking-widest text-muted-foreground">
-                {isArabic ? 'تسجيلات دخول اليوم' : 'LOGINS TODAY'}
+                {isArabic ? 'دخول اليوم في النشاط الأخير' : 'TODAY IN RECENT LOGINS'}
               </p>
               <h3 className="text-3xl font-black font-cyber text-amber-400 mt-1">
                 {summaryMetrics.loginsToday}
@@ -469,7 +484,7 @@ const UserManagement = () => {
             </div>
           </div>
           <div className="mt-3 flex items-center gap-1.5 text-[10px] text-muted-foreground font-mono">
-            <Activity className="w-3 h-3 text-amber-400" /> {isArabic ? 'أحداث auth_events اليومية' : 'Live auth_events today'}
+            <Activity className="w-3 h-3 text-amber-400" /> {isArabic ? 'ضمن آخر 40 حدث استيثاق' : 'Within the last 40 authentication events'}
           </div>
         </div>
       </div>
