@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-14T20:57:30.998Z",
+  "applicationCommit": "883ebbf585ce9e86e6e93570f1f4a387a64d57f6",
+  "deployment": {
+    "state": "success",
+    "url": "https://vercel.com/mart33645-wqs-projects/datacamp-student-club/5KWCYo6SfkohHXHtmzaFte5Nkqmv"
+  },
+  "origin": "https://datacamp-student-club.vercel.app",
+  "frontendEntry": {
+    "path": "/assets/index-Btew36YR.js",
+    "sha256": "7b52063e1f5ce50b7fd18daa5296d027b8e083e3763690b574c840bc6c75b793"
+  },
+  "checks": {
+    "htmlNoStore": true,
+    "profileButton": true,
+    "profileApi": true,
+    "frontendEntryMatchesLocal": false,
+    "unauthorizedRejected": true,
+    "avatarApiNoStore": true
+  }
+}

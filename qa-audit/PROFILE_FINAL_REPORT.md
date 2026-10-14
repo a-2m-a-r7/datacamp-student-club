@@ -23,3 +23,7 @@
 `profile-final-results.json` و`profile-auth-regression-results.json` يختبران واجهة التطبيق وSQL الحقيقي في بيئة معزولة؛ ليست جميع عمليات CRUD الحقيقية في الإنتاج. `avatar-api.test.ts` يتحقق من الرفض والملكية والرفع وإعادة الاستخدام والتغيير المتزامن وحفظ Google ومصادر الملفات. `postgres-results.json` يتضمن خمس حالات خصوصية صور جديدة.
 
 دخول Google الحقيقي اكتمل بواسطة المالك، ثم راجع الوكيل Dashboard وإعادة التحميل والإدارة وProfile. تفاصيل التاريخ الكامل والخدمات الخارجية في التقرير PDF و`FINAL_TAB_REPORT.md` و`LOGIN_FINAL_REPORT.md` و`FUTURE_READINESS.md`. بقي إعداد Piston لخمس لغات وGoogle Sheets، وتسليم البريد والكاميرا الفعلية، وإثبات حمل HTTP للإنتاج؛ لا تُوصف هذه الخدمات بأنها اختُبرت بالكامل.
+
+## التحقق المنشور — 15 أكتوبر
+
+إصدار التطبيق 883ebbf منشور بنجاح. نجحت 45 إعادة فحص للإنتاج، ورفضت واجهة الصور طلب الزائر بـ401 مع no-store. ظهر زر Google ونُفذ فعليًا على جلسة المالك برسالة نجاح، ثم ظهرت الصورة المحفوظة بعد إعادة التحميل. الأدلة في profile-release-results.json وprofile-real-ui-results.json؛ لم تتغير بيانات الدخول. التقرير الشامل في ../output/pdf/DataCamp_Final_Handover_AR.pdf.

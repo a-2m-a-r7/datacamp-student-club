@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-14T20:59:56.832Z",
+  "applicationCommit": "883ebbf585ce9e86e6e93570f1f4a387a64d57f6",
+  "mode": "Real owner session; no mocked requests; no credential changes",
+  "existingStoredPhotoLoaded": true,
+  "googleSaveButtonConfirmed": true,
+  "successToastObserved": true,
+  "storedPhotoSurvivedReload": true,
+  "privateIdentifiersSaved": false,
+  "loadedAfterReload": true
+}

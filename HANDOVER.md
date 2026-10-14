@@ -1,4 +1,6 @@
-# تسليم مشروع DataCamp — 14 أكتوبر 2026
+# تسليم مشروع DataCamp — 15 أكتوبر 2026
+
+[تقرير PDF الشامل منذ بداية العمل](output/pdf/DataCamp_Final_Handover_AR.pdf) — 12 صفحة، يتضمن الإصلاحات والاختبارات وحدود الخدمات الخارجية.
 
 آخر مراجعة للبروفايل وصور الحسابات: [PROFILE_FINAL_REPORT.md](qa-audit/PROFILE_FINAL_REPORT.md).
 
