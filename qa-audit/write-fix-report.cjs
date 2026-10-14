@@ -81,7 +81,7 @@ The user authorized repairs after the initial discovery and explicitly authorize
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: ${rows.length}; results: ${JSON.stringify(counts)}. Desktop 1440px, tablet 768px, mobile 375px. Latest outcomes combine fix-results.json with post-final-results.json and qr-final-results.json, replacing retests of the same scenario/viewport. Exact outcomes are in tested-elements.csv.
+- Browser scenarios: ${rows.length}; results: ${JSON.stringify(counts)}. Desktop 1440px, tablet 768px, mobile 375px. Latest outcomes combine fix-results.json with post-final-results.json, qr-final-results.json and error-final-results.json, replacing retests of the same scenario/viewport. Exact outcomes are in tested-elements.csv.
 - PostgreSQL: ${sqlResults.passed} passed, ${sqlResults.failed} failed in an isolated in-memory PostgreSQL database. All ${migrationCount} repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Node server/polling: six tests passed, including five authorization identities, bounded backup over 1105 rows, Auth account rollback and deletion contracts.
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.

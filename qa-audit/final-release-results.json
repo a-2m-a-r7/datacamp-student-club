@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-10-14T18:46:56.324Z",
+  "applicationCommit": "768e8661c003eb570e4d15528e966c4791d38059",
+  "branch": "main",
+  "origin": "https://datacamp-student-club.vercel.app",
+  "deployment": {
+    "state": "success",
+    "url": "https://vercel.com/mart33645-wqs-projects/datacamp-student-club/EvHh8XquMpvjPqFkgbrc6joFXy9m"
+  },
+  "applicationTrees": {
+    "src": "a9004f37a10bcf41548422022d6cb463f2086ca1",
+    "api": "e4d2d033a91a124f2a546ee1239a2d40c394c9e2"
+  },
+  "frontendEntry": {
+    "path": "/assets/index-CJ9LzyuS.js",
+    "sha256": "5e79281d1a7a0d73479f041e997b5413a7b06c18c33895c2d2d17b87bf14da17"
+  },
+  "checks": {
+    "effectiveBrowserScenarios": 324,
+    "isolatedPostgres": 56,
+    "nodeServerAndPolling": 6,
+    "productionRouteChecks": 45,
+    "productionContentChecks": 4,
+    "realCompilerLanguages": 4,
+    "productionCertificateChecks": 4,
+    "productionLinkedInControls": 3,
+    "deployedCardAndSecurityWithIsolatedFixtures": 3,
+    "productionTableReads": 15,
+    "knownProductionDependencyVulnerabilities": 0
+  },
+  "retests": {
+    "fullBatch": {
+      "passed": 320,
+      "failed": 1
+    },
+    "qrAfterRepair": 3,
+    "compilerControlsAndForms": 6,
+    "contentFailureAfterRepair": 3
+  },
+  "productionMaintenance": {
+    "changedKnownSeedRows": 13,
+    "deletedRows": 0,
+    "accountChanges": 0,
+    "learningRecordChanges": 0
+  },
+  "limits": [
+    "C++/Java/R/Go/Rust require Piston infrastructure; owner accepted documenting setup",
+    "Google Sheets needs configuration and live service verification",
+    "Live Auth email delivery and physical camera were not verified",
+    "Local PostgreSQL load tests do not certify 1000 simultaneous cloud users"
+  ],
+  "publicHtmlCache": "no-store, max-age=0"
+}
