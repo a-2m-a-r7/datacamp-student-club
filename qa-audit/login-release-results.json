@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-10-14T19:40:39.827Z",
+  "applicationCommit": "9a81ef2e2127f948e8f183f8fc800a3a17ea2f10",
+  "deployment": {
+    "state": "success",
+    "url": "https://vercel.com/mart33645-wqs-projects/datacamp-student-club/7AW5s48efpVX6wusyDAmSR1w39za"
+  },
+  "origin": "https://datacamp-student-club.vercel.app",
+  "frontendEntry": {
+    "path": "/assets/index-CNbyOOHZ.js",
+    "sha256": "7720ea8835256807ce0a80fa01f7b4eca859faf9b8a955df39792952b5645de8"
+  },
+  "checks": {
+    "isolatedLogin": 36,
+    "regressions": 12,
+    "deployedLoginWithIsolatedAuthTransport": 36,
+    "publicProductionRoutes": 45,
+    "nodeServer": 6,
+    "typeCheck": true,
+    "productionBuild": true,
+    "cumulativeEffectiveBrowserCases": 360
+  },
+  "liveAuthPreflight": {
+    "checkedAt": "2026-10-14T19:24:34.852Z",
+    "mode": "Live Auth configuration and negative login; no accounts created, recovery emails sent or password changes",
+    "emailProvider": true,
+    "googleProvider": true,
+    "confirmationRequired": true,
+    "invalidLoginStatus": 400,
+    "invalidLoginCode": "invalid_credentials",
+    "googleAuthorizationStatus": 302,
+    "redirectsToGoogle": true,
+    "googleAccountSelection": true
+  },
+  "productionAccountMutations": 0,
+  "liveOwnerAccountResult": "awaiting owner report; no successful real account login or inbox delivery claimed"
+}

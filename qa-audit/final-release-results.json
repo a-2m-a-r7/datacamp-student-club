@@ -49,5 +49,6 @@
     "Live Auth email delivery and physical camera were not verified",
     "Local PostgreSQL load tests do not certify 1000 simultaneous cloud users"
   ],
-  "publicHtmlCache": "no-store, max-age=0"
+  "publicHtmlCache": "no-store, max-age=0",
+  "supersededBy": "login-release-results.json"
 }
