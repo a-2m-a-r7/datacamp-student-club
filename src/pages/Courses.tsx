@@ -22,6 +22,7 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useCourseCatalog } from '../lib/useCourseCatalog';
 
 const Courses = () => {
   const navigate = useNavigate();
@@ -43,63 +44,53 @@ const Courses = () => {
     { id: 'advanced', label: isArabic ? 'متقدم' : 'ADVANCED' },
   ];
 
-  const [courses, setCourses] = useState<Course[]>([]);
   const [enrollments, setEnrollments] = useState<Record<string, Enrollment>>({});
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CourseCategory | 'all'>('all');
   const [selectedLevel, setSelectedLevel] = useState<CourseLevel | 'all'>('all');
+  const { courses, cursor, loading, loadingMore, error, reload, loadMore } = useCourseCatalog(search, selectedCategory, selectedLevel);
+  const [enrollingIds, setEnrollingIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    let active = true;
     const loadData = async () => {
-      setLoading(true);
       try {
-        const list = await courseService.getCourses();
-        setCourses(list);
-
         if (user) {
           const currentUserId = user.id || (user as any).uid;
-          const userEnr = await courseService.getUserEnrollments(currentUserId);
+          const userEnr = await courseService.getUserEnrollments(currentUserId, courses.map(course => course.id));
           const map: Record<string, Enrollment> = {};
           userEnr.forEach(e => { map[e.courseId] = e; });
-          setEnrollments(map);
-        }
+          if (active) setEnrollments(map);
+        } else if (active) setEnrollments({});
       } catch (err) {
         console.error('Error loading courses:', err);
-      } finally {
-        setLoading(false);
       }
     };
     loadData();
-  }, [user]);
+    return () => { active = false; };
+  }, [user, courses]);
 
   const handleEnrollCourse = async (e: React.MouseEvent, course: Course) => {
     e.preventDefault();
     e.stopPropagation();
+    if (enrollingIds.has(course.id)) return;
     if (!user) {
       toast.info(isArabic ? 'يرجى تسجيل الدخول أولاً للالتحاق بالدورة' : 'Please sign in to enroll in this course');
       navigate('/login');
       return;
     }
     const currentUserId = user.id || (user as any).uid;
+    setEnrollingIds(previous => new Set(previous).add(course.id));
     try {
       const enr = await courseService.enrollCourse(currentUserId, course.id);
       setEnrollments(prev => ({ ...prev, [course.id]: enr }));
       toast.success(isArabic ? `تم التسجيل بنجاح في ${course.title}! 🚀` : `Successfully enrolled in ${course.title}! 🚀`);
     } catch {
       toast.error(isArabic ? 'فشل التسجيل في الدورة' : 'Failed to enroll');
-    }
+    } finally { setEnrollingIds(previous => { const next = new Set(previous); next.delete(course.id); return next; }); }
   };
 
-  const filteredCourses = courses.filter(c => {
-    const matchCategory = selectedCategory === 'all' || c.category === selectedCategory;
-    const matchLevel = selectedLevel === 'all' || c.level === selectedLevel;
-    const matchSearch =
-      c.title.toLowerCase().includes(search.toLowerCase()) ||
-      c.description.toLowerCase().includes(search.toLowerCase()) ||
-      c.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
-    return matchCategory && matchLevel && matchSearch;
-  });
+  const filteredCourses = courses;
 
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
@@ -109,7 +100,7 @@ const Courses = () => {
         <div className="relative z-10 max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-cyber tracking-wider">
             <GraduationCap className="w-4 h-4" />
-            <span>{isArabic ? 'أكاديمية داتا كامب • المنهج التدريبي 2026' : 'DATACAMP ACADEMY // 2026 CURRICULUM'}</span>
+            <span>{isArabic ? `أكاديمية داتا كامب • المنهج التدريبي ${new Date().getFullYear()}` : `DATACAMP ACADEMY // ${new Date().getFullYear()} CURRICULUM`}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black font-cyber text-foreground tracking-tight">
@@ -220,6 +211,7 @@ const Courses = () => {
       </div>
 
       {/* Courses Grid */}
+      {error && <div role="alert" className="p-4 border border-red-500/30 rounded-xl space-y-3"><p>{isArabic ? 'تعذر تحميل الدورات. أعد المحاولة.' : error}</p><Button onClick={courses.length ? loadMore : reload}>{isArabic ? 'إعادة المحاولة' : 'Retry courses'}</Button></div>}
       {loading ? (
         <div className="py-20 flex flex-col items-center justify-center gap-4">
           <div className="w-10 h-10 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
@@ -227,7 +219,7 @@ const Courses = () => {
             {isArabic ? 'جاري استدعاء سجل الدورات التدريبية...' : 'QUERYING_ACADEMY_REGISTRY...'}
           </p>
         </div>
-      ) : filteredCourses.length === 0 ? (
+      ) : !error && filteredCourses.length === 0 ? (
         <div className="text-center py-20 border border-dashed border-white/10 rounded-2xl p-8">
           <BookOpen className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
           <h3 className="text-lg font-cyber text-foreground mb-2">
@@ -263,11 +255,11 @@ const Courses = () => {
               >
                 {/* Course Banner */}
                 <div className="relative h-44 w-full overflow-hidden bg-black/40">
-                  <img
+                  {course.coverImage ? <img
                     src={course.coverImage}
                     alt={course.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                  /> : <div className="h-full flex items-center justify-center bg-primary/5"><BookOpen className="w-14 h-14 text-primary/40" /></div>}
                   <div className="absolute inset-0 bg-gradient-to-t from-dark-navy via-dark-navy/40 to-transparent" />
 
                   {/* Level & XP Badges */}
@@ -372,6 +364,7 @@ const Courses = () => {
                           <Button
                             variant="cyber"
                             onClick={(e) => handleEnrollCourse(e, course)}
+                            disabled={enrollingIds.has(course.id)}
                             className="h-9 px-3 text-xs font-cyber tracking-wider"
                           >
                             {isArabic ? 'سجل الآن ⚡' : 'ENROLL NOW ⚡'}
@@ -395,6 +388,7 @@ const Courses = () => {
           })}
         </div>
       )}
+      {cursor && !loading && <div className="text-center"><Button onClick={loadMore} disabled={loadingMore}>{loadingMore ? (isArabic ? 'جاري التحميل...' : 'Loading more...') : (isArabic ? 'تحميل المزيد من الكورسات' : 'Load more courses')}</Button></div>}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { usePoints } from '../contexts/PointsContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { courseService } from '../services/courseService';
+import { courseService, courseModulesFromLessons } from '../services/courseService';
 import { Course, CourseModule, CourseLesson, Enrollment } from '../types';
 import { Button } from '../components/ui/Button';
 import {
@@ -59,10 +59,8 @@ const CourseLearning = () => {
         }
         setCourse(c);
 
-        const [mods, less] = await Promise.all([
-          courseService.getCourseModules(c.id),
-          courseService.getCourseLessons(c.id),
-        ]);
+        const less = await courseService.getCourseLessons(c.id);
+        const mods = courseModulesFromLessons(c.id, less);
         setModules(mods);
         setLessons(less);
 

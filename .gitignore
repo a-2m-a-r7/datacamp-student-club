@@ -37,6 +37,8 @@ test-results/
 qa-audit/site-build/
 qa-audit/fix-results/
 qa-audit/qa-audit/
+qa-audit/.runtime/
+qa-audit/.postgres/
 
 # Deployment & Serverless
 .vercel/

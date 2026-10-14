@@ -4,6 +4,7 @@
  */
 
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import { watchQuery } from '../lib/watchQuery';
 import {
   PointAction,
   PointsLog,
@@ -78,19 +79,17 @@ export const subscribeToPointsLog = (
   callback: (logs: PointsLog[]) => void,
   limitCount = 10,
 ): Unsubscribe => {
-  getUserPointsLog(userId, limitCount).then(callback).catch(console.error);
   if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
-
+  return watchQuery(() => getUserPointsLog(userId, limitCount), callback, refresh => {
   const channel = supabase
     .channel(`points_log_${userId}`)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'points_log', filter: `user_id=eq.${userId}` }, () => {
-      getUserPointsLog(userId, limitCount).then(callback).catch(console.error);
-    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'points_log', filter: `user_id=eq.${userId}` }, refresh)
     .subscribe();
 
   return () => {
     supabase.removeChannel(channel);
   };
+  });
 };
 
 export const getLeaderboard = async (limitCount = 20) => {
@@ -141,17 +140,17 @@ export const subscribeToAchievements = (
   userId: string,
   callback: (achievements: Achievement[]) => void,
 ): Unsubscribe => {
-  getUserAchievements(userId).then(async items => { callback(items); if (items.some(item => item.isNew)) await supabase.rpc('acknowledge_badges'); }).catch(console.error);
   if (!isSupabaseConfigured) { throw new Error('Database is not configured. No changes were saved.'); }
-
+  return watchQuery(() => getUserAchievements(userId), items => {
+    callback(items); if (items.some(item => item.isNew)) void supabase.rpc('acknowledge_badges').then(() => {});
+  }, refresh => {
   const channel = supabase
     .channel(`achievements_${userId}`)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'user_achievements', filter: `user_id=eq.${userId}` }, () => {
-      getUserAchievements(userId).then(callback).catch(console.error);
-    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'user_achievements', filter: `user_id=eq.${userId}` }, refresh)
     .subscribe();
 
   return () => {
     supabase.removeChannel(channel);
   };
+  });
 };

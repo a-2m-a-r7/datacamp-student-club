@@ -378,12 +378,12 @@ async function generateCertificateCanvas(
   let nameFontSize = 105;
   ctx.font = `bold ${nameFontSize}px "Playfair Display", "Cinzel", Georgia, serif`;
   let nameMetrics = ctx.measureText(recipientName);
-  while (nameMetrics.width > 1650 && nameFontSize > 60) {
+  while (nameMetrics.width > 1650 && nameFontSize > 30) {
     nameFontSize -= 5;
     ctx.font = `bold ${nameFontSize}px "Playfair Display", "Cinzel", Georgia, serif`;
     nameMetrics = ctx.measureText(recipientName);
   }
-  const nameW = nameMetrics.width;
+  const nameW = Math.min(1650, nameMetrics.width);
 
   // Draw side decorative wings for the name
   const wingY = 630;
@@ -414,7 +414,7 @@ async function generateCertificateCanvas(
   ctx.fillStyle = nameGrad;
   ctx.shadowColor = 'rgba(3, 239, 98, 0.45)';
   ctx.shadowBlur = 28;
-  ctx.fillText(recipientName, W / 2, 650);
+  ctx.fillText(recipientName, W / 2, 650, 1650);
   ctx.shadowBlur = 0;
 
   // Thin underline divider with center diamond
@@ -442,15 +442,36 @@ async function generateCertificateCanvas(
   );
 
   // 11. Program / Course Title in Luxury Glass Container
-  const courseTitle = cert.courseTitle || cert.eventTitle || 'Advanced DataCamp Technical Program';
-  ctx.font = 'bold 50px "Cinzel", "Space Grotesk", sans-serif';
-  const titleMetrics = ctx.measureText(courseTitle);
-  const titleBoxW = Math.max(titleMetrics.width + 160, 820);
+  const courseTitle = cert.courseTitle || cert.eventTitle || 'Completion Certificate';
+  let titleFont = 50;
+  let titleLines: string[] = [];
+  const maxTitleWidth = W - 540;
+  do {
+    ctx.font = `bold ${titleFont}px "Cinzel", "Space Grotesk", sans-serif`;
+    titleLines = [];
+    let line = '';
+    for (const word of courseTitle.split(/\s+/u)) {
+      if (ctx.measureText((line ? line + ' ' : '') + word).width <= maxTitleWidth) line += (line ? ' ' : '') + word;
+      else {
+        if (line) titleLines.push(line);
+        line = '';
+        for (const character of word) {
+          if (line && ctx.measureText(line + character).width > maxTitleWidth) { titleLines.push(line); line = ''; }
+          line += character;
+        }
+      }
+    }
+    if (line) titleLines.push(line);
+    if (titleLines.length <= 3 || titleFont <= 20) break;
+    titleFont -= 2;
+  } while (true);
+  const titleBoxW = Math.min(W - 380, Math.max(820, ...titleLines.map(line => ctx.measureText(line).width + 160)));
+  const titleBoxH = Math.max(96, titleLines.length * (titleFont + 6) + 28);
 
   // Container Glow & Background
   ctx.fillStyle = 'rgba(3, 239, 98, 0.08)';
   ctx.beginPath();
-  ctx.roundRect(W / 2 - titleBoxW / 2, 805, titleBoxW, 96, 26);
+  ctx.roundRect(W / 2 - titleBoxW / 2, 805, titleBoxW, titleBoxH, 26);
   ctx.fill();
   ctx.strokeStyle = '#03EF62';
   ctx.lineWidth = 3;
@@ -463,13 +484,13 @@ async function generateCertificateCanvas(
   ctx.fillStyle = '#03EF62';
   ctx.shadowColor = 'rgba(3, 239, 98, 0.5)';
   ctx.shadowBlur = 14;
-  ctx.fillText(courseTitle, W / 2, 870);
+  titleLines.forEach((line, index) => ctx.fillText(line, W / 2, 805 + titleBoxH / 2 + titleFont / 3 + (index - (titleLines.length - 1) / 2) * (titleFont + 6), maxTitleWidth));
   ctx.shadowBlur = 0;
 
   // Issuing organization
   ctx.font = '500 18px "JetBrains Mono", monospace';
   ctx.fillStyle = '#C084FC';
-  ctx.fillText('Issued by DataCamp Student Club', W / 2, 945);
+  ctx.fillText('Issued by DataCamp Student Club', W / 2, Math.max(945, 805 + titleBoxH + 40));
 
   // 12. Bottom Security & Signatures Section
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';

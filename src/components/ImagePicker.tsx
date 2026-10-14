@@ -11,6 +11,7 @@ interface ImagePickerProps {
 
 const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage, label }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -45,7 +46,7 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage
             <>
               <img src={currentImage} alt="Preview" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               <div className="absolute inset-0 bg-dark-navy/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <Button aria-label="Close" variant="ghost" size="icon" onClick={() => onImageSelected('')} className="text-destructive">
+                <Button type="button" aria-label="Close" variant="ghost" size="icon" onClick={() => onImageSelected('')} className="text-destructive">
                   <X className="w-5 h-5" />
                 </Button>
               </div>
@@ -65,25 +66,25 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage
             onChange={handleFileChange}
           />
 
-          <Button variant="outline" size="sm" className="justify-start" onClick={triggerUpload}>
+          <input type="file" ref={cameraInputRef} className="hidden" accept="image/jpeg,image/png,image/webp" capture="environment" onChange={handleFileChange} />
+          <Button type="button" variant="outline" size="sm" className="justify-start" onClick={triggerUpload}>
             <Upload className="w-4 h-4 mr-2" />
             IMPORT_FROM_DEVICE
           </Button>
 
-          <Button variant="outline" size="sm" className="justify-start" onClick={() => {
-            // Simulate camera/select photo
-            const url = prompt('Enter Image URL (Simulating Select Photo):');
-            if (url) onImageSelected(url);
+          <Button type="button" variant="outline" size="sm" className="justify-start" onClick={() => {
+            const value = prompt('Enter the image HTTPS URL:');
+            if (!value) return;
+            try { const url = new URL(value); if (url.protocol !== 'https:') throw Error(); onImageSelected(url.href); }
+            catch { alert('Enter a valid HTTPS image URL.'); }
           }}>
             <ImageIcon className="w-4 h-4 mr-2" />
             SELECT_PHOTO_ARCHIVE
           </Button>
 
-          <Button variant="outline" size="sm" className="justify-start" onClick={() => {
-            alert('Camera access requested... (Simulated)');
-          }}>
+          <Button type="button" variant="outline" size="sm" className="justify-start" onClick={() => cameraInputRef.current?.click()}>
             <Camera className="w-4 h-4 mr-2" />
-            TAKE_PHOTO_LIVE
+            TAKE_PHOTO
           </Button>
         </div>
       </div>

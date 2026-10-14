@@ -55,7 +55,7 @@ const Dashboard = () => {
 
     // Load enrolled courses
     courseService.getUserEnrollments(profile.uid).then(async enrollments => {
-      const allCourses = await courseService.getCourses(true);
+      const allCourses = await courseService.getCoursesByIds(enrollments.map(enrollment => enrollment.courseId));
       const combined = enrollments.map(enr => {
         const c = allCourses.find(course => course.id === enr.courseId);
         return c ? { course: c, enrollment: enr } : null;

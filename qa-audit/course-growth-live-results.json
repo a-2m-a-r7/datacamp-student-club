@@ -1,0 +1,12 @@
+{
+  "passed": 4,
+  "mode": "read-only real Supabase; no QA records or account changes",
+  "checks": [
+    "bounded catalog RPC is live",
+    "draft flag cannot expose unpublished rows to visitors",
+    "stored counts match actual lessons/enrollments",
+    "private activity helper denies visitors"
+  ],
+  "courses": 3,
+  "privateRoutineStatus": 401
+}

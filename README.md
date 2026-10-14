@@ -173,6 +173,7 @@ npm run dev
 | `SUPABASE_SERVICE_ROLE_KEY` | المفتاح الإداري السري للـ Serverless Functions | **Server Only** |
 | `GEMINI_API_KEY` | مفتاح Google Gemini API للمرشد الذكي | **Server Only** |
 | `VITE_SITE_URL` | النطاق المعتمد للروابط ورموز QR (`https://datacamp-student-club.vercel.app`) | Frontend Client |
+| `VITE_ENABLE_REALTIME` | الافتراضي false: تحديث الخلفية كل 60–75 ثانية أثناء ظهور التبويب؛ true يتطلب حصة Realtime مناسبة | Frontend Client |
 | `GOOGLE_SERVICE_ACCOUNT_EMAIL` | بريد حساب الخدمة لمزامنة جداول Google Sheets | **Server Only** |
 | `GOOGLE_PRIVATE_KEY` | المفتاح الخاص لحساب خدمة Google Sheets | **Server Only** |
 | `GOOGLE_SPREADSHEET_OWNER_EMAIL` | البريد الإلكتروني المالك لمجلدات الجداول المتزامنة | **Server Only** |
@@ -182,6 +183,8 @@ npm run dev
 ---
 
 ## 🧪 Testing & Verification | فحص واختبار المشروع
+
+الكورسات الجديدة تُحفظ كمسودة، ويضاف المنهج والاختبارات ثم تُنشر. إكمال المنهج يصدر شهادة الكورس تلقائيًا؛ تنزيل PDF/PNG يتم من زر الشهادة، وبيانات LinkedIn جاهزة للنسخ والمشاركة. راجع [تجهيز النمو وهدف 1000 مستخدم](qa-audit/FUTURE_READINESS.md) للحماية من إعادة الطلبات ونتيجة الضغط المحلي وحدود اعتماد السعة السحابية.
 
 اختبارات Playwright تفحص مسارات وصلاحيات وتدفقات محددة على 3 أحجام شاشة. اختبارات الكورسات والشهادات تنفذ روتينات PostgreSQL الفعلية في قاعدة معزولة، مع هوية Auth خاصة بالاختبار. راجع تقرير التسليم للتغطية الفعلية وحدود الاختبارات؛ ليست هذه شهادة بأن كل زر أو تكامل خارجي اختُبر.
 

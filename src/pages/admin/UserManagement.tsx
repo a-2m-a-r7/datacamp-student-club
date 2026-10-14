@@ -1,3 +1,4 @@
+import { watchQuery } from '../../lib/watchQuery';
 import { Dialog } from '../../components/ui/Dialog';
 import { authenticatedPost } from '../../lib/apiClient';
 import React, { useState, useEffect, useMemo } from 'react';
@@ -136,33 +137,13 @@ const UserManagement = () => {
 };
 
   useEffect(() => {
-    fetchData();
-
-    if (isSupabaseConfigured) {
-      // Realtime listener for Auth Events (login / signup / logout)
-      const authEventsChannel = supabase.channel('realtime_admin_auth_events')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'auth_events' }, (payload) => {
-          const newEvent = payload.new as AuthEventItem;
-          setAuthEvents(prev => [newEvent, ...prev.slice(0, 39)]);
-          // Also refresh users if signup
-          if (newEvent.event_type === 'signup') {
-            fetchData();
-          }
-        })
-        .subscribe();
-
-      // Realtime listener for profiles changes
-      const profilesChannel = supabase.channel('realtime_admin_profiles')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
-          fetchData();
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(authEventsChannel);
-        supabase.removeChannel(profilesChannel);
-      };
-    }
+    if (!isSupabaseConfigured) { void fetchData(); return; }
+    return watchQuery(fetchData, () => {}, refresh => {
+      const channel = supabase.channel('admin_member_activity')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'auth_events' }, refresh)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, refresh).subscribe();
+      return () => { supabase.removeChannel(channel); };
+    });
   }, []);
 
   const handleManualRefresh = async () => {

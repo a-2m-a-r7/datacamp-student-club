@@ -12,6 +12,7 @@ import { defaultSettings } from '../lib/defaultContent';
 import { contentService } from '../services/contentService';
 import { UserProfile, UserRole, UserStatus } from '../types';
 import { getSiteUrl } from '../lib/siteUrl';
+import { watchQuery } from '../lib/watchQuery';
 
 interface AuthContextType {
   user: any | null;
@@ -130,18 +131,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const sessionRevision = useRef(0);
   const refreshProfile = async () => {
     const activeUser = activeUserRef.current;
+    const revision = sessionRevision.current;
     if (!activeUser) throw new Error('Authentication required.');
     const { data, error } = await supabase.from('profiles').select('*').eq('id', activeUser.id).single();
     if (error) throw error;
-    setProfile(mapDatabaseProfile(data, activeUser));
+    if (revision === sessionRevision.current && activeUserRef.current?.id === activeUser.id) setProfile(mapDatabaseProfile(data, activeUser));
   };
   useEffect(() => {
     if (!user?.id || !isSupabaseConfigured) return;
-    const channel = supabase.channel(`account_profile_${user.id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${user.id}` }, () => {
-        refreshProfile().catch(() => setProfile(null));
-      }).subscribe();
-    return () => { supabase.removeChannel(channel); };
+    const identity = activeUserRef.current;
+    return watchQuery(async () => {
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      if (error) throw error;
+      return data;
+    }, row => { if (activeUserRef.current?.id === user.id) setProfile(mapDatabaseProfile(row, identity)); }, refresh => {
+      const channel = supabase.channel(`account_profile_${user.id}`).on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${user.id}` }, refresh).subscribe();
+      return () => { supabase.removeChannel(channel); };
+    }, false);
   }, [user?.id]);
 
   // Stop heartbeat timer
@@ -158,13 +164,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!isSupabaseConfigured || !userId) return;
 
     heartbeatTimerRef.current = setInterval(async () => {
+      if (document.visibilityState === 'hidden' || !navigator.onLine) return;
       try {
         await supabase
           .from('profiles')
           .update({ last_seen_at: new Date().toISOString() })
           .eq('id', userId);
       } catch {}
-    }, 60000);
+    }, 60000 + Math.random() * 15000);
   };
 
   // Fetch or construct profile from Supabase

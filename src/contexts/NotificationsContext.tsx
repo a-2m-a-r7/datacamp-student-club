@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { notificationService } from '../services/notificationService';
 import { Notification, NotificationType } from '../types';
 import { toast } from 'sonner';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import { watchQuery } from '../lib/watchQuery';
 
 interface NotificationsContextType {
   notifications: Notification[];
@@ -27,12 +28,13 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
   const { profile } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const currentUid = useRef(profile?.uid); currentUid.current = profile?.uid;
 
   const fetchNotifs = async () => {
     try {
       if (!profile?.uid) { setNotifications([]); return; }
       const list = await notificationService.getUserNotifications(profile.uid);
-      setNotifications(list);
+      if (currentUid.current === profile.uid) setNotifications(list);
     } catch (err) {
       console.error('Error fetching notifications:', err);
     } finally {
@@ -41,14 +43,20 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    fetchNotifs();
-    if (!profile?.uid || !isSupabaseConfigured) return;
-    const channel = supabase.channel(`notifications_${profile.uid}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, fetchNotifs)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'notification_reads', filter: `user_id=eq.${profile.uid}` }, fetchNotifs)
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [profile]);
+    setNotifications([]);
+    if (!profile?.uid || !isSupabaseConfigured) { setLoading(false); return; }
+    setLoading(true);
+    const uid = profile.uid;
+    const stop = watchQuery(() => notificationService.getUserNotifications(uid), list => { setNotifications(list); setLoading(false); }, refresh => {
+      const channel = supabase.channel(`notifications_${uid}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, refresh)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'notification_reads', filter: `user_id=eq.${uid}` }, refresh).subscribe();
+      return () => { supabase.removeChannel(channel); };
+    });
+    // A failed initial request must not leave the bell spinning indefinitely.
+    const loadingTimeout = setTimeout(() => setLoading(false), 15000);
+    return () => { stop(); clearTimeout(loadingTimeout); };
+  }, [profile?.uid]);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 

@@ -17,7 +17,7 @@ if(fs.existsSync(extraFile))for(const suite of JSON.parse(fs.readFileSync(extraF
 const seen=new Set();
 rows.splice(0,rows.length,...rows.filter(row=>{const key=row.scenario+'|'+row.viewport;if(seen.has(key))return false;seen.add(key);return true;}));
 const sqlResults=JSON.parse(fs.readFileSync(path.join(root,'postgres-results.json'),'utf8'));
-const migrationCount=fs.readdirSync(path.join(root,'..','supabase','migrations')).filter(file=>file.startsWith('20261013')).length;
+const migrationCount=fs.readdirSync(path.join(root,'..','supabase','migrations')).filter(file=>/^202610(13|14)/.test(file)).length;
 const defects = [
  ['Login / all roles','Critical','AuthContext.tsx','Cached fake accounts and role shortcuts could enter protected UI','Real Supabase session, verified identity, active database role; mock shortcuts removed','Browser guards + server auth tests + SQL RLS'],
  ['Admin users','Critical','api/admin/users.ts','Administrative requests relied on unsafe fallback account creation','Bearer identity and database role checked server-side; no default password','Server authorization tests; live account CRUD remains untested'],
@@ -71,7 +71,9 @@ fs.writeFileSync(path.join(root,'broken-buttons.csv'),[ ['Page / tab','Severity'
 fs.writeFileSync(path.join(root,'tested-elements.csv'),[ ['Scenario','Viewport','Status','Source','Duration ms'].map(q).join(','), ...rows.map(r=>[r.scenario,r.viewport,r.status,r.source,r.duration].map(q).join(','))].join('\n'));
 const counts=rows.reduce((out,row)=>(out[row.status]=(out[row.status]||0)+1,out),{});
 const table=defects.map((r,i)=>`| ${i+1} | ${r.map(v=>String(v).replaceAll('|','/')).join(' | ')} |`).join('\n');
-const report=`# DataCamp repair and QA report — 13 October 2026
+const report=`# DataCamp repair and QA report — updated 14 October 2026
+
+Current growth release: generic Arabic/English draft-course creation, validated quiz editor, automatic course certificates with chosen downloads and LinkedIn fields, keyset catalog pagination, safe lost-response retries and visible-tab polling by default. See FUTURE_READINESS.md. The isolated real PostgreSQL load run simulated 1000 QA members with 20 actual database connections and 10,000 successful requests; this does not certify cloud capacity. Latest live migration verification passed four read-only checks. Background refresh and server authorization passed four Node tests. The deployment paragraph below records an earlier release; current deployment evidence is recorded separately.
 
 The user authorized repairs after the initial discovery and explicitly authorized applying DataCamp schema/security repairs to the existing Supabase project. Work is on branch fix/qa-real-data. This report records current evidence; the Phase 1 inventory remains in discovery-20261013/INVENTORY.md.
 

@@ -1,12 +1,14 @@
-# DataCamp repair and QA report — 13 October 2026
+# DataCamp repair and QA report — updated 14 October 2026
+
+Current growth release: generic Arabic/English draft-course creation, validated quiz editor, automatic course certificates with chosen downloads and LinkedIn fields, keyset catalog pagination, safe lost-response retries and visible-tab polling by default. See FUTURE_READINESS.md. The isolated real PostgreSQL load run simulated 1000 QA members with 20 actual database connections and 10,000 successful requests; this does not certify cloud capacity. Latest live migration verification passed four read-only checks. Background refresh and server authorization passed four Node tests. The deployment paragraph below records an earlier release; current deployment evidence is recorded separately.
 
 The user authorized repairs after the initial discovery and explicitly authorized applying DataCamp schema/security repairs to the existing Supabase project. Work is on branch fix/qa-real-data. This report records current evidence; the Phase 1 inventory remains in discovery-20261013/INVENTORY.md.
 
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: 246; results: {"passed":246}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
-- PostgreSQL: 56 passed, 0 failed in an isolated in-memory PostgreSQL database. All 12 repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
+- Browser scenarios: 270; results: {"passed":270}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
+- PostgreSQL: 56 passed, 0 failed in an isolated in-memory PostgreSQL database. All 13 repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
 - TypeScript check and production build passed; npm audit reported zero known vulnerabilities. Zero audit findings does not guarantee absence of all defects.
@@ -31,10 +33,10 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 
 | # | Page / tab | Severity | Source / selector | Before | After | Evidence / limitation |
 |---|---|---|---|---|---|---|
-| 1 | Login / all roles | Critical | src/contexts/AuthContext.tsx:194 | Cached fake accounts and role shortcuts could enter protected UI | Real Supabase session, verified identity, active database role; mock shortcuts removed | Browser guards + server auth tests + SQL RLS |
+| 1 | Login / all roles | Critical | src/contexts/AuthContext.tsx:201 | Cached fake accounts and role shortcuts could enter protected UI | Real Supabase session, verified identity, active database role; mock shortcuts removed | Browser guards + server auth tests + SQL RLS |
 | 2 | Admin users | Critical | api/admin/users.ts:1 | Administrative requests relied on unsafe fallback account creation | Bearer identity and database role checked server-side; no default password | Server authorization tests; live account CRUD remains untested |
 | 3 | Home / About / content pages | High | src/lib/defaultContent.ts:2 | Invented metrics and sample people/articles/projects replaced missing data | No sample collections; real statistics RPC; unavailable values displayed honestly | Browser checks + live read-only RPC |
-| 4 | Courses / learning | High | src/services/courseService.ts:271 | Enrollment/progress could be simulated and repeated XP awarded | Locked persistent enrollment/completion RPC and idempotent rewards | Isolated PostgreSQL persistence tests |
+| 4 | Courses / learning | High | src/services/courseService.ts:281 | Enrollment/progress could be simulated and repeated XP awarded | Locked persistent enrollment/completion RPC and idempotent rewards | Isolated PostgreSQL persistence tests |
 | 5 | Forms builder | High | src/pages/admin/forms/FormBuilder.tsx:103 | Separate saves and regenerated IDs could lose historical answers; autosave could race publication | Atomic parent/questions transaction, stable IDs, serial saves | PostgreSQL rollback tests + browser delayed-save scenario |
 | 6 | Forms response | High | supabase/migrations/20261013000002_atomic_forms.sql:60 | Client validation/fallback results could imply an unsaved submission succeeded | Server validates ownership, required fields, types, schedule and repeat-response policy | PostgreSQL validation tests |
 | 7 | Course quiz | High | supabase/migrations/20261013000004_verified_quizzes.sql:2 | Client-selected success could grant completion and XP | Server grades stored questions; completion requires passing score | PostgreSQL fail/pass and bypass checks |
@@ -54,7 +56,7 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 | 21 | Profile security | High | src/pages/Profile.tsx:153 | Login OTP was incorrectly reused for credential changes, with unsupported SMS text | Real recovery emails and confirmed email changes; no premature profile email writes | Browser request/error/retry checks; actual mailbox delivery unverified |
 | 22 | Dashboard card download | High | src/lib/memberCard.ts:1 | html2canvas failed on Tailwind color formats | Direct Canvas PNG export with real member data and embedded decodable QR | Actual 1586×1000 PNG download and QR pixel decode at three sizes |
 | 23 | Membership QR | High | supabase/migrations/20261013000010_member_cards.sql:4 | Member number displayed as unexplained scan text | Random token verification URL and protected admin ticket resolution | SQL permissions, inactive/unknown tokens and browser verification |
-| 24 | Dashboard badges | Medium | src/pages/Dashboard.tsx:318 | Fifty points displayed every catalog badge as earned | Only persisted achievements unlock badges | Source repair; badge issuance remains SQL verified |
+| 24 | Dashboard badges | Medium | src/pages/Dashboard.tsx:320 | Fifty points displayed every catalog badge as earned | Only persisted achievements unlock badges | Source repair; badge issuance remains SQL verified |
 | 25 | Course completion / certificates | High | supabase/migrations/20261013000011_automatic_course_certificates.sql:48 | Completing a lesson or quiz did not automatically issue/link a course certificate | Atomic database trigger, unique certificate per user/course, safe historical repair, matching course selection and export QR snapshot | Browser operations execute actual PostgreSQL routines in an isolated database; real historical completion repaired in production |
 
 ## QR results
@@ -99,17 +101,41 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | Scenario | Viewport | Status | Source |
 |---|---|---|---|
 | last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course | 1440 | passed | course-certificates.spec.ts:67 |
-| partial completion and failed inline assessment do not issue; passing final assessment does | 1440 | passed | course-certificates.spec.ts:93 |
-| standalone final quiz creates and opens the matching persisted certificate | 1440 | passed | course-certificates.spec.ts:103 |
-| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 1440 | passed | course-certificates.spec.ts:109 |
+| partial completion and failed inline assessment do not issue; passing final assessment does | 1440 | passed | course-certificates.spec.ts:97 |
+| standalone final quiz creates and opens the matching persisted certificate | 1440 | passed | course-certificates.spec.ts:107 |
+| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 1440 | passed | course-certificates.spec.ts:115 |
 | last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course | 768 | passed | course-certificates.spec.ts:67 |
-| partial completion and failed inline assessment do not issue; passing final assessment does | 768 | passed | course-certificates.spec.ts:93 |
-| standalone final quiz creates and opens the matching persisted certificate | 768 | passed | course-certificates.spec.ts:103 |
-| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 768 | passed | course-certificates.spec.ts:109 |
+| partial completion and failed inline assessment do not issue; passing final assessment does | 768 | passed | course-certificates.spec.ts:97 |
+| standalone final quiz creates and opens the matching persisted certificate | 768 | passed | course-certificates.spec.ts:107 |
+| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 768 | passed | course-certificates.spec.ts:115 |
 | last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course | 375 | passed | course-certificates.spec.ts:67 |
-| partial completion and failed inline assessment do not issue; passing final assessment does | 375 | passed | course-certificates.spec.ts:93 |
-| standalone final quiz creates and opens the matching persisted certificate | 375 | passed | course-certificates.spec.ts:103 |
-| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 375 | passed | course-certificates.spec.ts:109 |
+| partial completion and failed inline assessment do not issue; passing final assessment does | 375 | passed | course-certificates.spec.ts:97 |
+| standalone final quiz creates and opens the matching persisted certificate | 375 | passed | course-certificates.spec.ts:107 |
+| database certificate failure rolls back the UI flow; storage and list retries recover honestly | 375 | passed | course-certificates.spec.ts:115 |
+| admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate | 1440 | passed | course-growth.spec.ts:68 |
+| duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data | 1440 | passed | course-growth.spec.ts:78 |
+| catalog pages, debounced search, cancellation and honest retry use bounded database requests | 1440 | passed | course-growth.spec.ts:84 |
+| future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 1440 | passed | course-growth.spec.ts:90 |
+| lost course response retries the same draft and image tools never submit the form | 1440 | passed | course-growth.spec.ts:98 |
+| admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate | 768 | passed | course-growth.spec.ts:68 |
+| duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data | 768 | passed | course-growth.spec.ts:78 |
+| catalog pages, debounced search, cancellation and honest retry use bounded database requests | 768 | passed | course-growth.spec.ts:84 |
+| future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 768 | passed | course-growth.spec.ts:90 |
+| lost course response retries the same draft and image tools never submit the form | 768 | passed | course-growth.spec.ts:98 |
+| admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate | 375 | passed | course-growth.spec.ts:68 |
+| duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data | 375 | passed | course-growth.spec.ts:78 |
+| catalog pages, debounced search, cancellation and honest retry use bounded database requests | 375 | passed | course-growth.spec.ts:84 |
+| future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 375 | passed | course-growth.spec.ts:90 |
+| lost course response retries the same draft and image tools never submit the form | 375 | passed | course-growth.spec.ts:98 |
+| certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate | 1440 | passed | linkedin.spec.ts:32 |
+| dashboard shares only persisted earned badges, without private directory or invented credential | 1440 | passed | linkedin.spec.ts:66 |
+| Arabic sharing keeps data selectable when clipboard permission fails | 1440 | passed | linkedin.spec.ts:83 |
+| certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate | 768 | passed | linkedin.spec.ts:32 |
+| dashboard shares only persisted earned badges, without private directory or invented credential | 768 | passed | linkedin.spec.ts:66 |
+| Arabic sharing keeps data selectable when clipboard permission fails | 768 | passed | linkedin.spec.ts:83 |
+| certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate | 375 | passed | linkedin.spec.ts:32 |
+| dashboard shares only persisted earned badges, without private directory or invented credential | 375 | passed | linkedin.spec.ts:66 |
+| Arabic sharing keeps data selectable when clipboard permission fails | 375 | passed | linkedin.spec.ts:83 |
 | public route renders without exceptions: / | 1440 | passed | public.spec.ts:16 |
 | public route renders without exceptions: /about | 1440 | passed | public.spec.ts:16 |
 | public route renders without exceptions: /courses | 1440 | passed | public.spec.ts:16 |

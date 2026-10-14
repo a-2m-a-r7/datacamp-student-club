@@ -15,7 +15,7 @@ try {
  await db.exec(`CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  CREATE TABLE storage.objects(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),bucket_id text,name text); ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
  GRANT USAGE ON SCHEMA storage TO anon,authenticated; GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA storage TO anon,authenticated;`);
- for(const file of fs.readdirSync('supabase/migrations').filter(f=>f.startsWith('20261013')).sort()){
+ for(const file of fs.readdirSync('supabase/migrations').filter(f=>/^202610(13|14)/.test(f)).sort()){
   await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8')); console.log('APPLIED '+file);
  }
  await db.exec('GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO anon,authenticated;');
@@ -41,6 +41,7 @@ try {
  await db.exec('RESET ROLE;');
  await check('database uniqueness rejects duplicate course certificates',async()=>await assert.rejects(db.query("INSERT INTO certificates(user_id,user_full_name,course_id,course_title,type,verification_code) SELECT user_id,user_full_name,course_id,course_title,type,verification_code||'-DUP' FROM certificates WHERE course_id=$1",[course]),e=>e.code==='23505'));
  await check('historical repair is idempotent and restores a missing enrollment link',async()=>{const original=(await db.query('SELECT certificate_id FROM enrollments WHERE course_id=$1',[course])).rows[0].certificate_id;await db.query('UPDATE enrollments SET certificate_id=NULL WHERE course_id=$1',[course]);await db.exec(fs.readFileSync('supabase/migrations/20261013000011_automatic_course_certificates.sql','utf8'));assert.equal((await db.query('SELECT certificate_id FROM enrollments WHERE course_id=$1',[course])).rows[0].certificate_id,original);assert.equal((await db.query('SELECT count(*)::int AS n FROM certificates WHERE course_id=$1',[course])).rows[0].n,1);});
+ await db.exec(fs.readFileSync('supabase/migrations/20261014000012_course_growth.sql','utf8'));
  const failedCourse=crypto.randomUUID(),failedLesson=crypto.randomUUID();
  await db.query("INSERT INTO courses(id,title,slug,is_published) VALUES($1,'QA_TEST_ROLLBACK','qa-test-rollback',true)",[failedCourse]);await db.query("INSERT INTO lessons(id,course_id,title) VALUES($1,$2,'QA_TEST_ROLLBACK_LESSON')",[failedLesson,failedCourse]);
  await db.exec(`CREATE FUNCTION public.qa_test_certificate_failure() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.course_id='${failedCourse}'::uuid THEN RAISE EXCEPTION 'QA_TEST_CERTIFICATE_STORAGE_FAILURE'; END IF; RETURN NEW; END;$$; CREATE TRIGGER qa_test_certificate_failure BEFORE INSERT ON certificates FOR EACH ROW EXECUTE FUNCTION public.qa_test_certificate_failure(); SET ROLE authenticated;`);

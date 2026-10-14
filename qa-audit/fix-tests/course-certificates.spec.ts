@@ -22,7 +22,7 @@ async function learningDatabase(page:Page,quiz=false){
  CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  CREATE TABLE storage.objects(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),bucket_id text,name text); ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
  GRANT USAGE ON SCHEMA storage TO anon,authenticated; GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA storage TO anon,authenticated;`);
- for(const file of fs.readdirSync('supabase/migrations').filter(f=>f.startsWith('20261013')).sort())await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));
+ for(const file of fs.readdirSync('supabase/migrations').filter(f=>/^202610(13|14)/.test(f)).sort())await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));
  await db.exec('GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO anon,authenticated;');
  await db.query("INSERT INTO auth.users(id,email,email_confirmed_at,raw_user_meta_data) VALUES($1,'qa_test_course@example.invalid',now(),'{\"full_name\":\"QA_TEST_COURSE_MEMBER\"}')",[uid]);
  await db.query("INSERT INTO courses(id,title,slug,is_published,total_lessons) VALUES($1,'QA_TEST_AUTOMATIC_COURSE','qa-test-automatic',true,$2)",[cid,quiz?2:1]);

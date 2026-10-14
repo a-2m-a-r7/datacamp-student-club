@@ -9,6 +9,7 @@ if(!origin?.startsWith('https://'))throw Error('Deployment URL required');
   const context=await browser.newContext({viewport:{width,height:900}});
   await context.addInitScript(()=>localStorage.setItem('datacamp_language','en'));
   const page=await context.newPage();activePage=page;
+  const sockets=[];page.on('websocket',socket=>sockets.push(socket.url()));
   for(const route of ['/','/about','/courses','/events','/projects','/blog','/staff','/gallery','/contact','/leaderboard','/login','/profile','/admin/users','/verify-membership/00000000-0000-4000-8000-000000000020']) {
    const errors=[];const listener=e=>errors.push(e.message);page.on('pageerror',listener);
    currentCheck={route,width};console.log(JSON.stringify(currentCheck));
@@ -19,7 +20,7 @@ if(!origin?.startsWith('https://'))throw Error('Deployment URL required');
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
    results.push({route,width,status:response.status(),cache:response.headers()['cache-control'],errors,overflow});
    page.off('pageerror',listener);
-   if(errors.length||overflow||response.status()!==200||!response.headers()['cache-control']?.includes('no-store'))throw Error('Deployment page check failed: '+route+' at '+width);
+   if(errors.length||overflow||sockets.length||response.status()!==200||!response.headers()['cache-control']?.includes('no-store'))throw Error('Deployment page check failed: '+route+' at '+width);
   }
   await context.close();
  }

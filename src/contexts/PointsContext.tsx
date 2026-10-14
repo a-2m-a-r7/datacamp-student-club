@@ -12,7 +12,6 @@ import {
   awardPoints,
   checkAndAwardBadges,
 } from '../services/pointsService';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import {
   PointsLog,
   Achievement,
@@ -92,53 +91,18 @@ export const PointsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     if (!user) {
       setTotalPoints(0);
+      setRecentLogs([]); setAchievements([]);
       setLoading(false);
       return;
     }
 
-    const activeUserId = (user as any).id || (user as any).uid;
     setTotalPoints(profile?.totalPoints ?? 0);
     setStats(prev => ({ ...prev, totalPoints: profile?.totalPoints ?? 0 }));
     setLoading(false);
 
-    if (!isSupabaseConfigured || !activeUserId) return;
-
-    const channel = supabase
-      .channel(`profile_points_${activeUserId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${activeUserId}` }, (payload) => {
-        const nextTotal = Number((payload.new as any)?.total_points ?? (payload.new as any)?.xp ?? 0);
-        setTotalPoints(nextTotal);
-        setStats(prev => ({ ...prev, totalPoints: nextTotal }));
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    // AuthContext owns profile refresh. Reuse its result instead of opening
+    // another subscription lifecycle for exactly the same profile row.
   }, [user, profile]);
-
-  useEffect(() => {
-    if (!user) return;
-    const activeUserId = (user as any).id || (user as any).uid;
-    if (!isSupabaseConfigured || !activeUserId) return;
-
-    (async () => {
-      try {
-        const { data } = await supabase
-          .from('profiles')
-          .select('total_points, xp')
-          .eq('id', activeUserId)
-          .maybeSingle();
-        const nextTotal = Number((data as any)?.total_points ?? (data as any)?.xp ?? 0);
-        setTotalPoints(nextTotal);
-        setStats(prev => ({ ...prev, totalPoints: nextTotal }));
-      } catch (err) {
-        console.warn('[PointsContext] Error fetching points:', err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [user]);
 
   // Listen to recent points log
   useEffect(() => {
@@ -160,7 +124,7 @@ export const PointsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setStats(prev => ({ ...prev, ...derived }));
     }, 50);
     return () => unsub();
-  }, [user]);
+  }, [user?.uid, profile?.updatedAt]);
 
   // Listen to achievements
   useEffect(() => {
@@ -177,7 +141,7 @@ export const PointsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setAchievements(ach);
     });
     return () => unsub();
-  }, [user]);
+  }, [user?.uid, profile?.updatedAt]);
 
   // Grant points helper — called from anywhere in the app
   const grantPoints = useCallback(async (

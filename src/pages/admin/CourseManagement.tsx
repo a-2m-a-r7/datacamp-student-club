@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { courseService } from '../../services/courseService';
 import { Course, CourseCategory, CourseLevel, CourseLesson, LessonType } from '../../types';
@@ -23,14 +23,16 @@ import {
   Upload
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useCourseCatalog } from '../../lib/useCourseCatalog';
+import { CourseQuizEditor } from '../../components/admin/CourseQuizEditor';
+import { Dialog } from '../../components/ui/Dialog';
 
 const toCsv = (value: unknown) => Array.isArray(value) ? value.join(', ') : String(value || '');
 
 export const CourseManagement = () => {
   const { isArabic } = useLanguage();
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const { courses, cursor, loading, loadingMore, error, reload: fetchCourses, loadMore } = useCourseCatalog(search, 'all', 'all', true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Partial<Course> | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -39,6 +41,9 @@ export const CourseManagement = () => {
   const [lessons, setLessons] = useState<CourseLesson[]>([]);
   const [loadingLessons, setLoadingLessons] = useState(false);
   const [editingLesson, setEditingLesson] = useState<Partial<CourseLesson> | null>(null);
+  const [savingLesson, setSavingLesson] = useState(false);
+  const draftCourseId = useRef('');
+  const savingCourseRequest = useRef(false), savingLessonRequest = useRef(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,23 +60,8 @@ export const CourseManagement = () => {
     }
   };
 
-  const fetchCourses = async () => {
-    setLoading(true);
-    try {
-      const list = await courseService.getCourses(true);
-      setCourses(list);
-    } catch {
-      toast.error(isArabic ? 'فشل تحميل الدورات' : 'Failed to load courses.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
   const handleOpenCreate = () => {
+    draftCourseId.current = crypto.randomUUID();
     setEditingCourse({
       title: '',
       slug: '',
@@ -80,13 +70,13 @@ export const CourseManagement = () => {
       category: 'data_science',
       level: 'beginner',
       durationHours: 12,
-      totalLessons: 10,
+      totalLessons: 0,
       pointsReward: 500,
-      instructorName: 'Club Faculty Mentor',
-      coverImage: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800',
-      status: 'published',
-      tags: ['Python', 'Data Science'],
-      skills: ['Data Analysis', 'Python Scripting'],
+      instructorName: '',
+      coverImage: '',
+      status: 'draft',
+      tags: [],
+      skills: [],
     });
     setIsModalOpen(true);
   };
@@ -139,6 +129,7 @@ export const CourseManagement = () => {
   const handleOpenCreateLesson = () => {
     if (!lessonCourse) return;
     setEditingLesson({
+      id: crypto.randomUUID(),
       courseId: lessonCourse.id,
       moduleId: `module-${lessonCourse.id}`,
       title: '',
@@ -159,22 +150,23 @@ export const CourseManagement = () => {
 
   const handleSaveLesson = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (savingLessonRequest.current) return;
     if (!lessonCourse || !editingLesson?.title?.trim()) {
       toast.error(isArabic ? 'عنوان الدرس مطلوب' : 'Lesson title is required');
       return;
     }
 
+    savingLessonRequest.current = true; setSavingLesson(true);
     try {
       await courseService.saveLesson({ ...editingLesson, courseId: lessonCourse.id });
       toast.success(isArabic ? 'تم حفظ الدرس بنجاح' : 'Lesson saved successfully');
       setEditingLesson(null);
       const list = await courseService.getCourseLessons(lessonCourse.id);
       setLessons(list);
-      await courseService.saveCourse({ ...lessonCourse, totalLessons: Math.max(lessonCourse.totalLessons, list.length) });
       fetchCourses();
     } catch (err: any) {
       toast.error(err.message || (isArabic ? 'فشل حفظ الدرس' : 'Failed to save lesson'));
-    }
+    } finally { savingLessonRequest.current = false; setSavingLesson(false); }
   };
 
   const handleDeleteLesson = async (lessonId: string) => {
@@ -193,21 +185,15 @@ export const CourseManagement = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (savingCourseRequest.current) return;
     if (!editingCourse || !editingCourse.title?.trim()) {
       toast.error(isArabic ? 'عنوان الدورة مطلوب' : 'Title is required');
       return;
     }
 
-    setSaving(true);
+    savingCourseRequest.current = true; setSaving(true);
     try {
-      if (!editingCourse.slug) {
-        editingCourse.slug = editingCourse.title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '');
-      }
-
-      await courseService.saveCourse(editingCourse);
+      await courseService.saveCourse(editingCourse, draftCourseId.current);
       toast.success(isArabic ? 'تم حفظ الدورة بنجاح' : 'Course saved successfully.');
       setIsModalOpen(false);
       setEditingCourse(null);
@@ -215,18 +201,16 @@ export const CourseManagement = () => {
     } catch (err: any) {
       toast.error(err.message || (isArabic ? 'فشل حفظ الدورة' : 'Failed to save course.'));
     } finally {
+      savingCourseRequest.current = false;
       setSaving(false);
     }
   };
 
-  const filtered = courses.filter(c =>
-    c.title.toLowerCase().includes(search.toLowerCase()) ||
-    c.category.toLowerCase().includes(search.toLowerCase()) ||
-    c.instructorName.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = courses;
 
   return (
     <div className="space-y-6">
+      {error && <div role="alert" className="space-y-2"><p>{isArabic ? 'تعذر تحميل الدورات.' : error}</p><Button onClick={courses.length ? loadMore : fetchCourses}>{isArabic ? 'إعادة المحاولة' : 'Retry courses'}</Button></div>}
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -281,11 +265,11 @@ export const CourseManagement = () => {
                 <tr key={course.id} className="hover:bg-white/5 transition-colors">
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
-                      <img
+                      {course.coverImage ? <img
                         src={course.coverImage}
                         alt={course.title}
                         className="w-12 h-12 rounded-lg object-cover border border-white/10 shrink-0 bg-dark-navy"
-                      />
+                      /> : <BookOpen className="w-12 h-12 p-3 border border-white/10 rounded-lg text-primary" />}
                       <div>
                         <span className="font-semibold text-foreground text-sm block">{course.title}</span>
                         <span className="text-[10px] text-muted-foreground flex items-center gap-2 mt-0.5">
@@ -408,8 +392,9 @@ export const CourseManagement = () => {
       </div>
 
       {/* Create / Edit Modal */}
+      {cursor && <Button onClick={loadMore} disabled={loadingMore}>{isArabic ? 'تحميل المزيد من الكورسات' : 'Load more courses'}</Button>}
       {isModalOpen && editingCourse && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <Dialog aria-label={isArabic ? 'إدارة الكورس' : 'Course editor'} onClose={() => {if(!saving && !uploadingImage)setIsModalOpen(false);}} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
           <div className="w-full max-w-2xl max-h-[90vh] bg-dark-navy border border-primary/30 rounded-2xl p-6 overflow-y-auto space-y-6 custom-scrollbar">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <h3 className="font-cyber font-bold text-primary text-lg flex items-center gap-2">
@@ -418,7 +403,7 @@ export const CourseManagement = () => {
                   ? (isArabic ? 'تعديل الدورة التدريبية' : 'EDIT_COURSE')
                   : (isArabic ? 'إنشاء دورة تدريبية جديدة' : 'CREATE_NEW_COURSE')}
               </h3>
-              <button aria-label="Close" onClick={() => setIsModalOpen(false)} className="text-muted-foreground hover:text-foreground">
+              <button type="button" aria-label="Close" disabled={saving || uploadingImage} onClick={() => setIsModalOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -524,11 +509,11 @@ export const CourseManagement = () => {
                     {isArabic ? 'حالة النشر' : 'Status'}
                   </label>
                   <select
-                    value={editingCourse.status || 'published'}
+                    value={editingCourse.status || 'draft'}
                     onChange={e => setEditingCourse(p => ({ ...p, status: e.target.value as any }))}
                     className="w-full h-10 px-3 rounded-lg bg-dark-navy border border-white/20 text-xs font-mono text-foreground"
                   >
-                    <option value="published">{isArabic ? 'منشور للطلاب' : 'Published'}</option>
+                    <option value="published" disabled={!editingCourse.id}>{isArabic ? 'منشور للطلاب' : 'Published'}</option>
                     <option value="draft">{isArabic ? 'مسودة خاصة' : 'Draft'}</option>
                   </select>
                 </div>
@@ -542,7 +527,7 @@ export const CourseManagement = () => {
                   </label>
                   <Input
                     type="number"
-                    value={editingCourse.pointsReward || 500}
+                    value={editingCourse.pointsReward ?? 500}
                     onChange={e => setEditingCourse(p => ({ ...p, pointsReward: Number(e.target.value) }))}
                     className="font-mono text-xs"
                   />
@@ -554,7 +539,7 @@ export const CourseManagement = () => {
                   </label>
                   <Input
                     type="number"
-                    value={editingCourse.durationHours || 12}
+                    value={editingCourse.durationHours ?? 12}
                     onChange={e => setEditingCourse(p => ({ ...p, durationHours: Number(e.target.value) }))}
                     className="font-mono text-xs"
                   />
@@ -566,8 +551,8 @@ export const CourseManagement = () => {
                   </label>
                   <Input
                     type="number"
-                    value={editingCourse.totalLessons || 10}
-                    onChange={e => setEditingCourse(p => ({ ...p, totalLessons: Number(e.target.value) }))}
+                    value={editingCourse.totalLessons ?? 0}
+                    readOnly
                     className="font-mono text-xs"
                   />
                 </div>
@@ -655,21 +640,23 @@ export const CourseManagement = () => {
                   type="button"
                   variant="outline"
                   onClick={() => setIsModalOpen(false)}
+                  disabled={saving || uploadingImage}
                   className="font-cyber text-xs border-white/20"
                 >
                   {isArabic ? 'إلغاء' : 'CANCEL'}
                 </Button>
-                <Button type="submit" variant="cyber" className="font-cyber text-xs tracking-wider" disabled={saving}>
+                <p className="text-xs text-muted-foreground">{isArabic ? 'احفظ الكورس كمسودة وأضف دروسه ثم انشره. الشهادة ورابط تحققها وبيانات LinkedIn تتجهز تلقائيًا عند إكمال كل متعلم للكورس.' : 'Save a draft, add lessons, then publish. Each learner automatically receives a certificate, verification link and LinkedIn sharing details after completing the course.'}</p>
+                <Button type="submit" variant="cyber" className="font-cyber text-xs tracking-wider" disabled={saving || uploadingImage}>
                   {saving ? (isArabic ? 'جاري الحفظ...' : 'SAVING...') : (isArabic ? 'حفظ الدورة' : 'SAVE_COURSE')}
                 </Button>
               </div>
             </form>
           </div>
-        </div>
+        </Dialog>
       )}
 
       {lessonCourse && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <Dialog aria-label={isArabic ? 'إدارة دروس الكورس' : 'Course lessons'} onClose={() => {if(!savingLesson)setLessonCourse(null);}} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
           <div className="w-full max-w-5xl max-h-[90vh] bg-dark-navy border border-primary/30 rounded-2xl p-6 overflow-y-auto space-y-6 custom-scrollbar">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
               <div>
@@ -684,7 +671,7 @@ export const CourseManagement = () => {
                   <Plus className="w-4 h-4 mr-1 rtl:mr-0 rtl:ml-1" />
                   {isArabic ? 'درس جديد' : 'NEW_LESSON'}
                 </Button>
-                <Button variant="outline" className="font-cyber text-xs border-white/20" onClick={() => setLessonCourse(null)}>
+                <Button variant="outline" disabled={savingLesson} className="font-cyber text-xs border-white/20" onClick={() => setLessonCourse(null)}>
                   {isArabic ? 'إغلاق' : 'CLOSE'}
                 </Button>
               </div>
@@ -742,7 +729,7 @@ export const CourseManagement = () => {
                   <form onSubmit={handleSaveLesson} className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h4 className="font-cyber text-primary text-sm">
-                        {editingLesson.id ? (isArabic ? 'تعديل الدرس' : 'EDIT_LESSON') : (isArabic ? 'إنشاء درس جديد' : 'CREATE_LESSON')}
+                        {lessons.some(lesson => lesson.id === editingLesson.id) ? (isArabic ? 'تعديل الدرس' : 'EDIT_LESSON') : (isArabic ? 'إنشاء درس جديد' : 'CREATE_LESSON')}
                       </h4>
                       <button aria-label="Close" type="button" onClick={() => setEditingLesson(null)} className="text-muted-foreground hover:text-white">
                         <X className="w-4 h-4" />
@@ -781,14 +768,14 @@ export const CourseManagement = () => {
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         type="number"
-                        value={editingLesson.duration || 20}
+                        value={editingLesson.duration ?? 20}
                         onChange={e => setEditingLesson(p => ({ ...p, duration: Number(e.target.value) }))}
                         placeholder="Duration minutes"
                         className="font-mono text-xs"
                       />
                       <Input
                         type="number"
-                        value={editingLesson.pointsReward || 30}
+                        value={editingLesson.pointsReward ?? 30}
                         onChange={e => setEditingLesson(p => ({ ...p, pointsReward: Number(e.target.value) }))}
                         placeholder="XP"
                         className="font-mono text-xs"
@@ -810,6 +797,7 @@ export const CourseManagement = () => {
                       placeholder={isArabic ? 'محتوى الدرس أو تعليمات التمرين...' : 'Lesson content or exercise instructions...'}
                     />
 
+                    {editingLesson.type === 'quiz' && <CourseQuizEditor questions={editingLesson.quizQuestions || []} disabled={savingLesson} onChange={questions => setEditingLesson(previous => ({ ...previous, quizQuestions: questions }))} />}
                     <label className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
                       <input
                         type="checkbox"
@@ -823,7 +811,7 @@ export const CourseManagement = () => {
                       <Button type="button" variant="outline" className="text-xs" onClick={() => setEditingLesson(null)}>
                         {isArabic ? 'إلغاء' : 'CANCEL'}
                       </Button>
-                      <Button type="submit" variant="cyber" className="text-xs">
+                      <Button type="submit" variant="cyber" className="text-xs" disabled={savingLesson}>
                         {isArabic ? 'حفظ الدرس' : 'SAVE_LESSON'}
                       </Button>
                     </div>
@@ -839,7 +827,7 @@ export const CourseManagement = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Dialog>
       )}
     </div>
   );

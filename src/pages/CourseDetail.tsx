@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { courseService } from '../services/courseService';
+import { courseService, courseModulesFromLessons } from '../services/courseService';
 import { Course, CourseModule, CourseLesson, Enrollment } from '../types';
 import { Button } from '../components/ui/Button';
 import {
@@ -53,10 +53,8 @@ const CourseDetail = () => {
         }
         setCourse(c);
 
-        const [mods, less] = await Promise.all([
-          courseService.getCourseModules(c.id),
-          courseService.getCourseLessons(c.id),
-        ]);
+        const less = await courseService.getCourseLessons(c.id);
+        const mods = courseModulesFromLessons(c.id, less);
         setModules(mods);
         setLessons(less);
 
@@ -190,7 +188,7 @@ const CourseDetail = () => {
         <div className="lg:col-span-1">
           <div className="sticky top-24 rounded-2xl border border-primary/30 bg-dark-navy/80 backdrop-blur-2xl overflow-hidden shadow-[0_0_40px_rgba(0,255,204,0.15)] space-y-6">
             <div className="relative h-48 w-full overflow-hidden">
-              <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover" />
+              {course.coverImage ? <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover" /> : <div className="h-full flex items-center justify-center bg-primary/5"><BookOpen className="w-14 h-14 text-primary/40" /></div>}
               <div className="absolute inset-0 bg-gradient-to-t from-dark-navy via-transparent to-transparent" />
               <div className={`absolute top-3 ${isArabic ? 'left-3' : 'right-3'}`}>
                 <span className="px-3 py-1 rounded-full text-xs font-cyber tracking-wider bg-black/70 backdrop-blur-md border border-primary/40 text-primary flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,255,204,0.4)]">

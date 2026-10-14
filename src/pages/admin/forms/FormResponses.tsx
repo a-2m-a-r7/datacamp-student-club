@@ -1,3 +1,4 @@
+import { watchQuery } from '../../../lib/watchQuery';
 import { authenticatedPost } from '../../../lib/apiClient';
 /**
  * src/pages/admin/forms/FormResponses.tsx
@@ -64,32 +65,14 @@ export const FormResponses: React.FC = () => {
     loadData();
   }, [id]);
 
-  // Supabase Realtime subscription for incoming submissions
   useEffect(() => {
     if (!id || !isSupabaseConfigured) return;
-
-    const channel = supabase
-      .channel(`form-responses-${id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'form_responses',
-          filter: `form_id=eq.${id}`,
-        },
-        async () => {
-          toast.info(isArabic ? 'وصلت استجابة جديدة للتو!' : 'New response just arrived!');
-          const updated = await formService.getFormResponses(id);
-          setResponses(updated);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [id, isArabic]);
+    return watchQuery(() => formService.getFormResponses(id), setResponses, refresh => {
+      const channel = supabase.channel('form-responses-' + id)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'form_responses', filter: 'form_id=eq.' + id }, refresh).subscribe();
+      return () => { supabase.removeChannel(channel); };
+    }, false);
+  }, [id]);
 
   // Delete Response handler
   const handleDeleteResponse = async (responseId: string) => {

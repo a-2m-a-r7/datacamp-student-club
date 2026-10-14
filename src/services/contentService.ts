@@ -1,5 +1,5 @@
-import { RealtimeChannel } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import { watchQuery } from '../lib/watchQuery';
 import {
   defaultAboutData,
   defaultHomeContent,
@@ -15,8 +15,6 @@ type TableName =
   | 'messages'
   | 'notifications'
   | 'settings';
-
-const realtimeSubscriptions = new Map<string, RealtimeChannel>();
 
 const normalizeSettingsKey = (key: string) => {
   if (key === 'site') return 'general';
@@ -261,18 +259,11 @@ export const contentService = {
   subscribe(table: TableName, callback: () => void): () => void {
     if (!isSupabaseConfigured) return () => {};
 
-    const key = `${table}-${Math.random().toString(36).slice(2)}`;
-    const channel = supabase
-      .channel(`realtime_${key}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table }, callback)
-      .subscribe();
-
-    realtimeSubscriptions.set(key, channel);
-    return () => {
-      const activeChannel = realtimeSubscriptions.get(key);
-      if (activeChannel) supabase.removeChannel(activeChannel);
-      realtimeSubscriptions.delete(key);
-    };
+    return watchQuery(async () => { await callback(); }, () => {}, refresh => {
+      const channel = supabase.channel(`content_${table}_${crypto.randomUUID()}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table }, refresh).subscribe();
+      return () => { supabase.removeChannel(channel); };
+    }, false);
   },
 
   async registerEvent(event: any, userId: string, userEmail: string): Promise<any> {
