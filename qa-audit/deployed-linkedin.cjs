@@ -21,7 +21,7 @@ let browser;
   if (await profile.getAttribute('href') !== 'https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME' || await profile.getAttribute('rel') !== 'noopener noreferrer') throw Error('LinkedIn profile link failed');
   const share = new URL(await dialog.getByRole('link', { name: 'Open LinkedIn post', exact: true }).getAttribute('href'));
   if (share.hostname !== 'www.linkedin.com' || share.pathname !== '/sharing/share-offsite/' || share.searchParams.get('url') !== url) throw Error('LinkedIn sharing URL failed');
-  const post = await dialog.getByLabel('Post text', { exact: true }).inputValue();
+  const post = await dialog.getByLabel('Post text').inputValue();
   if (!post.includes(cert.course_title) || !post.includes(url)) throw Error('LinkedIn post is missing saved certificate details');
   if (!await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)) throw Error('Mobile sharing overflow');
   await page.keyboard.press('Escape'); if (await dialog.count() || errors.length) throw Error('Sharing dialog dismissal/runtime check failed');
