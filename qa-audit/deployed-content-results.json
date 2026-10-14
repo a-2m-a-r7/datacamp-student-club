@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-14T18:41:42.084Z",
+  "origin": "https://datacamp-student-club.vercel.app",
+  "mode": "Public production reads; no intercepted requests or mutations",
+  "passed": 4,
+  "results": [
+    {
+      "route": "/gallery",
+      "archivedSamplesHidden": true,
+      "randomImagesAbsent": true
+    },
+    {
+      "route": "/blog",
+      "archivedSamplesHidden": true,
+      "randomImagesAbsent": true
+    },
+    {
+      "route": "/projects",
+      "archivedSamplesHidden": true,
+      "randomImagesAbsent": true
+    },
+    {
+      "route": "/contact",
+      "seedContactPlaceholdersAbsent": true
+    }
+  ]
+}

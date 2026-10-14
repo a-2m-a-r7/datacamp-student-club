@@ -118,7 +118,7 @@ export const Gallery = () => {
         </div>
 
         {/* Gallery Grid or Empty State */}
-        {filteredImages.length === 0 ? (
+        {loadError ? null : filteredImages.length === 0 ? (
           <div className="p-12 md:p-16 text-center glass rounded-3xl border border-white/10 space-y-6">
             <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center mx-auto">
               <Camera className="w-8 h-8" />

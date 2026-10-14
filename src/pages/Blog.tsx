@@ -164,7 +164,7 @@ export const Blog = () => {
         </div>
 
         {/* Articles Feed */}
-        {filteredPosts.length === 0 ? (
+        {loadError ? null : filteredPosts.length === 0 ? (
           <div className="p-12 md:p-16 text-center glass rounded-3xl border border-white/10 space-y-6">
             <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center mx-auto">
               <FileText className="w-8 h-8" />
