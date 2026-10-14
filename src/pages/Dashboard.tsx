@@ -372,7 +372,7 @@ const Dashboard = () => {
                     <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
                       {isArabic ? 'رقم الهاتف' : 'Phone Number'}
                     </div>
-                    <div className="text-sm font-medium" dir="ltr">{profile.phoneNumber || '+20 --- --- ----'}</div>
+                    <div className="text-sm font-medium" dir="ltr">{profile.phoneNumber || (isArabic ? 'غير محدد' : 'Not configured')}</div>
                   </div>
                 </div>
               </div>
@@ -381,9 +381,9 @@ const Dashboard = () => {
                   <GraduationCap className="text-primary w-5 h-5" />
                   <div>
                     <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                      {isArabic ? 'الكلية والفرقة' : 'Faculty & Year'}
+                      {isArabic ? 'الكلية والسنة الدراسية' : 'Faculty & Academic Year'}
                     </div>
-                    <div className="text-sm font-medium">{profile.faculty} - {isArabic ? `الفرقة ${profile.academicYear}` : `Year ${profile.academicYear}`}</div>
+                    <div className="text-sm font-medium">{profile.faculty || (isArabic ? 'الكلية غير محددة' : 'Faculty not configured')} - {profile.academicYear || (isArabic ? 'السنة الدراسية غير محددة' : 'Academic year not configured')}</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4 gap-3">

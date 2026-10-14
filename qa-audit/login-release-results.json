@@ -33,5 +33,6 @@
     "googleAccountSelection": true
   },
   "productionAccountMutations": 0,
-  "liveOwnerAccountResult": "awaiting owner report; no successful real account login or inbox delivery claimed"
+  "liveOwnerAccountResult": "Google flow completed by owner; agent observed dashboard, persisted reload, real admin page and profile",
+  "realGoogleUiEvidence": "google-real-ui-results.json"
 }

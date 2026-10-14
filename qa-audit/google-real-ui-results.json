@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-14T19:58:31.477Z",
+  "verifiedApplicationCommit": "3053cd0b2760a5292dd124b23bf83b3f80676966",
+  "mode": "Real user browser; no mocked requests; owner entered Google credentials and consent personally",
+  "googleSignInPageReached": true,
+  "ownerReportedCompletedGoogleSignIn": true,
+  "returnedToDashboard": true,
+  "noAuthTokensInReturnedAddress": true,
+  "sessionSurvivedReload": true,
+  "realAdminPageAccessible": true,
+  "realProfileFieldsLoaded": true,
+  "manualProfileOrCredentialWrites": 0,
+  "privateNamesEmailsTokensStored": false,
+  "followupDisplayRepair": "Map stored academic_year and show honest missing values instead of undefined or invented AI profile defaults"
+}

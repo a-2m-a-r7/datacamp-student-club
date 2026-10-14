@@ -131,8 +131,8 @@ ${certs || '  No certificates yet.'}
 - Name: ${memberName}
 - Faculty: ${faculty}
 - Rank: ${level} (${totalPoints} Total XP)
-- Email: ${profile?.email || 'student@innovation.edu.eg'}
-- Academic Year: ${profile?.academicYear || '2025/2026'}
+- Email: ${profile?.email || 'Not provided'}
+- Academic Year: ${profile?.academicYear || 'Not provided'}
 
 --- AVAILABLE COURSES IN CATALOG ---
 ${courseList || 'No courses currently published.'}

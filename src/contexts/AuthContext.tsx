@@ -99,6 +99,7 @@ const mapDatabaseProfile = (row: any, fallbackUser?: SupabaseUser | null): UserP
       `https://api.dicebear.com/7.x/bottts/svg?seed=${id || email}`,
     phoneNumber: row?.phone || '',
     faculty: row?.faculty || '',
+    academicYear: row?.academic_year || '',
     universityName: row?.university || '',
     university: row?.university || '',
     createdAt: row?.created_at || new Date().toISOString(),
