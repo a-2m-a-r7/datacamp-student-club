@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-10-14T19:24:34.852Z",
+  "mode": "Live Auth configuration and negative login; no accounts created, recovery emails sent or password changes",
+  "emailProvider": true,
+  "googleProvider": true,
+  "confirmationRequired": true,
+  "invalidLoginStatus": 400,
+  "invalidLoginCode": "invalid_credentials",
+  "googleAuthorizationStatus": 302,
+  "redirectsToGoogle": true,
+  "googleAccountSelection": true
+}

@@ -12,7 +12,7 @@ function visit(suite, parents=[]) {
   for (const child of suite.suites || []) visit(child,chain);
 }
 for (const suite of browser.suites || []) visit(suite);
-for (const filename of ['post-final-results.json', 'qr-final-results.json', 'error-final-results.json']) {
+for (const filename of ['post-final-results.json', 'qr-final-results.json', 'error-final-results.json', 'login-final-results.json', 'login-regression-results.json']) {
  const extraFile=path.join(root,filename);
  if(fs.existsSync(extraFile))for(const suite of JSON.parse(fs.readFileSync(extraFile,'utf8')).suites||[])visit(suite);
 }

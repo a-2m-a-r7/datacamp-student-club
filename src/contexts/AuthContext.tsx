@@ -1,6 +1,6 @@
 /**
  * AuthContext.tsx - Production Supabase Authentication System
- * Rebuilt from scratch with clean PKCE OAuth, email confirmation handling,
+ * Supabase-managed OAuth callbacks, email confirmation handling,
  * security-definer profile synchronization, activity auditing, and presence heartbeat.
  */
 
@@ -13,6 +13,7 @@ import { contentService } from '../services/contentService';
 import { UserProfile, UserRole, UserStatus } from '../types';
 import { getSiteUrl } from '../lib/siteUrl';
 import { watchQuery } from '../lib/watchQuery';
+import { safeAuthRedirect } from '../lib/authRedirect';
 
 interface AuthContextType {
   user: any | null;
@@ -200,6 +201,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Synchronize state with current active session
   const applySession = async (nextSession: Session | null) => {
     const revision = ++sessionRevision.current;
+    if (activeUserRef.current?.id !== nextSession?.user?.id) {
+      setUser(null); setProfile(null); setLoading(true);
+    }
     setSession(nextSession);
     activeUserRef.current = nextSession?.user ?? null;
     activeAccessTokenRef.current = nextSession?.access_token ?? null;
@@ -223,6 +227,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setProfile(null);
       activeAccessTokenRef.current = null;
     }
+    setLoading(false);
     return true;
   };
 
@@ -241,7 +246,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!mounted) return;
       const applied = await applySession(data?.session || null);
       if (mounted && applied) setLoading(false);
-    });
+    }).catch(() => { if (mounted) { setLoading(false); toast.error('Unable to restore your session. Please sign in again.'); } });
 
     // B. Real-time auth state listener
     const {
@@ -288,6 +293,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return () => {
       mounted = false;
+      sessionRevision.current++;
       subscription.unsubscribe();
       stopHeartbeat();
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -301,7 +307,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Authentication service is not configured.');
     }
 
-    const target = redirectTo || sessionStorage.getItem('datacamp_auth_redirect') || '/dashboard';
+    const target = safeAuthRedirect(redirectTo || sessionStorage.getItem('datacamp_auth_redirect'));
     sessionStorage.setItem('datacamp_auth_redirect', target);
 
     const redirectUri = `${getSiteUrl()}/auth/callback`;
@@ -359,13 +365,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw error;
     }
 
-    if (data.session) {
-      await applySession(data.session);
-    }
-
-    if (data.user) {
-      await logAuthEvent(data.user.id, data.user.email || cleanEmail, 'login', 'email');
-    }
+    if (!data.session || !data.user) { toast.error('Authentication did not return a valid session.'); throw new Error('Authentication did not return a valid session.'); }
+    await applySession(data.session);
 
     toast.success('تم تسجيل الدخول بنجاح! 🚀');
   };
@@ -389,7 +390,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       password,
       options: {
         data: { full_name: cleanName },
-        emailRedirectTo: `${getSiteUrl()}/dashboard`,
+        emailRedirectTo: `${getSiteUrl()}/auth/callback`,
       },
     });
 
@@ -412,7 +413,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { needsVerification: false };
     }
 
-    toast.info('تم إنشاء الحساب! يرجى مراجعة بريدك الإلكتروني لتأكيد التسجيل.');
+    sessionStorage.setItem('datacamp_pending_verification_email', cleanEmail);
+    toast.info('يرجى مراجعة بريدك الإلكتروني لتأكيد التسجيل ثم تسجيل الدخول.');
     return { needsVerification: true };
   };
 
@@ -445,6 +447,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     stopHeartbeat();
     sessionStorage.removeItem('datacamp_auth_redirect');
+    sessionStorage.removeItem('datacamp_pending_verification_email');
     localStorage.removeItem('datacamp_active_session');
 
     if (isSupabaseConfigured) {

@@ -11,31 +11,34 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { getSiteUrl } from '../lib/siteUrl';
 
 const VerifyEmail = () => {
-  const { user, profile, logout } = useAuth();
+  const { user, loading: authLoading, logout } = useAuth();
   const { isArabic } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
   const navigate = useNavigate();
 
+  const pendingEmail = sessionStorage.getItem('datacamp_pending_verification_email') || '';
+  const verificationEmail = user?.email || pendingEmail;
   useEffect(() => {
-    if (!user) {
+    if (authLoading) return;
+    if (!user && !pendingEmail) {
       navigate('/login', { replace: true });
-    } else if (user.email_confirmed_at || profile?.isVerified) {
+    } else if (user?.email_confirmed_at) {
       navigate('/dashboard', { replace: true });
     }
-  }, [user, profile, navigate]);
+  }, [user, authLoading, pendingEmail, navigate]);
 
-  const emailInfo = user?.email ? analyzeEmail(user.email) : null;
+  const emailInfo = verificationEmail ? analyzeEmail(verificationEmail) : null;
 
   const handleResend = async () => {
-    if (!user?.email || !isSupabaseConfigured) return;
+    if (!verificationEmail || loading || !isSupabaseConfigured) return;
     setLoading(true);
     try {
       const { error } = await supabase.auth.resend({
         type: 'signup',
-        email: user.email,
+        email: verificationEmail,
         options: {
-          emailRedirectTo: `${getSiteUrl()}/dashboard`,
+          emailRedirectTo: `${getSiteUrl()}/auth/callback`,
         },
       });
       if (error) throw error;
@@ -48,11 +51,16 @@ const VerifyEmail = () => {
   };
 
   const handleCheckStatus = async () => {
+    if (checking) return;
+    if (!user) { navigate('/login', { replace: true }); return; }
     setChecking(true);
     try {
       const { data, error } = await supabase.auth.getUser();
       if (error) throw error;
       if (data.user?.email_confirmed_at) {
+        const { error: refreshError } = await supabase.auth.refreshSession();
+        if (refreshError) throw refreshError;
+        sessionStorage.removeItem('datacamp_pending_verification_email');
         toast.success(isArabic ? 'تم تأكيد البريد بنجاح.' : 'Email verified.');
         navigate('/dashboard', { replace: true });
       } else {
@@ -82,8 +90,8 @@ const VerifyEmail = () => {
           </CardTitle>
           <CardDescription className="text-xs font-mono">
             {isArabic 
-              ? <>تم إرسال رابط التفعيل إلى: <span className="text-white font-bold">{user?.email}</span>.</>
-              : <>Verification link dispatched to <span className="text-white font-bold">{user?.email}</span>.</>
+              ? <>تم إرسال رابط التفعيل إلى: <span className="text-white font-bold">{verificationEmail}</span>.</>
+              : <>Verification link dispatched to <span className="text-white font-bold">{verificationEmail}</span>.</>
             }
             {emailInfo?.isUniversity && (
               <span className="block mt-2 p-2 rounded bg-primary/10 border border-primary/30 text-primary text-[11px]">
@@ -132,7 +140,7 @@ const VerifyEmail = () => {
           <div className="pt-2 border-t border-white/10 space-y-2.5">
             <Button variant="outline" className="w-full border-primary/40 text-primary h-11 text-xs font-cyber tracking-wider" onClick={handleCheckStatus} disabled={checking}>
               {checking ? <RefreshCw className={`w-4 h-4 ${isArabic ? 'ml-2' : 'mr-2'} animate-spin`} /> : null}
-              {isArabic ? 'فحص حالة التفعيل الآن' : 'CHECK_VERIFICATION_STATUS'}
+              {!user ? (isArabic ? 'تسجيل الدخول بعد تأكيد البريد' : 'SIGN IN AFTER VERIFICATION') : (isArabic ? 'فحص حالة التفعيل الآن' : 'CHECK_VERIFICATION_STATUS')}
             </Button>
             
             <Button variant="ghost" className="w-full text-xs font-mono text-muted-foreground" onClick={handleResend} disabled={loading}>

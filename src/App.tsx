@@ -80,6 +80,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   }
 
+  if (!user.email_confirmed_at) return <Navigate to="/verify-email" replace />;
+
   // If user exists but profile hasn't loaded yet, show a brief loading state
   if (user && !profile) {
     return <div role="alert" className="p-8 space-y-4 text-center">
@@ -107,7 +109,7 @@ const ManagerRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   // Enforce email verification
-  if (!user.email_confirmed_at && !profile?.isVerified) {
+  if (!user.email_confirmed_at) {
     return <Navigate to="/verify-email" />;
   }
 

@@ -7,7 +7,7 @@ The user authorized repairs after the initial discovery and explicitly authorize
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: 324; results: {"passed":324}. Desktop 1440px, tablet 768px, mobile 375px. Latest outcomes combine fix-results.json with post-final-results.json, qr-final-results.json and error-final-results.json, replacing retests of the same scenario/viewport. Exact outcomes are in tested-elements.csv.
+- Browser scenarios: 360; results: {"passed":360}. Desktop 1440px, tablet 768px, mobile 375px. Latest outcomes combine fix-results.json with post-final-results.json, qr-final-results.json and error-final-results.json, replacing retests of the same scenario/viewport. Exact outcomes are in tested-elements.csv.
 - PostgreSQL: 56 passed, 0 failed in an isolated in-memory PostgreSQL database. All 13 repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Node server/polling: six tests passed, including five authorization identities, bounded backup over 1105 rows, Auth account rollback and deletion contracts.
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
@@ -33,7 +33,7 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 
 | # | Page / tab | Severity | Source / selector | Before | After | Evidence / limitation |
 |---|---|---|---|---|---|---|
-| 1 | Login / all roles | Critical | src/contexts/AuthContext.tsx:201 | Cached fake accounts and role shortcuts could enter protected UI | Real Supabase session, verified identity, active database role; mock shortcuts removed | Browser guards + server auth tests + SQL RLS |
+| 1 | Login / all roles | Critical | src/contexts/AuthContext.tsx:202 | Cached fake accounts and role shortcuts could enter protected UI | Real Supabase session, verified identity, active database role; mock shortcuts removed | Browser guards + server auth tests + SQL RLS |
 | 2 | Admin users | Critical | api/admin/users.ts:1 | Administrative requests relied on unsafe fallback account creation | Bearer identity and database role checked server-side; no default password | Server authorization tests; live account CRUD remains untested |
 | 3 | Home / About / content pages | High | src/lib/defaultContent.ts:2 | Invented metrics and sample people/articles/projects replaced missing data | No sample collections; real statistics RPC; unavailable values displayed honestly | Browser checks + live read-only RPC |
 | 4 | Courses / learning | High | src/services/courseService.ts:281 | Enrollment/progress could be simulated and repeated XP awarded | Locked persistent enrollment/completion RPC and idempotent rewards | Isolated PostgreSQL persistence tests |
@@ -48,7 +48,7 @@ Before descriptions are source findings except where live HTTP404/exposure or br
 | 13 | Admin blog | Medium | src/pages/admin/BlogManagement.tsx:1 | Edit control had no saving workflow | Dialog edits and PATCH persist the submitted fields | Browser click, PATCH payload, UI update and dialog close |
 | 14 | Admin settings | Medium | src/pages/admin/Settings.tsx:279 | Export and clear-cache controls had empty handlers | Protected platform-record JSON download and actual browser cache clearing | Browser download contents and CacheStorage removal |
 | 15 | Admin staff / security | Medium | src/pages/admin/Security.tsx:10 | Pretend commit, firewall state, security logs and uptime implied backend actions | Real roster refresh, actual audit records and password-reset request; unavailable uptime stays unknown | Route rendering; live reset email delivery remains untested |
-| 16 | Builder desktop header | High | src/App.tsx:207 | Floating language control intercepted clicks on Publish | Language control has reserved layout space | Delayed autosave/publish browser click test |
+| 16 | Builder desktop header | High | src/App.tsx:209 | Floating language control intercepted clicks on Publish | Language control has reserved layout space | Delayed autosave/publish browser click test |
 | 17 | Contact / footer | Medium | src/pages/Contact.tsx:166 | Invented email, telephone and address shown when not configured | Configured contact data or explicit Not configured state | Source correction and final route checks |
 | 18 | Dialogs / share / QR | Medium | src/components/ui/Dialog.tsx:6 | Conditional dialogs lacked consistent focus/Escape behavior; QR lacked quiet margin | Portaled accessible dialogs, focus restore, awaited clipboard, decodable QR margin | Browser Escape/focus, badge/form/certificate QR and PNG download |
 | 19 | Data refresh | Medium | src/lib/supabase.ts:22 | Cached RAG context and browser data could show stale or fake records | Fresh database context and no-store; personal AI key is memory-only | Browser legacy-session/cache rejection; realtime delivery needs live role session |
@@ -424,3 +424,39 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template | 1440 | passed | platform-regressions.spec.ts:31 |
 | compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template | 768 | passed | platform-regressions.spec.ts:31 |
 | compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template | 375 | passed | platform-regressions.spec.ts:31 |
+| email login validates, retries wrong credentials, preserves intended member route and survives reload/logout | 1440 | passed | login-final.spec.ts:27 |
+| admin email login returns to requested admin tab | 1440 | passed | login-final.spec.ts:31 |
+| unconfirmed Auth identity cannot bypass verification using a verified profile flag | 1440 | passed | login-final.spec.ts:34 |
+| registration without a session retains verification email, resends and offers login after confirmation | 1440 | passed | login-final.spec.ts:37 |
+| recovery request surfaces provider failure, retries and sends the canonical reset redirect | 1440 | passed | login-final.spec.ts:40 |
+| password recovery rejects weak/mismatched inputs, persists success and really ends its session | 1440 | passed | login-final.spec.ts:43 |
+| expired recovery/callback links show actionable errors instead of false sign-in | 1440 | passed | login-final.spec.ts:46 |
+| callback honors internal destinations, rejects external redirect and never manually exchanges twice | 1440 | passed | login-final.spec.ts:49 |
+| Google button requests canonical callback and account selection; cancellation is actionable | 1440 | passed | login-final.spec.ts:52 |
+| expired refresh token returns to login without retaining administrative access | 1440 | passed | login-final.spec.ts:55 |
+| fresh server email confirmation refreshes the session instead of looping back to verification | 1440 | passed | login-final.spec.ts:58 |
+| SDK exchanges a PKCE callback once and password visibility is keyboard accessible | 1440 | passed | login-final.spec.ts:61 |
+| email login validates, retries wrong credentials, preserves intended member route and survives reload/logout | 768 | passed | login-final.spec.ts:27 |
+| admin email login returns to requested admin tab | 768 | passed | login-final.spec.ts:31 |
+| unconfirmed Auth identity cannot bypass verification using a verified profile flag | 768 | passed | login-final.spec.ts:34 |
+| registration without a session retains verification email, resends and offers login after confirmation | 768 | passed | login-final.spec.ts:37 |
+| recovery request surfaces provider failure, retries and sends the canonical reset redirect | 768 | passed | login-final.spec.ts:40 |
+| password recovery rejects weak/mismatched inputs, persists success and really ends its session | 768 | passed | login-final.spec.ts:43 |
+| expired recovery/callback links show actionable errors instead of false sign-in | 768 | passed | login-final.spec.ts:46 |
+| callback honors internal destinations, rejects external redirect and never manually exchanges twice | 768 | passed | login-final.spec.ts:49 |
+| Google button requests canonical callback and account selection; cancellation is actionable | 768 | passed | login-final.spec.ts:52 |
+| expired refresh token returns to login without retaining administrative access | 768 | passed | login-final.spec.ts:55 |
+| fresh server email confirmation refreshes the session instead of looping back to verification | 768 | passed | login-final.spec.ts:58 |
+| SDK exchanges a PKCE callback once and password visibility is keyboard accessible | 768 | passed | login-final.spec.ts:61 |
+| email login validates, retries wrong credentials, preserves intended member route and survives reload/logout | 375 | passed | login-final.spec.ts:27 |
+| admin email login returns to requested admin tab | 375 | passed | login-final.spec.ts:31 |
+| unconfirmed Auth identity cannot bypass verification using a verified profile flag | 375 | passed | login-final.spec.ts:34 |
+| registration without a session retains verification email, resends and offers login after confirmation | 375 | passed | login-final.spec.ts:37 |
+| recovery request surfaces provider failure, retries and sends the canonical reset redirect | 375 | passed | login-final.spec.ts:40 |
+| password recovery rejects weak/mismatched inputs, persists success and really ends its session | 375 | passed | login-final.spec.ts:43 |
+| expired recovery/callback links show actionable errors instead of false sign-in | 375 | passed | login-final.spec.ts:46 |
+| callback honors internal destinations, rejects external redirect and never manually exchanges twice | 375 | passed | login-final.spec.ts:49 |
+| Google button requests canonical callback and account selection; cancellation is actionable | 375 | passed | login-final.spec.ts:52 |
+| expired refresh token returns to login without retaining administrative access | 375 | passed | login-final.spec.ts:55 |
+| fresh server email confirmation refreshes the session instead of looping back to verification | 375 | passed | login-final.spec.ts:58 |
+| SDK exchanges a PKCE callback once and password visibility is keyboard accessible | 375 | passed | login-final.spec.ts:61 |

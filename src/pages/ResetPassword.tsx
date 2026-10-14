@@ -8,9 +8,11 @@ import { toast } from 'sonner';
 import { Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import {validatePasswordStrength} from '../lib/utils';
+import { useAuth } from '../contexts/AuthContext';
 
 export const ResetPassword = () => {
   const { isArabic } = useLanguage();
+  const { user, loading: authLoading, logout } = useAuth();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +22,7 @@ export const ResetPassword = () => {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || !user || authLoading) return;
     const strength=validatePasswordStrength(password);
     if (!strength.isValid) {
       toast.error(strength.message);
@@ -34,6 +37,7 @@ export const ResetPassword = () => {
     try {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
+      await logout();
       setSuccess(true);
       toast.success(isArabic ? 'تم تحديث كلمة المرور بنجاح!' : 'Password updated successfully!');
       setTimeout(() => navigate('/login'), 2000);
@@ -70,6 +74,11 @@ export const ResetPassword = () => {
                 {isArabic ? 'تسجيل الدخول الآن' : 'PROCEED TO LOGIN'}
               </Button>
             </div>
+          ) : !authLoading && !user ? (
+            <div role="alert" className="space-y-4">
+              <p>{isArabic ? 'رابط الاستعادة غير صالح أو منتهي. اطلب رابطًا جديدًا.' : 'Recovery session unavailable. Request a new recovery link.'}</p>
+              <Button onClick={() => navigate('/forgot-password')}>{isArabic ? 'طلب رابط جديد' : 'Request new recovery link'}</Button>
+            </div>
           ) : (
             <form onSubmit={handleUpdatePassword} className="space-y-4">
               <div className="space-y-1.5">
@@ -87,6 +96,7 @@ export const ResetPassword = () => {
                   />
                   <button
                     type="button"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white"
                   >
@@ -108,7 +118,7 @@ export const ResetPassword = () => {
                 />
               </div>
 
-              <Button type="submit" variant="cyber" className="w-full mt-4" disabled={loading}>
+              <Button type="submit" variant="cyber" className="w-full mt-4" disabled={loading || authLoading}>
                 {loading
                   ? (isArabic ? 'جاري الحفظ...' : 'UPDATING...')
                   : (isArabic ? 'تحديث كلمة المرور' : 'UPDATE PASSWORD')}

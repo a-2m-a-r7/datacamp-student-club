@@ -50,7 +50,7 @@ const Register = () => {
     else if (fullName.trim().length < 3) errs.fullName = isArabic ? 'الاسم يجب أن لا يقل عن 3 أحرف.' : 'Name must be at least 3 characters.';
 
     if (!email.trim()) errs.email = isArabic ? 'البريد الإلكتروني مطلوب.' : 'Email is required.';
-    else if (!/\S+@\S+\.\S+/.test(email)) errs.email = isArabic ? 'صيغة البريد الإلكتروني غير صحيحة.' : 'Invalid email format.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errs.email = isArabic ? 'صيغة البريد الإلكتروني غير صحيحة.' : 'Invalid email format.';
 
     if (!password) {
       errs.password = isArabic ? 'كلمة المرور مطلوبة.' : 'Password is required.';
@@ -73,7 +73,6 @@ const Register = () => {
     setIsLoading(true);
     try {
       const result = await registerWithEmail(email, password, fullName);
-      toast.success(isArabic ? 'مرحباً بك! تم إنشاء حسابك وحفظه في السحابة بنجاح' : 'Welcome! Account created successfully');
       navigate(result.needsVerification ? '/verify-email' : '/dashboard');
     } catch {
       // toast shown inside registerWithEmail
@@ -115,7 +114,7 @@ const Register = () => {
               {isArabic ? 'إنشاء حساب عضوية' : 'INITIALIZE_MEMBERSHIP'}
             </CardTitle>
             <CardDescription className="font-mono text-xs">
-              {isArabic ? 'انضم لنادي DataCamp واحصل على +10 نقاط XP ترحيبية' : 'Join DataCamp Student Club & claim +10 Starter XP'}
+              {isArabic ? 'انضم لنادي DataCamp وابدأ التعلم' : 'Join DataCamp Student Club and start learning'}
             </CardDescription>
           </CardHeader>
 
@@ -204,7 +203,7 @@ const Register = () => {
                     {analyzeEmail(email).isUniversity ? (
                       <div className="text-[10px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-md flex items-center gap-1.5 animate-fadeIn">
                         <span>🏛️</span>
-                        <span><strong>{isArabic ? 'هوية جامعية معتمدة:' : 'Academic Identity:'}</strong> {analyzeEmail(email).institutionName || 'University Domain'}</span>
+                        <span><strong>{isArabic ? 'نطاق بريد جامعي:' : 'Academic Identity:'}</strong> {analyzeEmail(email).institutionName || 'University Domain'}</span>
                       </div>
                     ) : (
                       <div className="text-[10px] font-mono text-muted-foreground bg-white/5 border border-white/10 px-2.5 py-1 rounded-md flex items-center gap-1.5">
@@ -234,7 +233,7 @@ const Register = () => {
                     type="button"
                     onClick={() => setShowPassword(v => !v)}
                     className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground ${isArabic ? 'left-3' : 'right-3'}`}
-                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>

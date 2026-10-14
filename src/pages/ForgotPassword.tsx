@@ -18,11 +18,13 @@ const ForgotPassword = () => {
 
   const handleResetRequest = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
     
     try {
-      if (isSupabaseConfigured) {
-        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      if (!isSupabaseConfigured) throw new Error('Authentication service is not configured.');
+      {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
           redirectTo: `${getSiteUrl()}/reset-password`,
         });
         if (error) throw error;

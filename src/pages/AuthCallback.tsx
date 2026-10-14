@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useLanguage } from '../contexts/LanguageContext';
 import { toast } from 'sonner';
+import { Button } from '../components/ui/Button';
+import { safeAuthRedirect } from '../lib/authRedirect';
+import type { Session } from '@supabase/supabase-js';
 
 export const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
   const { isArabic } = useLanguage();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  const sessionPromise = useRef<Promise<Session | null> | null>(null);
   useEffect(() => {
     let mounted = true;
 
@@ -25,35 +29,34 @@ export const AuthCallback: React.FC = () => {
           throw new Error(errorDescription || error);
         }
 
-        // 2. Extract code for PKCE exchange
-        const code = params.get('code');
-        if (code) {
-          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-          if (exchangeError) throw exchangeError;
-        }
-
-        // 3. Confirm active session
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) throw sessionError;
+        // Await SDK initialization first; exchange only if it did not establish a session.
+        sessionPromise.current ||= (async () => {
+          const initial = await supabase.auth.getSession();
+          if (initial.error) throw initial.error;
+          if (initial.data.session) return initial.data.session;
+          const code = params.get('code');
+          if (!code) return null;
+          const exchange = await supabase.auth.exchangeCodeForSession(code);
+          if (exchange.error) throw exchange.error;
+          return exchange.data.session;
+        })();
+        const session = await sessionPromise.current;
 
         if (session && mounted) {
           toast.success(isArabic ? 'تم تأكيد جلسة الحساب بنجاح' : 'Account session confirmed successfully');
           const destination = sessionStorage.getItem('datacamp_auth_redirect') || '/dashboard';
           sessionStorage.removeItem('datacamp_auth_redirect');
-          navigate(destination.startsWith('/') ? destination : '/dashboard', { replace: true });
+          navigate(safeAuthRedirect(destination), { replace: true });
           return;
         }
 
-        // If no session found yet, wait briefly and redirect to dashboard
-        setTimeout(() => {
-          if (mounted) navigate('/dashboard', { replace: true });
-        }, 1000);
+        if (mounted) throw new Error('Authentication link is invalid or expired. Please sign in again.');
       } catch (err: any) {
         console.error('[AuthCallback] Verification error:', err);
         if (mounted) {
           setErrorMsg(err.message || 'Failed to complete authentication.');
           toast.error(isArabic ? 'تعذر إتمام تأكيد الحساب' : 'Failed to complete account confirmation');
-          setTimeout(() => navigate('/login', { replace: true }), 3000);
+
         }
       }
     };
@@ -82,7 +85,8 @@ export const AuthCallback: React.FC = () => {
 
         {errorMsg && (
           <div className="mt-4 p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs font-mono">
-            {errorMsg}
+            <p role="alert">{errorMsg}</p>
+            <Button className="mt-4" onClick={() => navigate('/login', { replace: true })}>{isArabic ? 'العودة لتسجيل الدخول' : 'Return to login'}</Button>
           </div>
         )}
       </div>

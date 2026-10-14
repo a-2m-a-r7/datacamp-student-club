@@ -9,6 +9,7 @@ import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { analyzeEmail } from '../lib/emailUtils';
 import { GoogleAccountModal } from '../components/GoogleAccountModal';
+import { safeAuthRedirect } from '../lib/authRedirect';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +25,7 @@ const Login = () => {
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
-  const redirectTo = (location.state as { from?: string } | null)?.from || sessionStorage.getItem('datacamp_auth_redirect') || '/dashboard';
+  const redirectTo = safeAuthRedirect((location.state as { from?: string } | null)?.from || sessionStorage.getItem('datacamp_auth_redirect'));
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,7 +41,7 @@ const Login = () => {
   const validate = () => {
     const errs: typeof errors = {};
     if (!email.trim()) errs.email = isArabic ? 'البريد الإلكتروني مطلوب.' : 'Email is required.';
-    else if (!/\S+@\S+\.\S+/.test(email)) errs.email = isArabic ? 'صيغة البريد الإلكتروني غير صحيحة.' : 'Invalid email format.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errs.email = isArabic ? 'صيغة البريد الإلكتروني غير صحيحة.' : 'Invalid email format.';
     if (!password) errs.password = isArabic ? 'كلمة المرور مطلوبة.' : 'Password is required.';
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -166,7 +167,7 @@ const Login = () => {
                     {analyzeEmail(email).isUniversity ? (
                       <div className="text-[10px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-md flex items-center gap-1.5">
                         <span>🏛️</span>
-                        <span><strong>{isArabic ? 'هوية جامعية معتمدة:' : 'Academic Identity:'}</strong> {analyzeEmail(email).institutionName || 'University Domain'}</span>
+                        <span><strong>{isArabic ? 'نطاق بريد جامعي:' : 'Academic Identity:'}</strong> {analyzeEmail(email).institutionName || 'University Domain'}</span>
                       </div>
                     ) : (
                       <div className="text-[10px] font-mono text-muted-foreground bg-white/5 border border-white/10 px-2.5 py-1 rounded-md flex items-center gap-1.5">
@@ -197,7 +198,7 @@ const Login = () => {
                     type="button"
                     onClick={() => setShowPassword(v => !v)}
                     className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors ${isArabic ? 'left-3' : 'right-3'}`}
-                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
