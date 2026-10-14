@@ -7,10 +7,11 @@ import syncSheet from '../api/forms/sync-sheet';
 import submitForm from '../api/forms/submit';
 import chat from '../api/ai/chat';
 import compileTypeScript from '../api/compiler/typescript';
+import profileAvatar from '../api/profile/avatar';
 
 if (fs.existsSync('.env')) process.loadEnvFile('.env');
 const handlers: Record<string, (req: any, res: any) => Promise<any>> = {
-  '/api/admin/users': adminUsers, '/api/admin/backup': backup,
+  '/api/profile/avatar': profileAvatar, '/api/admin/users': adminUsers, '/api/admin/backup': backup,
   '/api/forms/sync-sheet': syncSheet, '/api/forms/submit': submitForm,
   '/api/ai/chat': chat, '/api/compiler/typescript': compileTypeScript,
 };

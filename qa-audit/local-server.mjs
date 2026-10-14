@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 const root = path.resolve('qa-audit/site-build');
 const headers = JSON.parse(fs.readFileSync('vercel.json','utf8')).headers[0].headers;
-const handlers = { '/api/admin/users':'../api/admin/users.ts', '/api/admin/backup':'../api/admin/backup.ts',
+const handlers = { '/api/profile/avatar':'../api/profile/avatar.ts', '/api/admin/users':'../api/admin/users.ts', '/api/admin/backup':'../api/admin/backup.ts',
  '/api/forms/sync-sheet':'../api/forms/sync-sheet.ts', '/api/forms/submit':'../api/forms/submit.ts', '/api/ai/chat':'../api/ai/chat.ts',
  '/api/compiler/typescript':'../api/compiler/typescript.ts' };
 const server = http.createServer(async (req,res) => {

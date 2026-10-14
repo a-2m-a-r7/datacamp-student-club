@@ -21,7 +21,7 @@ export const registerSchema = z.object({
 });
 
 export const profileSchema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+  fullName: z.string().trim().min(2, 'Full name must be at least 2 characters').max(200, 'Full name is too long'),
   phone: z.string().optional().or(z.literal('')),
   faculty: z.string().optional().or(z.literal('')),
   academicYear: z.string().optional().or(z.literal('')),

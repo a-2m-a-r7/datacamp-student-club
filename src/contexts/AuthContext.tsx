@@ -91,12 +91,7 @@ const mapDatabaseProfile = (row: any, fallbackUser?: SupabaseUser | null): UserP
     isVerified: row?.is_verified ?? !!fallbackUser?.email_confirmed_at,
     totalPoints: row?.total_points ?? row?.xp ?? 0,
     level: isOwner ? 'ARCHITECT' : row?.level || 'RECRUIT',
-    photoURL:
-      row?.avatar_url ||
-      row?.photo_url ||
-      fallbackUser?.user_metadata?.avatar_url ||
-      fallbackUser?.user_metadata?.picture ||
-      `https://api.dicebear.com/7.x/bottts/svg?seed=${id || email}`,
+    photoURL: row ? (row.avatar_url || row.photo_url || '') : (fallbackUser?.user_metadata?.avatar_url || fallbackUser?.user_metadata?.picture || ''),
     phoneNumber: row?.phone || '',
     faculty: row?.faculty || '',
     academicYear: row?.academic_year || '',
@@ -221,6 +216,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       setUser(compatibleUser);
       setProfile(nextProfile);
+      if (nextProfile?.photoURL && (/^https:\/\/([^/]+\.)?googleusercontent\.com\//i.test(nextProfile.photoURL) || nextProfile.photoURL.startsWith('https://api.dicebear.com/'))) {
+        void fetch('/api/profile/avatar', { method: 'POST', cache: 'no-store', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + nextSession.access_token }, body: JSON.stringify({action: 'persist-current'}) }).then(async response => {
+          if (!response.ok) throw Error('Account image copy unavailable');
+          const result = await response.json();
+          if (revision === sessionRevision.current && activeUserRef.current?.id === nextSession.user.id && result.success) setProfile(current => current?.uid === nextSession.user.id ? {...current, photoURL: result.avatarUrl} : current);
+        }).catch(() => console.warn('Account image remains unchanged; provider copy can be retried from Profile.'));
+      }
       startHeartbeat(nextSession.user.id);
     } else {
       stopHeartbeat();

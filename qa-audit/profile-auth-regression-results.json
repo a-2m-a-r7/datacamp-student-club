@@ -1,0 +1,1954 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config=qa-audit/fixes.config.ts",
+      "login-final",
+      "platform-regressions"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fixes.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/fix-tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/fix-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/fix-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/fix-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/fix-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/fix-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/fix-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "1440",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "1440"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "768",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "viewport": {
+            "width": 768,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "768"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "375",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\fix-tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "viewport": {
+            "width": 375,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "375"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\profile-auth-regression-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node qa-audit/start-local.cjs",
+      "cwd": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp",
+      "url": "http://127.0.0.1:3100",
+      "reuseExistingServer": false,
+      "timeout": 60000
+    }
+  },
+  "suites": [
+    {
+      "title": "login-final.spec.ts",
+      "file": "login-final.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "email login validates, retries wrong credentials, preserves intended member route and survives reload/logout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3897,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:09.487Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-5a4a55fd627ba837c965",
+          "file": "login-final.spec.ts",
+          "line": 29,
+          "column": 1
+        },
+        {
+          "title": "admin email login returns to requested admin tab",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3191,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:13.469Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-b2604346fc314752d56b",
+          "file": "login-final.spec.ts",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "unconfirmed Auth identity cannot bypass verification using a verified profile flag",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1815,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:16.667Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-75525fd506952c565f9a",
+          "file": "login-final.spec.ts",
+          "line": 36,
+          "column": 1
+        },
+        {
+          "title": "registration without a session retains verification email, resends and offers login after confirmation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3314,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:18.488Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-d60699e6a1491485a685",
+          "file": "login-final.spec.ts",
+          "line": 39,
+          "column": 1
+        },
+        {
+          "title": "recovery request surfaces provider failure, retries and sends the canonical reset redirect",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1029,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:21.808Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-eab6654600d2a41cf6eb",
+          "file": "login-final.spec.ts",
+          "line": 42,
+          "column": 1
+        },
+        {
+          "title": "password recovery rejects weak/mismatched inputs, persists success and really ends its session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1570,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:22.843Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-386250faee9dffec8d38",
+          "file": "login-final.spec.ts",
+          "line": 45,
+          "column": 1
+        },
+        {
+          "title": "expired recovery/callback links show actionable errors instead of false sign-in",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1630,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:24.419Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-b1a2f37e4bed33fa73e7",
+          "file": "login-final.spec.ts",
+          "line": 48,
+          "column": 1
+        },
+        {
+          "title": "callback honors internal destinations, rejects external redirect and never manually exchanges twice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 460,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:26.055Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-257bbc5009ef5bf10311",
+          "file": "login-final.spec.ts",
+          "line": 51,
+          "column": 1
+        },
+        {
+          "title": "Google button requests canonical callback and account selection; cancellation is actionable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2012,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:26.521Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-008ea22126d68541144e",
+          "file": "login-final.spec.ts",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "expired refresh token returns to login without retaining administrative access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 435,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:28.539Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-93a5dcd6444bab63ce4e",
+          "file": "login-final.spec.ts",
+          "line": 57,
+          "column": 1
+        },
+        {
+          "title": "fresh server email confirmation refreshes the session instead of looping back to verification",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1206,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:28.980Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-ee2f5c1291217473c0c2",
+          "file": "login-final.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "SDK exchanges a PKCE callback once and password visibility is keyboard accessible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2910,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:30.192Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-2d7ab596b02347c2f0dc",
+          "file": "login-final.spec.ts",
+          "line": 63,
+          "column": 1
+        },
+        {
+          "title": "email login validates, retries wrong credentials, preserves intended member route and survives reload/logout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4024,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:38.192Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-f1d1ff336f3b586fe29a",
+          "file": "login-final.spec.ts",
+          "line": 29,
+          "column": 1
+        },
+        {
+          "title": "admin email login returns to requested admin tab",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2651,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:42.337Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-f9484585b8f01f49d829",
+          "file": "login-final.spec.ts",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "unconfirmed Auth identity cannot bypass verification using a verified profile flag",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1705,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:44.995Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-bb63593b6b625ac24ad3",
+          "file": "login-final.spec.ts",
+          "line": 36,
+          "column": 1
+        },
+        {
+          "title": "registration without a session retains verification email, resends and offers login after confirmation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4140,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:46.705Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-cbfa5ccfc16824c4cd63",
+          "file": "login-final.spec.ts",
+          "line": 39,
+          "column": 1
+        },
+        {
+          "title": "recovery request surfaces provider failure, retries and sends the canonical reset redirect",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1011,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:50.850Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-f99bae996ee1b013c23f",
+          "file": "login-final.spec.ts",
+          "line": 42,
+          "column": 1
+        },
+        {
+          "title": "password recovery rejects weak/mismatched inputs, persists success and really ends its session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1759,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:51.867Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-2f50380e801044cab88f",
+          "file": "login-final.spec.ts",
+          "line": 45,
+          "column": 1
+        },
+        {
+          "title": "expired recovery/callback links show actionable errors instead of false sign-in",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1911,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:53.632Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-daf3e8202963a495cae4",
+          "file": "login-final.spec.ts",
+          "line": 48,
+          "column": 1
+        },
+        {
+          "title": "callback honors internal destinations, rejects external redirect and never manually exchanges twice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 430,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:55.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-39ad8a5f356ebf352432",
+          "file": "login-final.spec.ts",
+          "line": 51,
+          "column": 1
+        },
+        {
+          "title": "Google button requests canonical callback and account selection; cancellation is actionable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1910,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:55.985Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-69bf7d274fd1daa366ea",
+          "file": "login-final.spec.ts",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "expired refresh token returns to login without retaining administrative access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 411,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:57.902Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-14ffbbb38977f5d5794f",
+          "file": "login-final.spec.ts",
+          "line": 57,
+          "column": 1
+        },
+        {
+          "title": "fresh server email confirmation refreshes the session instead of looping back to verification",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1091,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:58.320Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-09237089888400626828",
+          "file": "login-final.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "SDK exchanges a PKCE callback once and password visibility is keyboard accessible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2897,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:59.417Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-d637026726cfffcd711d",
+          "file": "login-final.spec.ts",
+          "line": 63,
+          "column": 1
+        },
+        {
+          "title": "email login validates, retries wrong credentials, preserves intended member route and survives reload/logout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3915,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:46:52.148Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-9f219c4d3f38c2cd6aa8",
+          "file": "login-final.spec.ts",
+          "line": 29,
+          "column": 1
+        },
+        {
+          "title": "admin email login returns to requested admin tab",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2728,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:46:56.135Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-04dbde2e4ac905baec5f",
+          "file": "login-final.spec.ts",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "unconfirmed Auth identity cannot bypass verification using a verified profile flag",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1797,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:46:58.874Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-7619fef8a4ca84de6364",
+          "file": "login-final.spec.ts",
+          "line": 36,
+          "column": 1
+        },
+        {
+          "title": "registration without a session retains verification email, resends and offers login after confirmation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3784,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:00.681Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-77c7462e8455a6a1c134",
+          "file": "login-final.spec.ts",
+          "line": 39,
+          "column": 1
+        },
+        {
+          "title": "recovery request surfaces provider failure, retries and sends the canonical reset redirect",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1309,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:04.473Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-8cae3ee06137ff78de74",
+          "file": "login-final.spec.ts",
+          "line": 42,
+          "column": 1
+        },
+        {
+          "title": "password recovery rejects weak/mismatched inputs, persists success and really ends its session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1416,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:05.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-6f1bb6668790c2d46a49",
+          "file": "login-final.spec.ts",
+          "line": 45,
+          "column": 1
+        },
+        {
+          "title": "expired recovery/callback links show actionable errors instead of false sign-in",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2070,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:07.213Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-7ed88f1f144c29b3abb2",
+          "file": "login-final.spec.ts",
+          "line": 48,
+          "column": 1
+        },
+        {
+          "title": "callback honors internal destinations, rejects external redirect and never manually exchanges twice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 449,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:09.294Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-b6a0fe2435b114bc6690",
+          "file": "login-final.spec.ts",
+          "line": 51,
+          "column": 1
+        },
+        {
+          "title": "Google button requests canonical callback and account selection; cancellation is actionable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2046,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:09.749Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-367b8102f50ad0c58a2c",
+          "file": "login-final.spec.ts",
+          "line": 54,
+          "column": 1
+        },
+        {
+          "title": "expired refresh token returns to login without retaining administrative access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 449,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:11.803Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-6a3ffc21a67cffe066c0",
+          "file": "login-final.spec.ts",
+          "line": 57,
+          "column": 1
+        },
+        {
+          "title": "fresh server email confirmation refreshes the session instead of looping back to verification",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1676,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:12.261Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-06d20a7be923a32cf5a5",
+          "file": "login-final.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "SDK exchanges a PKCE callback once and password visibility is keyboard accessible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2925,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:13.946Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d87868aac0fd3344fece-f112f9bdc8f6f15c76b0",
+          "file": "login-final.spec.ts",
+          "line": 63,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "platform-regressions.spec.ts",
+      "file": "platform-regressions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "session race never redirects an authenticated admin or destroys fast unsaved form edits",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5019,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:33.133Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-5ac6d63deb4db2fa506b",
+          "file": "platform-regressions.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5503,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:38.159Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-3e0a9c65f3a6f7feaaa3",
+          "file": "platform-regressions.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7235,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:43.674Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-477d3d795e06ed89bcb4",
+          "file": "platform-regressions.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "temporary content and notification failures display honest retry/error and preserve unread records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 38124,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:44:50.927Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-7c94ae2e1c41401f0069",
+          "file": "platform-regressions.spec.ts",
+          "line": 24,
+          "column": 1
+        },
+        {
+          "title": "compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6667,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:45:29.073Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-6021b45df2c7400c3bb6",
+          "file": "platform-regressions.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "session race never redirects an authenticated admin or destroys fast unsaved form edits",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4959,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:46:02.344Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-7326845a66bac80116e9",
+          "file": "platform-regressions.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3256,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:46:07.311Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-1c97b80a9e112cd08c5a",
+          "file": "platform-regressions.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3576,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:46:10.574Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-adc0522c98e90543627f",
+          "file": "platform-regressions.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "temporary content and notification failures display honest retry/error and preserve unread records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 33384,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:46:14.159Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-0ab9f8c86a8ad36f4e1f",
+          "file": "platform-regressions.spec.ts",
+          "line": 24,
+          "column": 1
+        },
+        {
+          "title": "compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2434,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:46:47.553Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-23199efe0cfd804e67e8",
+          "file": "platform-regressions.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "session race never redirects an authenticated admin or destroys fast unsaved form edits",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5460,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:16.915Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-c76304ba52c1dd3455d6",
+          "file": "platform-regressions.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4122,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:22.386Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-74e1b4cb02603e2b01c8",
+          "file": "platform-regressions.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3815,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:26.518Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-676ff50146f041de8e9a",
+          "file": "platform-regressions.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "temporary content and notification failures display honest retry/error and preserve unread records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 34264,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:47:30.342Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-e9688b344cb62246f1f3",
+          "file": "platform-regressions.spec.ts",
+          "line": 24,
+          "column": 1
+        },
+        {
+          "title": "compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3045,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T20:48:04.617Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b53ca0cdfdcfdb819630-7c08f05ee20892813aec",
+          "file": "platform-regressions.spec.ts",
+          "line": 31,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-14T20:44:02.290Z",
+    "duration": 248032.90600000002,
+    "expected": 51,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

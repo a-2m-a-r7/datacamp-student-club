@@ -118,6 +118,18 @@ try {
  await check('inactive member card no longer verifies',async()=>assert.equal((await db.query('SELECT verify_member_card($1) AS r',[card.token])).rows[0].r.valid,false));
  await db.exec('RESET ROLE; SET ROLE anon;');
  await check('visitor cannot query directory RPC directly',async()=>await assert.rejects(db.query('SELECT public_leaderboard()')));
+ await db.exec('RESET ROLE;');
+ await db.query("UPDATE profiles SET status='active' WHERE id=$1",[member]);
+ await db.query("INSERT INTO storage.objects(bucket_id,name) VALUES('avatars',$1),('avatars',$2)",[member+'/QA_TEST.png',admin+'/QA_TEST.png']);
+ await db.query("SELECT set_config('qa.uid','',false)");await db.exec('SET ROLE anon;');
+ await check('visitor cannot enumerate avatar object directory',async()=>assert.equal((await db.query("SELECT name FROM storage.objects WHERE bucket_id='avatars'")).rows.length,0));
+ await db.exec('RESET ROLE;');await db.query("SELECT set_config('qa.uid',$1,false)",[member]);await db.exec('SET ROLE authenticated;');
+ await check('member lists only their own avatar directory',async()=>assert.deepEqual((await db.query("SELECT name FROM storage.objects WHERE bucket_id='avatars'")).rows.map(r=>r.name),[member+'/QA_TEST.png']));
+ await check('member cannot replace another account avatar',async()=>assert.equal((await db.query("UPDATE storage.objects SET name='QA_TEST_FORGED' WHERE name=$1 RETURNING id",[admin+'/QA_TEST.png'])).rows.length,0));
+ await db.exec('RESET ROLE;');await db.query("SELECT set_config('qa.uid',$1,false)",[admin]);await db.exec('SET ROLE authenticated;');
+ await check('administrator can inspect avatar directory',async()=>assert.equal((await db.query("SELECT name FROM storage.objects WHERE bucket_id='avatars'")).rows.length,2));
+ await db.exec('RESET ROLE;');
+ await check('avatar bucket enforces 5 MB and raster types',async()=>{const b=(await db.query("SELECT * FROM storage.buckets WHERE id='avatars'")).rows[0];assert.equal(Number(b.file_size_limit),5242880);assert.deepEqual(b.allowed_mime_types,['image/png','image/jpeg','image/webp']);});
  fs.writeFileSync('qa-audit/postgres-results.json',JSON.stringify({passed,failed:0,environment:'isolated in-memory PostgreSQL'},null,2));
 } catch(error){console.error(error.message);process.exitCode=1;fs.writeFileSync('qa-audit/postgres-results.json',JSON.stringify({passed,failed:1,error:error.message},null,2));}
 finally {await db.close();}

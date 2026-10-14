@@ -1,5 +1,5 @@
 {
-  "passed": 56,
+  "passed": 61,
   "failed": 0,
   "environment": "isolated in-memory PostgreSQL"
 }

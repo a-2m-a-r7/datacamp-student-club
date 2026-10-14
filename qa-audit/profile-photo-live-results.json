@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-14T20:43:50.505Z",
+  "profiles": 5,
+  "migrated": 5,
+  "unchanged": 0,
+  "failed": 0,
+  "stored": 5,
+  "filesVerified": 5,
+  "recordsPreserved": true,
+  "anonymousDirectoryHidden": true,
+  "bucketLimitBytes": 5242880,
+  "allowedMimeTypes": [
+    "image/png",
+    "image/jpeg",
+    "image/webp"
+  ]
+}

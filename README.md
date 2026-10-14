@@ -229,3 +229,5 @@ npm run test:qa
 ## Final tab review
 
 See [qa-audit/FINAL_TAB_REPORT.md](qa-audit/FINAL_TAB_REPORT.md) for the final member/admin operation matrix, persisted database tests, production seed archival and external setup limits. Compiled languages require an independently hosted Piston server; set the public VITE_PISTON_API_URL endpoint and its CSP hostname after provisioning. Do not put credentials in client variables.
+
+Final profile/Storage review: see [qa-audit/PROFILE_FINAL_REPORT.md](qa-audit/PROFILE_FINAL_REPORT.md). Apply all 14 repair migrations in order on a new installation; the consolidated qa-audit/SETUP_SUPABASE.sql includes the profile-photo bucket constraints. Existing production pictures were copied to owned Storage without changing identity fields.

@@ -8,14 +8,19 @@ interface ImagePickerProps {
   onImageSelected: (base64: string) => void;
   currentImage?: string;
   label?: string;
+  disabled?: boolean;
+  allowRemoteUrl?: boolean;
+  onReadingChange?: (reading:boolean) => void;
 }
 
-const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage, label }) => {
+const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage, label, disabled=false, allowRemoteUrl=true, onReadingChange }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = '';
+    if (disabled) return;
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
         alert('File size exceeds maximum allowed limit of 5MB');
@@ -27,8 +32,11 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage
         return;
       }
       const reader = new FileReader();
-      reader.onloadend = () => {
+      onReadingChange?.(true);
+      reader.onerror = () => {onReadingChange?.(false);alert('Unable to read this image. Please choose it again.');};
+      reader.onload = () => {
         onImageSelected(reader.result as string);
+        onReadingChange?.(false);
       };
       reader.readAsDataURL(file);
     }
@@ -47,7 +55,7 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage
             <>
               <AssetImage src={currentImage} alt="Preview" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               <div className="absolute inset-0 bg-dark-navy/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <Button type="button" aria-label="Close" variant="ghost" size="icon" onClick={() => onImageSelected('')} className="text-destructive">
+                <Button type="button" aria-label="Remove image" disabled={disabled} variant="ghost" size="icon" onClick={() => onImageSelected('')} className="text-destructive">
                   <X className="w-5 h-5" />
                 </Button>
               </div>
@@ -68,12 +76,12 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage
           />
 
           <input type="file" ref={cameraInputRef} className="hidden" accept="image/jpeg,image/png,image/webp" capture="environment" onChange={handleFileChange} />
-          <Button type="button" variant="outline" size="sm" className="justify-start" onClick={triggerUpload}>
+          <Button type="button" disabled={disabled} variant="outline" size="sm" className="justify-start" onClick={triggerUpload}>
             <Upload className="w-4 h-4 mr-2" />
             IMPORT_FROM_DEVICE
           </Button>
 
-          <Button type="button" variant="outline" size="sm" className="justify-start" onClick={() => {
+          {allowRemoteUrl && <Button type="button" disabled={disabled} variant="outline" size="sm" className="justify-start" onClick={() => {
             const value = prompt('Enter the image HTTPS URL:');
             if (!value) return;
             try { const url = new URL(value); if (url.protocol !== 'https:') throw Error(); onImageSelected(url.href); }
@@ -81,9 +89,9 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelected, currentImage
           }}>
             <ImageIcon className="w-4 h-4 mr-2" />
             SELECT_PHOTO_ARCHIVE
-          </Button>
+          </Button>}
 
-          <Button type="button" variant="outline" size="sm" className="justify-start" onClick={() => cameraInputRef.current?.click()}>
+          <Button type="button" disabled={disabled} variant="outline" size="sm" className="justify-start" onClick={() => cameraInputRef.current?.click()}>
             <Camera className="w-4 h-4 mr-2" />
             TAKE_PHOTO
           </Button>

@@ -43,6 +43,7 @@ export async function platform() {
     if(url.pathname.includes('/storage/')){
      const path=url.pathname.replace('/storage/v1/object/','').replace(/^public\//,'');
      if(method==='GET')return route.fulfill({status:uploads.has(path)?200:404,contentType:'image/png',body:uploads.get(path)||Buffer.from('')});
+     if(method==='DELETE') { const prefixes=req.postDataJSON()?.prefixes||[]; for(const name of prefixes){await asUser(uid,tx=>tx.query('DELETE FROM storage.objects WHERE bucket_id=$1 AND name=$2',[path,name]));uploads.delete(path+'/'+name);}return route.fulfill({contentType:'application/json',body:'[]'}); }
      if(method==='POST') { await asUser(uid,tx=>tx.query('INSERT INTO storage.objects(bucket_id,name) VALUES($1,$2)',[path.split('/')[0],path.split('/').slice(1).join('/')]));let bytes=req.postDataBuffer()!;const start=bytes.indexOf(Buffer.from([137,80,78,71,13,10,26,10])),end=bytes.indexOf(Buffer.from('IEND'));if(start>=0&&end>=0)bytes=bytes.subarray(start,end+8);uploads.set(path,bytes);return route.fulfill({contentType:'application/json',body:JSON.stringify({Key:path,path:path.split('/').slice(1).join('/')})}); }
      return route.fulfill({contentType:'application/json',body:'[]'});
     }

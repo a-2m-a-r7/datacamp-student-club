@@ -1,4 +1,5 @@
-import { imageDataToBlob } from '../lib/imageData';
+import { saveOwnProfile } from '../services/profileService';
+import { authenticatedPost } from '../lib/apiClient';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -15,7 +16,7 @@ import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import ImagePicker from '../components/ImagePicker';
 import { Dialog } from '../components/ui/Dialog';
 
-import { profileSchema } from '../lib/schemas';
+
 import { getSiteUrl } from '../lib/siteUrl';
 import { ROLE_DEFINITIONS } from '../lib/roleDefinitions';
 import { UserRole } from '../types';
@@ -25,8 +26,10 @@ const Profile = () => {
   const { isArabic } = useLanguage();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [readingPhoto,setReadingPhoto] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
   const dirty = useRef(false);
+  const photoDirty = useRef(false);
   const editingUid = useRef('');
 
   // Profile Info State
@@ -43,8 +46,8 @@ const Profile = () => {
 
   useEffect(() => {
     if (profile) {
-      if (editingUid.current !== profile.uid) { editingUid.current = profile.uid; dirty.current = false; }
-      if (dirty.current) return;
+      if (editingUid.current !== profile.uid) { editingUid.current = profile.uid; dirty.current = false; photoDirty.current = false; }
+      if (dirty.current) { if (!photoDirty.current) setFormData(previous=>({...previous,photoURL:profile.photoURL||''})); return; }
       setFormData({
         fullName: profile.fullName || '',
         phone: profile.phoneNumber || '',
@@ -52,14 +55,10 @@ const Profile = () => {
         academicYear: profile.academicYear || '',
         photoURL: profile.photoURL || '',
       });
-      setNewEmail(profile.email || '');
+      if(!emailDialogOpen)setNewEmail(profile.email || '');
     }
-  }, [profile]);
+  }, [profile,emailDialogOpen]);
 
-  const validatePhone = (phone: string) => {
-    const cleaned = phone.replace(/[\s-]/g, '');
-    return /^(\+20|0)?1[0125][0-9]{8}$/.test(cleaned);
-  };
 
   const handleCopyId = async () => {
     if (profile?.memberId) {
@@ -73,6 +72,7 @@ const Profile = () => {
   };
 
   const handleSendPasswordReset = async () => {
+    if (loading) return;
     const targetEmail = profile?.email || (user as any)?.email;
     if (!targetEmail) {
       toast.error(isArabic ? 'لا يوجد بريد إلكتروني مرتبط بهذا الحساب' : 'No email address found for this account');
@@ -98,61 +98,27 @@ const Profile = () => {
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || readingPhoto) return;
     setLoading(true);
-
     try {
-      profileSchema.parse(formData);
-
-      let finalPhotoURL = formData.photoURL;
-
-      if (formData.photoURL.startsWith('data:image')) {
-        try {
-          const blob = imageDataToBlob(formData.photoURL);
-          const { uploadFile, getStoragePath } = await import('../services/storageService');
-          const activeUid = (user as any)?.id || (user as any)?.uid || 'user';
-          const file = new File([blob], `avatar_${Date.now()}.${blob.type.split('/')[1]}`, { type: blob.type });
-          finalPhotoURL = await uploadFile(getStoragePath('avatars', activeUid, file.name), file);
-        } catch {
-          throw new Error('Avatar upload failed. No profile changes were saved.');
-        }
-      }
-
-      if (formData.phone && formData.phone.trim().length > 0 && !validatePhone(formData.phone)) {
-        toast.error(isArabic ? 'صيغة رقم الهاتف المصري غير صحيحة (+201XXXXXXXXX)' : 'Invalid Egyptian phone format (+201XXXXXXXXX)');
-        setLoading(false);
-        return;
-      }
-
-      if (isSupabaseConfigured) {
-        const activeId = (user as any)?.id || (user as any)?.uid || profile?.uid;
-        if (activeId) {
-          const { error } = await supabase.from('profiles').update({
-            full_name: formData.fullName,
-            phone: formData.phone,
-            faculty: formData.faculty,
-            academic_year: formData.academicYear,
-            avatar_url: finalPhotoURL,
-            photo_url: finalPhotoURL,
-            updated_at: new Date().toISOString()
-          }).eq('id', activeId).select('id').single();
-
-          if (error) throw error;
-
-          dirty.current = false;
-          await refreshProfile();
-
-          toast.success(isArabic ? 'تم حفظ التعديلات بنجاح في قاعدة البيانات' : 'Profile updated successfully in database');
-          setLoading(false);
-          return;
-        }
-      }
-
-      throw new Error('Database is not configured. Profile was not saved.');
+      const activeId=user?.id||user?.uid||profile?.uid;
+      const result=await saveOwnProfile({...formData},activeId,photoDirty.current,profile?.photoURL||'');
+      dirty.current=false;photoDirty.current=false;
+      if(result.photoURL!==undefined)setFormData(previous=>({...previous,photoURL:result.photoURL!}));
+      toast.success(isArabic ? 'تم حفظ التعديلات بنجاح في قاعدة البيانات' : 'Profile updated successfully in database');
+      if(result.cleanupWarning)toast.warning(isArabic?'حُفظت الصورة الجديدة، وتعذر تنظيف الملف القديم.':'New photo saved; old file cleanup could not complete.');
+      await refreshProfile().catch(()=>toast.warning(isArabic?'البيانات محفوظة؛ أعد تحميل الصفحة لتحديث العرض.':'Changes are saved. Reload to refresh the displayed profile.'));
     } catch (error: any) {
-      toast.error(error.message || (isArabic ? 'فشل حفظ التعديلات' : 'Failed to update profile'));
+      toast.error(error.issues?.[0]?.message||error.message || (isArabic ? 'فشل حفظ التعديلات' : 'Failed to update profile'));
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGooglePhoto = async () => {
+    if(loading)return;setLoading(true);
+    try {const result=await authenticatedPost('/api/profile/avatar',{action:'use-google'});dirty.current=true;photoDirty.current=false;setFormData(previous=>({...previous,photoURL:result.avatarUrl}));await refreshProfile().catch(()=>toast.warning(isArabic?'الصورة محفوظة؛ أعد تحميل الصفحة لتحديث العرض.':'Photo saved. Reload to refresh the display.'));if(result.concurrentChange)toast.warning(isArabic?'تغيرت الصورة أثناء الحفظ؛ تظهر الصورة الأحدث.':'Photo changed during saving; the latest saved photo is displayed.');else toast.success(isArabic?'صورة Google محفوظة في Storage وسجل الحساب.':'Google photo saved in Storage and your account record.');}
+    catch(error:any){toast.error(error.message||'Unable to save Google photo');}finally{setLoading(false);}
   };
 
   const handleEmailUpdate = async (event: React.FormEvent) => {
@@ -224,16 +190,21 @@ const Profile = () => {
                 </CardTitle>
               </div>
               <CardDescription>
-                {isArabic ? 'تحديث بيانات ملفك الشخصي الأكاديمي.' : 'Update your public profile details.'}
+                {isArabic ? 'تحديث بيانات ملفك الشخصي الأكاديمي.' : 'Update your account details.'}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleProfileUpdate} onChange={() => { dirty.current = true; }} className="space-y-6">
+                <fieldset disabled={loading} className="space-y-6">
                 <ImagePicker
+                  disabled={loading}
+                  allowRemoteUrl={false}
+                  onReadingChange={setReadingPhoto}
                   label={isArabic ? 'صورة الملف الشخصي' : 'Profile Picture'}
                   currentImage={formData.photoURL}
-                  onImageSelected={(base64) => { dirty.current = true; setFormData(previous => ({ ...previous, photoURL: base64 })); }}
+                  onImageSelected={(base64) => { dirty.current = true; photoDirty.current = true; setFormData(previous => ({ ...previous, photoURL: base64 })); }}
                 />
+                {(user?.user_metadata?.avatar_url||user?.user_metadata?.picture||'').includes('.googleusercontent.com/') && <Button type="button" disabled={loading||readingPhoto} onClick={handleGooglePhoto}>{isArabic?'حفظ صورة Google في الحساب':'Save Google photo to account'}</Button>}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
@@ -243,6 +214,7 @@ const Profile = () => {
                     <div className="relative">
                       <User className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
                       <Input
+                        aria-label="Full name"
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                         className={isArabic ? 'pr-10' : 'pl-10'}
@@ -256,6 +228,7 @@ const Profile = () => {
                     <div className="relative">
                       <Phone className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
                       <Input
+                        aria-label="Phone number"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className={isArabic ? 'pr-10' : 'pl-10'}
@@ -271,6 +244,7 @@ const Profile = () => {
                     <div className="relative">
                       <GraduationCap className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
                       <select
+                        aria-label="Faculty"
                         className={`flex h-10 w-full rounded-md border border-white/10 bg-white/5 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                           isArabic ? 'pr-10 pl-3' : 'pl-10 pr-3'
                         }`}
@@ -278,6 +252,7 @@ const Profile = () => {
                         onChange={(e) => setFormData({ ...formData, faculty: e.target.value })}
                       >
                         <option value="" className="bg-dark-navy">{isArabic ? 'اختر الكلية' : 'Select Faculty'}</option>
+                        {formData.faculty&&!['Computer Science','Engineering','Nursing','Physical Therapy','Business','Arts'].includes(formData.faculty)&&<option value={formData.faculty} className="bg-dark-navy">{formData.faculty}</option>}
                         <option value="Computer Science" className="bg-dark-navy">{isArabic ? 'حاسبات ومعلومات / ذكاء اصطناعي' : 'Computer Science'}</option>
                         <option value="Engineering" className="bg-dark-navy">{isArabic ? 'الهندسة' : 'Engineering'}</option>
                         <option value="Nursing" className="bg-dark-navy">{isArabic ? 'التمريض' : 'Nursing'}</option>
@@ -292,11 +267,13 @@ const Profile = () => {
                       {isArabic ? 'الفرقة الدراسية' : 'Academic Year'}
                     </label>
                     <select
+                      aria-label="Academic year"
                       className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       value={formData.academicYear}
                       onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
                     >
                       <option value="" className="bg-dark-navy">{isArabic ? 'اختر الفرقة' : 'Select Year'}</option>
+                      {formData.academicYear&&!['1','2','3','4','5'].includes(formData.academicYear)&&<option value={formData.academicYear} className="bg-dark-navy">{formData.academicYear}</option>}
                       <option value="1" className="bg-dark-navy">{isArabic ? 'الفرقة الأولى' : 'Year 1'}</option>
                       <option value="2" className="bg-dark-navy">{isArabic ? 'الفرقة الثانية' : 'Year 2'}</option>
                       <option value="3" className="bg-dark-navy">{isArabic ? 'الفرقة الثالثة' : 'Year 3'}</option>
@@ -307,11 +284,12 @@ const Profile = () => {
                 </div>
 
                 <div className="flex justify-end">
-                  <Button type="submit" variant="cyber" disabled={loading}>
+                  <Button type="submit" variant="cyber" disabled={loading||readingPhoto}>
                     <Save className={`w-4 h-4 ${isArabic ? 'ml-2' : 'mr-2'}`} />
                     {isArabic ? 'حفظ التعديلات' : 'SAVE_CHANGES'}
                   </Button>
                 </div>
+                </fieldset>
               </form>
             </CardContent>
           </Card>
