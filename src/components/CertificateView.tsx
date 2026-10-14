@@ -5,7 +5,6 @@ import { Button } from './ui/Button';
 import {
   Download,
   Share2,
-  ExternalLink,
   ShieldCheck,
   Award,
   Sparkles,
@@ -18,6 +17,8 @@ import { jsPDF } from 'jspdf';
 import { toast } from 'sonner';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getSiteUrl } from '../lib/siteUrl';
+import { LinkedInShare } from './LinkedInShare';
+import { certificateVerificationUrl } from '../lib/linkedin';
 
 interface CertificateViewProps {
   certificate: Certificate;
@@ -574,7 +575,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
   const hiddenQrCanvasRef = useRef<HTMLCanvasElement>(null);
   const [downloading, setDownloading] = useState(false);
 
-  const verificationUrl = `${getSiteUrl()}/verify-certificate/${certificate.verificationCode}`;
+  const verificationUrl = certificateVerificationUrl(certificate);
 
   const issueDateObj = certificate.issuedAt && typeof (certificate.issuedAt as any).toDate === 'function'
     ? (certificate.issuedAt as any).toDate()
@@ -747,16 +748,6 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
     window.print();
   };
 
-  const handleShareLinkedIn = () => {
-    const certTitle = encodeURIComponent(certificate.courseTitle || certificate.eventTitle || 'DataCamp Technical Program');
-    const orgName = encodeURIComponent('DataCamp Student Club & Innovation University');
-    const issueDate = issueDateObj;
-    const certUrl = encodeURIComponent(verificationUrl);
-
-    const linkedinUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${certTitle}&organizationName=${orgName}&issueYear=${issueDate.getFullYear()}&issueMonth=${issueDate.getMonth() + 1}&certUrl=${certUrl}&certId=${certificate.verificationCode}`;
-    window.open(linkedinUrl, '_blank');
-  };
-
   const handleCopyLink = () => {
     void copyText(verificationUrl, isArabic ? 'تم نسخ رابط التحقق إلى الحافظة' : 'Verification URL copied to clipboard');
   };
@@ -833,15 +824,7 @@ export const CertificateView: React.FC<CertificateViewProps> = ({ certificate, o
             <Share2 className="w-3.5 h-3.5 mr-1 rtl:mr-0 rtl:ml-1" />
             {isArabic ? 'مشاركة الرابط' : 'SHARE LINK'}
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleShareLinkedIn}
-            className="text-xs font-cyber border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
-          >
-            <ExternalLink className="w-3.5 h-3.5 mr-1 rtl:mr-0 rtl:ml-1" />
-            LINKEDIN
-          </Button>
+          <LinkedInShare key={certificate.verificationCode} item={certificate} />
           <Button
             size="sm"
             variant="outline"

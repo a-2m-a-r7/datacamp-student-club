@@ -26,6 +26,7 @@ import {supabase} from '../lib/supabase';
 import {getSiteUrl} from '../lib/siteUrl';
 import {downloadMemberCard} from '../lib/memberCard';
 import {toast} from 'sonner';
+import { LinkedInShare } from '../components/LinkedInShare';
 
 const Dashboard = () => {
   const { profile, isSuperAdmin, isAdmin } = useAuth();
@@ -314,8 +315,9 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                {BADGES_CATALOG.slice(0, 8).map(b => {
-                  const isUnlocked = achievements.some(a => a.badgeId === b.id);
+                {BADGES_CATALOG.map(b => {
+                  const achievement = achievements.find(a => a.badgeId === b.id);
+                  const isUnlocked = Boolean(achievement);
 
                   return (
                     <div
@@ -335,6 +337,7 @@ const Dashboard = () => {
                           : (isArabic ? 'مقفلة' : 'LOCKED')
                         }
                       </div>
+                      {achievement && <LinkedInShare item={achievement} compact />}
                     </div>
                   );
                 })}

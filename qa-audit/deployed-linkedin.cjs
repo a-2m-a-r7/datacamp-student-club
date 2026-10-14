@@ -1,0 +1,30 @@
+// Read-only production check. No LinkedIn/account writes; never log real certificate data.
+const fs = require('node:fs');
+const { chromium } = require('@playwright/test');
+const origin = process.argv[2], base = process.env.VITE_SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!origin?.startsWith('https://') || !base || !key) throw Error('Missing deployment/local configuration');
+let browser;
+(async () => {
+  const response = await fetch(base + '/rest/v1/certificates?select=course_title,verification_code&type=eq.course&limit=1', { headers: { apikey: key, Authorization: 'Bearer ' + key } });
+  if (!response.ok) throw Error('Certificate read failed');
+  const cert = (await response.json())[0]; if (!cert) throw Error('No persisted certificate available');
+  browser = await chromium.launch(); const context = await browser.newContext({ viewport: { width: 375, height: 900 } });
+  await context.addInitScript(() => localStorage.setItem('datacamp_language', 'en'));
+  const page = await context.newPage(), errors = []; page.on('pageerror', error => errors.push(error.message));
+  const url = origin + '/verify-certificate/' + encodeURIComponent(cert.verification_code);
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  await page.getByText('AUTHENTIC CREDENTIAL VERIFIED', { exact: true }).waitFor();
+  await page.getByRole('button', { name: /^Share on LinkedIn:/ }).click();
+  const dialog = page.getByRole('dialog', { name: 'Share on LinkedIn' });
+  if (await dialog.getByLabel('Certificate name', { exact: true }).inputValue() !== cert.course_title || await dialog.getByLabel('Credential ID', { exact: true }).inputValue() !== cert.verification_code || await dialog.getByLabel('Credential URL', { exact: true }).inputValue() !== url) throw Error('LinkedIn fields do not match the saved certificate');
+  const profile = dialog.getByRole('link', { name: 'Add certificate to profile', exact: true });
+  if (await profile.getAttribute('href') !== 'https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME' || await profile.getAttribute('rel') !== 'noopener noreferrer') throw Error('LinkedIn profile link failed');
+  const share = new URL(await dialog.getByRole('link', { name: 'Open LinkedIn post', exact: true }).getAttribute('href'));
+  if (share.hostname !== 'www.linkedin.com' || share.pathname !== '/sharing/share-offsite/' || share.searchParams.get('url') !== url) throw Error('LinkedIn sharing URL failed');
+  const post = await dialog.getByLabel('Post text', { exact: true }).inputValue();
+  if (!post.includes(cert.course_title) || !post.includes(url)) throw Error('LinkedIn post is missing saved certificate details');
+  if (!await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)) throw Error('Mobile sharing overflow');
+  await page.keyboard.press('Escape'); if (await dialog.count() || errors.length) throw Error('Sharing dialog dismissal/runtime check failed');
+  fs.writeFileSync('qa-audit/deployed-linkedin-results.json', JSON.stringify({ origin, passed: 3, mode: 'Read-only genuine production certificate sharing controls; no LinkedIn/account writes', fieldsMatchDatabase: true, linksMatchCertificate: true, mobileDialogPassed: true, javascriptErrors: [] }, null, 2));
+  console.log(JSON.stringify({ passed: 3, fieldsMatchDatabase: true, linksMatchCertificate: true, mobileDialogPassed: true })); await browser.close();
+})().catch(async error => { console.error(error.message); await browser?.close(); process.exitCode = 1; });
