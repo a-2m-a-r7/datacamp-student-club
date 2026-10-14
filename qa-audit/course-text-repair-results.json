@@ -1,0 +1,10 @@
+{
+  "mode": "apply",
+  "courseRows": 3,
+  "lessonRows": 12,
+  "fields": 39,
+  "deletions": 0,
+  "changed": 15,
+  "backupStoredLocally": true,
+  "sqlMigrationApplied": false
+}

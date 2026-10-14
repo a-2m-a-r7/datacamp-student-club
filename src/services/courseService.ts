@@ -341,6 +341,7 @@ export const courseService = {
           is_featured: Boolean(courseData.isFeatured),
           is_locked: Boolean(courseData.isLocked),
           is_published: courseData.status === 'published',
+          ...(!courseData.id ? { rating: 0, rating_count: 0 } : {}),
           updated_at: new Date().toISOString(),
         };
 

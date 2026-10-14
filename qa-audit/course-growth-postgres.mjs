@@ -50,6 +50,19 @@ try {
   await owner.query("INSERT INTO courses(title,slug,is_published,created_at) SELECT 'QA_TEST_CATALOG_'||n,'qa-test-catalog-'||n,true,'2026-10-14T00:00:00Z'::timestamptz FROM generate_series(1,1200) n");
   const draft = (await owner.query("INSERT INTO courses(title,slug) VALUES('QA_TEST_PRIVATE_DRAFT','qa-test-private-draft') RETURNING id")).rows[0].id;
   await owner.query('ANALYZE courses; ANALYZE lessons;');
+  await check('legacy Arabic repair is reversible and preserves valid/mixed text and ratings with actual reviews', async () => {
+    await owner.query(fs.readFileSync('qa-audit/course-text-repair.sql','utf8'));
+    const correct='QA_TEST من أساسيات بايثون إلى البيانات', latin=Buffer.from(correct,'utf8').toString('latin1');
+    const cp1252=latin.replaceAll(String.fromCharCode(133),'…').replaceAll(String.fromCharCode(134),'†').replaceAll(String.fromCharCode(138),'Š').replaceAll(String.fromCharCode(156),'œ');
+    for(const value of [latin,cp1252])assert.equal((await owner.query('SELECT dc_repair_arabic_encoding($1) value',[value])).rows[0].value,correct);
+    for(const value of ['QA_TEST عربي صحيح','QA_TEST Øresund','QA_TEST العربية Ø§'])assert.equal((await owner.query('SELECT dc_repair_arabic_encoding($1) value',[value])).rows[0].value,value);
+    await owner.query("UPDATE courses SET description=$1,rating=5,rating_count=0 WHERE id=$2",[cp1252,course]);
+    await owner.query("UPDATE courses SET rating=4.5,rating_count=2 WHERE id=$1",[draft]);
+    await owner.query('UPDATE lessons SET title=$1,content=$1 WHERE id=$2',[cp1252,lesson]);
+    await owner.query(fs.readFileSync('qa-audit/course-text-repair.sql','utf8'));
+    const row=(await owner.query('SELECT description,rating FROM courses WHERE id=$1',[course])).rows[0];assert.equal(row.description,correct);assert.equal(Number(row.rating),0);assert.equal(Number((await owner.query('SELECT rating FROM courses WHERE id=$1',[draft])).rows[0].rating),4.5);
+    const fixedLesson=(await owner.query('SELECT title,content FROM lessons WHERE id=$1',[lesson])).rows[0];assert.equal(fixedLesson.title,correct);assert.equal(fixedLesson.content,correct);
+  });
   await check('new courses have genuine lesson counts and cannot publish an empty curriculum', async () => {
     assert.equal((await owner.query('SELECT total_lessons FROM courses WHERE id=$1',[course])).rows[0].total_lessons,2);
     await assert.rejects(asUser(admin,'UPDATE courses SET is_published=true WHERE id=$1',[draft]),/Add course lessons/);

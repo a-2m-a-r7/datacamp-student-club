@@ -109,18 +109,18 @@ const Courses = () => {
 
           <p className="text-muted-foreground font-mono text-xs sm:text-sm leading-relaxed max-w-2xl">
             {isArabic
-              ? 'مسارات تدريبية تطبيقية صممها خبراء ومهندسون وباحثون أكاديميون. أكمل الدروس البرمجية، واكسب شهادات معتمدة ونقاط XP للتنافس على صدارة الجامعة.'
-              : 'Hands-on courses created by senior engineers and university researchers. Complete lessons, ace code assessments, earn verified certificates, and accumulate XP to ascend the club leaderboard.'}
+              ? 'تصفح الكورسات المتاحة وتابع تقدمك في الدروس والاختبارات. إكمال المنهج يصدر شهادة من نادي داتا كامب يمكن التحقق منها ومشاركتها.'
+              : 'Explore available courses and track your lessons and assessments. Complete the curriculum to earn a verifiable DataCamp Student Club certificate you can share.'}
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg">
               <Award className="w-4 h-4 text-primary" />
-              <span>{isArabic ? 'اكسب حتى ' : 'Earn Up to '}<strong className="text-primary font-bold">800 XP</strong>{isArabic ? ' لكل مسار' : ' per course'}</span>
+              <span>{isArabic ? 'مكافأة كل كورس موضحة في بطاقته' : 'Each course shows its own XP reward'}</span>
             </div>
             <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg">
               <Users className="w-4 h-4 text-secondary" />
-              <span>{isArabic ? '+350 طالب نشط بالنادي' : '350+ Active Club Students'}</span>
+              <span>{isArabic ? 'تقدمك محفوظ في حسابك' : 'Progress saved to your account'}</span>
             </div>
           </div>
         </div>
@@ -299,10 +299,10 @@ const Courses = () => {
                         <BookOpen className="w-3.5 h-3.5 text-secondary" />
                         {course.totalLessons} {isArabic ? 'درس' : 'Lessons'}
                       </span>
-                      <span className="flex items-center gap-1 text-amber-400">
+                      {course.ratingCount > 0 && <span className="flex items-center gap-1 text-amber-400" aria-label={isArabic ? 'تقييم الكورس' : 'Course rating'}>
                         <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                         {course.rating}
-                      </span>
+                      </span>}
                     </div>
 
                     <h3 className="font-cyber font-bold text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">

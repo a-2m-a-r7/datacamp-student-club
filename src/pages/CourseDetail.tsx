@@ -138,10 +138,10 @@ const CourseDetail = () => {
             <span className="px-3 py-1 rounded-md text-xs font-cyber tracking-wider bg-white/5 border border-white/10 text-muted-foreground uppercase">
               {course.level}
             </span>
-            <span className="px-3 py-1 rounded-md text-xs font-mono bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center gap-1">
+            {course.ratingCount > 0 && <span className="px-3 py-1 rounded-md text-xs font-mono bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center gap-1">
               <Star className="w-3.5 h-3.5 fill-amber-400" />
               {course.rating} ({course.ratingCount} {isArabic ? 'تقييم' : 'reviews'})
-            </span>
+            </span>}
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black font-cyber text-foreground tracking-tight leading-tight">

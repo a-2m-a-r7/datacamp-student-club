@@ -1,13 +1,13 @@
 # DataCamp repair and QA report — updated 14 October 2026
 
-Current growth release: generic Arabic/English draft-course creation, validated quiz editor, automatic course certificates with chosen downloads and LinkedIn fields, keyset catalog pagination, safe lost-response retries and visible-tab polling by default. See FUTURE_READINESS.md. The isolated real PostgreSQL load run simulated 1000 QA members with 20 actual database connections and 10,000 successful requests; this does not certify cloud capacity. Latest live migration verification passed four read-only checks. Background refresh and server authorization passed four Node tests. The deployment paragraph below records an earlier release; current deployment evidence is recorded separately.
+Current growth release: generic Arabic/English draft-course creation, validated quiz editor, automatic course certificates with chosen downloads and LinkedIn fields, keyset catalog pagination, safe lost-response retries and visible-tab polling by default. See FUTURE_READINESS.md. The isolated real PostgreSQL load run simulated 1000 QA members with 20 actual database connections and 10,000 successful requests; this does not certify cloud capacity. Latest live migration verification passed four read-only checks. Background refresh and server authorization passed four Node tests. The course catalog no longer displays an invented 350+ population, 800 XP ceiling or stars without reviews. Legacy encoding was reversibly repaired in 39 fields across 3 actual courses and 12 actual lessons through owner-authorized REST with optimistic comparisons and a local backup. The optional SQL maintenance alternative is not an application migration/dependency. See course-text-repair-results.json and course-text-live-results.json. The deployment paragraph below records an earlier release; current deployment evidence is recorded separately.
 
 The user authorized repairs after the initial discovery and explicitly authorized applying DataCamp schema/security repairs to the existing Supabase project. Work is on branch fix/qa-real-data. This report records current evidence; the Phase 1 inventory remains in discovery-20261013/INVENTORY.md.
 
 ## Results and coverage
 
 - Inventory: 49 route patterns, 685 source control declarations. These are not 685 clicked elements.
-- Browser scenarios: 270; results: {"passed":270}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
+- Browser scenarios: 273; results: {"passed":273}. Desktop 1440px, tablet 768px, mobile 375px. Exact per-scenario outcomes are below and in tested-elements.csv/fix-results.json.
 - PostgreSQL: 56 passed, 0 failed in an isolated in-memory PostgreSQL database. All 13 repair migrations applied and actual SQL rows/rollback/RLS were verified. These tests do not prove authenticated production CRUD.
 - Server authorization: one test with five identity cases passed (visitor/member/expired/unverified/verified admin).
 - Live read-only integration: 11 checks passed against the connected Supabase and the local API server. Existing server key reads five profiles; anonymous private-row reads expose zero; sanitized events expose two; three unauthenticated admin endpoints return401.
@@ -116,17 +116,20 @@ Run npm run dev for the local frontend plus API server; Vite alone cannot serve 
 | duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data | 1440 | passed | course-growth.spec.ts:78 |
 | catalog pages, debounced search, cancellation and honest retry use bounded database requests | 1440 | passed | course-growth.spec.ts:84 |
 | future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 1440 | passed | course-growth.spec.ts:90 |
-| lost course response retries the same draft and image tools never submit the form | 1440 | passed | course-growth.spec.ts:98 |
+| catalog displays actual Arabic text without invented population or unrated stars | 1440 | passed | course-growth.spec.ts:98 |
+| lost course response retries the same draft and image tools never submit the form | 1440 | passed | course-growth.spec.ts:105 |
 | admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate | 768 | passed | course-growth.spec.ts:68 |
 | duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data | 768 | passed | course-growth.spec.ts:78 |
 | catalog pages, debounced search, cancellation and honest retry use bounded database requests | 768 | passed | course-growth.spec.ts:84 |
 | future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 768 | passed | course-growth.spec.ts:90 |
-| lost course response retries the same draft and image tools never submit the form | 768 | passed | course-growth.spec.ts:98 |
+| catalog displays actual Arabic text without invented population or unrated stars | 768 | passed | course-growth.spec.ts:98 |
+| lost course response retries the same draft and image tools never submit the form | 768 | passed | course-growth.spec.ts:105 |
 | admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate | 375 | passed | course-growth.spec.ts:68 |
 | duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data | 375 | passed | course-growth.spec.ts:78 |
 | catalog pages, debounced search, cancellation and honest retry use bounded database requests | 375 | passed | course-growth.spec.ts:84 |
 | future long Arabic course titles and member names export PNG/PDF with the correct verification QR | 375 | passed | course-growth.spec.ts:90 |
-| lost course response retries the same draft and image tools never submit the form | 375 | passed | course-growth.spec.ts:98 |
+| catalog displays actual Arabic text without invented population or unrated stars | 375 | passed | course-growth.spec.ts:98 |
+| lost course response retries the same draft and image tools never submit the form | 375 | passed | course-growth.spec.ts:105 |
 | certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate | 1440 | passed | linkedin.spec.ts:32 |
 | dashboard shares only persisted earned badges, without private directory or invented credential | 1440 | passed | linkedin.spec.ts:66 |
 | Arabic sharing keeps data selectable when clipboard permission fails | 1440 | passed | linkedin.spec.ts:83 |

@@ -1,10 +1,11 @@
 {
-  "passed": 10,
+  "passed": 11,
   "failed": 0,
   "environment": "isolated real PostgreSQL 18, loopback, 20 simultaneous connections; NOT a production capacity benchmark",
   "catalogCourses": 1200,
   "members": 1000,
   "tests": [
+    "legacy Arabic repair is reversible and preserves valid/mixed text and ratings with actual reviews",
     "new courses have genuine lesson counts and cannot publish an empty curriculum",
     "member catalog uses keyset pages beyond 1000 rows without duplicates, including equal timestamps",
     "Arabic search is generic; large limits are clamped and draft flags cannot bypass RLS",
@@ -20,33 +21,33 @@
     "catalog": {
       "requests": 1000,
       "concurrentPool": 20,
-      "elapsedMs": 497,
-      "p50Ms": 318,
-      "p95Ms": 473,
+      "elapsedMs": 349,
+      "p50Ms": 218,
+      "p95Ms": 335,
       "errors": 0
     },
     "enrollment": {
       "requests": 3000,
       "concurrentPool": 20,
-      "elapsedMs": 1588,
-      "p50Ms": 1249,
-      "p95Ms": 1551,
+      "elapsedMs": 1077,
+      "p50Ms": 824,
+      "p95Ms": 1046,
       "errors": 0
     },
     "lessonCompletion": {
       "requests": 3000,
       "concurrentPool": 20,
-      "elapsedMs": 762,
-      "p50Ms": 398,
-      "p95Ms": 722,
+      "elapsedMs": 509,
+      "p50Ms": 273,
+      "p95Ms": 481,
       "errors": 0
     },
     "quizCompletion": {
       "requests": 3000,
       "concurrentPool": 20,
-      "elapsedMs": 926,
-      "p50Ms": 529,
-      "p95Ms": 880,
+      "elapsedMs": 609,
+      "p50Ms": 329,
+      "p95Ms": 576,
       "errors": 0
     }
   }
