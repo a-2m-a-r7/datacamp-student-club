@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef,useEffect } from 'react';
+import { Link,useSearchParams } from 'react-router-dom';
 import { courseService } from '../../services/courseService';
 import { Course, CourseCategory, CourseLevel, CourseLesson, LessonType } from '../../types';
 import { Button } from '../../components/ui/Button';
@@ -26,11 +26,17 @@ import { toast } from 'sonner';
 import { useCourseCatalog } from '../../lib/useCourseCatalog';
 import { CourseQuizEditor } from '../../components/admin/CourseQuizEditor';
 import { Dialog } from '../../components/ui/Dialog';
+import {LessonMediaEditor} from '../../components/admin/LessonMediaEditor';
+import {CourseUnitsEditor,CourseUnit} from '../../components/admin/CourseUnitsEditor';
+import {supabase} from '../../lib/supabase';
+import {CourseExerciseEditor} from '../../components/admin/CourseExerciseEditor';
 
 const toCsv = (value: unknown) => Array.isArray(value) ? value.join(', ') : String(value || '');
 
 export const CourseManagement = () => {
   const { isArabic } = useLanguage();
+  const [params,setParams]=useSearchParams();
+  useEffect(()=>{const state=params.get('drive');if(!state)return;if(state==='connected')toast.success(isArabic?'تم ربط Google Drive. افتح الدرس لرفع ملفاته.':'Google Drive connected. Open a lesson to upload its files.');else toast.error(isArabic?'لم يكتمل ربط Google Drive. تحقق من إعداد OAuth وأعد المحاولة.':'Google Drive connection failed. Check OAuth setup and retry.');const next=new URLSearchParams(params);next.delete('drive');setParams(next,{replace:true});},[params,setParams,isArabic]);
   const [search, setSearch] = useState('');
   const { courses, cursor, loading, loadingMore, error, reload: fetchCourses, loadMore } = useCourseCatalog(search, 'all', 'all', true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +48,7 @@ export const CourseManagement = () => {
   const [loadingLessons, setLoadingLessons] = useState(false);
   const [editingLesson, setEditingLesson] = useState<Partial<CourseLesson> | null>(null);
   const [savingLesson, setSavingLesson] = useState(false);
+  const [mediaBusy,setMediaBusy]=useState(false),[units,setUnits]=useState<CourseUnit[]>([]),[draggedLesson,setDraggedLesson]=useState('');
   const draftCourseId = useRef('');
   const savingCourseRequest = useRef(false), savingLessonRequest = useRef(false);
 
@@ -127,7 +134,7 @@ export const CourseManagement = () => {
   };
 
   const handleOpenCreateLesson = () => {
-    if (!lessonCourse) return;
+    if (!lessonCourse||mediaBusy||savingLesson) return;
     setEditingLesson({
       id: crypto.randomUUID(),
       courseId: lessonCourse.id,
@@ -150,7 +157,7 @@ export const CourseManagement = () => {
 
   const handleSaveLesson = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (savingLessonRequest.current) return;
+    if (savingLessonRequest.current||mediaBusy) return;
     if (!lessonCourse || !editingLesson?.title?.trim()) {
       toast.error(isArabic ? 'عنوان الدرس مطلوب' : 'Lesson title is required');
       return;
@@ -158,9 +165,9 @@ export const CourseManagement = () => {
 
     savingLessonRequest.current = true; setSavingLesson(true);
     try {
-      await courseService.saveLesson({ ...editingLesson, courseId: lessonCourse.id });
+      const saved=await courseService.saveLesson({ ...editingLesson, courseId: lessonCourse.id });
       toast.success(isArabic ? 'تم حفظ الدرس بنجاح' : 'Lesson saved successfully');
-      setEditingLesson(null);
+      setEditingLesson(saved);
       const list = await courseService.getCourseLessons(lessonCourse.id);
       setLessons(list);
       fetchCourses();
@@ -170,6 +177,7 @@ export const CourseManagement = () => {
   };
 
   const handleDeleteLesson = async (lessonId: string) => {
+    if(mediaBusy||savingLesson)return;
     const confirmMsg = isArabic ? 'هل أنت متأكد من حذف هذا الدرس؟' : 'Delete this lesson?';
     if (!lessonCourse || !window.confirm(confirmMsg)) return;
 
@@ -182,6 +190,9 @@ export const CourseManagement = () => {
       toast.error(err.message || (isArabic ? 'فشل حذف الدرس' : 'Failed to delete lesson'));
     }
   };
+
+  const refreshLessonMedia=async()=>{if(!lessonCourse)return;const list=await courseService.getCourseLessons(lessonCourse.id);setLessons(list);setEditingLesson(previous=>list.find(l=>l.id===previous?.id)||previous);await fetchCourses();};
+  const reorderLessons=async(from:string,to:string)=>{if(!lessonCourse||savingLesson||mediaBusy||from===to)return;const ids=lessons.map(l=>l.id),a=ids.indexOf(from),b=ids.indexOf(to);if(a<0||b<0)return;ids.splice(a,1);ids.splice(b,0,from);setSavingLesson(true);try{const r=await supabase.rpc('reorder_course_lessons',{p_course_id:lessonCourse.id,p_ids:ids});if(r.error)throw r.error;await refreshLessonMedia();}catch(e:any){toast.error(e.message);}finally{setSavingLesson(false);}};
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -656,7 +667,7 @@ export const CourseManagement = () => {
       )}
 
       {lessonCourse && (
-        <Dialog aria-label={isArabic ? 'إدارة دروس الكورس' : 'Course lessons'} onClose={() => {if(!savingLesson)setLessonCourse(null);}} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <Dialog aria-label={isArabic ? 'إدارة دروس الكورس' : 'Course lessons'} onClose={() => {if(!savingLesson&&!mediaBusy)setLessonCourse(null);}} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
           <div className="w-full max-w-5xl max-h-[90vh] bg-dark-navy border border-primary/30 rounded-2xl p-6 overflow-y-auto space-y-6 custom-scrollbar">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
               <div>
@@ -667,16 +678,18 @@ export const CourseManagement = () => {
                 <p className="text-xs font-mono text-muted-foreground mt-1">{lessonCourse.title}</p>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="cyber" className="font-cyber text-xs" onClick={handleOpenCreateLesson}>
+                <Button variant="cyber" disabled={mediaBusy||savingLesson} className="font-cyber text-xs" onClick={handleOpenCreateLesson}>
                   <Plus className="w-4 h-4 mr-1 rtl:mr-0 rtl:ml-1" />
                   {isArabic ? 'درس جديد' : 'NEW_LESSON'}
                 </Button>
-                <Button variant="outline" disabled={savingLesson} className="font-cyber text-xs border-white/20" onClick={() => setLessonCourse(null)}>
+                <Button variant="outline" disabled={savingLesson||mediaBusy} className="font-cyber text-xs border-white/20" onClick={() => setLessonCourse(null)}>
                   {isArabic ? 'إغلاق' : 'CLOSE'}
                 </Button>
               </div>
             </div>
 
+            <CourseUnitsEditor key={lessonCourse.id} courseId={lessonCourse.id} onChange={setUnits} disabled={savingLesson||mediaBusy}/>
+            <p className="text-xs text-muted-foreground mb-3">{isArabic?'اسحب الدروس لترتيبها أو استخدم الأسهم. احفظ الدرس أولًا لإضافة الفيديو والملفات.':'Drag lessons to reorder or use arrows. Save a lesson first to attach videos and files.'}</p>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="space-y-3">
                 {loadingLessons ? (
@@ -687,8 +700,8 @@ export const CourseManagement = () => {
                   <div className="py-10 text-center border border-dashed border-white/10 rounded-xl text-muted-foreground text-xs font-mono">
                     {isArabic ? 'لا توجد دروس لهذه الدورة بعد.' : 'No lessons created for this course yet.'}
                   </div>
-                ) : lessons.map(lesson => (
-                  <div key={lesson.id} className="p-4 rounded-xl border border-white/10 bg-white/[0.03] flex items-center justify-between gap-4">
+                ) : lessons.map((lesson,index) => (
+                  <div key={lesson.id} draggable={!mediaBusy&&!savingLesson} onDragStart={()=>setDraggedLesson(lesson.id)} onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();reorderLessons(draggedLesson,lesson.id);setDraggedLesson('');}} className="p-4 rounded-xl border border-white/10 bg-white/[0.03] flex flex-wrap items-center justify-between gap-4">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-[10px] font-cyber text-primary">#{lesson.order}</span>
@@ -700,12 +713,16 @@ export const CourseManagement = () => {
                         )}
                       </div>
                       <h4 className="text-sm font-bold text-white truncate">{lesson.title}</h4>
+                      <p className="text-xs text-primary/70">{units.find(u=>u.id===lesson.moduleId)?.title||''}</p>
                       <p className="text-[10px] text-muted-foreground font-mono">
                         {lesson.duration} min • +{lesson.pointsReward} XP
                       </p>
                     </div>
                     <div className="flex items-center gap-1">
+                      <button type="button" disabled={savingLesson||mediaBusy||index===0} aria-label={'Move lesson up '+lesson.title} onClick={()=>reorderLessons(lesson.id,lessons[index-1].id)} className="p-2">↑</button>
+                      <button type="button" disabled={savingLesson||mediaBusy||index===lessons.length-1} aria-label={'Move lesson down '+lesson.title} onClick={()=>reorderLessons(lesson.id,lessons[index+1].id)} className="p-2">↓</button>
                       <button aria-label={isArabic ? 'تعديل الدرس' : 'Edit lesson'}
+                        disabled={savingLesson||mediaBusy}
                         onClick={() => setEditingLesson({ ...lesson })}
                         className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-white/5"
                         title={isArabic ? 'تعديل الدرس' : 'Edit lesson'}
@@ -713,6 +730,7 @@ export const CourseManagement = () => {
                         <Edit className="w-4 h-4" />
                       </button>
                       <button aria-label={isArabic ? 'حذف الدرس' : 'Delete lesson'}
+                        disabled={savingLesson||mediaBusy}
                         onClick={() => handleDeleteLesson(lesson.id)}
                         className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-white/5"
                         title={isArabic ? 'حذف الدرس' : 'Delete lesson'}
@@ -727,6 +745,7 @@ export const CourseManagement = () => {
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
                 {editingLesson ? (
                   <form onSubmit={handleSaveLesson} className="space-y-4">
+                    <fieldset disabled={savingLesson||mediaBusy} className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h4 className="font-cyber text-primary text-sm">
                         {lessons.some(lesson => lesson.id === editingLesson.id) ? (isArabic ? 'تعديل الدرس' : 'EDIT_LESSON') : (isArabic ? 'إنشاء درس جديد' : 'CREATE_LESSON')}
@@ -743,9 +762,11 @@ export const CourseManagement = () => {
                       className="font-mono text-xs"
                       required
                     />
+                    <label className="block text-xs">{isArabic?'الوحدة':'Unit'}<select aria-label="Lesson unit" value={units.some(u=>u.id===editingLesson.moduleId)?editingLesson.moduleId:''} onChange={e=>setEditingLesson(p=>({...p,moduleId:e.target.value}))} className="block w-full mt-2 h-10 px-3 rounded bg-dark-navy border border-white/20"><option value="">{isArabic?'دروس عامة':'General lessons'}</option>{units.map(u=><option key={u.id} value={u.id}>{u.title}</option>)}</select></label>
 
                     <div className="grid grid-cols-2 gap-3">
                       <select
+                        aria-label="Lesson type"
                         value={editingLesson.type || 'article'}
                         onChange={e => setEditingLesson(p => ({ ...p, type: e.target.value as LessonType }))}
                         className="h-10 px-3 rounded-lg bg-dark-navy border border-white/20 text-xs font-mono"
@@ -798,6 +819,7 @@ export const CourseManagement = () => {
                     />
 
                     {editingLesson.type === 'quiz' && <CourseQuizEditor questions={editingLesson.quizQuestions || []} disabled={savingLesson} onChange={questions => setEditingLesson(previous => ({ ...previous, quizQuestions: questions }))} />}
+                    {editingLesson.type==='exercise'&&<CourseExerciseEditor lesson={editingLesson} onChange={fields=>setEditingLesson(p=>({...p,...fields}))}/>}
                     <label className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
                       <input
                         type="checkbox"
@@ -806,12 +828,14 @@ export const CourseManagement = () => {
                       />
                       {isArabic ? 'متاح كمعاينة مجانية' : 'Available as free preview'}
                     </label>
+                    </fieldset>
+                    {lessons.some(l=>l.id===editingLesson.id)?<LessonMediaEditor key={editingLesson.id} lessonId={editingLesson.id} onSaved={refreshLessonMedia} onBusy={setMediaBusy}/>:<p className="text-xs text-amber-300">{isArabic?'احفظ الدرس أولًا لتفعيل رفع الفيديو والماتريال.':'Save the lesson first to enable video and material uploads.'}</p>}
 
                     <div className="flex justify-end gap-2 pt-2">
-                      <Button type="button" variant="outline" className="text-xs" onClick={() => setEditingLesson(null)}>
+                      <Button type="button" variant="outline" disabled={savingLesson||mediaBusy} className="text-xs" onClick={() => setEditingLesson(null)}>
                         {isArabic ? 'إلغاء' : 'CANCEL'}
                       </Button>
-                      <Button type="submit" variant="cyber" className="text-xs" disabled={savingLesson}>
+                      <Button type="submit" variant="cyber" className="text-xs" disabled={savingLesson||mediaBusy}>
                         {isArabic ? 'حفظ الدرس' : 'SAVE_LESSON'}
                       </Button>
                     </div>

@@ -18,7 +18,7 @@ for (const filename of ['post-final-results.json', 'qr-final-results.json', 'err
 }
 const latest=new Map();for(const row of rows)latest.set(row.scenario+'|'+row.viewport,row);rows.splice(0,rows.length,...latest.values());
 const sqlResults=JSON.parse(fs.readFileSync(path.join(root,'postgres-results.json'),'utf8'));
-const migrationCount=fs.readdirSync(path.join(root,'..','supabase','migrations')).filter(file=>/^202610(13|14)/.test(file)).length;
+const migrationCount=fs.readdirSync(path.join(root,'..','supabase','migrations')).filter(file=>/^202610(13|14|15)/.test(file)).length;
 const defects = [
  ['Login / all roles','Critical','AuthContext.tsx','Cached fake accounts and role shortcuts could enter protected UI','Real Supabase session, verified identity, active database role; mock shortcuts removed','Browser guards + server auth tests + SQL RLS'],
  ['Admin users','Critical','api/admin/users.ts','Administrative requests relied on unsafe fallback account creation','Bearer identity and database role checked server-side; no default password','Server authorization tests; live account CRUD remains untested'],

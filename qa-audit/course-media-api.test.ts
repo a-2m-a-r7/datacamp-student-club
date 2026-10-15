@@ -1,0 +1,52 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {google} from 'googleapis';
+import media from '../api/courses/media';
+import analyze from '../api/courses/analyze';
+import drive from '../api/courses/drive';
+import {seal,unseal,sign,verify,uploadLocation,geminiLocation,boundedBytes,validateCourseFile} from '../server/courseMedia';
+import {parseLessonPlan} from '../server/courseAi';
+const uid='00000000-0000-4000-8000-000000000002',aid='00000000-0000-4000-8000-000000000003',lid='00000000-0000-4000-8000-000000000004',cid='00000000-0000-4000-8000-000000000005';
+const response=()=>({code:200,statusCode:200,headers:{} as Record<string,string>,payload:null as any,setHeader(k:string,v:string){this.headers[k]=v;},status(c:number){this.code=c;this.statusCode=c;return this;},json(p:any){this.payload=p;return this;},end(p?:any){this.payload=p;return this;}});
+const req=(body:any)=>({method:'POST',headers:{authorization:'Bearer QA_TEST'},body});
+const json=(value:any)=>new Response(JSON.stringify(value),{headers:{'Content-Type':'application/json'}});
+test('course APIs preserve permissions, provider binding, bounded memory and private credentials',async t=>{
+ const oldFetch=globalThis.fetch,oldEnv={...process.env},oldToken=google.auth.OAuth2.prototype.getAccessToken;
+ Object.assign(process.env,{SUPABASE_URL:'https://qa-test.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'QA_TEST_SERVER_SECRET',GOOGLE_DRIVE_CLIENT_ID:'QA_TEST_CLIENT',GOOGLE_DRIVE_CLIENT_SECRET:'QA_TEST_OAUTH_SECRET',GEMINI_API_KEY:'QA_TEST_GEMINI',GEMINI_COURSE_ENABLED:'true'});
+ let role='admin',enrolled=false,writes=0,permissions=0,md5='b'.repeat(32),calls=0;
+ const job={id:aid,owner_id:uid,lesson_id:lid,kind:'video',name:'QA_TEST.mp4',mime_type:'video/mp4',size_bytes:100,fingerprint:'b'.repeat(32),sha256:'a'.repeat(64),status:'uploading'};
+ const asset={id:aid,owner_id:uid,lesson_id:lid,course_id:cid,provider:'drive',file_id:'QA_TEST_DRIVE_FILE',kind:'video',mime_type:'video/mp4',size_bytes:100,url:'https://drive.google.com/file/d/QA_TEST_DRIVE_FILE/view'};
+ globalThis.fetch=async(input:any,options:any={})=>{
+  calls++;const url=new URL(String(input));const method=options.method||'GET';
+  if(url.hostname==='qa-test.supabase.co'){
+   if(url.pathname.includes('/auth/'))return json({id:uid,email_confirmed_at:'2026-10-15T00:00:00Z'});
+   const table=url.pathname.split('/').at(-1);if(!['GET','HEAD'].includes(method)){writes++;return json([]);}
+   const row=table==='profiles'?{role,status:'active'}:table==='lessons'?{id:lid,course_id:cid,is_preview:false}:table==='courses'?{id:cid,is_published:true}:table==='course_assets'?asset:table==='course_upload_jobs'?job:table==='course_drive_connections'?{owner_id:uid,encrypted_refresh_token:seal('QA_TEST_REFRESH_SECRET')}:null;
+   if(table==='enrollments')return json(enrolled?[{id:aid}]:[]);
+   if(table==='profiles'||table==='course_drive_connections')return json(new Headers(options.headers).get('accept')?.includes('vnd.pgrst.object')?row:[row]);
+   return json(row);
+  }
+  if(url.hostname==='www.googleapis.com'){
+   if(url.pathname.endsWith('/permissions')){permissions++;return json({id:'QA_TEST_PERMISSION'});}
+   if(url.searchParams.get('alt')==='media'){const data=Buffer.alloc(100);data.write('ftyp',4);const range=new Headers(options.headers).get('Range');return new Response(data.subarray(0,range==='bytes=0-31'?32:100),{status:206,headers:{'Content-Length':range==='bytes=0-31'?'32':'100'}});}
+   return json({id:asset.file_id,name:job.name,mimeType:job.mime_type,size:'100',ownedByMe:true,md5Checksum:md5,appProperties:{dcUpload:job.id,dcLesson:lid}});
+  }
+  throw Error('Unexpected QA network destination '+url.hostname);
+ };
+ google.auth.OAuth2.prototype.getAccessToken=async()=>({token:'QA_TEST_SHORT_LIVED'}) as any;
+ try{
+  await t.test('encrypted refresh tokens are randomized, reversible and tamper evident',()=>{const a=seal('QA_TEST_REFRESH'),b=seal('QA_TEST_REFRESH');assert.notEqual(a,b);assert.equal(unseal(a),'QA_TEST_REFRESH');const bytes=Buffer.from(a,'base64url');bytes[20]^=1;assert.throws(()=>unseal(bytes.toString('base64url')));assert.ok(!a.includes('QA_TEST_REFRESH'));});
+  await t.test('signed tickets reject tampering and expiry',()=>{assert.equal(verify(sign({exp:Date.now()+10000,purpose:'QA_TEST'})).purpose,'QA_TEST');assert.throws(()=>verify(sign({exp:Date.now()-1000})));assert.throws(()=>verify(sign({exp:Date.now()+10000})+'x'));});
+  await t.test('upload destinations reject foreign hosts, credentials and leaked API keys',()=>{for(const url of ['https://evil.invalid/upload/drive/v3/files','http://www.googleapis.com/upload/drive/v3/files','https://name:secret@www.googleapis.com/upload/drive/v3/files'])assert.throws(()=>uploadLocation(url));assert.throws(()=>geminiLocation('https://generativelanguage.googleapis.com/upload/v1beta/files?key=QA_TEST_SECRET'));});
+  await t.test('file validation rejects 2 GiB plus one, unsupported executables and oversized captions',()=>{validateCourseFile('QA_TEST.mp4','video/mp4',2147483648,'video');assert.throws(()=>validateCourseFile('QA_TEST.mp4','video/mp4',2147483649,'video'));assert.throws(()=>validateCourseFile('QA_TEST.exe','application/octet-stream',100,'material'));assert.throws(()=>validateCourseFile('QA_TEST.srt','text/plain',5242881,'subtitle'));});
+  await t.test('bounded provider reads reject oversized streams without buffering the whole response',async()=>{let cancelled=false;const stream=new ReadableStream({start(c){c.enqueue(new Uint8Array(33));},cancel(){cancelled=true;}});await assert.rejects(boundedBytes(new Response(stream),32),/exceeds/);assert.ok(cancelled);});
+  await t.test('AI plans reject invalid answers, empty output tests and duplicate question IDs',()=>{const questions=Array.from({length:3},()=>({id:'same',question:'QA_TEST_Q',options:['A','B'],correctIndex:0,explanation:'QA_TEST_EXPLANATION'}));const valid={summary:'QA_TEST_SUMMARY',questions,exercise:null};assert.equal(new Set(parseLessonPlan(valid).questions.map(q=>q.id)).size,3);assert.throws(()=>parseLessonPlan({...valid,questions:questions.map(q=>({...q,correctIndex:4}))}));assert.throws(()=>parseLessonPlan({...valid,exercise:{language:'javascript',prompt:'QA_TEST',starterCode:'',solution:'console.log(1)',testCases:[{description:'QA_TEST',input:'',expectedOutput:''}]}}));});
+  await t.test('all administration endpoints reject visitors and ordinary members before provider access',async()=>{for(const handler of [drive,media,analyze]){let res=response();await handler({method:'POST',headers:{},body:{action:'start'}},res);assert.equal(res.code,401);role='user';res=response();await handler(req({action:'start'}),res);assert.equal(res.code,403);}role='admin';});
+  await t.test('OAuth callback with missing or mismatched nonce cannot exchange a code',async()=>{const before=calls;for(const cookie of ['', 'dc_drive_state=wrong']){const res=response();await drive({method:'GET',url:'/api/courses/drive?code=QA_TEST&state='+sign({uid,nonce:'correct',purpose:'drive-connect',exp:Date.now()+10000}),headers:{cookie}},res);assert.equal(res.statusCode,302);assert.ok(res.headers.Location.endsWith('drive=failed'));}assert.equal(calls,before);});
+  await t.test('Drive connection exposes no refresh token or server secret',async()=>{const res=response();await drive(req({action:'status'}),res);assert.equal(res.payload.connected,true);assert.equal(res.payload.configured,true);assert.ok(!JSON.stringify(res).includes('QA_TEST_REFRESH_SECRET'));assert.ok(!JSON.stringify(res).includes('QA_TEST_SERVER_SECRET'));});
+  await t.test('file tickets require enrollment; active membership alone is insufficient',async()=>{role='user';let res=response();await media(req({action:'open',assetId:aid}),res);assert.equal(res.code,403);enrolled=true;res=response();await media(req({action:'open',assetId:aid}),res);assert.equal(res.code,200);const ticket=new URL(res.payload.url,'https://local.invalid').searchParams.get('ticket')!;assert.equal(verify(ticket).uid,uid);assert.equal(verify(ticket).asset,aid);role='admin';});
+  await t.test('file completion rejects a provider hash mismatch before public sharing or database writes',async()=>{md5='0'.repeat(32);const before=writes;const res=response();await media(req({action:'finish',jobId:aid,fileId:asset.file_id}),res);assert.equal(res.code,400);assert.match(res.payload.error,/does not match/);assert.equal(writes,before);assert.equal(permissions,0);});
+  await t.test('file completion validates actual bytes and only then saves the lesson reference',async()=>{md5=job.fingerprint;const before=writes;const res=response();await media(req({action:'finish',jobId:aid,fileId:asset.file_id}),res);assert.equal(res.code,200);assert.equal(res.payload.assetId,aid);assert.equal(writes-before,3);assert.equal(permissions,1);});
+  await t.test('video generation stays disabled until free-tier activation is configured',async()=>{process.env.GEMINI_COURSE_ENABLED='false';const res=response();await analyze(req({action:'prepare'}),res);assert.equal(res.code,503);assert.match(res.payload.error,/verified free-tier/);});
+ }finally{globalThis.fetch=oldFetch;google.auth.OAuth2.prototype.getAccessToken=oldToken;for(const key of Object.keys(process.env))if(!(key in oldEnv))delete process.env[key];Object.assign(process.env,oldEnv);}
+});

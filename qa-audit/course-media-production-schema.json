@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-10-15T06:54:04.610Z",
+  "results": [
+    {
+      "table": "course_modules",
+      "serviceStatus": 200,
+      "count": 0
+    },
+    {
+      "table": "course_assets",
+      "serviceStatus": 200,
+      "count": 0
+    },
+    {
+      "table": "course_drive_connections",
+      "serviceStatus": 200,
+      "count": 0
+    },
+    {
+      "table": "course_upload_jobs",
+      "serviceStatus": 200,
+      "count": 0
+    },
+    {
+      "table": "lesson_analysis_jobs",
+      "serviceStatus": 200,
+      "count": 0
+    },
+    {
+      "table": "lesson_watch_progress",
+      "serviceStatus": 200,
+      "count": 0
+    },
+    {
+      "table": "course_drive_connections",
+      "anonymousStatus": 401
+    },
+    {
+      "table": "course_upload_jobs",
+      "anonymousStatus": 401
+    },
+    {
+      "table": "lesson_analysis_jobs",
+      "anonymousStatus": 401
+    }
+  ]
+}

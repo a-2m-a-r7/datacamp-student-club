@@ -8,9 +8,13 @@ import submitForm from '../api/forms/submit';
 import chat from '../api/ai/chat';
 import compileTypeScript from '../api/compiler/typescript';
 import profileAvatar from '../api/profile/avatar';
+import courseDrive from '../api/courses/drive';
+import courseMedia from '../api/courses/media';
+import courseAnalyze from '../api/courses/analyze';
 
 if (fs.existsSync('.env')) process.loadEnvFile('.env');
 const handlers: Record<string, (req: any, res: any) => Promise<any>> = {
+  '/api/courses/drive':courseDrive,'/api/courses/media':courseMedia,'/api/courses/analyze':courseAnalyze,
   '/api/profile/avatar': profileAvatar, '/api/admin/users': adminUsers, '/api/admin/backup': backup,
   '/api/forms/sync-sheet': syncSheet, '/api/forms/submit': submitForm,
   '/api/ai/chat': chat, '/api/compiler/typescript': compileTypeScript,

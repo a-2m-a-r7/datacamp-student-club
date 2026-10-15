@@ -1,0 +1,23 @@
+{
+  "passed": 17,
+  "tests": [
+    "members cannot create or rename course units",
+    "unit reorder is atomic, checks exact membership and requires administrator",
+    "lesson reorder rejects missing IDs without partially updating positions",
+    "cross-course units and source lessons are rejected",
+    "asset boundary accepts 2 GiB metadata and rejects larger files",
+    "non-enrolled members cannot list private lesson assets",
+    "enrolled members can read assets but cannot forge file references",
+    "watch position persists privately and updates resume lesson without awarding completion",
+    "non-enrolled users and invalid bookmark values are rejected",
+    "private OAuth and upload/analysis capabilities are invisible to members and admins",
+    "AI approval atomically adds quiz then coding in the source unit",
+    "AI approval retries return the same IDs and do not duplicate lessons",
+    "generated quiz cannot complete before its source video",
+    "generated coding cannot complete before passing the linked quiz",
+    "certificate waits for all persisted lessons including the generated stages",
+    "approval rejects a plan generated for an edited source without partial writes",
+    "videos without code create a quiz only"
+  ],
+  "scope": "Isolated PGlite; boundary test checks metadata, not an actual 2 GiB network transfer."
+}

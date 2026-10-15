@@ -40,7 +40,7 @@ try {
    CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
    CREATE TABLE storage.objects(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),bucket_id text,name text); ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
    GRANT USAGE ON SCHEMA storage TO anon,authenticated; GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA storage TO anon,authenticated;`);
-  for (const file of fs.readdirSync('supabase/migrations').filter(file => /^202610(13|14)/.test(file)).sort()) await owner.query(fs.readFileSync('supabase/migrations/' + file, 'utf8'));
+  for (const file of fs.readdirSync('supabase/migrations').filter(file => /^202610(13|14|15)/.test(file)).sort()) await owner.query(fs.readFileSync('supabase/migrations/' + file, 'utf8'));
   await owner.query('GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO anon,authenticated; REVOKE ALL ON course_request_windows FROM anon,authenticated;');
   await owner.query("INSERT INTO auth.users(id,email,email_confirmed_at,raw_user_meta_data) SELECT id, 'QA_TEST_'||id::text||'@example.invalid',now(),'{\"full_name\":\"QA_TEST_GROWTH_MEMBER\"}' FROM jsonb_to_recordset($1::jsonb) AS t(id uuid)", [JSON.stringify([admin,...members].map(id => ({id})))]);
   await owner.query("UPDATE profiles SET role='admin' WHERE id=$1", [admin]);

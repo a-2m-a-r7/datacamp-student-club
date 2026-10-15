@@ -153,6 +153,9 @@ export interface CourseLesson {
   type: LessonType;
   content: string;
   videoUrl?: string;
+    videoAssetId?: string;
+    sourceLessonId?: string;
+    exerciseLanguage?: string;
   duration: number;
   order: number;
   isPreview?: boolean;

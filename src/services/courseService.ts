@@ -14,10 +14,10 @@ import {
 } from '../types';
 export interface CourseCursor { createdAt: string; id: string }
 export interface CoursePage { items: Course[]; hasMore: boolean; nextCursor: CourseCursor | null }
-export function courseModulesFromLessons(courseId: string, lessons: CourseLesson[]): CourseModule[] {
+export function courseModulesFromLessons(courseId: string, lessons: CourseLesson[],units:{id:string;title:string;position:number}[]=[]): CourseModule[] {
   const groups = new Map<string, CourseLesson[]>();
   for (const lesson of lessons) { const id = lesson.moduleId || `module-${courseId}`; const rows = groups.get(id) || []; rows.push(lesson); groups.set(id, rows); }
-  return [...groups].map(([id, rows], index) => ({ id, courseId, title: groups.size === 1 ? 'Course Lessons' : `Module ${index + 1}`, description: '', order: index + 1, totalLessons: rows.length, durationMinutes: rows.reduce((sum, lesson) => sum + lesson.duration, 0) }));
+  return [...groups].map(([id, rows], index) => ({ id, courseId, title:units.find(u=>u.id===id)?.title||(groups.size === 1 ? 'Course Lessons' : `Module ${index + 1}`), description: '', order:units.find(u=>u.id===id)?.position||10000+index, totalLessons: rows.length, durationMinutes: rows.reduce((sum, lesson) => sum + lesson.duration, 0) })).sort((a,b)=>a.order-b.order);
 }
 function nonNegativeNumber(value: unknown, fallback: number, label: string): number {
   const number = value === undefined || value === null ? fallback : Number(value);
@@ -67,6 +67,9 @@ const mapDatabaseLesson = (row: any): CourseLesson => ({
   type: row.type || (row.video_url ? 'video' : 'article'),
   content: row.content || '',
   videoUrl: row.video_url || '',
+  videoAssetId:row.video_asset_id||undefined,
+  sourceLessonId:row.source_lesson_id||undefined,
+  exerciseLanguage:row.exercise_language||'python',
   duration: Number(row.duration_minutes ?? 20),
   order: Number(row.position || 1),
   isPreview: Boolean(row.is_preview),
@@ -175,32 +178,18 @@ export const courseService = {
   /**
    * 3. Get Course Modules
    */
-  async getCourseModules(courseId: string): Promise<CourseModule[]> {
-    const lessons = await this.getCourseLessons(courseId);
-    if (lessons.length > 0) {
-      const moduleIds = Array.from(new Set<string>(lessons.map(l => String(l.moduleId || `module-${courseId}`))));
-      return moduleIds.map((moduleId, index) => {
-        const moduleLessons = lessons.filter(l => (l.moduleId || `module-${courseId}`) === moduleId);
-        return {
-          id: moduleId,
-          courseId,
-          title: moduleIds.length === 1 ? 'Course Lessons' : `Module ${index + 1}`,
-          description: 'Lessons managed from the Supabase lessons table.',
-          order: index + 1,
-          totalLessons: moduleLessons.length,
-          durationMinutes: moduleLessons.reduce((sum, lesson) => sum + (lesson.duration || 0), 0),
-        };
-      });
-    }
-
-    if (isSupabaseConfigured) return [];
-
-    return [];
+  async getCourseUnits(courseId:string) {
+    const r=await supabase.from('course_modules').select('id,title,position').eq('course_id',courseId).order('position').order('id');
+    if(r.error)throw r.error;return r.data;
   },
-
-  /**
-   * 4. Get Lessons for a course from Supabase
-   */
+  async getCourseModules(courseId:string):Promise<CourseModule[]> {
+    const lessons=await this.getCourseLessons(courseId);
+    const units=lessons.some(l=>/^[a-f0-9-]{36}$/i.test(l.moduleId))?await this.getCourseUnits(courseId):[];
+    return courseModulesFromLessons(courseId,lessons,units);
+  },
+  async getLesson(lessonId:string):Promise<CourseLesson> {
+    const r=await supabase.from('lessons').select('*').eq('id',lessonId).single();if(r.error)throw r.error;return mapDatabaseLesson(r.data);
+  },
   async getCourseLessons(courseId: string): Promise<CourseLesson[]> {
     if (!isSupabaseConfigured) throw new Error('Database is not configured.');
     const lessons: CourseLesson[] = [];
@@ -394,6 +383,13 @@ export const courseService = {
   async saveLesson(lessonData: Partial<CourseLesson> & { courseId: string }): Promise<CourseLesson> {
     const title = lessonData.title?.trim();
     if (!title || title.length > 300) throw new Error('Lesson title is required and must be under 300 characters.');
+    if(lessonData.videoUrl){let url:URL;try{url=new URL(lessonData.videoUrl);}catch{throw new Error('Enter a valid HTTPS video URL.');}if(url.protocol!=='https:'||url.username||url.password)throw new Error('Enter a valid HTTPS video URL.');}
+    if(lessonData.type==='exercise'){
+      if(!lessonData.exercisePrompt?.trim())throw new Error('Enter coding exercise instructions.');
+      if(!['python','javascript','typescript','sql','cpp','java','r','go','rust'].includes(lessonData.exerciseLanguage||'python'))throw new Error('Choose a supported exercise language.');
+      const tests=lessonData.exerciseTestCases;
+      if(!Array.isArray(tests)||!tests.length||tests.length>20||tests.some(t=>!t.description?.trim()||typeof t.expectedOutput!=='string'||!t.expectedOutput.trim()))throw new Error('Add 1 to 20 test cases with a description and expected output.');
+    }
     if (lessonData.type === 'quiz') {
       const questions = lessonData.quizQuestions;
       if (!Array.isArray(questions) || !questions.length || questions.length > 100) throw new Error('A quiz needs 1 to 100 valid questions.');
@@ -417,6 +413,7 @@ export const courseService = {
       points_reward: nonNegativeNumber(lessonData.pointsReward, 30, 'Lesson reward'),
       quiz_questions: lessonData.quizQuestions || [],
       exercise_prompt: lessonData.exercisePrompt || '',
+      exercise_language:lessonData.exerciseLanguage||'python',
       exercise_starter_code: lessonData.exerciseStarterCode || '',
       exercise_solution: lessonData.exerciseSolution || '',
       exercise_test_cases: lessonData.exerciseTestCases || [],

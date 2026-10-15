@@ -23,6 +23,7 @@ import {
 import { toast } from 'sonner';
 import { CodeExerciseRunner } from '../components/Compiler/CodeExerciseRunner';
 import { AIMentorModal } from '../components/AIMentor/AIMentorModal';
+import {LessonResources} from '../components/courses/LessonResources';
 
 const CourseLearning = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -60,11 +61,14 @@ const CourseLearning = () => {
         setCourse(c);
 
         const less = await courseService.getCourseLessons(c.id);
-        const mods = courseModulesFromLessons(c.id, less);
+        const units=less.some(l=>/^[a-f0-9-]{36}$/i.test(l.moduleId))?await courseService.getCourseUnits(c.id):[];
+        const mods = courseModulesFromLessons(c.id, less,units);
+        less.sort((a,b)=>mods.findIndex(m=>m.id===a.moduleId)-mods.findIndex(m=>m.id===b.moduleId)||a.order-b.order);
         setModules(mods);
         setLessons(less);
 
-        if (user) {
+        if(user&&c.status==='draft'&&['admin','super_admin'].includes(user.role)){setEnrollment(null);setCurrentLesson(less[0]||null);}
+        else if (user) {
           const currentUserId = user.id || (user as any).uid;
           let enr = await courseService.getUserEnrollment(currentUserId, c.id);
           if (!enr) {
@@ -80,6 +84,7 @@ const CourseLearning = () => {
         }
       } catch (err) {
         console.error('Learning view load error:', err);
+        toast.error((err as Error).message||(isArabic?'تعذر تحميل الدروس.':'Unable to load lessons.'));
       } finally {
         setLoading(false);
       }
@@ -95,7 +100,7 @@ const CourseLearning = () => {
   };
 
   const handleCompleteCurrentLesson = async () => {
-    if (!user || !course || !currentLesson || completing) return;
+    if (!user || !course || !currentLesson || completing) return false;
 
     setCompleting(true);
     try {
@@ -123,8 +128,10 @@ const CourseLearning = () => {
       if (currentIndex < lessons.length - 1) {
         handleLessonSelect(lessons[currentIndex + 1]);
       }
+      return true;
     } catch (error: any) {
       toast.error(error.message || (isArabic ? 'فشل حفظ إتمام الدرس.' : 'Failed to complete lesson.'));
+      return false;
     } finally {
       setCompleting(false);
     }
@@ -142,6 +149,8 @@ const CourseLearning = () => {
    await refreshProfile().catch(() => {});
    toast.success(isArabic ? 'تم اجتياز الاختبار وحفظ النتيجة' : 'Assessment passed and result saved');
    if (result.progress?.isCourseFinished && rows?.certificateId) toast.success(isArabic ? 'تم إصدار شهادة الكورس تلقائيًا' : 'Your course certificate was issued automatically');
+   const next=lessons[lessons.findIndex(l=>l.id===currentLesson.id)+1];
+   if(next?.type==='exercise'&&next.sourceLessonId&&next.sourceLessonId===currentLesson.sourceLessonId)handleLessonSelect(next);
   } else toast.error(isArabic ? 'درجة النجاح 80%' : 'Passing score is 80%');
  } catch (err: any) { toast.error(err.message || 'Unable to save assessment'); }
  finally { setCompleting(false); }
@@ -265,28 +274,10 @@ const CourseLearning = () => {
               </div>
             </div>
 
-            {/* Video Player */}
-            {currentLesson.type === 'video' && (
-              <div className="relative rounded-2xl overflow-hidden border border-primary/30 bg-black aspect-video shadow-[0_0_40px_rgba(0,0,0,0.8)]">
-                {currentLesson.videoUrl ? (
-                  <iframe
-                    src={currentLesson.videoUrl}
-                    title={currentLesson.title}
-                    className="w-full h-full border-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground gap-3">
-                    <PlayCircle className="w-16 h-16 text-primary animate-pulse" />
-                    <p className="font-mono text-xs">
-                      {isArabic ? 'جاري معالجة وبث الفيديو التعليمي...' : 'Video stream currently processing.'}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-
+            <div className="flex flex-wrap gap-2" role="tablist" aria-label={isArabic?'مراحل الدرس':'Learning stages'}>
+              {lessons.filter(l=>l.id===(currentLesson.sourceLessonId||currentLesson.id)||l.sourceLessonId===(currentLesson.sourceLessonId||currentLesson.id)).map(l=><button key={l.id} type="button" role="tab" aria-selected={l.id===currentLesson.id} onClick={()=>handleLessonSelect(l)} className={`px-4 py-2 rounded-lg border text-sm ${l.id===currentLesson.id?'border-primary text-primary bg-primary/10':'border-white/15'}`}>{l.type==='video'?(isArabic?'الفيديو':'Video'):l.type==='quiz'?(isArabic?'الكويز':'Quiz'):l.type==='exercise'?(isArabic?'التطبيق البرمجي':'Coding'):l.title}</button>)}
+            </div>
+            <LessonResources key={`${user?.id||user?.uid||'visitor'}:${currentLesson.id}`} lesson={currentLesson} onVideoEnded={()=>{if(!isCompleted)handleCompleteCurrentLesson();}}/>
             {/* Article Content */}
             {currentLesson.type !== 'quiz' && currentLesson.content && (
               <div className="p-6 sm:p-8 rounded-2xl border border-white/10 bg-dark-navy/60 backdrop-blur-xl prose prose-invert max-w-none font-mono text-xs sm:text-sm leading-relaxed space-y-4">
@@ -391,18 +382,17 @@ const CourseLearning = () => {
               </div>
             )}
 
+            {currentLesson.exercisePrompt&&<Link className="text-primary underline text-sm" to={`/compiler?lesson=${encodeURIComponent(currentLesson.id)}`}>{isArabic?'فتح التمرين في محرر الأكواد الكامل':'Open practice in the full coding tab'}</Link>}
             {/* Practical Coding Exercise / Online Compiler */}
             {currentLesson.exercisePrompt && (
               <div className="pt-2">
-                <CodeExerciseRunner
+                <CodeExerciseRunner key={currentLesson.id} language={currentLesson.exerciseLanguage||'python'}
                   exerciseTitle={isArabic ? `التحدي البرمجي: ${currentLesson.title}` : `Practical Challenge: ${currentLesson.title}`}
                   exercisePrompt={currentLesson.exercisePrompt}
                   starterCode={currentLesson.exerciseStarterCode || '# Write your solution here\n'}
                   testCases={currentLesson.exerciseTestCases || [{ description: isArabic ? 'فحص التنفيذ' : 'Execution check', expectedOutput: '' }]}
                   pointsReward={currentLesson.pointsReward}
-                  onSuccess={() => {
-                    handleCompleteCurrentLesson();
-                  }}
+                  onSuccess={handleCompleteCurrentLesson}
                   onAskAI={() => {
                     setIsAIModalOpen(true);
                   }}
@@ -430,7 +420,7 @@ const CourseLearning = () => {
                   variant="cyber"
                   className="font-cyber text-xs tracking-wider h-11 px-6 shadow-[0_0_20px_rgba(0,255,204,0.25)]"
                   onClick={handleCompleteCurrentLesson}
-                  disabled={completing || isCompleted}
+                  disabled={completing || isCompleted || currentLesson.type==='quiz' || currentLesson.type==='exercise'}
                 >
                   {isCompleted ? (
                     <span className="flex items-center gap-2">

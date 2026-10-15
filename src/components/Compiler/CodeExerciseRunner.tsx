@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { runPythonCode, runCodeVerification, TestCase } from '../../lib/pythonRunner';
+import { TestCase } from '../../lib/pythonRunner';
 import { getLanguage, LanguageDefinition } from '../../lib/universalRunner';
 import { Button } from '../ui/Button';
 import {
@@ -20,10 +20,10 @@ interface CodeExerciseRunnerProps {
   exerciseTitle: string;
   exercisePrompt: string;
   starterCode: string;
-  testCases: TestCase[];
+  testCases: (TestCase&{input?:string})[];
   pointsReward?: number;
   language?: string;
-  onSuccess?: () => void;
+  onSuccess?: () => void|boolean|Promise<void|boolean>;
   onAskAI?: (code: string) => void;
 }
 
@@ -67,26 +67,13 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
     if (isVerifying) return;
     setIsVerifying(true);
     try {
-      const exec = await runPythonCode(code);
-      setOutput(exec.output);
-      setError(exec.error);
-      setExecutionTime(exec.executionTimeMs);
-
-      if (exec.error) {
-        toast.error('Code has errors. Fix them before submitting.');
-        setIsVerifying(false);
-        return;
-      }
-
-      const verif = await runCodeVerification(code, testCases);
-      setTestResults(verif.results);
-
-      if (verif.allPassed) {
+      if(!testCases.length||!testCases.some(t=>t.expectedOutput.trim()))throw Error('The instructor must configure meaningful test cases first.');
+      const results=[];for(const tc of testCases){const exec=await activeLang.run(code,tc.input||'');setOutput(exec.output);setError(exec.error||null);setExecutionTime(exec.executionTimeMs);results.push({description:tc.description,passed:!exec.error&&exec.output.trim()===tc.expectedOutput.trim(),expected:tc.expectedOutput.trim(),actual:exec.output.trim()});if(exec.error)break;}
+      setTestResults(results);
+      if (results.length===testCases.length&&results.every(r=>r.passed)) {
+        if(onSuccess&&(await onSuccess())===false)throw Error('Tests passed, but completion was not saved. Retry.');
         setIsCompleted(true);
-        toast.success(`🎉 CHALLENGE SOLVED! +${pointsReward} XP Claimed!`, {
-          duration: 5000,
-        });
-        if (onSuccess) onSuccess();
+        toast.success(onSuccess?'Challenge passed and completion saved.':'Local test cases passed.');
       } else {
         toast.error('Some tests failed. Check expected output and try again.');
       }
@@ -98,10 +85,12 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
   };
 
   const handleReset = () => {
+    if(isRunning||isVerifying)return;
     setCode(starterCode);
     setOutput('');
     setError(null);
     setTestResults(null);
+    setIsCompleted(false);
   };
 
   return (
@@ -113,7 +102,7 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
             <span className="px-2.5 py-0.5 rounded text-[10px] font-cyber tracking-wider bg-primary/20 text-primary border border-primary/40 uppercase">
               PRACTICAL CHALLENGE
             </span>
-            <span className="text-xs font-mono text-muted-foreground">{activeLang.name} {activeLang.version} In-Browser Engine</span>
+            <span className="text-xs font-mono text-muted-foreground">{activeLang.name} {activeLang.version}</span>
           </div>
           <h3 className="text-lg font-cyber font-bold text-foreground">{exerciseTitle}</h3>
         </div>
@@ -156,7 +145,8 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
           <div className="relative rounded-xl border border-white/15 bg-black/60 overflow-hidden font-mono text-xs shadow-inner">
             <textarea
               value={code}
-              onChange={e => setCode(e.target.value)}
+              onChange={e => {setCode(e.target.value);setIsCompleted(false);setTestResults(null);}}
+              disabled={isRunning||isVerifying}
               rows={12}
               spellCheck={false}
               className="w-full h-full p-4 bg-transparent text-emerald-300 placeholder:text-muted-foreground/40 outline-none resize-none font-mono text-xs leading-relaxed custom-scrollbar selection:bg-primary/30"
@@ -180,7 +170,7 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
             {isRunning || isVerifying ? (
               <div className="flex items-center gap-2 text-primary animate-pulse">
                 <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <span>Executing Python script...</span>
+                <span>Executing {activeLang.name}...</span>
               </div>
             ) : error ? (
               <div className="text-destructive whitespace-pre-wrap flex items-start gap-2">

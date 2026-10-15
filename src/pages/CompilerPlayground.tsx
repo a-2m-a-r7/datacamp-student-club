@@ -27,8 +27,13 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { AIMentorModal } from '../components/AIMentor/AIMentorModal';
+import {useSearchParams,useNavigate} from 'react-router-dom';
+import {courseService} from '../services/courseService';
 
 export const CompilerPlayground = () => {
+  const [params]=useSearchParams();
+  const navigate=useNavigate();
+  const [coursePractice,setCoursePractice]=useState<{title:string;prompt:string;courseId:string;language:string;starterCode:string}|null>(null);
   const languages = getRegisteredLanguages();
   const [selectedLangId, setSelectedLangId] = useState<string>('python');
   const activeLang: LanguageDefinition = getLanguage(selectedLangId);
@@ -44,6 +49,7 @@ export const CompilerPlayground = () => {
   const [engineUsed, setEngineUsed] = useState<string>('');
   const [isAIModalOpen, setIsAIModalOpen] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  useEffect(()=>{let active=true;const id=params.get('lesson');if(!id)return;courseService.getLesson(id).then(l=>{if(!active)return;if(!l.exercisePrompt)throw Error('This lesson has no coding exercise.');setSelectedLangId(l.exerciseLanguage||'python');setCode(l.exerciseStarterCode||'');setCoursePractice({title:l.title,prompt:l.exercisePrompt,courseId:l.courseId,language:l.exerciseLanguage||'python',starterCode:l.exerciseStarterCode||''});}).catch(e=>{if(active)toast.error(e.message||'Unable to load course practice.');});return()=>{active=false;};},[params]);
 
   // Switch language handler
   const handleLanguageChange = (langId: string) => {
@@ -108,7 +114,7 @@ export const CompilerPlayground = () => {
   };
 
   const handleReset = () => {
-    setCode(activeLang.starterCode);
+    setCode(coursePractice?.language===selectedLangId?coursePractice.starterCode:activeLang.starterCode);
     setOutput('');
     setError(null);
     setExecutionTime(null);
@@ -118,6 +124,7 @@ export const CompilerPlayground = () => {
 
   return (
     <div className="min-h-screen bg-cyber-black text-foreground pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+      {coursePractice&&<section aria-label="Course coding context" className="max-w-7xl mx-auto mb-6 p-4 border border-primary/30 rounded-xl"><h2 className="font-bold">{coursePractice.title}</h2><Button variant="outline" onClick={()=>navigate(-1)}>{isArabic?'العودة إلى الدرس':'Return to lesson'}</Button><p className="text-sm whitespace-pre-wrap mt-2">{coursePractice.prompt}</p><p className="text-xs text-muted-foreground mt-2">{isArabic?'تجربة مستقلة؛ ارجع لدرس التطبيق لتسليم الحل وحفظ الإنجاز.':'Independent practice. Return to the lesson to submit and save completion.'}</p></section>}
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
