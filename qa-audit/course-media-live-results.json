@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-10-15T13:10:59.364Z",
+  "sourceBytes": 87294409,
+  "sourceDurationSeconds": 43.11,
+  "courseSlug": "volunteer-project-walkthrough",
+  "coursePublished": false,
+  "videoPublicPreview": false,
+  "lessonTypes": [
+    "video",
+    "quiz"
+  ],
+  "uploadJobs": [
+    "complete"
+  ],
+  "persistedVideoAssets": 1,
+  "videoLinked": true,
+  "analysisStatus": "applied",
+  "generatedQuestions": 5,
+  "generatedExercise": false,
+  "pausedAndResumedInBrowser": true,
+  "savedQuizQuestions": 5,
+  "savedQuizBilingual": true,
+  "savedQuizCorrectIndices": [
+    1,
+    2,
+    2,
+    1,
+    2
+  ],
+  "savedSizeMatches": true,
+  "savedSha256Matches": true,
+  "playbackRangeStatus": 206,
+  "playbackRangeBytes": 65536,
+  "playbackBytesMatch": true,
+  "assetHiddenFromAnonymous": true
+}

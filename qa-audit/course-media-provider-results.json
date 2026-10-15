@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-10-15T13:09:32.801Z",
+  "drive": {
+    "persistedConnections": 1,
+    "checks": [
+      {
+        "ownerRole": "admin",
+        "ownerActive": true,
+        "connectionUpdatedAt": "2026-10-15T12:51:16.237+00:00",
+        "refreshSucceeded": true,
+        "providerStatus": 200,
+        "spaceFor2GiB": true
+      }
+    ],
+    "reconsentAfterOwnerReportedProduction": true
+  },
+  "gemini": {
+    "freeTierVerifiedInAiStudio": true,
+    "localKeyMatchedMaskedUiKey": true,
+    "serverKeyConfiguredInProduction": true,
+    "model": "gemini-2.5-flash",
+    "generationProbeStatus": 200,
+    "realVideoAnalysisTested": true,
+    "realVideoPlanApplied": true,
+    "bilingualVideoGenerationStatus": 200
+  },
+  "realVideoUploadTested": true,
+  "syntheticProductionUsersCreated": 0,
+  "realPrivateDraftCoursesCreatedWithOwnerAuthorization": 1,
+  "oauthAudience": "In production reported by owner; dashboard publication state not independently reread",
+  "reconsentCompleted": true
+}

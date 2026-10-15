@@ -1,24 +1,44 @@
 {
-  "codeCommit": "11890e8cbe1f1fbaee3116eced032104a772fe7b",
-  "deploymentId": "dpl_7Vhg3Vp1PadnfLLjAKWjfkwqxHMD",
+  "codeCommit": "9b266f53ceeaaae81fd4346ac862fd85729ac664",
+  "deploymentId": "dpl_GkT6yFzfNx6vzp5brHPYDJV6hWeG",
   "deploymentStatus": "READY",
   "origin": "https://datacamp-student-club.vercel.app",
-  "checkedAt": "2026-10-15T07:13:59.114Z",
+  "checkedAt": "2026-10-15T16:42:29.751Z",
   "validation": {
     "browserPassed": 48,
     "browserFailed": 0,
     "databaseNewPassed": 17,
     "databaseRegressionPassed": 61,
-    "courseApiNodePassed": 14,
+    "courseApiNodePassed": 20,
     "emittedEsmEndpointsPassed": 3,
     "deployedHttpPassed": 9,
     "frontendSecretLeaks": 0,
-    "npmProductionVulnerabilities": 0
+    "npmProductionVulnerabilities": 0,
+    "bilingualAndResumeBrowserPassed": 12,
+    "bilingualAndDraftPreviewRecheckPassed": 12,
+    "browserCountsNote": "48 prior scenarios; 12 targeted cases; 12 latest rechecks include overlapping language cases. Do not sum as unique coverage."
   },
   "productionSchemaApplied": true,
   "productionTestRecordsCreated": 0,
-  "externalDriveOAuthConfigured": false,
-  "externalCourseGeminiEnabled": false,
-  "blocker": "Google Cloud OAuth client and APIs pages fail to load in the authenticated in-app browser. No OAuth client was created. Real Drive upload and Gemini video analysis remain unverified and disabled pending setup.",
-  "scope": "48 isolated browser scenarios on three viewports; 10 MiB resumed upload with isolated providers. No actual 2 GiB upload or 1000-viewer video capacity claim."
+  "externalDriveOAuthConfigured": true,
+  "externalDriveApiEnabled": true,
+  "externalDriveConnectionVerified": true,
+  "externalDriveAudience": "In production reported by owner; not independently reread in Cloud",
+  "externalDriveConsentResult": "Reconsent completed after owner-reported publication; updated connection timestamp and Drive token refresh/about HTTP 200 verified",
+  "externalCourseGeminiEnabled": true,
+  "blocker": null,
+  "scope": "Actual 87,294,409-byte video resumed, persisted, ranged playback verified, analyzed, quiz reviewed and saved in Arabic/English. Isolated tests cover coding and certificate completion. No actual 2 GiB transfer or 1000-viewer capacity claim.",
+  "externalGeminiFreeTierVerified": true,
+  "externalGeminiGenerationHttpStatus": 200,
+  "productionTestRecordsNote": "No synthetic production fixtures. One authorized real-video private draft course with two lessons was created.",
+  "externalGeminiRealVideoAnalysisVerified": true,
+  "externalGeminiBilingualVideoGenerationVerified": true,
+  "remainingLimits": [
+    "2 GiB transfer has not been exercised on a real file",
+    "1000 simultaneous video viewers have not been capacity-tested",
+    "C++/Java/R/Go/Rust require external code execution service",
+    "Legacy quizzes retain source text until an administrator adds both translations"
+  ],
+  "deploymentUrl": "https://datacamp-student-club-r2z8wagwa-mart33645-wqs-projects.vercel.app",
+  "finalBrowserReviewLimit": "Final browser step blocked by automatic approval review usage limit. Prior real browser checks and final isolated tests passed; standalone draft preview was not manually rechecked after the last deployment."
 }
