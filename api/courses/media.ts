@@ -38,7 +38,16 @@ export default async function handler(req:any,res:any){
    const lesson=await auth.client.from('lessons').select('id,course_id').eq('id',body.lessonId).single();if(lesson.error)throw Error('Save the lesson before uploading files.');
    const token=await driveToken(auth.client,auth.user.id);
    const prior=await auth.client.from('course_upload_jobs').select('*').eq('owner_id',auth.user.id).eq('lesson_id',body.lessonId).eq('fingerprint',body.fingerprint).eq('sha256',body.sha256).eq('name',body.name).eq('mime_type',body.mimeType).eq('size_bytes',body.size).eq('kind',body.kind).eq('status','uploading').gte('created_at',new Date(Date.now()-6*24*60*60*1000).toISOString()).order('created_at',{ascending:false}).limit(1).maybeSingle();if(prior.error)throw Error('Unable to read upload state');
-   if(prior.data&&prior.data.kind===body.kind)return res.status(200).json({jobId:prior.data.id,uploadUrl:uploadLocation(prior.data.upload_url),accessToken:token,resuming:true});
+   if(prior.data&&prior.data.kind===body.kind){
+    // Drive may omit CORS headers from completed resumable sessions. Recover the
+    // acknowledgement on the server; finish still verifies ownership and hashes.
+    const url=uploadLocation(prior.data.upload_url);
+    const check=await fetch(url,{method:'PUT',headers:{Authorization:'Bearer '+token,'Content-Range':'bytes */'+body.size},body:new Blob([]),signal:AbortSignal.timeout(25000)});
+    let completedFileId:string|undefined;
+    if(check.ok){const metadata=JSON.parse((await boundedBytes(check,65536)).toString('utf8'));if(!FILE_ID.test(metadata.id||''))throw Error('Invalid completed upload acknowledgement');completedFileId=metadata.id;}
+    else{await check.body?.cancel();if(![308,404,410].includes(check.status))throw Error('Unable to recover Drive upload status. Retry or reconnect.');}
+    return res.status(200).json({jobId:prior.data.id,uploadUrl:url,accessToken:token,resuming:true,completedFileId});
+   }
    const id=randomUUID();const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id,size,mimeType',{
     method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json','X-Upload-Content-Type':body.mimeType||'application/octet-stream','X-Upload-Content-Length':String(body.size)},
     body:JSON.stringify({name:body.name,mimeType:body.mimeType||'application/octet-stream',appProperties:{dcUpload:id,dcLesson:body.lessonId}}),signal:AbortSignal.timeout(20000)});

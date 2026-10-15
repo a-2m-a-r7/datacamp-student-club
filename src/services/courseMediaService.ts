@@ -9,11 +9,12 @@ export async function driveUpload(file:File,lessonId:string,kind:string,hashes:{
  const start=()=>authenticatedPost('/api/courses/media',{action:'start',lessonId,kind,name:file.name,mimeType:file.type||'application/octet-stream',size:file.size,...hashes});
  let session=await start(),headers={Authorization:'Bearer '+session.accessToken},offset=0,fileId='',restarted=false;
  const position=async():Promise<void>=>{signal.throwIfAborted();const r=await fetch(session.uploadUrl,{method:'PUT',headers:{...headers,'Content-Range':'bytes */'+file.size},body:new Blob([]),signal});if(r.ok){fileId=(await r.json()).id;offset=file.size;return;}if([404,410].includes(r.status)&&!restarted){restarted=true;await authenticatedPost('/api/courses/media',{action:'restart',jobId:session.jobId});session=await start();headers={Authorization:'Bearer '+session.accessToken};offset=0;return position();}if(r.status!==308)throw Error('Drive upload is unavailable. Check free storage quota or reconnect Drive.');offset=Number(r.headers.get('range')?.match(/-(\d+)$/)?.[1]||-1)+1;if(!Number.isSafeInteger(offset)||offset<0||offset>file.size)throw Error('Invalid upload position');};
- await position();
+ const recoverPosition=async()=>{if(session.completedFileId){fileId=session.completedFileId;offset=file.size;return;}await position();};
+ await recoverPosition();
  while(offset<file.size){signal.throwIfAborted();const end=Math.min(file.size,offset+8*1024*1024);let sent=false;
   for(let attempt=0;attempt<3&&!sent;attempt++){
    try{const r=await fetch(session.uploadUrl,{method:'PUT',headers:{...headers,'Content-Type':file.type||'application/octet-stream','Content-Range':`bytes ${offset}-${end-1}/${file.size}`},body:file.slice(offset,end),signal});if(r.ok){fileId=(await r.json()).id;offset=file.size;sent=true;}else if(r.status===308){const received=Number(r.headers.get('range')?.match(/-(\d+)$/)?.[1]||-1)+1;if(received<=offset)throw Error('Upload made no progress');offset=received;sent=true;}else throw Error('Upload failed');}
-   catch(e){signal.throwIfAborted();if(attempt===2)throw e;await new Promise(resolve=>setTimeout(resolve,1000*(attempt+1)));session=await start();headers={Authorization:'Bearer '+session.accessToken};const previousJob=session.jobId;await position();if(offset>=end||session.jobId!==previousJob)sent=true;}
+   catch(e){signal.throwIfAborted();if(attempt===2)throw e;await new Promise(resolve=>setTimeout(resolve,1000*(attempt+1)));session=await start();headers={Authorization:'Bearer '+session.accessToken};const previousJob=session.jobId;await recoverPosition();if(offset>=end||session.jobId!==previousJob)sent=true;}
   }
   onProgress(100*offset/file.size);
  }
