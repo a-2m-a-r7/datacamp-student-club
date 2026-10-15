@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { QuizQuestion } from '../types';
+import { quizText } from '../lib/quizLanguage';
 import { Button } from './ui/Button';
 import {
   CheckCircle2,
@@ -34,7 +35,8 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [awardedPoints, setAwardedPoints] = useState<number | null>(null);
 
-  const currentQ = questions[currentIndex];
+  const localizedQuestions = questions.map(question => ({...question, ...quizText(question, isArabic)}));
+  const currentQ = localizedQuestions[currentIndex];
   const total = questions.length;
 
   const handleSelectOption = (optionIndex: number) => {
@@ -267,7 +269,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
             <h4 className="text-xs font-cyber uppercase tracking-wider text-muted-foreground">
               {isArabic ? 'مراجعة الإجابات' : 'ANSWER REVIEW'}
             </h4>
-            {questions.map((q, idx) => {
+            {localizedQuestions.map((q, idx) => {
               const selected = selectedAnswers[idx];
               const correct = q.correctIndex ?? q.correctAnswer ?? 0;
               const isCorrect = selected === correct;

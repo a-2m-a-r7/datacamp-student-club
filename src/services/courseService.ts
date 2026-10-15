@@ -398,6 +398,12 @@ export const courseService = {
         const correct = question.correctIndex ?? question.correctAnswer;
         if (!question.id || ids.has(question.id) || !question.question?.trim() || !Array.isArray(question.options) || question.options.length < 2 || question.options.length > 10 || question.options.some(option => !option?.trim()) || typeof correct !== 'number' || !Number.isInteger(correct) || correct < 0 || correct >= question.options.length) throw new Error('Each quiz question needs a unique ID, question, options and a valid correct answer.');
         ids.add(question.id);
+        if (question.translations) {
+          for (const language of ['ar', 'en'] as const) {
+            const translated = question.translations[language];
+            if (!translated?.question?.trim() || !Array.isArray(translated.options) || translated.options.length !== question.options.length || translated.options.some(option => !option?.trim()) || new Set(translated.options).size !== translated.options.length) throw new Error('Complete Arabic and English question text and options, preserving the same option order.');
+          }
+        }
       }
     }
     const payload = {

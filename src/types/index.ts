@@ -96,6 +96,12 @@ export type CourseLanguage = 'ar' | 'en' | 'both';
 export type CourseStatus = 'draft' | 'published' | 'archived';
 export type LessonType = 'video' | 'article' | 'quiz' | 'exercise' | 'project';
 
+export interface QuizQuestionText {
+  question: string;
+  options: string[];
+  explanation?: string;
+}
+
 export interface QuizQuestion {
   id: string;
   question: string;
@@ -103,6 +109,7 @@ export interface QuizQuestion {
   correctIndex?: number;
   correctAnswer?: number;
   explanation?: string;
+  translations?: Partial<Record<'ar' | 'en', QuizQuestionText>>;
 }
 
 export interface Course {

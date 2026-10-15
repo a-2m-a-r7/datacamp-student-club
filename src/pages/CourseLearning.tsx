@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { usePoints } from '../contexts/PointsContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { quizText } from '../lib/quizLanguage';
 import { courseService, courseModulesFromLessons } from '../services/courseService';
 import { Course, CourseModule, CourseLesson, Enrollment } from '../types';
 import { Button } from '../components/ui/Button';
@@ -90,7 +91,8 @@ const CourseLearning = () => {
       }
     };
     load();
-  }, [slug, user, navigate, isArabic]);
+  // Language changes re-render text without reloading lessons or playback.
+  }, [slug, user, navigate]);
 
   const handleLessonSelect = (lesson: CourseLesson) => {
     setCurrentLesson(lesson);
@@ -303,6 +305,7 @@ const CourseLearning = () => {
                 <div className="space-y-6">
                   {currentLesson.quizQuestions.map((q, qIndex) => {
                     const selected = selectedAnswers[q.id];
+                    const translated = quizText(q, isArabic);
 
                     return (
                       <div
@@ -310,11 +313,11 @@ const CourseLearning = () => {
                         className="p-6 rounded-xl border border-white/10 bg-dark-navy/60 backdrop-blur-xl space-y-4"
                       >
                         <h4 className="font-cyber font-semibold text-foreground text-sm">
-                          {qIndex + 1}. {q.question}
+                          {qIndex + 1}. {translated.question}
                         </h4>
 
                         <div className="space-y-2">
-                          {q.options.map((option, optIndex) => {
+                          {translated.options.map((option, optIndex) => {
                             const isThisChosen = selected === optIndex;
                             let btnStyle = 'border-white/10 hover:border-white/30 text-muted-foreground';
 
@@ -344,9 +347,9 @@ const CourseLearning = () => {
                           })}
                         </div>
 
-                        {quizSubmitted && q.explanation && (
+                        {quizSubmitted && translated.explanation && (
                           <p className="text-[11px] font-mono text-muted-foreground pt-2 border-t border-white/5">
-                            💡 <strong>{isArabic ? 'التوضيح:' : 'Explanation:'}</strong> {q.explanation}
+                            💡 <strong>{isArabic ? 'التوضيح:' : 'Explanation:'}</strong> {translated.explanation}
                           </p>
                         )}
                       </div>

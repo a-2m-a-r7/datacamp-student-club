@@ -59,7 +59,8 @@ export const CourseQuiz = () => {
     }
 
     loadQuiz();
-  }, [slug, lessonId, navigate, isArabic]);
+  // Switching UI language must preserve the mounted quiz and selected answers.
+  }, [slug, lessonId, navigate]);
 
   const handleQuizComplete = async (scorePct: number, passed: boolean, answers: Record<number, number>) => {
  if (!profile || !course?.id || !lesson?.id) throw new Error('Assessment unavailable');

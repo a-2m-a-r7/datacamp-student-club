@@ -1,8 +1,9 @@
 import {createMD5,createSHA256} from 'hash-wasm';
 import {supabase} from '../lib/supabase';
 import {authenticatedPost} from '../lib/apiClient';
+import type {QuizQuestionText} from '../types';
 export interface CourseAsset {id:string;lesson_id:string;kind:'video'|'material'|'subtitle';name:string;mime_type:string;size_bytes:number;url:string;language:string;}
-export interface VideoPlan {summary:string;questions:{id:string;question:string;options:string[];correctIndex:number;explanation:string}[];exercise:null|{language:string;prompt:string;starterCode:string;solution:string;testCases:{description:string;input:string;expectedOutput:string}[]};}
+export interface VideoPlan {summary:string;questions:{id:string;question:string;options:string[];correctIndex:number;explanation:string;translations?:Partial<Record<'ar'|'en',QuizQuestionText>>}[];exercise:null|{language:string;prompt:string;starterCode:string;solution:string;testCases:{description:string;input:string;expectedOutput:string}[]};}
 export const courseAssets=async(lessonId:string)=>{const r=await supabase.from('course_assets').select('id,lesson_id,kind,name,mime_type,size_bytes,url,language').eq('lesson_id',lessonId).order('created_at');if(r.error)throw r.error;return r.data as CourseAsset[];};
 export async function fileHashes(file:File,signal:AbortSignal,onProgress?:(p:number)=>void){if(file.size>2*1024*1024*1024||file.size===0)throw Error('Choose a nonempty file no larger than 2 GiB.');const md5=await createMD5(),sha=await createSHA256();md5.init();sha.init();for(let offset=0;offset<file.size;offset+=8*1024*1024){signal.throwIfAborted();const bytes=new Uint8Array(await file.slice(offset,offset+8*1024*1024).arrayBuffer());md5.update(bytes);sha.update(bytes);onProgress?.(Math.min(100,100*(offset+bytes.length)/file.size));}return{fingerprint:md5.digest(),sha256:sha.digest()};}
 export async function driveUpload(file:File,lessonId:string,kind:string,hashes:{fingerprint:string;sha256:string},signal:AbortSignal,onProgress:(p:number)=>void,language='ar'){
