@@ -1,0 +1,24 @@
+{
+  "codeCommit": "11890e8cbe1f1fbaee3116eced032104a772fe7b",
+  "deploymentId": "dpl_7Vhg3Vp1PadnfLLjAKWjfkwqxHMD",
+  "deploymentStatus": "READY",
+  "origin": "https://datacamp-student-club.vercel.app",
+  "checkedAt": "2026-10-15T07:13:59.114Z",
+  "validation": {
+    "browserPassed": 48,
+    "browserFailed": 0,
+    "databaseNewPassed": 17,
+    "databaseRegressionPassed": 61,
+    "courseApiNodePassed": 14,
+    "emittedEsmEndpointsPassed": 3,
+    "deployedHttpPassed": 9,
+    "frontendSecretLeaks": 0,
+    "npmProductionVulnerabilities": 0
+  },
+  "productionSchemaApplied": true,
+  "productionTestRecordsCreated": 0,
+  "externalDriveOAuthConfigured": false,
+  "externalCourseGeminiEnabled": false,
+  "blocker": "Google Cloud OAuth client and APIs pages fail to load in the authenticated in-app browser. No OAuth client was created. Real Drive upload and Gemini video analysis remain unverified and disabled pending setup.",
+  "scope": "48 isolated browser scenarios on three viewports; 10 MiB resumed upload with isolated providers. No actual 2 GiB upload or 1000-viewer video capacity claim."
+}

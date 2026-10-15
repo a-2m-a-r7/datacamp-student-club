@@ -1,0 +1,64 @@
+{
+  "origin": "https://datacamp-student-club.vercel.app",
+  "checkedAt": "2026-10-15T07:13:08.586Z",
+  "passed": 9,
+  "checks": [
+    {
+      "route": "/",
+      "status": 200,
+      "noStore": true,
+      "driveConnectionAllowed": true,
+      "pass": true
+    },
+    {
+      "route": "/courses",
+      "status": 200,
+      "noStore": true,
+      "driveConnectionAllowed": true,
+      "pass": true
+    },
+    {
+      "route": "/login",
+      "status": 200,
+      "noStore": true,
+      "driveConnectionAllowed": true,
+      "pass": true
+    },
+    {
+      "route": "/compiler",
+      "status": 200,
+      "noStore": true,
+      "driveConnectionAllowed": true,
+      "pass": true
+    },
+    {
+      "route": "/api/courses/drive",
+      "status": 401,
+      "requiresAuthentication": true,
+      "pass": true
+    },
+    {
+      "route": "/api/courses/media",
+      "status": 401,
+      "requiresAuthentication": true,
+      "pass": true
+    },
+    {
+      "route": "/api/courses/analyze",
+      "status": 401,
+      "requiresAuthentication": true,
+      "pass": true
+    },
+    {
+      "route": "media without ticket",
+      "status": 403,
+      "pass": true
+    },
+    {
+      "route": "OAuth invalid state",
+      "status": 302,
+      "cleanFailure": true,
+      "pass": true
+    }
+  ]
+}
