@@ -1,0 +1,409 @@
+{
+  "checkedAt": "2026-10-15T17:20:52.273Z",
+  "environment": "Two independent in-memory PGlite PostgreSQL databases, no network or .env reads",
+  "mode": "proposed BUG-002 SQL in-memory only",
+  "limitations": [
+    "Supabase platform prerequisites are minimal local stand-ins; this does not run GoTrue, Storage HTTP, PostgREST, or Realtime transport.",
+    "Timestamped migrations are replayed verbatim, including their original local seeds and data-changing statements; never applied to production.",
+    "Legacy helper case is a minimal independent reproduction of its exact source definition, not proof of effective deployed privileges.",
+    "No public table privilege bootstrap or blanket GRANT ALL is used. PostgreSQL default PUBLIC EXECUTE is measured unchanged."
+  ],
+  "fullReplay": {
+    "status": "passed",
+    "attempted": [
+      {
+        "migration": "20261010000000_initial_schema.sql",
+        "sha256": "d8f93acce9e19b68717321b87dcf7911e7c03bfeba7f1459340f349cc963d3aa",
+        "status": "passed"
+      },
+      {
+        "migration": "20261010000001_seed_courses.sql",
+        "sha256": "692528e1488d7690fef1ccd145530ef822e4317d0cc8e609fb1db2723f393113",
+        "status": "passed"
+      },
+      {
+        "migration": "20261010000002_storage_buckets.sql",
+        "sha256": "b10e080854de327d9ad3d8f6702334f962bb662e87eafa856f77a38c07b37fab",
+        "status": "passed"
+      },
+      {
+        "migration": "20261010000003_remaining_tables.sql",
+        "sha256": "bb7607ac0551ec9f143319fc850ff2a3c3480ef7377a1fa4d68e307572ccd8c3",
+        "status": "passed"
+      },
+      {
+        "migration": "20261010000004_phase2_schema_hardening.sql",
+        "sha256": "2b0137e5771fdf05c3b744bc01dfb6ddac254d592d159ec47429b9af0ebc233d",
+        "status": "passed"
+      },
+      {
+        "migration": "20261010000005_phase5_courses.sql",
+        "sha256": "77c5ded01577749786bee952461df2c202728bdf41e26b00e87195634012edc1",
+        "status": "passed"
+      },
+      {
+        "migration": "20261010000006_phase6_content_data.sql",
+        "sha256": "72412a4d7e3f4abf97eaeb54159a7f07f0a7ca23fd03cb5aebba5c522b8adf1d",
+        "status": "passed"
+      },
+      {
+        "migration": "20261010000007_auth_rebuild_clean.sql",
+        "sha256": "8f1a4f425682f210d0e4e76b7efda34186b1c592378409a76acbc49793eae861",
+        "status": "passed"
+      },
+      {
+        "migration": "20261011000000_form_builder.sql",
+        "sha256": "7c384faec0be410ac8130c10554e70138ea6532a05162cadee91986f8a81c381",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000000_missing_schema.sql",
+        "sha256": "7f20659cb6c763fd26670d5ee68045d8da3f18362e5d49029ba4524bcd431993",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000001_real_operations.sql",
+        "sha256": "03f905467f937bb3db7cf4785207ecb3dbd1952e72833e13fb6d9d8b2961d3f7",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000002_atomic_forms.sql",
+        "sha256": "5df3155c3cb96b919d4e7b4edc896d1b7998723b3197d6f1ce808df25bc43ea3",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000003_auth_notifications.sql",
+        "sha256": "8da6c91e1f1683c2c893432ccc7515c66a3a1a88ae4565e3bad5d54a9942e905",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000004_verified_quizzes.sql",
+        "sha256": "6bcf2c05857a598c58d49e5544ba9f6fd133e5b6efaa8257c0d754446a3635f1",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000005_storage.sql",
+        "sha256": "ecb2853a5acccb635db8d5c12a6d7c53719ce05627647718c545affeef8e0eef",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000006_verified_badges.sql",
+        "sha256": "5f13132056dc29643642067b6466dd656a71266dad7d91e75b5c5e710ab3f90d",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000007_analytics.sql",
+        "sha256": "3ad8ee9169cc5fea6bde88cfe45335b0cce006fa8b98e9d2bc020c881164730f",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000008_member_directory_private.sql",
+        "sha256": "eff3f6ff66b4f75c922a035fe6a235b9785cc7726969b2d4630ceb17a6a00f89",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000009_staff_directory_private.sql",
+        "sha256": "a9803b357ebe580c2cc66cfe73e9092d51d7d2be0453c30003f7df7e6ad7609d",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000010_member_cards.sql",
+        "sha256": "ac4e82497c2b74fb33651000144c12121f08693bc2c8fce9ddb7da24a3f07ace",
+        "status": "passed"
+      },
+      {
+        "migration": "20261013000011_automatic_course_certificates.sql",
+        "sha256": "187ea820cffb272ee246989498e9c8b6112786752a831a5f1151096be69fca12",
+        "status": "passed"
+      },
+      {
+        "migration": "20261014000012_course_growth.sql",
+        "sha256": "c2fe8c609307433b671ad6fcffd4afa4787caf2830e42353a8c3db1f31448c3f",
+        "status": "passed"
+      },
+      {
+        "migration": "20261014000013_profile_photos.sql",
+        "sha256": "28d79159856604d7a05a34413fae9f9dab6076435179999a356e1a019f0ff74a",
+        "status": "passed"
+      },
+      {
+        "migration": "20261015000014_course_media.sql",
+        "sha256": "b794e97b031789db79237dab88c88e396c7691dd7912455b56c1b4ef38e36e6a",
+        "status": "passed"
+      }
+    ],
+    "bootstrap": [
+      "Roles anon/authenticated/service_role and minimal auth.users, auth.uid(), auth.role()",
+      "Minimal storage.buckets/storage.objects, enabled object RLS, storage.foldername()",
+      "Schema usage and platform-helper execute only; no app-table grants",
+      "Empty supabase_realtime publication; original migrations add tables",
+      "PGlite bundled uuid-ossp/pgcrypto/citext enabled; original CREATE EXTENSION statements unchanged"
+    ],
+    "migrationCount": 24,
+    "excludedAlternateInputs": [
+      "combined_migration.sql",
+      "../full_schema.sql",
+      "../seed.sql"
+    ],
+    "catalog": {
+      "public_tables": 33,
+      "policies": 71,
+      "realtime_tables": 13
+    },
+    "promotionAcl": {
+      "anon_execute": true,
+      "member_execute": true
+    },
+    "baselinePromotion": {
+      "status": "failed",
+      "cases": [
+        {
+          "id": "FULL-CHAIN-PROMOTE-BASELINE-ANON",
+          "actor": "anon",
+          "jwtSubject": "empty",
+          "expectation": "Unprivileged caller denied; profile, XP and allowlist unchanged",
+          "before": {
+            "role": "user",
+            "total_points": 0,
+            "xp": 0,
+            "level": "RECRUIT",
+            "is_verified": true,
+            "allowlisted": false,
+            "mirror_role": "member",
+            "mirror_points": 0
+          },
+          "after": {
+            "role": "admin",
+            "total_points": 10000,
+            "xp": 10000,
+            "level": "ARCHITECT",
+            "is_verified": true,
+            "allowlisted": true,
+            "mirror_role": "admin",
+            "mirror_points": 10000
+          },
+          "callError": null,
+          "passed": false
+        },
+        {
+          "id": "FULL-CHAIN-PROMOTE-BASELINE-AUTHENTICATED",
+          "actor": "authenticated",
+          "jwtSubject": "QA_TEST_own_member_subject",
+          "expectation": "Unprivileged caller denied; profile, XP and allowlist unchanged",
+          "before": {
+            "role": "user",
+            "total_points": 0,
+            "xp": 0,
+            "level": "RECRUIT",
+            "is_verified": true,
+            "allowlisted": false,
+            "mirror_role": "member",
+            "mirror_points": 0
+          },
+          "after": {
+            "role": "admin",
+            "total_points": 10000,
+            "xp": 10000,
+            "level": "ARCHITECT",
+            "is_verified": true,
+            "allowlisted": true,
+            "mirror_role": "admin",
+            "mirror_points": 10000
+          },
+          "callError": null,
+          "passed": false
+        }
+      ],
+      "source": "All original timestamped migrations already applied verbatim",
+      "acl": {
+        "anon_execute": true,
+        "member_execute": true,
+        "service_execute": true,
+        "anon_direct_profile_update": false,
+        "member_direct_profile_update": false,
+        "security_definer": true
+      }
+    },
+    "candidateSource": {
+      "file": "qa-audit/final/proposed-sql/BUG-002.sql",
+      "sha256": "387be63d44f73ec67fa13a3c83fb74395c74678afd68462cf576095992e33e5c",
+      "appliedTo": "this ephemeral in-memory database only, after original migration chain"
+    },
+    "candidatePromotion": {
+      "status": "passed",
+      "cases": [
+        {
+          "id": "FULL-CHAIN-PROMOTE-CANDIDATE-ANON",
+          "actor": "anon",
+          "jwtSubject": "empty",
+          "expectation": "Unprivileged caller denied; profile, XP and allowlist unchanged",
+          "before": {
+            "role": "user",
+            "total_points": 0,
+            "xp": 0,
+            "level": "RECRUIT",
+            "is_verified": true,
+            "allowlisted": false,
+            "mirror_role": "member",
+            "mirror_points": 0
+          },
+          "after": {
+            "role": "user",
+            "total_points": 0,
+            "xp": 0,
+            "level": "RECRUIT",
+            "is_verified": true,
+            "allowlisted": false,
+            "mirror_role": "member",
+            "mirror_points": 0
+          },
+          "callError": {
+            "sqlstate": "42501",
+            "message": "permission denied for function promote_admin_by_email"
+          },
+          "passed": true
+        },
+        {
+          "id": "FULL-CHAIN-PROMOTE-CANDIDATE-AUTHENTICATED",
+          "actor": "authenticated",
+          "jwtSubject": "QA_TEST_own_member_subject",
+          "expectation": "Unprivileged caller denied; profile, XP and allowlist unchanged",
+          "before": {
+            "role": "user",
+            "total_points": 0,
+            "xp": 0,
+            "level": "RECRUIT",
+            "is_verified": true,
+            "allowlisted": false,
+            "mirror_role": "member",
+            "mirror_points": 0
+          },
+          "after": {
+            "role": "user",
+            "total_points": 0,
+            "xp": 0,
+            "level": "RECRUIT",
+            "is_verified": true,
+            "allowlisted": false,
+            "mirror_role": "member",
+            "mirror_points": 0
+          },
+          "callError": {
+            "sqlstate": "42501",
+            "message": "permission denied for function promote_admin_by_email"
+          },
+          "passed": true
+        },
+        {
+          "id": "FULL-CHAIN-PROMOTE-CANDIDATE-SERVICE_ROLE",
+          "actor": "service_role",
+          "jwtSubject": "empty",
+          "expectation": "Trusted service_role helper remains usable",
+          "before": {
+            "role": "user",
+            "total_points": 0,
+            "xp": 0,
+            "level": "RECRUIT",
+            "is_verified": true,
+            "allowlisted": false,
+            "mirror_role": "member",
+            "mirror_points": 0
+          },
+          "after": {
+            "role": "admin",
+            "total_points": 10000,
+            "xp": 10000,
+            "level": "ARCHITECT",
+            "is_verified": true,
+            "allowlisted": true,
+            "mirror_role": "admin",
+            "mirror_points": 10000
+          },
+          "callError": null,
+          "passed": true
+        }
+      ],
+      "source": "All original timestamped migrations already applied verbatim",
+      "acl": {
+        "anon_execute": false,
+        "member_execute": false,
+        "service_execute": true,
+        "anon_direct_profile_update": false,
+        "member_direct_profile_update": false,
+        "security_definer": true
+      }
+    }
+  },
+  "legacyPromotion": {
+    "status": "failed",
+    "cases": [
+      {
+        "id": "LEGACY-PROMOTE-ANON",
+        "actor": "anon",
+        "identityPrefix": "QA_TEST_",
+        "expectation": "Unprivileged caller cannot promote account, mint XP, verify account or edit allowlist",
+        "before": {
+          "role": "user",
+          "total_points": 0,
+          "xp": 0,
+          "level": "RECRUIT",
+          "is_verified": false,
+          "allowlisted": false
+        },
+        "after": {
+          "role": "admin",
+          "total_points": 10000,
+          "xp": 10000,
+          "level": "ARCHITECT",
+          "is_verified": true,
+          "allowlisted": true
+        },
+        "callError": null,
+        "passed": false
+      },
+      {
+        "id": "LEGACY-PROMOTE-MEMBER",
+        "actor": "authenticated",
+        "identityPrefix": "QA_TEST_",
+        "expectation": "Unprivileged caller cannot promote account, mint XP, verify account or edit allowlist",
+        "before": {
+          "role": "user",
+          "total_points": 0,
+          "xp": 0,
+          "level": "RECRUIT",
+          "is_verified": false,
+          "allowlisted": false
+        },
+        "after": {
+          "role": "admin",
+          "total_points": 10000,
+          "xp": 10000,
+          "level": "ARCHITECT",
+          "is_verified": true,
+          "allowlisted": true
+        },
+        "callError": null,
+        "passed": false
+      }
+    ],
+    "source": {
+      "migration": "20261010000004_phase2_schema_hardening.sql",
+      "line": 452,
+      "sha256": "cffdd3e87d215618da2b54d071a7f32f181304bffb3029c6b97a985298a8636f"
+    },
+    "bootstrap": [
+      "Only minimal profiles/admin_emails tables, citext, anon/authenticated roles, public schema usage",
+      "Both tables RLS enabled, no caller table privileges, no RLS policies, no trigger substitutions",
+      "Only exact extracted helper source installed; no EXECUTE grants/default privilege alterations"
+    ],
+    "acl": {
+      "anon_execute": true,
+      "member_execute": true,
+      "anon_direct_profile_update": false,
+      "member_direct_profile_update": false,
+      "security_definer": true
+    }
+  },
+  "finishedAt": "2026-10-15T17:20:54.529Z",
+  "passed": true
+}

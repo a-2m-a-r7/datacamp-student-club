@@ -12,3 +12,16 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Evidence: `evidence/BUG-001-before.txt`.
 - Fix: explicit OS allowlist plus local/dummy environment, loopback Node transport guard, no QA dotenv loading and non-destructive QA output generation.
 - Status: Fixed; 4/4 targeted regressions and build/lint/explicit type-check passed. Commit recorded by Git fix(BUG-001). Initial sandbox realpath EPERM was retried with approved execution; it was an environment failure, not an application build defect.
+
+## BUG-002 — Public legacy helper grants administrator privileges and XP
+
+- Severity: Critical. Layer: database authorization / privilege escalation.
+- Surface: `public.promote_admin_by_email(text)` from the original phase2 migration, retained after the complete migration chain.
+- Reproduce: `full-schema-security.mjs` replayed all 24 original timestamped migrations in a fresh memory PostgreSQL database, created QA_TEST_ Auth identities through actual signup triggers, and invoked the helper as anon (no subject) and authenticated (member subject).
+- Expected: neither caller may alter role, allowlist or XP; trusted service_role may retain legacy server access.
+- Actual before fix: both calls succeeded, changing the real profiles and users mirror from user/member with 0 XP to admin with 10000 XP, and adding the email to admin_emails. Direct caller table privileges remained denied. No production test occurred.
+- Evidence: `evidence/BUG-002-before.json` (complete-chain proof), `evidence/BUG-002-candidate-proof.json` (reviewed candidate), `evidence/full-schema-security.json` and `full-schema-security-candidate.json` (installed-fix regressions).
+- Approval: user explicitly approved migration addition and local tests only through the numbered approval question.
+- Fix: append `20261015000015_restrict_legacy_promotion.sql`; revoke PUBLIC/anon/authenticated execution, grant only service_role. A to_regprocedure guard safely handles installations without the obsolete helper. No rows/function/table are deleted or rewritten.
+- Validation: fresh 25-migration replay succeeds; anon/member receive SQLSTATE 42501 with unchanged profile/mirror/allowlist/XP, service_role still functions. Reapplying the same restriction succeeds. Build, lint and explicit TypeScript check passed.
+- Status: Fixed and validated locally; production application remains outside approved scope. Commit recorded by Git fix(BUG-002). Historical unpatched-control observations remain deliberately vulnerable and are labeled separately from the current-chain passing regression.

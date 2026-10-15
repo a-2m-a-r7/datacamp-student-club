@@ -1,2 +1,3 @@
 ID,Severity,Layer,Page or endpoint,Role,Expected,Actual,Evidence,Status,Commit
-BUG-001,High,Test infrastructure/security,QA launcher and Vite QA mode,QA executor,Only isolated local dummy environment,Four canary regression failures for inherited external config,evidence/BUG-001-before.txt,Fixed and validated,
+BUG-001,High,Test infrastructure/security,QA launcher and Vite QA mode,QA executor,Only isolated local dummy environment,Four canary regression failures for inherited external config,evidence/BUG-001-before.txt,Fixed and validated,de400aa
+BUG-002,Critical,Database authorization,promote_admin_by_email(text),anon/member,Untrusted callers cannot promote accounts or mint XP,Complete-chain calls granted admin and 10000XP,evidence/BUG-002-before.json,Fixed and validated locally; production not applied,

@@ -1,0 +1,1 @@
+{"fullReplay":"passed","firstFailure":null,"legacyPromotion":"historical-vulnerable-control-confirmed","fullChainBaselinePromotion":"passed","fullChainCandidatePromotion":"not-run","cases":[{"id":"LEGACY-PROMOTE-ANON","passed":false},{"id":"LEGACY-PROMOTE-MEMBER","passed":false}],"evidence":"qa-audit/final/evidence/full-schema-security.json"}
