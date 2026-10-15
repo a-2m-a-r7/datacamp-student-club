@@ -44,3 +44,25 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Expected: derived counter maintenance runs through trusted enrollment triggers or service operations; untrusted direct RPC cannot write course metadata.
 - Fix: appended `20261015000017_restrict_course_counter.sql`; revokes PUBLIC/anon/authenticated execution and retains service_role while owner-context triggers retain execution.
 - Approval: local migration/test permission received with BUG-003. Status: Fixed and validated locally; no production application. Commit recorded by Git fix(BUG-004).
+
+## BUG-005 — Public form ranking and branching renderer can crash or omit questions
+
+- Severity: High. Layer: public form UI.
+- Reproduce: create a dropdown question with a forward `goToQuestionId` and render it beside a target question; select the branch option. The prior renderer computed ranking state from every answer value, including the dropdown string.
+- Expected: the selected branch hides only intermediate questions and renders the target; ranking questions render and persist option IDs.
+- Actual: the page crashed with `s.map is not a function`, so the target question and submission UI disappeared.
+- Evidence: `evidence/regression-artifacts/form-question-types-config-fef8a-red-questions-before-saving-1440/error-context.md`.
+- Fix: add a ranking renderer, use stable option IDs for choice controls, and guard ranking state with `q.type === 'ranking' && Array.isArray(currentVal)`.
+- Validation: `form-question-types.spec.ts` passed 9/9 across 1440/768/375; main Playwright suite passed 399/399; build, lint and explicit TypeScript check passed.
+- Status: Fixed. Commit `d0942e5` (`fix(BUG-005): support public form ranking and branching`).
+
+## BUG-006 — Branching submission rejects required questions intentionally skipped by the selected route
+
+- Severity: High. Layer: database validation.
+- Reproduce: submit a published form where a dropdown option targets a later question while an intervening question is required. The UI correctly omits the intervening question, but the original RPC still validated every required question.
+- Expected: required validation follows the selected forward branch; skipped questions are not required, while the target remains required.
+- Actual: the RPC rejected the otherwise valid response with `Required answer missing` for the skipped question.
+- Evidence: the configured-go-to regression trace and isolated migration replay.
+- Fix: replace the submission RPC in `20261015000018_branch_aware_form_validation.sql` with branch-aware required-question validation while preserving type, option, duplicate, attachment and authorization checks.
+- Validation: `form-question-types.spec.ts` passed 9/9 across 1440/768/375; database boundary suite passed 118 assertions; main Playwright suite passed 399/399.
+- Status: Fixed locally; production migration was not applied. Commit `d2ee0e5` (`fix(BUG-006): honor skipped required questions in branching`).

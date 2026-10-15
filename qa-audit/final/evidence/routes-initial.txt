@@ -1,0 +1,43 @@
+
+Running 1 test using 1 worker
+
+  x  1 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (1.9s)
+
+
+  1) [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census 
+
+    error: column "order_index" of relation "lessons" does not exist
+        at pe.Ue (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:17959)
+        at pe.tt (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:15347)
+        at pe.parse (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:14021)
+        at D.Ne (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1763)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1155
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5951576)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2629075)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2661584)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2662188)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5597545)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:4118241)
+        at Object.Module._PostgresMainLongJmp (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:213704)
+        at D.execProtocolRawSync (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:305828)
+        at D.execProtocolRaw (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306072)
+        at D.execProtocolStream (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306729)
+        at D.y (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2057)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2282
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\regression-artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\regression-artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\regression-artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\regression-artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census 

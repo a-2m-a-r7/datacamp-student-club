@@ -1,3 +1,101 @@
+# STEP 0 baseline — tester-final
+
+Recorded 2026-10-15T16:49:44.339Z; completed 2026-10-15T16:50:09.400Z. This is the current baseline; the earlier report is preserved below as historical evidence.
+
+## Scope and approval gates
+
+Only STEP 0 performed. No functional tests, fixes, deletion, dependency installation, schema/data writes, push or deployment. Build output was written to a new ignored directory with emptyOutDir=false, preserving existing dist and caches. Baseline build/lint/type-check execution is not a functional pass. Production credentials were not loaded explicitly and no browser/API/database tests were run. Vite uses the existing local build environment; no secret values are printed or recorded here.
+
+## Git
+
+- Initial branch: fix/qa-real-data. Initial tracked and untracked working tree: clean.
+- New branch: tester-final, created from 4d4ea0964dfc6671cd76bc24d1e2bf96c401f821.
+- qa-audit unmerged commits: 0; qa-fix unmerged commits: 0. Both are ancestors of the starting HEAD; no merge is needed.
+- origin/main locally recorded ref matches the starting HEAD; no fetch or push was performed. Local main is behind that ref by 34 commits. Remote refs are a local snapshot, not a new remote check.
+
+```text
+auth-supabase-upgrade                e81d612 [origin/auth-supabase-upgrade] feat(phase6-8): complete data layer sync, seed.sql, auth account chooser, and zero-error build
+  feature-form-builder                 0e5f0a8 [origin/feature-form-builder] feat(forms): complete Microsoft Forms-style Form Builder, responses analytics, public form page and Google Sheets sync
+  final-cleanup                        f429129 docs(audit): record FINAL delivery state and comparative metrics in AFTER.md
+  fix-auth-rebuild                     ed067aa [origin/fix-auth-rebuild] feat(auth-supabase): enable native Google OAuth with account chooser, remove Firebase, and switch 100% to Supabase
+  fix/qa-real-data                     4d4ea09 Document verified Drive video upload, bilingual quizzes and handover limits
+  main                                 f429129 [origin/main: behind 34] docs(audit): record FINAL delivery state and comparative metrics in AFTER.md
+  qa-audit                             f429129 docs(audit): record FINAL delivery state and comparative metrics in AFTER.md
+  qa-audit-existing-20261013           0e5f0a8 feat(forms): complete Microsoft Forms-style Form Builder, responses analytics, public form page and Google Sheets sync
+  qa-fix                               8eb8250 test(qa): add Playwright E2E test suites, QA report, and audit deliverables
+* tester-final                         4d4ea09 Document verified Drive video upload, bilingual quizzes and handover limits
+  remotes/origin/HEAD                  -> origin/main
+  remotes/origin/auth-supabase-upgrade e81d612 feat(phase6-8): complete data layer sync, seed.sql, auth account chooser, and zero-error build
+  remotes/origin/feature-form-builder  0e5f0a8 feat(forms): complete Microsoft Forms-style Form Builder, responses analytics, public form page and Google Sheets sync
+  remotes/origin/final-cleanup         f429129 docs(audit): record FINAL delivery state and comparative metrics in AFTER.md
+  remotes/origin/fix-auth-rebuild      ed067aa feat(auth-supabase): enable native Google OAuth with account chooser, remove Firebase, and switch 100% to Supabase
+  remotes/origin/main                  4d4ea09 Document verified Drive video upload, bilingual quizzes and handover limits
+```
+
+## Toolchain and checks
+
+Node v25.8.0; npm 11.11.0.
+
+| Check | Command | Exit | Error markers | Warning lines | Seconds |
+|---|---|---:|---:|---:|---:|
+| build | npm run build -- --outDir qa-audit/.runtime/tester-final-step0-2026-10-15T16-49-44-339Z/build --emptyOutDir false | 0 | 0 | 0 | 6.88 |
+| lint | npm run lint | 0 | 0 | 0 | 8.19 |
+| type-check | node node_modules/typescript/bin/tsc --noEmit | 0 | 0 | 0 | 7.74 |
+
+The lint script is tsc --noEmit. There is no separate type-check script; TypeScript was also invoked explicitly. This does not constitute an ESLint/code-style check. The warnings/errors columns count actual output markers, not runtime page defects.
+
+No error or warning markers were emitted by these three checks.
+
+## Dependency counts
+
+- Declared production: 21; development: 13; total: 34.
+- Lockfile non-root package entries: 348.
+- npm ls exit: 0; installed tree entries: 513; unique name/version pairs: 332.
+- Dependency-tree problems: []. No reinstall or dependency changes performed.
+
+## Size before baseline build
+
+Logical file sizes, not disk allocation. Symlinks are skipped; unreadable paths are counted in JSON. Workspace includes ignored runtime material, caches, dependencies and Git.
+
+| Area | Logical size | Files |
+|---|---:|---:|
+| workspace | 852,180,356 B (812.70 MiB) | 27063 |
+| git | 38,907,921 B (37.11 MiB) | 1460 |
+| nodeModules | 587,240,839 B (560.04 MiB) | 23299 |
+| src | 1,300,236 B (1.24 MiB) | 125 |
+| public | 82,983 B (0.08 MiB) | 2 |
+| existingDist | 3,870,674 B (3.69 MiB) | 79 |
+| Tracked working-tree files | 14,946,766 B (14.25 MiB) | 344 |
+
+## Fresh baseline build output
+
+79 emitted files; 3,870,674 B (3.69 MiB) total; 1,227,295 B (1.17 MiB) sum of individual gzip sizes. Total includes public assets and is not the initial page transfer size. Existing dist was preserved and its size above is not treated as this build's output.
+
+| Largest emitted JS/CSS file | Bytes | Gzip bytes |
+|---|---:|---:|
+| assets/vendor-spreadsheets-BLigKl4k.js | 492338 | 160635 |
+| assets/vendor-pdf-BAdL73m8.js | 391246 | 129080 |
+| assets/EventManagement-BqdtEOMS.js | 390325 | 114557 |
+| assets/vendor-charts-BCQALMor.js | 371644 | 109218 |
+| assets/vendor-react-L-KCOhBx.js | 310020 | 94454 |
+| assets/vendor-supabase-B12s50R_.js | 226703 | 58896 |
+| assets/vendor-canvas-QH1iLAAe.js | 202379 | 48044 |
+| assets/index-f6PSR5wG.js | 185026 | 58572 |
+| assets/index.es-DszGVZQQ.js | 159644 | 53541 |
+| assets/index-DMuVB9pc.css | 136174 | 17979 |
+
+Lighthouse, browser console/network, accessibility, functionality, external integrations and RLS: **Not run in STEP 0**. Earlier audit results are historical and are not relabeled as new passes.
+
+## Evidence and next gate
+
+Machine-readable metrics: qa-audit/final/step0-baseline.json. Full command output is in the ignored local directory qa-audit/.runtime/tester-final-step0-2026-10-15T16-49-44-339Z. Existing evidence and generated files were retained. No commit was made.
+
+Await the user's numbered setup answers before STEP 1. Build TEST-MATRIX.md next; wait for matrix approval before execution. Existing AFTER.md belongs to the old audit and has not been changed.
+
+---
+
+# Historical BEFORE report (retained, superseded by the baseline above)
+
 # Baseline State Report (STEP 0: BEFORE)
 **Platform:** DataCamp Student Club Web Platform (`datacamp-student-club`)  
 **Release Manager / Senior Engineer:** Antigravity  

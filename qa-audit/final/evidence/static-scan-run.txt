@@ -1,0 +1,231 @@
+{
+  "warning": "Static candidates only; no confirmed unused/deletion-safe claims. Counts exclude private/secret/generated source roots. No secret file contents read.",
+  "sourceFilesInventoried": 205,
+  "packageCandidates": [
+    {
+      "name": "@google/genai",
+      "reason": "No literal import/require/CSS @import in inventoried source; CLI/config/transitive use may still require it."
+    },
+    {
+      "name": "html2canvas",
+      "reason": "No literal import/require/CSS @import in inventoried source; CLI/config/transitive use may still require it."
+    },
+    {
+      "name": "autoprefixer",
+      "reason": "No literal import/require/CSS @import in inventoried source; CLI/config/transitive use may still require it."
+    },
+    {
+      "name": "tsx",
+      "reason": "No literal import/require/CSS @import in inventoried source; CLI/config/transitive use may still require it."
+    }
+  ],
+  "filesWithoutInboundImports": [
+    {
+      "file": "src/main.tsx",
+      "reason": "No resolved static inbound import; entry points, dynamic conventions and type/runtime refs require manual review."
+    },
+    {
+      "file": "src/types/index.ts",
+      "reason": "No resolved static inbound import; entry points, dynamic conventions and type/runtime refs require manual review."
+    }
+  ],
+  "exactDuplicateSourceOrPublicFiles": [],
+  "logCalls": [
+    {
+      "file": "api/forms/sync-sheet.ts",
+      "line": 114,
+      "method": "log"
+    },
+    {
+      "file": "api/forms/sync-sheet.ts",
+      "line": 196,
+      "method": "log"
+    },
+    {
+      "file": "api/forms/sync-sheet.ts",
+      "line": 214,
+      "method": "log"
+    },
+    {
+      "file": "api/forms/sync-sheet.ts",
+      "line": 283,
+      "method": "log"
+    },
+    {
+      "file": "scripts/dev-server.ts",
+      "line": 46,
+      "method": "log"
+    },
+    {
+      "file": "generate_report_pdf.cjs",
+      "line": 9,
+      "method": "log"
+    },
+    {
+      "file": "generate_report_pdf.cjs",
+      "line": 10,
+      "method": "log"
+    },
+    {
+      "file": "generate_report_pdf.cjs",
+      "line": 28,
+      "method": "log"
+    },
+    {
+      "file": "generate_report_pdf.cjs",
+      "line": 31,
+      "method": "log"
+    }
+  ],
+  "debuggerStatements": [],
+  "caches": [
+    {
+      "path": "dist",
+      "present": true,
+      "files": 79,
+      "bytes": 3870674,
+      "tracked": 0
+    },
+    {
+      "path": ".vite",
+      "present": false,
+      "tracked": 0
+    },
+    {
+      "path": "node_modules/.vite",
+      "present": true,
+      "files": 60,
+      "bytes": 28957692,
+      "tracked": 0
+    },
+    {
+      "path": "node_modules/.cache",
+      "present": false,
+      "tracked": 0
+    },
+    {
+      "path": ".vercel",
+      "present": true,
+      "files": 2,
+      "bytes": 646,
+      "tracked": 0
+    },
+    {
+      "path": "coverage",
+      "present": false,
+      "tracked": 0
+    },
+    {
+      "path": "playwright-report",
+      "present": false,
+      "tracked": 0
+    },
+    {
+      "path": "test-results",
+      "present": true,
+      "files": 1,
+      "bytes": 45,
+      "tracked": 0
+    },
+    {
+      "path": ".eslintcache",
+      "present": false,
+      "tracked": 0
+    },
+    {
+      "path": "qa-audit/site-build",
+      "present": true,
+      "files": 144,
+      "bytes": 5321806,
+      "tracked": 0
+    },
+    {
+      "path": "qa-audit/fix-results",
+      "present": true,
+      "files": 1,
+      "bytes": 45,
+      "tracked": 0
+    },
+    {
+      "path": "tmp/pdfs",
+      "present": true,
+      "files": 31,
+      "bytes": 3772298,
+      "tracked": 0
+    }
+  ],
+  "trackedGeneratedPatterns": [],
+  "rootMetadataCandidates": [
+    {
+      "file": "firebase-blueprint.json",
+      "bytes": 5786,
+      "tracked": true,
+      "sourceReferenceFiles": []
+    },
+    {
+      "file": "metadata.json",
+      "bytes": 255,
+      "tracked": true,
+      "sourceReferenceFiles": []
+    },
+    {
+      "file": "storage.rules",
+      "bytes": 939,
+      "tracked": true,
+      "sourceReferenceFiles": []
+    },
+    {
+      "file": "supabase-schema.sql",
+      "bytes": 7554,
+      "tracked": true,
+      "sourceReferenceFiles": []
+    },
+    {
+      "file": "generate_report_pdf.cjs",
+      "bytes": 1074,
+      "tracked": true,
+      "sourceReferenceFiles": []
+    },
+    {
+      "file": "PROJECT_ADDITIONS_REPORT.html",
+      "bytes": 37796,
+      "tracked": true,
+      "sourceReferenceFiles": [
+        "generate_report_pdf.cjs"
+      ]
+    },
+    {
+      "file": "PROJECT_ADDITIONS_REPORT.pdf",
+      "bytes": 1385264,
+      "tracked": true,
+      "sourceReferenceFiles": [
+        "generate_report_pdf.cjs"
+      ]
+    }
+  ],
+  "environmentNames": [
+    "COURSE_SITE_URL",
+    "DISABLE_HMR",
+    "GEMINI_API_KEY",
+    "GEMINI_COURSE_ENABLED",
+    "GEMINI_COURSE_MODEL",
+    "GOOGLE_DRIVE_CLIENT_ID",
+    "GOOGLE_DRIVE_CLIENT_SECRET",
+    "GOOGLE_PRIVATE_KEY",
+    "GOOGLE_SERVICE_ACCOUNT_EMAIL",
+    "GOOGLE_SPREADSHEET_OWNER_EMAIL",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "VITE_PISTON_API_URL",
+    "VITE_SITE_URL",
+    "VITE_SUPABASE_ANON_KEY",
+    "VITE_SUPABASE_URL"
+  ],
+  "sourceEnvironmentNamesMissingFromExample": [
+    "COURSE_SITE_URL",
+    "DISABLE_HMR",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+  ]
+}

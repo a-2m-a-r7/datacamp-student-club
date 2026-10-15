@@ -1,0 +1,153 @@
+{
+  "startedAt": "2026-10-15T16:49:44.339Z",
+  "finishedAt": "2026-10-15T16:50:09.400Z",
+  "branch": "tester-final",
+  "baseCommit": "4d4ea0964dfc6671cd76bc24d1e2bf96c401f821",
+  "workingTreeBefore": "clean",
+  "branches": "auth-supabase-upgrade                e81d612 [origin/auth-supabase-upgrade] feat(phase6-8): complete data layer sync, seed.sql, auth account chooser, and zero-error build\n  feature-form-builder                 0e5f0a8 [origin/feature-form-builder] feat(forms): complete Microsoft Forms-style Form Builder, responses analytics, public form page and Google Sheets sync\n  final-cleanup                        f429129 docs(audit): record FINAL delivery state and comparative metrics in AFTER.md\n  fix-auth-rebuild                     ed067aa [origin/fix-auth-rebuild] feat(auth-supabase): enable native Google OAuth with account chooser, remove Firebase, and switch 100% to Supabase\n  fix/qa-real-data                     4d4ea09 Document verified Drive video upload, bilingual quizzes and handover limits\n  main                                 f429129 [origin/main: behind 34] docs(audit): record FINAL delivery state and comparative metrics in AFTER.md\n  qa-audit                             f429129 docs(audit): record FINAL delivery state and comparative metrics in AFTER.md\n  qa-audit-existing-20261013           0e5f0a8 feat(forms): complete Microsoft Forms-style Form Builder, responses analytics, public form page and Google Sheets sync\n  qa-fix                               8eb8250 test(qa): add Playwright E2E test suites, QA report, and audit deliverables\n* tester-final                         4d4ea09 Document verified Drive video upload, bilingual quizzes and handover limits\n  remotes/origin/HEAD                  -> origin/main\n  remotes/origin/auth-supabase-upgrade e81d612 feat(phase6-8): complete data layer sync, seed.sql, auth account chooser, and zero-error build\n  remotes/origin/feature-form-builder  0e5f0a8 feat(forms): complete Microsoft Forms-style Form Builder, responses analytics, public form page and Google Sheets sync\n  remotes/origin/final-cleanup         f429129 docs(audit): record FINAL delivery state and comparative metrics in AFTER.md\n  remotes/origin/fix-auth-rebuild      ed067aa feat(auth-supabase): enable native Google OAuth with account chooser, remove Firebase, and switch 100% to Supabase\n  remotes/origin/main                  4d4ea09 Document verified Drive video upload, bilingual quizzes and handover limits",
+  "unmergedCommitsRelativeToBase": {
+    "qa-audit": 0,
+    "qa-fix": 0
+  },
+  "versions": {
+    "node": "v25.8.0",
+    "npm": "11.11.0"
+  },
+  "before": {
+    "workspace": {
+      "bytes": 852180356,
+      "files": 27063,
+      "skippedLinks": 0,
+      "unreadable": 0
+    },
+    "git": {
+      "bytes": 38907921,
+      "files": 1460,
+      "skippedLinks": 0,
+      "unreadable": 0
+    },
+    "nodeModules": {
+      "bytes": 587240839,
+      "files": 23299,
+      "skippedLinks": 0,
+      "unreadable": 0
+    },
+    "src": {
+      "bytes": 1300236,
+      "files": 125,
+      "skippedLinks": 0,
+      "unreadable": 0
+    },
+    "public": {
+      "bytes": 82983,
+      "files": 2,
+      "skippedLinks": 0,
+      "unreadable": 0
+    },
+    "existingDist": {
+      "bytes": 3870674,
+      "files": 79,
+      "skippedLinks": 0,
+      "unreadable": 0
+    }
+  },
+  "tracked": {
+    "files": 344,
+    "bytes": 14946766
+  },
+  "dependencies": {
+    "directProduction": 21,
+    "directDevelopment": 13,
+    "lockPackageEntries": 348
+  },
+  "installed": {
+    "exitCode": 0,
+    "treeEntries": 513,
+    "uniqueNameVersionPairs": 332,
+    "problems": []
+  },
+  "bundle": {
+    "files": 79,
+    "bytes": 3870674,
+    "gzipBytes": 1227295,
+    "largest": [
+      {
+        "file": "assets/vendor-spreadsheets-BLigKl4k.js",
+        "bytes": 492338,
+        "gzipBytes": 160635
+      },
+      {
+        "file": "assets/vendor-pdf-BAdL73m8.js",
+        "bytes": 391246,
+        "gzipBytes": 129080
+      },
+      {
+        "file": "assets/EventManagement-BqdtEOMS.js",
+        "bytes": 390325,
+        "gzipBytes": 114557
+      },
+      {
+        "file": "assets/vendor-charts-BCQALMor.js",
+        "bytes": 371644,
+        "gzipBytes": 109218
+      },
+      {
+        "file": "assets/vendor-react-L-KCOhBx.js",
+        "bytes": 310020,
+        "gzipBytes": 94454
+      },
+      {
+        "file": "assets/vendor-supabase-B12s50R_.js",
+        "bytes": 226703,
+        "gzipBytes": 58896
+      },
+      {
+        "file": "assets/vendor-canvas-QH1iLAAe.js",
+        "bytes": 202379,
+        "gzipBytes": 48044
+      },
+      {
+        "file": "assets/index-f6PSR5wG.js",
+        "bytes": 185026,
+        "gzipBytes": 58572
+      },
+      {
+        "file": "assets/index.es-DszGVZQQ.js",
+        "bytes": 159644,
+        "gzipBytes": 53541
+      },
+      {
+        "file": "assets/index-DMuVB9pc.css",
+        "bytes": 136174,
+        "gzipBytes": 17979
+      }
+    ]
+  },
+  "results": [
+    {
+      "name": "build",
+      "command": "npm run build -- --outDir qa-audit/.runtime/tester-final-step0-2026-10-15T16-49-44-339Z/build --emptyOutDir false",
+      "exitCode": 0,
+      "durationSeconds": 6.88,
+      "errors": 0,
+      "warningLines": []
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationSeconds": 8.19,
+      "errors": 0,
+      "warningLines": []
+    },
+    {
+      "name": "type-check",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0,
+      "durationSeconds": 7.74,
+      "errors": 0,
+      "warningLines": []
+    }
+  ],
+  "evidenceDirectory": "qa-audit/.runtime/tester-final-step0-2026-10-15T16-49-44-339Z"
+}

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-15T17:22:32.476Z",
+  "checkedAt": "2026-10-15T17:41:11.455Z",
   "environment": "Two independent in-memory PGlite PostgreSQL databases, no network or .env reads",
   "mode": "unmodified baseline",
   "limitations": [
@@ -135,6 +135,16 @@
         "migration": "20261015000015_restrict_legacy_promotion.sql",
         "sha256": "d5fb05b4b9ab7b65f3033accebfa99ac0a1e78cc5fcdb35797c0541112854bdb",
         "status": "passed"
+      },
+      {
+        "migration": "20261015000016_protect_users_mirror.sql",
+        "sha256": "37e0407803f2e664061ce30f62fec35daab7296b2792b38f02d03272f318e110",
+        "status": "passed"
+      },
+      {
+        "migration": "20261015000017_restrict_course_counter.sql",
+        "sha256": "6216ec9a59076abdcaa9dec6644a12d2d5264c60bfea0d83c39f68ec1b9ac240",
+        "status": "passed"
       }
     ],
     "bootstrap": [
@@ -144,7 +154,7 @@
       "Empty supabase_realtime publication; original migrations add tables",
       "PGlite bundled uuid-ossp/pgcrypto/citext enabled; original CREATE EXTENSION statements unchanged"
     ],
-    "migrationCount": 25,
+    "migrationCount": 27,
     "excludedAlternateInputs": [
       "combined_migration.sql",
       "../full_schema.sql",
@@ -337,6 +347,6 @@
     "expectedHistoricalControl": "Exact original helper permits untrusted promotion under unchanged PostgreSQL PUBLIC EXECUTE default",
     "controlConfirmed": true
   },
-  "finishedAt": "2026-10-15T17:22:35.006Z",
+  "finishedAt": "2026-10-15T17:41:14.569Z",
   "passed": true
 }

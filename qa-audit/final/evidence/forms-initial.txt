@@ -1,0 +1,102 @@
+
+Running 3 tests using 1 worker
+
+  x  1 [1440] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (22.1s)
+  ok 2 [1440] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (6.9s)
+  x  3 [1440] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (25.4s)
+
+
+  1) [1440] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('QA_TEST_Analysis', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('QA_TEST_Analysis', { exact: true }) with timeout 20000ms
+      - waiting for getByText('QA_TEST_Analysis', { exact: true })
+
+
+      75 |   await page.goto('/f/' + form.slug);
+      76 |   await expect(page.getByText(ranking.title, { exact: true })).toBeVisible();
+    > 77 |   for (const option of options) await expect(page.getByText(option.text, { exact: true })).toBeVisible();
+         |                                                                                            ^
+      78 |
+      79 |   // Drag contract comes from the picker. No guessed hidden input or direct state
+      80 |   // injection is used. Each displayed option must have a draggable ancestor.
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-question-types.spec.ts:77:92
+
+    Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, copyfile 'C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\evidence\regression-artifacts\.playwright-artifacts-0\traces\873bba8f5cb12f7989de-f67f025629f10e6a718c-recording1.network' -> 'C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\evidence\regression-artifacts\.playwright-artifacts-0\traces\873bba8f5cb12f7989de-f67f025629f10e6a718c-recording1-pwnetcopy-1.network'
+
+       9 | test.beforeEach(async () => { app = await platform(); });
+      10 | test.afterEach(async ({ browser }) => {
+    > 11 |   for (const context of browser.contexts()) await context.close();
+         |                                                           ^
+      12 |   await app?.db.close();
+      13 | });
+      14 |
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-question-types.spec.ts:11:59
+
+    Error: browserContext._wrapApiCall: ENOENT: no such file or directory, open 'C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\evidence\regression-artifacts\.playwright-artifacts-0\traces\873bba8f5cb12f7989de-f67f025629f10e6a718c.trace'
+
+    Error: ENOENT: no such file or directory, open 'C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\evidence\regression-artifacts\.playwright-artifacts-0\148f2969d62b451cf1c44e65a97f70e1.zip'
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\regression-artifacts\form-question-types-rankin-61a10-ersist-the-exact-option-IDs-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [1440] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText('QA_TEST_INTERMEDIATE_OPTIONAL', { exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText('QA_TEST_INTERMEDIATE_OPTIONAL', { exact: true }) with timeout 20000ms
+      - waiting for getByText('QA_TEST_INTERMEDIATE_OPTIONAL', { exact: true })
+        44 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      175 |   // label so the test remains valid when the value is fixed to stable option ID.
+      176 |   await respondent.locator('form select').selectOption({ label: fixture.route.options[0].text });
+    > 177 |   await expect(respondent.getByText(fixture.optional.title, { exact: true })).toHaveCount(0);
+          |                                                                               ^
+      178 |   await expect(respondent.getByText(fixture.required.title, { exact: true })).toHaveCount(0);
+      179 |   await expect(respondent.getByText(fixture.target.title, { exact: true })).toBeVisible();
+      180 |   await respondent.getByPlaceholder('QA_TEST_FINAL_ANSWER', { exact: true }).fill('QA_TEST_FINISHED_BRANCH');
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-question-types.spec.ts:177:79
+
+    Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, copyfile 'C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\evidence\regression-artifacts\.playwright-artifacts-1\traces\873bba8f5cb12f7989de-1ac066ad36ce1e13cc2b-recording3.network' -> 'C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\evidence\regression-artifacts\.playwright-artifacts-1\traces\873bba8f5cb12f7989de-1ac066ad36ce1e13cc2b-recording3-pwnetcopy-1.network'
+
+       9 | test.beforeEach(async () => { app = await platform(); });
+      10 | test.afterEach(async ({ browser }) => {
+    > 11 |   for (const context of browser.contexts()) await context.close();
+         |                                                           ^
+      12 |   await app?.db.close();
+      13 | });
+      14 |
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-question-types.spec.ts:11:59
+
+    Error: browserContext._wrapApiCall: ENOENT: no such file or directory, open 'C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\evidence\regression-artifacts\.playwright-artifacts-1\traces\873bba8f5cb12f7989de-1ac066ad36ce1e13cc2b-recording2.trace'
+
+    Error: ENOENT: no such file or directory, open 'C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\evidence\regression-artifacts\.playwright-artifacts-1\15512d7cbc7c1f1fe73b6f6af12f5c3b.zip'
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\regression-artifacts\form-question-types-config-fef8a-red-questions-before-saving-1440\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\regression-artifacts\form-question-types-config-fef8a-red-questions-before-saving-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [1440] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs 
+    [1440] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving 
+  1 passed (57.8s)

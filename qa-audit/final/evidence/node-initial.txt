@@ -1,0 +1,37 @@
+✔ admin account API validates, creates, rolls back failed profile writes, refuses self-deletion and deletes Auth-owned records (20.37ms)
+✔ backup exports all 1105 records in bounded pages, excludes credentials and rejects partial database failures (7007.1427ms)
+✔ server authorization rejects visitor, member, expired token and unverified administrator (18.4281ms)
+✔ avatar API validates real identity, saves owned Storage bytes and reference, and reuses stored photos (26.8595ms)
+✔ provider image fetch rejects arbitrary URLs, hostile redirects, oversized bodies and wrong signatures (0.9369ms)
+▶ course APIs preserve permissions, provider binding, bounded memory and private credentials
+  ✔ encrypted refresh tokens are randomized, reversible and tamper evident (1.0141ms)
+  ✔ signed tickets reject tampering and expiry (0.3642ms)
+  ✔ upload destinations reject foreign hosts, credentials and leaked API keys (0.2024ms)
+  ✔ Gemini hashes accept base64 raw bytes and base64 hex text but reject malformed lengths and data (0.2335ms)
+  ✔ file validation rejects 2 GiB plus one, unsupported executables and oversized captions (0.1307ms)
+  ✔ bounded provider reads reject oversized streams without buffering the whole response (9.6784ms)
+  ✔ AI plans reject invalid answers, empty output tests and duplicate question IDs (1.9539ms)
+  ✔ new generated quizzes require complete aligned Arabic and English versions (0.5207ms)
+  ✔ changing quiz language preserves answer indices and legacy fallback (0.1303ms)
+  ✔ all administration endpoints reject visitors and ordinary members before provider access (6.9188ms)
+  ✔ OAuth callback with missing or mismatched nonce cannot exchange a code (0.4022ms)
+  ✔ Drive connection exposes no refresh token or server secret (0.8122ms)
+  ✔ completed Drive sessions are recovered by the server without browser CORS or database writes (2.7539ms)
+  ✔ Gemini recovers an uploaded job file without returning its completed upload session (1.3649ms)
+  ✔ Gemini status validates the provider base64-encoded hex hash before advancing an uploaded job (0.8224ms)
+  ✔ file tickets require enrollment; active membership alone is insufficient (1.5565ms)
+  ✔ file completion rejects a provider hash mismatch before public sharing or database writes (1.3835ms)
+  ✔ file completion validates actual bytes and only then saves the lesson reference (1.3368ms)
+  ✔ video generation stays disabled until free-tier activation is configured (0.3213ms)
+✔ course APIs preserve permissions, provider binding, bounded memory and private credentials (33.9849ms)
+✔ background refresh needs no realtime connection; hidden/offline tabs stop work and resume fresh (4.8058ms)
+✔ slow responses do not overlap and cannot repopulate state after logout/unmount (0.6612ms)
+✔ a temporary backend failure retains known data and a later refresh receives the real update (0.8244ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7435.1196

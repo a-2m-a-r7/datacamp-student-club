@@ -1,0 +1,622 @@
+[
+  {
+    "file": "src/App.tsx",
+    "lines": 337,
+    "uiTemplates": 9
+  },
+  {
+    "file": "src/components/AIMentor/AIMentorButton.tsx",
+    "lines": 46,
+    "uiTemplates": 2
+  },
+  {
+    "file": "src/components/AIMentor/AIMentorModal.tsx",
+    "lines": 565,
+    "uiTemplates": 14
+  },
+  {
+    "file": "src/components/AssetImage.tsx",
+    "lines": 14,
+    "uiTemplates": 2
+  },
+  {
+    "file": "src/components/CertificateView.tsx",
+    "lines": 1055,
+    "uiTemplates": 9
+  },
+  {
+    "file": "src/components/Compiler/CodeExerciseRunner.tsx",
+    "lines": 261,
+    "uiTemplates": 5
+  },
+  {
+    "file": "src/components/ContentPage.tsx",
+    "lines": 51,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/components/ErrorBoundary.tsx",
+    "lines": 73,
+    "uiTemplates": 2
+  },
+  {
+    "file": "src/components/Footer.tsx",
+    "lines": 143,
+    "uiTemplates": 14
+  },
+  {
+    "file": "src/components/GoogleAccountModal.tsx",
+    "lines": 23,
+    "uiTemplates": 4
+  },
+  {
+    "file": "src/components/ImagePicker.tsx",
+    "lines": 105,
+    "uiTemplates": 7
+  },
+  {
+    "file": "src/components/LanguageSwitcher.tsx",
+    "lines": 115,
+    "uiTemplates": 6
+  },
+  {
+    "file": "src/components/LinkedInShare.tsx",
+    "lines": 58,
+    "uiTemplates": 11
+  },
+  {
+    "file": "src/components/Logo.tsx",
+    "lines": 128,
+    "uiTemplates": 2
+  },
+  {
+    "file": "src/components/QuizEngine.tsx",
+    "lines": 343,
+    "uiTemplates": 6
+  },
+  {
+    "file": "src/components/Sidebar.tsx",
+    "lines": 314,
+    "uiTemplates": 12
+  },
+  {
+    "file": "src/components/Starfield.tsx",
+    "lines": 65,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/components/UserIdentityInput.tsx",
+    "lines": 119,
+    "uiTemplates": 4
+  },
+  {
+    "file": "src/components/admin/CourseExerciseEditor.tsx",
+    "lines": 10,
+    "uiTemplates": 6
+  },
+  {
+    "file": "src/components/admin/CourseQuizEditor.tsx",
+    "lines": 47,
+    "uiTemplates": 10
+  },
+  {
+    "file": "src/components/admin/CourseUnitsEditor.tsx",
+    "lines": 15,
+    "uiTemplates": 7
+  },
+  {
+    "file": "src/components/admin/LessonMediaEditor.tsx",
+    "lines": 45,
+    "uiTemplates": 16
+  },
+  {
+    "file": "src/components/admin/RoleEditorModal.tsx",
+    "lines": 296,
+    "uiTemplates": 7
+  },
+  {
+    "file": "src/components/courses/LessonResources.tsx",
+    "lines": 33,
+    "uiTemplates": 6
+  },
+  {
+    "file": "src/components/ui/Button.tsx",
+    "lines": 58,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/components/ui/Card.tsx",
+    "lines": 82,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/components/ui/Dialog.tsx",
+    "lines": 35,
+    "uiTemplates": 1
+  },
+  {
+    "file": "src/components/ui/Input.tsx",
+    "lines": 25,
+    "uiTemplates": 1
+  },
+  {
+    "file": "src/contexts/AuthContext.tsx",
+    "lines": 538,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/contexts/LanguageContext.tsx",
+    "lines": 263,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/contexts/NotificationsContext.tsx",
+    "lines": 120,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/contexts/PointsContext.tsx",
+    "lines": 205,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/apiClient.ts",
+    "lines": 18,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/authRedirect.ts",
+    "lines": 9,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/clipboard.ts",
+    "lines": 14,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/defaultContent.ts",
+    "lines": 9,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/emailUtils.ts",
+    "lines": 120,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/imageData.ts",
+    "lines": 8,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/isolatedRunner.ts",
+    "lines": 22,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/linkedin.ts",
+    "lines": 29,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/logger.ts",
+    "lines": 19,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/memberCard.ts",
+    "lines": 21,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/memberUtils.ts",
+    "lines": 27,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/pythonRunner.ts",
+    "lines": 29,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/quizLanguage.ts",
+    "lines": 11,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/roleDefinitions.ts",
+    "lines": 82,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/schemas.ts",
+    "lines": 30,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/siteUrl.ts",
+    "lines": 39,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/sqlRunner.ts",
+    "lines": 19,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/supabase.ts",
+    "lines": 49,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/universalRunner.ts",
+    "lines": 564,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/useCourseCatalog.ts",
+    "lines": 42,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/usePublicStats.ts",
+    "lines": 15,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/utils.ts",
+    "lines": 29,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/lib/watchQuery.ts",
+    "lines": 21,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/main.tsx",
+    "lines": 11,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/pages/About.tsx",
+    "lines": 395,
+    "uiTemplates": 8
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "lines": 142,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/pages/AuthCallback.tsx",
+    "lines": 98,
+    "uiTemplates": 2
+  },
+  {
+    "file": "src/pages/Blog.tsx",
+    "lines": 350,
+    "uiTemplates": 18
+  },
+  {
+    "file": "src/pages/Certificates.tsx",
+    "lines": 294,
+    "uiTemplates": 10
+  },
+  {
+    "file": "src/pages/CompilerPlayground.tsx",
+    "lines": 435,
+    "uiTemplates": 14
+  },
+  {
+    "file": "src/pages/Contact.tsx",
+    "lines": 243,
+    "uiTemplates": 10
+  },
+  {
+    "file": "src/pages/CourseDetail.tsx",
+    "lines": 391,
+    "uiTemplates": 11
+  },
+  {
+    "file": "src/pages/CourseLearning.tsx",
+    "lines": 535,
+    "uiTemplates": 21
+  },
+  {
+    "file": "src/pages/CourseQuiz.tsx",
+    "lines": 118,
+    "uiTemplates": 5
+  },
+  {
+    "file": "src/pages/Courses.tsx",
+    "lines": 397,
+    "uiTemplates": 17
+  },
+  {
+    "file": "src/pages/Dashboard.tsx",
+    "lines": 535,
+    "uiTemplates": 20
+  },
+  {
+    "file": "src/pages/Events.tsx",
+    "lines": 282,
+    "uiTemplates": 15
+  },
+  {
+    "file": "src/pages/FAQ.tsx",
+    "lines": 291,
+    "uiTemplates": 9
+  },
+  {
+    "file": "src/pages/ForgotPassword.tsx",
+    "lines": 122,
+    "uiTemplates": 5
+  },
+  {
+    "file": "src/pages/Gallery.tsx",
+    "lines": 249,
+    "uiTemplates": 10
+  },
+  {
+    "file": "src/pages/Home.tsx",
+    "lines": 278,
+    "uiTemplates": 10
+  },
+  {
+    "file": "src/pages/Leaderboard.tsx",
+    "lines": 331,
+    "uiTemplates": 2
+  },
+  {
+    "file": "src/pages/Login.tsx",
+    "lines": 263,
+    "uiTemplates": 10
+  },
+  {
+    "file": "src/pages/MyCourses.tsx",
+    "lines": 143,
+    "uiTemplates": 5
+  },
+  {
+    "file": "src/pages/NotFound.tsx",
+    "lines": 26,
+    "uiTemplates": 1
+  },
+  {
+    "file": "src/pages/Notifications.tsx",
+    "lines": 218,
+    "uiTemplates": 6
+  },
+  {
+    "file": "src/pages/Privacy.tsx",
+    "lines": 130,
+    "uiTemplates": 2
+  },
+  {
+    "file": "src/pages/Profile.tsx",
+    "lines": 427,
+    "uiTemplates": 33
+  },
+  {
+    "file": "src/pages/Projects.tsx",
+    "lines": 514,
+    "uiTemplates": 35
+  },
+  {
+    "file": "src/pages/PublicFormView.tsx",
+    "lines": 895,
+    "uiTemplates": 25
+  },
+  {
+    "file": "src/pages/Register.tsx",
+    "lines": 298,
+    "uiTemplates": 11
+  },
+  {
+    "file": "src/pages/ResetPassword.tsx",
+    "lines": 135,
+    "uiTemplates": 8
+  },
+  {
+    "file": "src/pages/Staff.tsx",
+    "lines": 307,
+    "uiTemplates": 10
+  },
+  {
+    "file": "src/pages/Terms.tsx",
+    "lines": 151,
+    "uiTemplates": 1
+  },
+  {
+    "file": "src/pages/VerifyEmail.tsx",
+    "lines": 165,
+    "uiTemplates": 11
+  },
+  {
+    "file": "src/pages/VerifyMembership.tsx",
+    "lines": 12,
+    "uiTemplates": 1
+  },
+  {
+    "file": "src/pages/admin/BlogManagement.tsx",
+    "lines": 202,
+    "uiTemplates": 12
+  },
+  {
+    "file": "src/pages/admin/ContentManagement.tsx",
+    "lines": 294,
+    "uiTemplates": 12
+  },
+  {
+    "file": "src/pages/admin/CourseManagement.tsx",
+    "lines": 861,
+    "uiTemplates": 75
+  },
+  {
+    "file": "src/pages/admin/EventManagement.tsx",
+    "lines": 485,
+    "uiTemplates": 34
+  },
+  {
+    "file": "src/pages/admin/GalleryManagement.tsx",
+    "lines": 152,
+    "uiTemplates": 10
+  },
+  {
+    "file": "src/pages/admin/MessageManagement.tsx",
+    "lines": 159,
+    "uiTemplates": 8
+  },
+  {
+    "file": "src/pages/admin/Overview.tsx",
+    "lines": 162,
+    "uiTemplates": 2
+  },
+  {
+    "file": "src/pages/admin/PointsManagement.tsx",
+    "lines": 241,
+    "uiTemplates": 9
+  },
+  {
+    "file": "src/pages/admin/ProjectManagement.tsx",
+    "lines": 246,
+    "uiTemplates": 16
+  },
+  {
+    "file": "src/pages/admin/Security.tsx",
+    "lines": 42,
+    "uiTemplates": 3
+  },
+  {
+    "file": "src/pages/admin/Settings.tsx",
+    "lines": 299,
+    "uiTemplates": 16
+  },
+  {
+    "file": "src/pages/admin/StaffManagement.tsx",
+    "lines": 255,
+    "uiTemplates": 18
+  },
+  {
+    "file": "src/pages/admin/UserManagement.tsx",
+    "lines": 1314,
+    "uiTemplates": 64
+  },
+  {
+    "file": "src/pages/admin/forms/FormBuilder.tsx",
+    "lines": 710,
+    "uiTemplates": 20
+  },
+  {
+    "file": "src/pages/admin/forms/FormList.tsx",
+    "lines": 481,
+    "uiTemplates": 16
+  },
+  {
+    "file": "src/pages/admin/forms/FormManagement.tsx",
+    "lines": 24,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/pages/admin/forms/FormResponses.tsx",
+    "lines": 695,
+    "uiTemplates": 18
+  },
+  {
+    "file": "src/pages/admin/forms/FormSettingsModal.tsx",
+    "lines": 292,
+    "uiTemplates": 13
+  },
+  {
+    "file": "src/pages/admin/forms/FormShareModal.tsx",
+    "lines": 197,
+    "uiTemplates": 8
+  },
+  {
+    "file": "src/pages/admin/forms/FormThemePicker.tsx",
+    "lines": 209,
+    "uiTemplates": 7
+  },
+  {
+    "file": "src/pages/admin/forms/QuestionCard.tsx",
+    "lines": 556,
+    "uiTemplates": 28
+  },
+  {
+    "file": "src/pages/admin/forms/QuestionTypePicker.tsx",
+    "lines": 224,
+    "uiTemplates": 4
+  },
+  {
+    "file": "src/services/aiService.ts",
+    "lines": 468,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/certificateService.ts",
+    "lines": 80,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/contentService.ts",
+    "lines": 339,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/courseMediaService.ts",
+    "lines": 38,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/courseService.ts",
+    "lines": 486,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/dbService.ts",
+    "lines": 187,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/formService.ts",
+    "lines": 321,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/notificationService.ts",
+    "lines": 72,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/pointsService.ts",
+    "lines": 157,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/profileService.ts",
+    "lines": 28,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/services/storageService.ts",
+    "lines": 81,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/types/database.ts",
+    "lines": 688,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/types/forms.ts",
+    "lines": 136,
+    "uiTemplates": 0
+  },
+  {
+    "file": "src/types/index.ts",
+    "lines": 470,
+    "uiTemplates": 0
+  }
+]

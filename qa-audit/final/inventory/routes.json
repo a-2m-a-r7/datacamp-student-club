@@ -1,0 +1,326 @@
+[
+  {
+    "file": "src/App.tsx",
+    "line": 171,
+    "path": "\"/f/:slug\"",
+    "element": "{<PublicFormView />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 172,
+    "path": "\"*\"",
+    "element": "{<NotFound />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 229,
+    "path": "\"/\"",
+    "element": "{<Home />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 230,
+    "path": "\"/courses\"",
+    "element": "{<Courses />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 231,
+    "path": "\"/my-courses\"",
+    "element": "{ <ProtectedRoute> <MyCourses /> </ProtectedRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 236,
+    "path": "\"/courses/:slug\"",
+    "element": "{<CourseDetail />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 237,
+    "path": "\"/courses/:slug/learn\"",
+    "element": "{ <ProtectedRoute> <CourseLearning /> </ProtectedRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 242,
+    "path": "\"/courses/:slug/quiz\"",
+    "element": "{ <ProtectedRoute> <CourseQuiz /> </ProtectedRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 247,
+    "path": "\"/courses/:slug/quiz/:lessonId\"",
+    "element": "{ <ProtectedRoute> <CourseQuiz /> </ProtectedRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 252,
+    "path": "\"/certificates\"",
+    "element": "{<Certificates />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 253,
+    "path": "\"/verify-certificate\"",
+    "element": "{<Certificates />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 254,
+    "path": "\"/verify-certificate/:code\"",
+    "element": "{<Certificates />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 255,
+    "path": "\"/verify-membership/:token\"",
+    "element": "{<VerifyMembership />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 256,
+    "path": "\"/notifications\"",
+    "element": "{ <ProtectedRoute> <Notifications /> </ProtectedRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 261,
+    "path": "\"/leaderboard\"",
+    "element": "{<Leaderboard />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 262,
+    "path": "\"/compiler\"",
+    "element": "{<CompilerPlayground />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 263,
+    "path": "\"/about\"",
+    "element": "{<About />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 264,
+    "path": "\"/projects\"",
+    "element": "{<Projects />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 265,
+    "path": "\"/events\"",
+    "element": "{<Events />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 266,
+    "path": "\"/blog\"",
+    "element": "{<Blog />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 267,
+    "path": "\"/staff\"",
+    "element": "{<Staff />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 268,
+    "path": "\"/gallery\"",
+    "element": "{<Gallery />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 269,
+    "path": "\"/contact\"",
+    "element": "{<Contact />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 270,
+    "path": "\"/faq\"",
+    "element": "{<FAQ />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 271,
+    "path": "\"/privacy\"",
+    "element": "{<Privacy />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 272,
+    "path": "\"/terms\"",
+    "element": "{<Terms />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 273,
+    "path": "\"/login\"",
+    "element": "{ <GuestRoute> <Login /> </GuestRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 278,
+    "path": "\"/register\"",
+    "element": "{ <GuestRoute> <Register /> </GuestRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 283,
+    "path": "\"/forgot-password\"",
+    "element": "{ <GuestRoute> <ForgotPassword /> </GuestRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 288,
+    "path": "\"/reset-password\"",
+    "element": "{<ResetPassword />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 289,
+    "path": "\"/verify-email\"",
+    "element": "{<VerifyEmail />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 290,
+    "path": "\"/auth/callback\"",
+    "element": "{<AuthCallback />}"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 291,
+    "path": "\"/dashboard\"",
+    "element": "{ <ProtectedRoute> <Dashboard /> </ProtectedRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 296,
+    "path": "\"/profile\"",
+    "element": "{ <ProtectedRoute> <Profile /> </ProtectedRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 301,
+    "path": "\"/admin/*\"",
+    "element": "{ <ManagerRoute> <AdminDashboard /> </ManagerRoute> }"
+  },
+  {
+    "file": "src/App.tsx",
+    "line": 306,
+    "path": "\"*\"",
+    "element": "{<NotFound />}"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 57,
+    "path": "\"/\"",
+    "element": "{<Overview />}"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 59,
+    "path": "\"/users\"",
+    "element": "{ <RoleGuard check={auth.isAdmin || auth.isHR}> <UserManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 65,
+    "path": "\"/events\"",
+    "element": "{ <RoleGuard check={auth.isAdmin || auth.isHR || auth.isEventManager}> <EventManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 71,
+    "path": "\"/staff\"",
+    "element": "{ <RoleGuard check={auth.isAdmin || auth.isHR}> <StaffManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 77,
+    "path": "\"/gallery\"",
+    "element": "{ <RoleGuard check={auth.isManager}> <GalleryManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 83,
+    "path": "\"/content\"",
+    "element": "{ <RoleGuard check={auth.isAdmin || auth.isContentManager}> <ContentManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 89,
+    "path": "\"/projects\"",
+    "element": "{ <RoleGuard check={auth.isAdmin || auth.isContentManager}> <ProjectManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 95,
+    "path": "\"/blog\"",
+    "element": "{ <RoleGuard check={auth.isAdmin || auth.isContentManager}> <BlogManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 101,
+    "path": "\"/messages\"",
+    "element": "{ <RoleGuard check={auth.isManager}> <MessageManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 107,
+    "path": "\"/courses\"",
+    "element": "{ <RoleGuard check={auth.isAdmin || auth.isContentManager}> <CourseManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 113,
+    "path": "\"/points\"",
+    "element": "{ <RoleGuard check={auth.isAdmin || auth.isManager}> <PointsManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 119,
+    "path": "\"/forms/*\"",
+    "element": "{ <RoleGuard check={auth.isAdmin}> <FormManagement /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 125,
+    "path": "\"/security\"",
+    "element": "{ <RoleGuard check={auth.isSuperAdmin}> <Security /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/AdminDashboard.tsx",
+    "line": 131,
+    "path": "\"/settings\"",
+    "element": "{ <RoleGuard check={auth.isSuperAdmin}> <SettingsPage /> </RoleGuard> }"
+  },
+  {
+    "file": "src/pages/admin/forms/FormManagement.tsx",
+    "line": 15,
+    "path": "\"/\"",
+    "element": "{<FormList />}"
+  },
+  {
+    "file": "src/pages/admin/forms/FormManagement.tsx",
+    "line": 16,
+    "path": "\"/new\"",
+    "element": "{<FormBuilder />}"
+  },
+  {
+    "file": "src/pages/admin/forms/FormManagement.tsx",
+    "line": 17,
+    "path": "\"/builder/:id\"",
+    "element": "{<FormBuilder />}"
+  },
+  {
+    "file": "src/pages/admin/forms/FormManagement.tsx",
+    "line": 18,
+    "path": "\"/:id/responses\"",
+    "element": "{<FormResponses />}"
+  }
+]

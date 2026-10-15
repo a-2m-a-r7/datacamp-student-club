@@ -1,0 +1,588 @@
+
+Running 1 test using 1 worker
+
+  x  1 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (4.4m)
+
+
+  1) [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census 
+
+    Test timeout of 240000ms exceeded.
+
+    Error: [
+      {
+        "route": "/my-courses",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/courses/qa-test-routes/learn",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/courses/qa-test-routes/quiz",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/courses/qa-test-routes/quiz/40000000-0000-4000-8000-000000000003",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/notifications",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/staff",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/login",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/register",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/forgot-password",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/verify-email",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/auth/callback",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('body')\nExpected pattern: not \u001b[32m/SYNCHRONIZING|ESTABLISHING_SESSION|EVALUATING_PERMISSIONS|جاري المزامنة|جاري تهيئة الجلسة|جاري فحص الصلاحيات/\u001b[39m\nReceived string: \u001b[31m\"\u001b[39m\n\u001b[31m    Main MenuHomeCoursesOnline CompilerCertificatesNotificationsEventsProjectsBlogStaff & BoardGalleryAbout UsContactINITIALIZE_MEMBERSHIPLOGIN_SYSTEMالعربيةEnglishالعربيةENالعربيةEN\u001b[7mSYNCHRONIZING\u001b[27m_IDENTITY...Exchanging secure keys and fetching your operative profileAuthentication link is invalid or expired. Please sign in again.Return to loginEmpowering students with data science, AI, and software engineering skills.Quick LinksAbout UsCoursesEventsProjectsBlogStaff & BoardGallerySupportFAQContactPrivacy PolicyTerms of ServiceContact InfoNot configuredNot configuredNot configured© 2026 DataCamp. All rights reserved.العربيةVERSION: 2.5.0-ARNEXUS AI MENTOR\u001b[39m\n\u001b[31m\u001b[39m\n\u001b[31m  \u001b[39m\n\u001b[31m\u001b[39m\n\u001b[31m\u001b[39m\n\u001b[31m\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"not toContainText\" locator('body') with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for locator('body')\u001b[22m\n\u001b[2m    12 × locator resolved to <body>…</body>\u001b[22m\n\u001b[2m       - unexpected value \"\u001b[22m\n\u001b[2m    Main MenuHomeCoursesOnline CompilerCertificatesNotificationsEventsProjectsBlogStaff & BoardGalleryAbout UsContact"
+      },
+      {
+        "route": "/dashboard",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Test timeout of 240000ms exceeded"
+      },
+      {
+        "route": "/profile",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 20000ms exceeded while waiting on the predicate"
+      },
+      {
+        "route": "/admin",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Test timeout of 240000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3100/admin\", waiting until \"load\"\u001b[22m\n"
+      },
+      {
+        "route": "/admin/users",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/events",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/staff",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/gallery",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/content",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/projects",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/blog",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/messages",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/courses",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/points",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/forms",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/forms/new",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/forms/builder/40000000-0000-4000-8000-000000000004",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/forms/40000000-0000-4000-8000-000000000004/responses",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/security",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/admin/settings",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/f/qa-test-routes",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      },
+      {
+        "route": "/QA_TEST_missing_route",
+        "locale": "en",
+        "role": "visitor",
+        "reason": "route-assertion",
+        "message": "page.goto: Target page, context or browser has been closed"
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -   1
+    + Received  + 319
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/my-courses",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/courses/qa-test-routes/learn",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/courses/qa-test-routes/quiz",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/courses/qa-test-routes/quiz/40000000-0000-4000-8000-000000000003",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/notifications",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/staff",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/login",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/register",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/forgot-password",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/verify-email",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(locator).not.toContainText(expected) failed
+    +
+    + Locator: locator('body')
+    + Expected pattern: not /SYNCHRONIZING|ESTABLISHING_SESSION|EVALUATING_PERMISSIONS|جاري المزامنة|جاري تهيئة الجلسة|جاري فحص الصلاحيات/
+    + Received string: \"
+    +     Main MenuHomeCoursesOnline CompilerCertificatesNotificationsEventsProjectsBlogStaff & BoardGalleryAbout UsContactINITIALIZE_MEMBERSHIPLOGIN_SYSTEMالعربيةEnglishالعربيةENالعربيةENSYNCHRONIZING_IDENTITY...Exchanging secure keys and fetching your operative profileAuthentication link is invalid or expired. Please sign in again.Return to loginEmpowering students with data science, AI, and software engineering skills.Quick LinksAbout UsCoursesEventsProjectsBlogStaff & BoardGallerySupportFAQContactPrivacy PolicyTerms of ServiceContact InfoNot configuredNot configuredNot configured© 2026 DataCamp. All rights reserved.العربيةVERSION: 2.5.0-ARNEXUS AI MENTOR
+    + 
+    +   
+    + 
+    + 
+    + \"
+    + Timeout: 20000ms
+    +
+    + Call log:
+    +   - Expect \"not toContainText\" locator('body') with timeout 20000ms
+    +   - waiting for locator('body')
+    +     12 × locator resolved to <body>…</body>
+    +        - unexpected value \"
+    +     Main MenuHomeCoursesOnline CompilerCertificatesNotificationsEventsProjectsBlogStaff & BoardGalleryAbout UsContact",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/auth/callback",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Test timeout of 240000ms exceeded",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/dashboard",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "expect(received).toBeGreaterThan(expected)
+    +
+    + Expected: > 0
+    + Received:   0
+    +
+    + Call Log:
+    + - Timeout 20000ms exceeded while waiting on the predicate",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/profile",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Test timeout of 240000ms exceeded.
+    + Call log:
+    +   - navigating to \"http://127.0.0.1:3100/admin\", waiting until \"load\"
+    + ",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/users",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/events",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/staff",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/gallery",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/content",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/projects",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/blog",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/messages",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/courses",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/points",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/forms",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/forms/new",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/forms/builder/40000000-0000-4000-8000-000000000004",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/forms/40000000-0000-4000-8000-000000000004/responses",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/security",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/admin/settings",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/f/qa-test-routes",
+    +   },
+    +   Object {
+    +     "locale": "en",
+    +     "message": "page.goto: Target page, context or browser has been closed",
+    +     "reason": "route-assertion",
+    +     "role": "visitor",
+    +     "route": "/QA_TEST_missing_route",
+    +   },
+    + ]
+
+      54 |    }
+      55 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});
+    > 56 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);
+         |                                                     ^
+      57 |   }finally{await app.db.close();}
+      58 |  });
+      59 | }
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\routes-locales.spec.ts:56:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\regression-artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\regression-artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\regression-artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\regression-artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census 

@@ -1,0 +1,12 @@
+{
+  "baselineCommit": "4d4ea0964dfc6671cd76bc24d1e2bf96c401f821",
+  "branch": "tester-final",
+  "routeDeclarations": 54,
+  "normalizedRouteTemplates": 53,
+  "semanticCaseFamilies": 112,
+  "uiSourceTemplates": 902,
+  "sqlObjectPolicyRows": 249,
+  "buckets": 4,
+  "baseCaseRows": 1320,
+  "executedFunctionalCases": 0
+}

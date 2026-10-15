@@ -1,0 +1,1 @@
+{"fullReplay":"passed","firstFailure":null,"legacyPromotion":"failed","fullChainBaselinePromotion":"failed","fullChainCandidatePromotion":"passed","cases":[{"id":"LEGACY-PROMOTE-ANON","passed":false},{"id":"LEGACY-PROMOTE-MEMBER","passed":false}],"evidence":"qa-audit/final/evidence/full-schema-security-candidate.json"}

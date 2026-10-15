@@ -1,0 +1,1010 @@
+[
+  {
+    "id": "AUTH-001",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Email signup valid",
+    "expected": "Unique QA_TEST_ email creates exactly one Auth identity and profile; user status and role agree with schema; confirmation is required according to configured test Auth settings.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-002",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Signup empty/invalid/weak/mismatched/duplicate",
+    "expected": "Exercise each field separately at its real limit; client and server reject without partial profile, elevated role, duplicate identity or misleading success.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-003",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "University versus personal identity input",
+    "expected": "Actual registration mode, normalization and affiliation match delivered schema/metadata; no unconfirmed user gains admin access.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-004",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Email confirmation",
+    "expected": "Open actual test-inbox link; verify callback, confirmed identity and profile in test Auth/database; wrong, used and expired links show honest failure.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-005",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Email login valid/wrong/unconfirmed/empty",
+    "expected": "Trigger each case, inspect request/status, profile, session and protected destination; bad credentials never create authenticated UI.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-006",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Many failed login attempts",
+    "expected": "Observe test Auth throttling/429 and UI retry handling; do not claim a rate-limit pass from mocked single errors.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-007",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Google login",
+    "expected": "Use a dedicated test OAuth client/account and callback; verify actual provider redirect, identity/profile/audit; BLOCKED until test credentials exist.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Blocked — external test setup / approval"
+  },
+  {
+    "id": "AUTH-008",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Google account switch",
+    "expected": "Select another dedicated QA account and verify account/profile/permissions/notifications are replaced without old-account data.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Blocked — external test setup / approval"
+  },
+  {
+    "id": "AUTH-009",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Logout then second login",
+    "expected": "Real signout clears session and subscriptions; back/refresh/protected APIs cannot reuse first identity.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-010",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Refresh/expiry/invalid refresh token",
+    "expected": "Refresh active session, expire access token, revoke refresh token; verify real session rotation or honest login redirect with no loop.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-011",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Independent tabs",
+    "expected": "Check intended per-tab isolation from sessionStorage; shared-session persistence is a product decision, not silently changed.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Needs decision"
+  },
+  {
+    "id": "AUTH-012",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Protected return paths",
+    "expected": "Direct protected deep link with query, login, and return; malicious external/protocol-relative/encoded redirect is rejected.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-013",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Recovery lifecycle",
+    "expected": "Forgot password generic response and actual test email; open one-time link, update password, prove new login and old password failure; expired/wrong/reused links reject.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-014",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Audit lifecycle",
+    "expected": "Compare profile creation, login/signup/logout audit/activity rows to actual source-defined events and trigger contract; count once, no invented audit types.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-015",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Demo switcher isolation",
+    "expected": "Search and trigger any exposed demo/account switch mechanism in production-mode local build; it must not bypass real Auth.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "AUTH-016",
+    "page": "/register, /login, /auth/callback, /forgot-password, /reset-password, /verify-email",
+    "role": "visitor, member, super_admin",
+    "element": "Pending/suspended/missing profile",
+    "expected": "Verify blocked member routes, retry profile fetch, signout, role downgrades and refresh; direct API/RLS denies inactive account access.",
+    "source": "src/contexts/AuthContext.tsx; src/pages/Login.tsx; src/pages/Register.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "NAV-001",
+    "page": "all routes; Sidebar; Footer; App; AdminDashboard",
+    "role": "all identities",
+    "element": "Every route direct load and refresh",
+    "expected": "Instantiate each NAV route below using QA_TEST_ identifiers; verify intended component or authorization boundary, never blank shell or wrong resource.",
+    "source": "src/App.tsx; src/components/Sidebar.tsx; src/components/Footer.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "NAV-002",
+    "page": "all routes; Sidebar; Footer; App; AdminDashboard",
+    "role": "all identities",
+    "element": "Every header/sidebar/footer/data link",
+    "expected": "Trigger every UI link template and each data-driven link; verify resolved URL, active state, query, deep link and back/forward behavior.",
+    "source": "src/App.tsx; src/components/Sidebar.tsx; src/components/Footer.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "NAV-003",
+    "page": "all routes; Sidebar; Footer; App; AdminDashboard",
+    "role": "all identities",
+    "element": "Mobile drawer and desktop collapse",
+    "expected": "Open/close by icon, backdrop, navigation and keyboard; verify scroll/focus, width, tooltips, restored content at 1440/768/375.",
+    "source": "src/App.tsx; src/components/Sidebar.tsx; src/components/Footer.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "NAV-004",
+    "page": "all routes; Sidebar; Footer; App; AdminDashboard",
+    "role": "all identities",
+    "element": "Every admin route denied identities",
+    "expected": "Direct visit plus direct downstream API/RPC calls for visitor/member/unsupported roles; hidden navigation alone is insufficient proof.",
+    "source": "src/App.tsx; src/components/Sidebar.tsx; src/components/Footer.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "NAV-005",
+    "page": "all routes; Sidebar; Footer; App; AdminDashboard",
+    "role": "all identities",
+    "element": "404 and unknown nested admin/form routes",
+    "expected": "Unknown paths render a clear recoverable not-found result and functioning Home/back actions; no misleading empty panel.",
+    "source": "src/App.tsx; src/components/Sidebar.tsx; src/components/Footer.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "NAV-006",
+    "page": "all routes; Sidebar; Footer; App; AdminDashboard",
+    "role": "all identities",
+    "element": "Maintenance",
+    "expected": "Toggle only isolated settings; verify public/protected/manager/login/callback/recovery behavior and safe recovery from maintenance.",
+    "source": "src/App.tsx; src/components/Sidebar.tsx; src/components/Footer.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "NAV-007",
+    "page": "all routes; Sidebar; Footer; App; AdminDashboard",
+    "role": "all identities",
+    "element": "Language controls",
+    "expected": "Trigger every toggle/sidebar/pill switch EN/AR, check document lang/dir, texts, form preservation, selection, focus and persistence.",
+    "source": "src/App.tsx; src/components/Sidebar.tsx; src/components/Footer.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "NAV-008",
+    "page": "all routes; Sidebar; Footer; App; AdminDashboard",
+    "role": "all identities",
+    "element": "Theme controls",
+    "expected": "Inventory actual controls; there is no assumed light-mode contract. If absent, record Not present/Needs decision rather than fabricate a theme-toggle pass.",
+    "source": "src/App.tsx; src/components/Sidebar.tsx; src/components/Footer.tsx",
+    "status": "Needs decision"
+  },
+  {
+    "id": "PUB-001",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Home/About content and stats",
+    "expected": "Load isolated settings/public_stats; displayed counts, configured hero, logos and links match rows; empty/error values are honest, no invented totals.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-002",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Catalog search/filter/pagination",
+    "expected": "Each category and level; English/Arabic mixed case/whitespace/no match; cursor boundaries and rapid query changes; no duplicates, missing pages or stale requests.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-003",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Course detail modules",
+    "expected": "Title/teacher/image/skills/prerequisites/units/lesson duration match rows; expand/collapse each module; private or unpublished content is protected.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-004",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Enrollment from catalog and detail",
+    "expected": "Click once/double-click/two sessions/lost response; one enrollment and actual source-defined XP; toast, button labels, counter and DB ledger must agree.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-005",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "My Courses search and resume",
+    "expected": "Only current identity enrollments, completed versus active state, last lesson and certificates match database; another user ID cannot change scope.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-006",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Events search/filter/register",
+    "expected": "Each availability option; valid/closed/past/full/zero-capacity event; duplicate and parallel last-seat registration are atomic; ticket appears only after persisted success.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-007",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Projects tabs/search/details",
+    "expected": "Each category, no match, open/close details and outbound GitHub/live URL; no unsafe protocols, broken image or leaked submitter private fields.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-008",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Project submission",
+    "expected": "Valid/empty/long/Arabic/emoji/XSS/bad external URL; authorized submit stores one planning/review row and no premature public publication.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-009",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Blog search/category/deep link",
+    "expected": "Every category and article query; open full body, close through every path, copy canonical encoded article URL, refresh deep link; escaped text stays inert.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-010",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Gallery filters/search/lightbox",
+    "expected": "All filters, empty result, each real QA image, backdrop/internal click/X/keyboard; correct image source, accessible label and no random placeholder substitution.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-011",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Staff directory privacy",
+    "expected": "Visitor/member cannot search or read club member/staff directory through UI, table query or alternate endpoints; admin filters/search/social links work.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-012",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Contact form",
+    "expected": "Every field valid/empty/invalid/length boundary/HTML/emoji/Arabic/double-submit; private message persists once, form clears only after actual success and unauthorized reads deny.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-013",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Footer contact/social content",
+    "expected": "Configured email/phone/address/social links match settings or explicit unconfigured state; every protocol/target/rel/label verified.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-014",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "FAQ search/categories/accordions",
+    "expected": "Exercise all categories/questions and clear/no-results; open state belongs to correct filtered item; support and courses CTAs resolve.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-015",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Privacy/Terms/content consistency",
+    "expected": "Links and rendered text match actual service privacy/access/execution capabilities in both languages; record discrepancies for review, do not invent legal terms.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-016",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Notifications list/actions",
+    "expected": "All/unread, each icon/type/destination, mark one/all twice and retry; counts/owner-specific rows persist, cross-user writes deny.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "PUB-017",
+    "page": "/, /about, /courses, /projects, /events, /blog, /gallery, /staff, /contact, /faq, /privacy, /terms",
+    "role": "visitor, member, super_admin",
+    "element": "Leaderboard privacy/filter",
+    "expected": "Admin-only source contract; direct member/visitor access does not disclose users. Allowed admin search/faculty/rank/XP agrees with rows.",
+    "source": "src/pages; src/services/contentService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-001",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Learning navigation",
+    "expected": "Each sidebar unit/lesson, previous/next and stage tab; correct source associations, ordering and last-accessed row; foreign lesson ID blocked.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-002",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Lesson completion",
+    "expected": "Article/video completion persists one earned progress/XP record; duplicate/retry and two sessions cannot multiply credit; failure rolls back.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-003",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Quiz server grading",
+    "expected": "Correct/wrong/partial/empty/unknown question/out-of-range/forged score answer maps; source correctIndex decides; required threshold cannot be bypassed via direct RPC.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-004",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Bilingual quizzes",
+    "expected": "Every question/choice/explanation in both views follows locale with same IDs/order/correct answer; language change preserves answers/current lesson. Legacy missing translation is explicit, no fabricated text.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-005",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Quiz review/retry",
+    "expected": "Submit all/unanswered confirmation, loading/double submit/errors, saved score and explanation; retry clears local attempt without duplicate reward.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-006",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Administrator draft preview",
+    "expected": "Open draft video/quiz in both views; no enrollment, watch bookmark, score, XP or certificate write. Answer review must be labeled preview, not saved result.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-007",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Video actual bytes",
+    "expected": "Play/pause/seek/end/resume/range requests; verify Content-Range, MIME, duration and exact local fixture hash; codec/network/token expiry failure has recovery.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-008",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Watch bookmark",
+    "expected": "Save every interval/pause/end; refresh/resume in real enrolled test session; other-user/negative/NaN/too-large time denies; iframe behavior stated accurately.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-009",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Subtitle/material",
+    "expected": "Upload/download/read UTF-8 SRT and VTT; malformed timing/oversize reject; matching locale track works, text URL revoked, material opens exact persisted artifact.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-010",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Generated learning path",
+    "expected": "After reviewed AI plan, one quiz and optional relevant code exercise are linked in source unit/order; reapply idempotent; changed source rejects old analysis.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-011",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Exercise execution/completion",
+    "expected": "Actual JavaScript/Python/TS/SQL/stdin/test cases; incorrect output/error/timeout cannot claim success, expected success persists authorized progress; prerequisites enforced.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-012",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Compiler context/reset",
+    "expected": "Open assigned lesson with correct starter/language/instructions; independent practice does not claim completion; reset restores assigned code; return path works.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-013",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Compiler every language",
+    "expected": "Run success/syntax/runtime/stdin/loop/output limit for python,javascript,typescript,sql,cpp,java,r,go,rust; external runners BLOCKED until independent endpoint exists.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Blocked — external test setup / approval"
+  },
+  {
+    "id": "LRN-014",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "Compiler controls",
+    "expected": "Language selection/sidebar/editable code, run/double run/loading, stdin toggle, console clear, clipboard and downloaded source extensions/contents; keyboard shortcuts if implemented.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "LRN-015",
+    "page": "/courses/:slug/learn, /courses/:slug/quiz, /courses/:slug/quiz/:lessonId, /compiler",
+    "role": "member, super_admin; visitor deny private learning",
+    "element": "AI mentor",
+    "expected": "Open/close from all triggers, send normal/empty/long/injection-like input, maintain/reset conversation as implemented; real reply only with test key, timeout/429/failure explicit and secret-free.",
+    "source": "src/pages/CourseLearning.tsx; src/pages/CourseQuiz.tsx; src/components/courses/LessonResources.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-001",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Dashboard consistency",
+    "expected": "Compare XP/rank/activities/enrollments/progress/certificates/unlocked badges to isolated rows; no invented identity/statistics or cross-user contents.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-002",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Automatic certificate",
+    "expected": "Finish exact current curriculum and quizzes; one certificate per course/member issued in same transaction; parallel completion, retries and rollback preserve integrity.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-003",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Existing credential integrity",
+    "expected": "Edit title/curriculum after award; credential snapshot and verification remain stable; new learner must satisfy current requirements.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-004",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Certificate PDF and PNG",
+    "expected": "Actually download/open/render each format with long Arabic/English names, course, dates, seals and decoded QR; correct dimensions, no clipped content or blank file.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-005",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Certificate print",
+    "expected": "Open print flow/print emulation for current UI; exported pages exclude controls, maintain valid layout/text/QR; missing stylesheet is not silently passed.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-006",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Member ID card PNG",
+    "expected": "Issue/retry/download/open and decode actual image; correct member details/owned token; refresh and concurrent issuance do not duplicate cards.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-007",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Membership and certificate verify",
+    "expected": "Valid/nonexistent/expired/revoked/malformed tokens; public output minimal; wrong course/user cannot obtain private profile or credential.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-008",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "All QR surfaces",
+    "expected": "Decode certificate UI/PNG/PDF, member card, event ticket and form-share QR exports; match expected canonical value. Test fixture origin for local navigation; canonical-production URL verification intercepts navigation so production is never contacted.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-009",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "QR scanner",
+    "expected": "Fake-camera/simulated scan valid/invalid/duplicate/wrong event/foreign member; one attendance transaction and exact XP; stop/reopen/deny permission/unmount releases tracks.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-010",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Google Sheets",
+    "expected": "Dedicated test spreadsheet only: create, new response append, repeat sync, new question after responses, missing share/credentials/quota/network retry; header mapping and no duplicated IDs. Real provider status BLOCKED until configured.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-011",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Every spreadsheet/CSV export",
+    "expected": "Download actual file, parse workbook/CSV, verify headers/row count/Arabic/BOM/date/timezone/nulls/filter scope, formula injection neutralization and authorization.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-012",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "Audit/export/backup JSON",
+    "expected": "Exercise all export buttons actually present; download and parse exact authorized rows, omit secrets, correct date/entity filters, empty/error/large results truthful.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "EXP-013",
+    "page": "/dashboard, /certificates, /verify-certificate/:code, /verify-membership/:token; admin exports",
+    "role": "visitor minimal verify; owner member; super_admin",
+    "element": "LinkedIn add/share/copy",
+    "expected": "Verify generated title/issuer/date/verification URL, clipboard contents and target query encoding for certificate and earned achievement; user confirms posting in LinkedIn, no unrequested publication.",
+    "source": "src/components/CertificateView.tsx; src/lib/memberCard.ts; src/lib/linkedin.ts; src/pages/admin/forms/FormResponses.tsx",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-001",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Interaction states per UI row",
+    "expected": "For EACH UI-ID trigger valid, double/rapid click, disabled/loading/success/rejection/offline/timeout paths; inspect endpoint/method/payload/status and real relevant state/row/file.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-002",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Every form boundary",
+    "expected": "For EACH form and field run empty/whitespace/valid/invalid/exact limit/limit+1/very long/emoji/Arabic/special/script HTML; compare client and direct server validation.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-003",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Every modal/dropdown",
+    "expected": "For EACH dynamic instance test open/close/X/cancel/Escape/outside/internal click, focus trap/restore, Tab/Shift+Tab, submit/save and validation/error.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-004",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "All upload classes",
+    "expected": "For EACH avatar/thumbnail/gallery/staff/event/form-answer/course file input: valid, zero-byte, misleading extension/MIME/header, >limit, duplicate names, same-file reselection, cancel/interrupt/retry and orphan cleanup.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-005",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Upload byte and storage ownership",
+    "expected": "Verify actual isolated Storage/Drive file, MIME/size/hash/URL and row relation. Replace reference atomically; another identity cannot list/read private files, overwrite/delete originals or upload to foreign prefix.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-006",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Data view states",
+    "expected": "For EACH route: honest loading, empty and failure states; retry; stale request after navigation cannot overwrite new view or show other identity data.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-007",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Layout and image resources",
+    "expected": "At 1440/768/375 in EN and AR check overflow, clipped/offscreen/overlapping controls, keyboard reachability, readable text, image load/fallback and responsive sidebar.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-008",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Accessibility",
+    "expected": "Every icon-only action has meaningful accessible name; focus visible/order, semantic heading/label/error association, dialog/accordion state, reduced motion and contrast measured against WCAG AA.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-009",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Console/network",
+    "expected": "Capture browser warnings/errors, failed 4xx/5xx, unhandled rejection and CSP violations per route/identity; intentionally rejected requests labeled and verified, never hidden.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-010",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Resource cleanup",
+    "expected": "Repeated mount/unmount, account changes and route cycles: channel subscriptions, timers, event listeners, workers, blob URLs and camera tracks close; measure heap trend rather than assert leak-free from code.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-011",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Realtime two independent sessions",
+    "expected": "Insert authorized QA event/response/notification in one session; relevant other view updates without refresh; unrelated/private data not broadcast. Adapters do not prove actual Supabase realtime.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-012",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Lighthouse mobile",
+    "expected": "Measure key public/learning/profile/admin pages against isolated fixed fixtures, cache/network settings and recorded version; record actual scores, no fabricated target.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "QUAL-013",
+    "page": "all UI templates and data views",
+    "role": "all identities",
+    "element": "Future capacity",
+    "expected": "Plan isolated 1000 concurrent-user load with known profiles/workload/resource quotas and explicit load target before execution; do not load-test production or infer capacity from UI pass.",
+    "source": "all source inventory rows",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-001",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "Privilege escalation legacy helpers",
+    "expected": "Call every SECURITY DEFINER role-changing helper incl promote_admin_by_email as anon/member with own/other email on disposable schema; enumerate EXECUTE ACLs and actual role row before/after. Static concern is not a confirmed bug.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-002",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "IDOR direct requests",
+    "expected": "For EACH resource, replace user/course/lesson/form/response/event/file/connection/job ID; enforce owner/membership/manager on server/RLS before access.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-003",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "Role spoofing",
+    "expected": "Alter request JSON role, JWT user_metadata/app_metadata, client flags and unsupported role strings; real verified server identity and schema permissions control access.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-004",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "Secrets built assets/history",
+    "expected": "Scan local emitted assets and all local Git objects/history for exact secret signatures without outputting values; only redacted counts/file/commit IDs recorded, no remote data or credential download.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-005",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "XSS and injection",
+    "expected": "Every persisted/displayed field: script HTML/attributes/javascript URLs/formula/SQL-like payload; rendered inert, protocol restrictions enforced, parameterized SQL unaffected.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-006",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "CORS/CSRF/security headers",
+    "expected": "Direct same/foreign origin/preflight/cookie state replay, expected headers/CSP/referrer/frame/content type; code execution/embedded video/auth/captions still work.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-007",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "API validation matrix",
+    "expected": "For EACH endpoint/action: correct method, OPTIONS/unsupported, missing/wrong/oversized body, malformed JSON, no/invalid/expired auth, wrong identity, downstream failure/rate-limit, concurrent/idempotent retry; verify exact status and no stack/secret leak.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-008",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "Fresh complete migration chain",
+    "expected": "Replay timestamped migrations in order on a fresh isolated database including auth/storage prerequisites; compare full_schema/combined copies and existing recent-only harness. Exclude destructive seeds until reviewed; no schema writes to production.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-009",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "All table CRUD/RLS",
+    "expected": "For EACH table and all roles: own/foreign SELECT INSERT UPDATE DELETE with real SQL roles, grants and WITH CHECK; count before/after denied writes, test join/view/RPC bypass and service-role handling.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "SEC-010",
+    "page": "every API/RPC/table/storage policy and production-mode local bundle",
+    "role": "visitor, owner member, other member, admin, unsupported/forged identities",
+    "element": "Integrity and indexes",
+    "expected": "For EACH FK/unique/check/trigger: permitted operation, invalid/orphan/cascade/concurrent and rollback; list missing query indexes with query/plan proof before suggesting schema changes.",
+    "source": "api; server; supabase/migrations; vercel.json",
+    "status": "Pending approval"
+  },
+  {
+    "id": "DEL-001",
+    "page": "repository and local runtime only",
+    "role": "QA executor",
+    "element": "Per-fix checks and commit",
+    "expected": "After confirmed bug, targeted+related regression and build/lint/explicit tsc must all pass before next fix; one commit fix(BUG-NNN), no mixing unrelated fixes.",
+    "source": "package.json; lockfile; docs; local clone",
+    "status": "Pending approval"
+  },
+  {
+    "id": "DEL-002",
+    "page": "repository and local runtime only",
+    "role": "QA executor",
+    "element": "Full matrix rerun",
+    "expected": "After all approved fixes rerun all expanded cases; each ID gets actual evidence, status and build SHA; blocked integrations remain blocked, never passed from code review.",
+    "source": "package.json; lockfile; docs; local clone",
+    "status": "Pending approval"
+  },
+  {
+    "id": "DEL-003",
+    "page": "repository and local runtime only",
+    "role": "QA executor",
+    "element": "Cleanup approval list",
+    "expected": "Enumerate cache/junk/unused components/assets/dependencies/demo code with tracked status, byte count and references; request itemized approval before deleting; preserve all secrets/config and required evidence.",
+    "source": "package.json; lockfile; docs; local clone",
+    "status": "Pending approval"
+  },
+  {
+    "id": "DEL-004",
+    "page": "repository and local runtime only",
+    "role": "QA executor",
+    "element": "Clean install/fresh clone",
+    "expected": "After approval, create new local checkout from tester-final including committed fixes, install via npm ci with one lockfile and isolated env; build/run first try. No production credentials or network tests.",
+    "source": "package.json; lockfile; docs; local clone",
+    "status": "Pending approval"
+  },
+  {
+    "id": "DEL-005",
+    "page": "repository and local runtime only",
+    "role": "QA executor",
+    "element": "QA fixture cleanup",
+    "expected": "Track every QA_TEST_ record/file, use isolated disposable scope; before delete request required approval/exact SQL. Prove zero residual records/files or list uncleared IDs; never wipe production or unrelated data.",
+    "source": "package.json; lockfile; docs; local clone",
+    "status": "Pending approval"
+  },
+  {
+    "id": "DEL-006",
+    "page": "repository and local runtime only",
+    "role": "QA executor",
+    "element": "Browser/CDN/cache handling",
+    "expected": "Inventory service workers and all relevant cache layers; inspect tracked generated artifacts and headers/hash names. Clear only approved isolated origin caches; no speculative production purge.",
+    "source": "package.json; lockfile; docs; local clone",
+    "status": "Pending approval"
+  },
+  {
+    "id": "DEL-007",
+    "page": "repository and local runtime only",
+    "role": "QA executor",
+    "element": "Handover documentation",
+    "expected": "Update README/env.example/architecture/RLS/roles/deployment/maintenance/CHANGELOG/HANDOVER using verified contract; LICENSE ownership decision required, no invented license grant.",
+    "source": "package.json; lockfile; docs; local clone",
+    "status": "Needs decision"
+  },
+  {
+    "id": "DEL-008",
+    "page": "repository and local runtime only",
+    "role": "QA executor",
+    "element": "Final report approval gate",
+    "expected": "Deliver complete matrix, BUGS.md/bugs.csv with fix commits, BEFORE/AFTER metrics and blocked items. Push/merge/deploy only after separate approval of the concrete final report. Live smoke test only after authorized deployment and explicit scope.",
+    "source": "package.json; lockfile; docs; local clone",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-001",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Availability and identity",
+    "expected": "Unknown/draft/closed/not-yet-open/expired form; exact schedule boundaries/timezones; member-only Google/login return path; no direct API bypass.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-002",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Text questions",
+    "expected": "short_text and long_text required/optional/length/Arabic/emoji/XSS; saved per-question IDs and answer type match server validation.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-003",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Choice and Other",
+    "expected": "single_choice/multiple_choice/dropdown: every option, Other free text, clear/deselect, unknown option ID, duplicates, min/max selection and shuffle stable IDs.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-004",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Rating and scale",
+    "expected": "rating each configured maximum/icon; linear_scale each value/labels; boundary/out-of-range/noninteger crafted values rejected or normalized exactly as source contract.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-005",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Dates/times/numbers/email",
+    "expected": "date/time/number/email each valid/invalid/empty/range/step/timezone; browser locale formatting must round-trip persisted values; nonfinite number rejects.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-006",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "File answer",
+    "expected": "Real allowed file uploaded and readable only by permitted response viewer; zero-byte/wrong/oversize/cancel/retry and duplicate filename, server checks path ownership not just supplied URL.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-007",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Ranking question",
+    "expected": "Builder/type supports ranking; verify the respondent can set and save a full unique ordered option list. Missing rendering is a candidate to confirm by execution, not a fabricated pass.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-008",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Sections and navigation",
+    "expected": "section_header title/description, next/previous, required validation only for visible branch; preserve answers and focus on validation; no empty phantom response for header.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-009",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Conditional branching",
+    "expected": "Every go-to-next/question/end branch, forward target/delete target/loops; recompute visible questions and remove hidden stale answers from submitted payload.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-010",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Submission integrity",
+    "expected": "Honeypot, anonymous token, authenticated one-response rule, duplicate/lost response/parallel submissions; exact answer+response+sync outbox transaction, no invented referenceId.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-011",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Success/failure/resubmit",
+    "expected": "Show thank-you and reference only after persisted success; disable while uploading/submitting, preserve answers on failure, cleared correct form after navigation, no wrong delayed redirect.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  },
+  {
+    "id": "FORM-012",
+    "page": "/f/:slug",
+    "role": "visitor when anonymous allowed; member; super_admin",
+    "element": "Analytics roundtrip",
+    "expected": "All 14 types round-trip builder->respondent->individual detail->summary->Excel; dynamic headers preserve old answers after adding/reordering/deleting questions. Deletion test only after isolated fixture approval.",
+    "source": "src/pages/PublicFormView.tsx; src/types/forms.ts; src/services/formService.ts",
+    "status": "Pending approval"
+  }
+]

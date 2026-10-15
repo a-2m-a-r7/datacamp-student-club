@@ -1,0 +1,48 @@
+﻿{
+    "timestamp":  "2026-10-15T17:46:54.1522653Z",
+    "files":  79,
+    "bytes":  3871499,
+    "MiB":  3.69,
+    "largest":  [
+                    {
+                        "Name":  "vendor-spreadsheets-BLigKl4k.js",
+                        "Length":  492338
+                    },
+                    {
+                        "Name":  "vendor-pdf-BAdL73m8.js",
+                        "Length":  391246
+                    },
+                    {
+                        "Name":  "EventManagement-CqNdRmRF.js",
+                        "Length":  390325
+                    },
+                    {
+                        "Name":  "vendor-charts-BCQALMor.js",
+                        "Length":  371644
+                    },
+                    {
+                        "Name":  "vendor-react-L-KCOhBx.js",
+                        "Length":  310020
+                    },
+                    {
+                        "Name":  "vendor-supabase-B12s50R_.js",
+                        "Length":  226703
+                    },
+                    {
+                        "Name":  "vendor-canvas-QH1iLAAe.js",
+                        "Length":  202379
+                    },
+                    {
+                        "Name":  "index-COzqQbTp.js",
+                        "Length":  185026
+                    },
+                    {
+                        "Name":  "index.es-DszGVZQQ.js",
+                        "Length":  159644
+                    },
+                    {
+                        "Name":  "index-B2IZ1z79.css",
+                        "Length":  136999
+                    }
+                ]
+}
