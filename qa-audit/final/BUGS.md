@@ -25,3 +25,22 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Fix: append `20261015000015_restrict_legacy_promotion.sql`; revoke PUBLIC/anon/authenticated execution, grant only service_role. A to_regprocedure guard safely handles installations without the obsolete helper. No rows/function/table are deleted or rewritten.
 - Validation: fresh 25-migration replay succeeds; anon/member receive SQLSTATE 42501 with unchanged profile/mirror/allowlist/XP, service_role still functions. Reapplying the same restriction succeeds. Build, lint and explicit TypeScript check passed.
 - Status: Fixed and validated locally; production application remains outside approved scope. Commit recorded by Git fix(BUG-002). Historical unpatched-control observations remain deliberately vulnerable and are labeled separately from the current-chain passing regression.
+
+## BUG-003 — Member can forge protected values in legacy account mirror
+
+- Severity: Medium. Layer: database integrity. This is mirror drift, not demonstrated administrator escalation or authoritative XP gain.
+- Reproduce: `tests/database-boundaries.mjs` fully replays the migrations in two independent memory databases. With explicitly simulated public-table default grants applied **before** migrations, an authenticated member updates its own `users.total_points/xp` to 7777. The authoritative `profiles` values stay 0; the mirror becomes 7777.
+- Evidence: `evidence/BUG-003-004-before.json`, case `PROTECTED-users-own-XP`. The migration-only context rejects direct table access; the provider-default simulation is not a measurement of deployed grants.
+- Expected: role, identity, verification, status and earned values in both representations are maintained through trusted operations; personal edits and server synchronization remain available.
+- Approval: user approved BUG-003 and BUG-004 migration addition and local tests only. No production changes or backfill authorized.
+- Fix: appended `20261015000016_protect_users_mirror.sql` installs an invoker trigger rejecting direct non-admin changes to derived mirror fields, while preserving own personal fields, verified active admin writes and trusted profile-to-mirror synchronization. Existing drift is not silently rewritten.
+- Status: Fixed and validated locally; no production application. Commit recorded by Git fix(BUG-003).
+
+## BUG-004 — Public internal counter helper mutates course metadata
+
+- Severity: Low. Layer: database authorization. No arbitrary count or privilege gain was demonstrated.
+- Reproduce: anon and authenticated member execute `refresh_course_enrolled_count(uuid)` after a full migration replay. Both calls succeed and alter the selected course's `updated_at` even with no direct table privileges.
+- Evidence: `evidence/BUG-003-004-before.json`, `MUTABLE-COUNTER-HELPER-*` in both privilege contexts.
+- Expected: derived counter maintenance runs through trusted enrollment triggers or service operations; untrusted direct RPC cannot write course metadata.
+- Fix: appended `20261015000017_restrict_course_counter.sql`; revokes PUBLIC/anon/authenticated execution and retains service_role while owner-context triggers retain execution.
+- Approval: local migration/test permission received with BUG-003. Status: Approved, pending application after BUG-003 verification.
