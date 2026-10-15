@@ -29,7 +29,7 @@ import {LessonResources} from '../components/courses/LessonResources';
 const CourseLearning = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { user, refreshProfile } = useAuth();
+  const { user, isAdmin, refreshProfile } = useAuth();
   const { grantPoints } = usePoints();
   const { isArabic } = useLanguage();
 
@@ -47,6 +47,7 @@ const CourseLearning = () => {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [, setQuizScore] = useState<number | null>(null);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const isDraftPreview = isAdmin && course?.status === 'draft';
 
   useEffect(() => {
     if (!slug) return;
@@ -68,7 +69,7 @@ const CourseLearning = () => {
         setModules(mods);
         setLessons(less);
 
-        if(user&&c.status==='draft'&&['admin','super_admin'].includes(user.role)){setEnrollment(null);setCurrentLesson(less[0]||null);}
+        if(isAdmin&&c.status==='draft'){setEnrollment(null);setCurrentLesson(less[0]||null);}
         else if (user) {
           const currentUserId = user.id || (user as any).uid;
           let enr = await courseService.getUserEnrollment(currentUserId, c.id);
@@ -92,7 +93,7 @@ const CourseLearning = () => {
     };
     load();
   // Language changes re-render text without reloading lessons or playback.
-  }, [slug, user, navigate]);
+  }, [slug, user, isAdmin, navigate]);
 
   const handleLessonSelect = (lesson: CourseLesson) => {
     setCurrentLesson(lesson);
@@ -102,7 +103,7 @@ const CourseLearning = () => {
   };
 
   const handleCompleteCurrentLesson = async () => {
-    if (!user || !course || !currentLesson || completing) return false;
+    if (!user || !course || !currentLesson || completing || isDraftPreview) return false;
 
     setCompleting(true);
     try {
@@ -141,6 +142,11 @@ const CourseLearning = () => {
 
   const handleQuizSubmit = async () => {
  if (!currentLesson?.quizQuestions?.length || completing) return;
+ if (isDraftPreview) {
+  setQuizSubmitted(true);
+  toast.info(isArabic ? 'معاينة الإجابات فقط؛ لم تُحفظ نتيجة أو نقاط.' : 'Answer preview only; no result or points were saved.');
+  return;
+ }
  setCompleting(true);
  try {
   const result = await courseService.submitQuiz(currentLesson.id, selectedAnswers);
@@ -279,7 +285,8 @@ const CourseLearning = () => {
             <div className="flex flex-wrap gap-2" role="tablist" aria-label={isArabic?'مراحل الدرس':'Learning stages'}>
               {lessons.filter(l=>l.id===(currentLesson.sourceLessonId||currentLesson.id)||l.sourceLessonId===(currentLesson.sourceLessonId||currentLesson.id)).map(l=><button key={l.id} type="button" role="tab" aria-selected={l.id===currentLesson.id} onClick={()=>handleLessonSelect(l)} className={`px-4 py-2 rounded-lg border text-sm ${l.id===currentLesson.id?'border-primary text-primary bg-primary/10':'border-white/15'}`}>{l.type==='video'?(isArabic?'الفيديو':'Video'):l.type==='quiz'?(isArabic?'الكويز':'Quiz'):l.type==='exercise'?(isArabic?'التطبيق البرمجي':'Coding'):l.title}</button>)}
             </div>
-            <LessonResources key={`${user?.id||user?.uid||'visitor'}:${currentLesson.id}`} lesson={currentLesson} onVideoEnded={()=>{if(!isCompleted)handleCompleteCurrentLesson();}}/>
+            {isDraftPreview && <p role="status" className="rounded-lg border border-amber-300/30 p-3 text-sm text-amber-200">{isArabic ? 'معاينة مسودة للمدير؛ لا تُحفظ مشاهدة أو نتائج أو نقاط ولا تصدر شهادة.' : 'Administrator draft preview; watch progress, results and points are not saved, and no certificate is issued.'}</p>}
+            <LessonResources key={`${user?.id||user?.uid||'visitor'}:${currentLesson.id}`} lesson={currentLesson} persistProgress={!isDraftPreview} onVideoEnded={()=>{if(!isCompleted)handleCompleteCurrentLesson();}}/>
             {/* Article Content */}
             {currentLesson.type !== 'quiz' && currentLesson.content && (
               <div className="p-6 sm:p-8 rounded-2xl border border-white/10 bg-dark-navy/60 backdrop-blur-xl prose prose-invert max-w-none font-mono text-xs sm:text-sm leading-relaxed space-y-4">
@@ -365,7 +372,7 @@ const CourseLearning = () => {
                       onClick={handleQuizSubmit}
                       disabled={Object.keys(selectedAnswers).length < currentLesson.quizQuestions.length}
                     >
-                      {isArabic ? 'تسليم التقييم' : 'SUBMIT_ASSESSMENT'}
+                      {isDraftPreview ? (isArabic ? 'معاينة الإجابات' : 'PREVIEW ANSWERS') : (isArabic ? 'تسليم التقييم' : 'SUBMIT_ASSESSMENT')}
                     </Button>
                   ) : (
                     <Button
@@ -423,7 +430,7 @@ const CourseLearning = () => {
                   variant="cyber"
                   className="font-cyber text-xs tracking-wider h-11 px-6 shadow-[0_0_20px_rgba(0,255,204,0.25)]"
                   onClick={handleCompleteCurrentLesson}
-                  disabled={completing || isCompleted || currentLesson.type==='quiz' || currentLesson.type==='exercise'}
+                  disabled={isDraftPreview || completing || isCompleted || currentLesson.type==='quiz' || currentLesson.type==='exercise'}
                 >
                   {isCompleted ? (
                     <span className="flex items-center gap-2">
