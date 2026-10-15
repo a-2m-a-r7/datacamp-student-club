@@ -12,7 +12,7 @@ import { Button } from '../components/ui/Button';
 export const CourseQuiz = () => {
   const { slug, lessonId } = useParams<{ slug: string; lessonId?: string }>();
   const navigate = useNavigate();
-  const { profile, refreshProfile } = useAuth();
+  const { profile, isAdmin, refreshProfile } = useAuth();
   const { grantPoints } = usePoints();
   const { isArabic } = useLanguage();
 
@@ -103,6 +103,7 @@ export const CourseQuiz = () => {
           <Link to={`/certificates?course=${course?.id}`}><Button>{isArabic ? 'عرض الشهادة' : 'VIEW CERTIFICATE'}</Button></Link>
         </div>}
         <QuizEngine
+          previewOnly={isAdmin && course?.status === 'draft'}
           quizTitle={lesson?.title ? `${lesson.title} — ${isArabic ? 'اختبار' : 'Quiz'}` : `${course?.title} — ${isArabic ? 'تقييم شامل' : 'Assessment'}`}
           questions={questions}
           passingScore={80}

@@ -302,7 +302,7 @@ const CourseLearning = () => {
                     {isArabic ? 'التحقق من المعرفة والفهم' : 'KNOWLEDGE_VERIFICATION'}
                   </h3>
                   <p className="text-xs font-mono text-muted-foreground">
-                    {isArabic
+                    {isDraftPreview ? (isArabic ? 'اختر الإجابات لمراجعتها؛ لا يُحفظ التقييم أو أي نقاط في المعاينة.' : 'Select answers to review them; preview results and points are not saved.') : isArabic
                       ? `أجب على جميع الأسئلة بدقة. يلزم 80% على الأقل لكسب +${currentLesson.pointsReward} XP.`
                       : `Answer all questions correctly. Minimum 80% required to claim +${currentLesson.pointsReward} XP.`
                     }

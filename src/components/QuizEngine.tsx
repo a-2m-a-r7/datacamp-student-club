@@ -18,6 +18,7 @@ interface QuizEngineProps {
   quizTitle: string;
   questions: QuizQuestion[];
   passingScore?: number; // default 80%
+  previewOnly?: boolean;
   onComplete: (scorePercentage: number, passed: boolean, answers: Record<number, number>) => number | Promise<number>;
   onAskAI?: (questionText: string) => void;
 }
@@ -26,6 +27,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   quizTitle,
   questions,
   passingScore = 80,
+  previewOnly = false,
   onComplete,
 }) => {
   const { isArabic } = useLanguage();
@@ -83,10 +85,11 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
 
     setSubmitting(true);
     try {
-      const points = await onComplete(scorePct, passed, selectedAnswers);
+      const points = previewOnly ? 0 : await onComplete(scorePct, passed, selectedAnswers);
       setAwardedPoints(points);
       setSubmitted(true);
-      if (passed) toast.success(isArabic ? 'تم اجتياز الاختبار وحفظ النتيجة' : 'Quiz passed and result saved');
+      if (previewOnly) toast.info(isArabic ? 'معاينة فقط؛ لم تُحفظ نتيجة أو نقاط.' : 'Preview only; no result or points were saved.');
+      else if (passed) toast.success(isArabic ? 'تم اجتياز الاختبار وحفظ النتيجة' : 'Quiz passed and result saved');
       else toast.error(isArabic ? 'لم تصل إلى درجة النجاح' : 'Passing score not reached');
     } catch (error: any) { toast.error(error.message || 'Result could not be saved. Please retry.'); }
     finally { setSubmitting(false); }
@@ -127,7 +130,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
 
         <div className="flex items-center gap-2">
           <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-cyber flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" /> {awardedPoints === null ? (isArabic ? 'المكافأة تُسجل بعد التقييم' : 'Reward recorded after assessment') : `${awardedPoints > 0 ? '+' : ''}${awardedPoints} XP ${isArabic ? 'مسجلة' : 'recorded'}`}
+            <Sparkles className="w-3.5 h-3.5" /> {previewOnly ? (isArabic ? 'معاينة دون حفظ' : 'Preview without saving') : awardedPoints === null ? (isArabic ? 'المكافأة تُسجل بعد التقييم' : 'Reward recorded after assessment') : `${awardedPoints > 0 ? '+' : ''}${awardedPoints} XP ${isArabic ? 'مسجلة' : 'recorded'}`}
           </span>
         </div>
       </div>
@@ -217,7 +220,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
                   disabled={submitting}
                   className="font-cyber text-xs bg-primary hover:bg-primary/90 text-dark-navy font-bold shadow-[0_0_15px_rgba(0,255,204,0.3)]"
                 >
-                  {isArabic ? 'تسليم الاختبار' : 'SUBMIT ASSESSMENT'}
+                  {previewOnly ? (isArabic ? 'معاينة الإجابات' : 'PREVIEW ANSWERS') : (isArabic ? 'تسليم الاختبار' : 'SUBMIT ASSESSMENT')}
                   <CheckCircle2 className={`w-3.5 h-3.5 ${isArabic ? 'mr-1' : 'ml-1'}`} />
                 </Button>
               ) : (
@@ -245,7 +248,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           >
             <div className="text-4xl">{passed ? (scorePct === 100 ? '🏆' : '🎉') : '📚'}</div>
             <h3 className="text-2xl font-cyber font-black text-white">
-              {passed
+              {previewOnly ? (isArabic ? 'نتيجة المعاينة' : 'PREVIEW RESULT') : passed
                 ? (isArabic ? 'تم اجتياز الاختبار بنجاح!' : 'ASSESSMENT COMPLETED!')
                 : (isArabic ? 'بحاجة لمزيد من المراجعة' : 'NEEDS IMPROVEMENT')
               }
@@ -254,7 +257,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
               {scorePct}% ({correctCount}/{total} {isArabic ? 'صحيحة' : 'Correct'})
             </div>
             <p className="text-xs font-mono text-muted-foreground max-w-md mx-auto">
-              {passed
+              {previewOnly ? (isArabic ? 'معاينة مسودة؛ لم تُحفظ نتيجة أو نقاط ولم تصدر شهادة.' : 'Draft preview; no result or points were saved and no certificate was issued.') : passed
                 ? (isArabic
                     ? `تهانينا! حققت نسبة النجاح (${passingScore}%) وتم حفظ النتيجة.`
                     : `Congratulations! You met the passing criteria (${passingScore}%). Your passing result has been saved.`)
