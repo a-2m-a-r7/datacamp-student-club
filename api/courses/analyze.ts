@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import {authorizeAdmin} from '../_lib/authorize.js';
-import {UUID,MAX_COURSE_FILE,VIDEO_TYPES,geminiLocation} from '../../server/courseMedia.js';
+import {UUID,MAX_COURSE_FILE,VIDEO_TYPES,geminiLocation,geminiSha256} from '../../server/courseMedia.js';
 import {parseLessonPlan,lessonVideoPrompt} from '../../server/courseAi.js';
 export const config={maxDuration:300};
 export default async function handler(req:any,res:any){
@@ -40,7 +40,7 @@ export default async function handler(req:any,res:any){
    // A tab may close after Google finalizes the file but before its name reaches our server.
    if(!name)name=(await uploadedFile(job.id))?.name;
    if(typeof name!=='string'||!/^files\/[\w-]{1,100}$/.test(name))throw Error('The analysis upload is incomplete. Reselect the same video to resume.');
-   const f=await(await gFetch('v1beta/'+name)).json();if(f.displayName!=='dc-course-'+job.id||Number(f.sizeBytes)!==Number(job.size_bytes)||f.mimeType!==job.mime_type||Buffer.from(f.sha256Hash||'','base64').toString('hex')!==job.sha256)throw Error('Analysis file does not match the uploaded video');
+   const f=await(await gFetch('v1beta/'+name)).json();if(f.displayName!=='dc-course-'+job.id||Number(f.sizeBytes)!==Number(job.size_bytes)||f.mimeType!==job.mime_type||geminiSha256(f.sha256Hash)!==job.sha256)throw Error('Analysis file does not match the uploaded video');
    const status=f.state==='ACTIVE'?'active':f.state==='FAILED'?'failed':'processing';
    const saved=await auth.client.from('lesson_analysis_jobs').update({file_name:name,file_uri:f.uri,status,updated_at:new Date().toISOString()}).eq('id',job.id).in('status',['uploading','processing','failed','active']);if(saved.error)throw Error('Unable to save processing status');
    return res.status(200).json({status});
