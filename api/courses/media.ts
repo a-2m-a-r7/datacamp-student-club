@@ -10,7 +10,7 @@ export default async function handler(req:any,res:any){
    const range=String(req.headers?.range||'').match(/^bytes=(\d+)-(\d*)$/);if(req.headers?.range&&!range){res.setHeader('Content-Range','bytes */'+size);return res.status(416).end();}
    const start=range?Number(range[1]):0;if(!Number.isSafeInteger(start)||start>=size){res.setHeader('Content-Range','bytes */'+size);return res.status(416).end();}
    const end=Math.min(size-1,start+MAX_RANGE-1,range?.[2]?Number(range[2]):size-1);if(end<start)throw Error('Invalid range');
-   const r=await driveFetch(asset.file_id+'?alt=media',token,{headers:{Range:`bytes=${start}-${end}`}});
+   const r=await driveFetch('files/'+asset.file_id+'?alt=media',token,{headers:{Range:`bytes=${start}-${end}`}});
    if(Number(r.headers.get('content-length'))>MAX_RANGE||(r.status===200&&size>MAX_RANGE)){await r.body?.cancel();throw Error('File provider did not honor the requested range.');}
    const bytes=await boundedBytes(r,end-start+1);if(!bytes.length)throw Error('Invalid provider response');
    res.setHeader('Content-Type',asset.kind==='subtitle'?'text/plain; charset=utf-8':asset.kind==='video'?asset.mime_type:'application/octet-stream');
@@ -58,16 +58,16 @@ export default async function handler(req:any,res:any){
   if(body.action==='finish'){
    if(!UUID.test(body.jobId)||!FILE_ID.test(body.fileId))throw Error('Invalid upload reference');const j=await auth.client.from('course_upload_jobs').select('*').eq('id',body.jobId).eq('owner_id',auth.user.id).single();if(j.error)throw Error('Upload not found');
    if(j.data.status==='complete')return res.status(200).json({assetId:j.data.asset_id,success:true});
-   const job=j.data,token=await driveToken(auth.client,auth.user.id);const file=await(await driveFetch(body.fileId+'?fields=id,name,size,mimeType,md5Checksum,appProperties,ownedByMe',token)).json();
+   const job=j.data,token=await driveToken(auth.client,auth.user.id);const file=await(await driveFetch('files/'+body.fileId+'?fields=id,name,size,mimeType,md5Checksum,appProperties,ownedByMe',token)).json();
    if(!file.ownedByMe||file.appProperties?.dcUpload!==job.id||file.appProperties?.dcLesson!==job.lesson_id||Number(file.size)!==Number(job.size_bytes)||file.name!==job.name||file.mimeType!==job.mime_type||file.md5Checksum!==job.fingerprint)throw Error('Uploaded file does not match this lesson');
    validateCourseFile(file.name,file.mimeType,Number(file.size),job.kind);
    if(job.kind==='subtitle'){
-    const bytes=await boundedBytes(await driveFetch(file.id+'?alt=media',token),5*1024*1024);let text:string;
+    const bytes=await boundedBytes(await driveFetch('files/'+file.id+'?alt=media',token),5*1024*1024);let text:string;
     try{text=new TextDecoder('utf-8',{fatal:true}).decode(bytes);}catch{throw Error('Save subtitles as UTF-8 SRT or VTT.');}
     if(!/\d{1,2}:\d{2}(?::\d{2})?[.,]\d{3}\s+-->/.test(text))throw Error('Subtitle file has no valid timed captions.');
    }
-   if(job.kind==='video'){const header=await boundedBytes(await driveFetch(file.id+'?alt=media',token,{headers:{Range:'bytes=0-31'}}),32);const mp4=['ftyp','moov','mdat','wide'].includes(header.toString('ascii',4,8));const webm=header.subarray(0,4).equals(Buffer.from([26,69,223,163]));if(!(file.mimeType==='video/webm'?webm:mp4))throw Error('File is not a supported video');}
-   await driveFetch(file.id+'/permissions',token,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'anyone',role:'reader'})});
+   if(job.kind==='video'){const header=await boundedBytes(await driveFetch('files/'+file.id+'?alt=media',token,{headers:{Range:'bytes=0-31'}}),32);const mp4=['ftyp','moov','mdat','wide'].includes(header.toString('ascii',4,8));const webm=header.subarray(0,4).equals(Buffer.from([26,69,223,163]));if(!(file.mimeType==='video/webm'?webm:mp4))throw Error('File is not a supported video');}
+   await driveFetch('files/'+file.id+'/permissions',token,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'anyone',role:'reader'})});
    const l=await auth.client.from('lessons').select('id,course_id').eq('id',job.lesson_id).single();if(l.error)throw Error('Lesson no longer exists');
    const asset={id:job.id,course_id:l.data.course_id,lesson_id:l.data.id,owner_id:auth.user.id,kind:job.kind,provider:'drive',name:file.name,mime_type:file.mimeType,size_bytes:Number(file.size),file_id:file.id,url:'https://drive.google.com/file/d/'+file.id+'/view',fingerprint:job.fingerprint,sha256:job.sha256,language:typeof body.language==='string'&&/^[a-z]{2}(-[A-Z]{2})?$/.test(body.language)?body.language:'ar'};
    const saved=await auth.client.from('course_assets').upsert(asset,{onConflict:'id'});if(saved.error)throw Error('File uploaded, but its lesson reference was not saved. Retry finishing.');

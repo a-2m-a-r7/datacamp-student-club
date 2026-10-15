@@ -27,6 +27,7 @@ test('course APIs preserve permissions, provider binding, bounded memory and pri
    return json(row);
   }
   if(url.hostname==='www.googleapis.com'){
+   if(url.pathname.startsWith('/drive/v3/'))assert.match(url.pathname,/^\/drive\/v3\/files\/QA_TEST_DRIVE_FILE(?:\/permissions)?$/,'Drive file requests must use the files resource');
    if(url.pathname.endsWith('/permissions')){permissions++;return json({id:'QA_TEST_PERMISSION'});}
    if(url.searchParams.get('alt')==='media'){const data=Buffer.alloc(100);data.write('ftyp',4);const range=new Headers(options.headers).get('Range');return new Response(data.subarray(0,range==='bytes=0-31'?32:100),{status:206,headers:{'Content-Length':range==='bytes=0-31'?'32':'100'}});}
    return json({id:asset.file_id,name:job.name,mimeType:job.mime_type,size:'100',ownedByMe:true,md5Checksum:md5,appProperties:{dcUpload:job.id,dcLesson:lid}});
