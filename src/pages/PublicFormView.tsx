@@ -142,7 +142,32 @@ export const PublicFormView: React.FC = () => {
     return list;
   }, [questions, form]);
 
+  const visibleQuestionIds = useMemo(() => {
+    const orderedQuestions = questions.filter((q) => q.type !== 'section_header');
+    const hidden = new Set<string>();
+
+    orderedQuestions.forEach((q, index) => {
+      if (q.type !== 'single_choice' && q.type !== 'dropdown') return;
+      const answer = answers[q.id];
+      if (answer === undefined || answer === null || answer === '') return;
+      const option = (q.options || []).find((candidate) => candidate.id === answer || candidate.text === answer);
+      const target = option?.goToQuestionId;
+      if (!target || target === 'next') return;
+      if (target === 'end') {
+        orderedQuestions.slice(index + 1).forEach((candidate) => hidden.add(candidate.id));
+        return;
+      }
+      const targetIndex = orderedQuestions.findIndex((candidate) => candidate.id === target);
+      if (targetIndex > index) {
+        orderedQuestions.slice(index + 1, targetIndex).forEach((candidate) => hidden.add(candidate.id));
+      }
+    });
+
+    return new Set(orderedQuestions.filter((q) => !hidden.has(q.id)).map((q) => q.id));
+  }, [answers, questions]);
+
   const activeSection = sections[currentSectionIndex] || sections[0];
+  const activeQuestions = activeSection?.questions.filter((q) => visibleQuestionIds.has(q.id)) || [];
   const isLastSection = currentSectionIndex === sections.length - 1;
 
   // Answer change handlers
@@ -166,6 +191,18 @@ export const PublicFormView: React.FC = () => {
         [questionId]: [...current, optionText],
       }));
     }
+  };
+
+  const handleRankingDrop = (questionId: string, sourceId: string, targetId: string) => {
+    if (sourceId === targetId) return;
+    const current = (answers[questionId] as string[]) || [];
+    const next = current.length > 0 ? [...current] : (questions.find((q) => q.id === questionId)?.options || []).map((option) => option.id);
+    const sourceIndex = next.indexOf(sourceId);
+    const targetIndex = next.indexOf(targetId);
+    if (sourceIndex < 0 || targetIndex < 0) return;
+    next.splice(sourceIndex, 1);
+    next.splice(targetIndex, 0, sourceId);
+    handleAnswerChange(questionId, next);
   };
 
   // File upload handler
@@ -194,7 +231,7 @@ export const PublicFormView: React.FC = () => {
   const validateCurrentSection = (): boolean => {
     if (!activeSection) return true;
 
-    for (const q of activeSection.questions) {
+    for (const q of activeQuestions) {
       if (q.required) {
         const val = answers[q.id];
         if (
@@ -263,10 +300,12 @@ export const PublicFormView: React.FC = () => {
     setIsSubmitting(true);
     try {
       // Format answers payload
-      const formattedAnswers = Object.entries(answers).map(([qId, val]) => ({
+      const formattedAnswers = Object.entries(answers)
+        .filter(([qId]) => visibleQuestionIds.has(qId))
+        .map(([qId, val]) => ({
         question_id: qId,
         value: val,
-      }));
+        }));
 
       const metadata = {
         browser: navigator.userAgent,
@@ -556,8 +595,16 @@ export const PublicFormView: React.FC = () => {
 
             {/* Questions list for active section */}
             <div className="space-y-6">
-              {activeSection.questions.map((q, qIndex) => {
+              {activeQuestions.map((q, qIndex) => {
                 const currentVal = answers[q.id];
+                const rankingAnswer = q.type === 'ranking' && Array.isArray(currentVal)
+                  ? currentVal
+                  : [];
+                const rankingOptions = rankingAnswer.length
+                  ? rankingAnswer
+                      .map((optionId) => (q.options || []).find((option) => option.id === optionId))
+                      .filter((option): option is ChoiceOption => Boolean(option))
+                  : q.options || [];
 
                 return (
                   <div
@@ -603,11 +650,11 @@ export const PublicFormView: React.FC = () => {
                       {q.type === 'single_choice' && (
                         <div className="space-y-2">
                           {(q.options || []).map((opt) => {
-                            const isChecked = currentVal === opt.text;
+                            const isChecked = currentVal === opt.id;
                             return (
                               <label
                                 key={opt.id}
-                                onClick={() => handleAnswerChange(q.id, opt.text)}
+                                onClick={() => handleAnswerChange(q.id, opt.id)}
                                 className={`flex items-center space-x-3 rtl:space-x-reverse p-3.5 rounded-xl border cursor-pointer transition-all ${
                                   isChecked
                                     ? 'border-primary bg-primary/10 shadow-md shadow-primary/10'
@@ -634,11 +681,11 @@ export const PublicFormView: React.FC = () => {
                       {q.type === 'multiple_choice' && (
                         <div className="space-y-2">
                           {(q.options || []).map((opt) => {
-                            const isChecked = ((currentVal as string[]) || []).includes(opt.text);
+                            const isChecked = ((currentVal as string[]) || []).includes(opt.id);
                             return (
                               <label
                                 key={opt.id}
-                                onClick={() => handleMultipleChoiceToggle(q.id, opt.text)}
+                                onClick={() => handleMultipleChoiceToggle(q.id, opt.id)}
                                 className={`flex items-center space-x-3 rtl:space-x-reverse p-3.5 rounded-xl border cursor-pointer transition-all ${
                                   isChecked
                                     ? 'border-primary bg-primary/10 shadow-md shadow-primary/10'
@@ -670,14 +717,38 @@ export const PublicFormView: React.FC = () => {
                         >
                           <option value="">{isArabic ? '-- اختر خياراً من القائمة --' : '-- Select an option --'}</option>
                           {(q.options || []).map((opt) => (
-                            <option key={opt.id} value={opt.text} className="bg-dark-navy text-foreground">
+                            <option key={opt.id} value={opt.id} className="bg-dark-navy text-foreground">
                               {opt.text}
                             </option>
                           ))}
                         </select>
                       )}
 
-                      {/* 6. Rating */}
+                      {/* 6. Ranking */}
+                      {q.type === 'ranking' && (
+                        <div className="space-y-2">
+                          {rankingOptions.map((opt) => (
+                            <div
+                              key={opt.id}
+                              draggable
+                              onDragOver={(event) => event.preventDefault()}
+                              onDrop={(event) => {
+                                event.preventDefault();
+                                handleRankingDrop(q.id, event.dataTransfer.getData('text/plain'), opt.id);
+                              }}
+                              onDragStart={(event) => {
+                                event.dataTransfer.setData('text/plain', opt.id);
+                                event.dataTransfer.effectAllowed = 'move';
+                              }}
+                              className="p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-grab active:cursor-grabbing text-sm font-medium text-foreground"
+                            >
+                              {opt.text}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 7. Rating */}
                       {q.type === 'rating' && (
                         <div className="flex items-center gap-2 pt-1 text-amber-400">
                           {Array.from({ length: q.settings?.maxRating || 5 }).map((_, i) => {
