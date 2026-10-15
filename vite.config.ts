@@ -4,13 +4,16 @@ import path from 'path';
 import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
-  const env = loadEnv(mode, '.', '');
+  // QA receives only explicit dummy/local values from its launcher. Loading the
+  // project dotenv files here would reintroduce production provider settings.
+  const env = mode === 'qa' ? {} : loadEnv(mode, '.', '');
   // Expose only server-side configuration to local API handlers, never to client define().
   for (const key of ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY', 'SUPABASE_URL', 'SUPABASE_ANON_KEY',
     'SUPABASE_SERVICE_ROLE_KEY', 'GEMINI_API_KEY', 'GOOGLE_SERVICE_ACCOUNT_EMAIL', 'GOOGLE_PRIVATE_KEY', 'GOOGLE_SPREADSHEET_OWNER_EMAIL']) {
     if (process.env[key] === undefined && env[key]) process.env[key] = env[key];
   }
   return {
+    envDir: mode === 'qa' ? false : undefined,
     plugins: [react(), tailwindcss(), {
       name: 'local-api',
       configureServer(server) {

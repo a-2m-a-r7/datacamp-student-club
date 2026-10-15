@@ -1,0 +1,12 @@
+✔ QA launcher strips inherited provider credentials in both child environments (1.7032ms)
+✔ QA launcher disables inherited optional integrations and external runner URL (1.0569ms)
+✔ QA launcher keeps canonical and authentication return URLs on isolated localhost (0.8917ms)
+✔ QA Vite mode cannot hydrate project dotenv files, including unlisted VITE variables (147.7534ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 213.4137

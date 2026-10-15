@@ -1,0 +1,7 @@
+const {spawn}=require('node:child_process');
+const path=require('node:path');
+const allowed=['SystemRoot','SYSTEMROOT','WINDIR','windir','COMSPEC','ComSpec','PATH','Path','PATHEXT','TEMP','TMP','USERPROFILE','APPDATA','LOCALAPPDATA','PROGRAMFILES','ProgramFiles','ProgramFiles(x86)','NUMBER_OF_PROCESSORS','PROCESSOR_ARCHITECTURE'];
+const env=Object.fromEntries(allowed.filter(k=>process.env[k]!==undefined).map(k=>[k,process.env[k]]));
+Object.assign(env,{VITE_SITE_URL:'http://127.0.0.1:3100',COURSE_SITE_URL:'http://127.0.0.1:3100',VITE_SUPABASE_URL:'https://qa-test.supabase.co',SUPABASE_URL:'https://qa-test.supabase.co',VITE_SUPABASE_ANON_KEY:'QA_TEST_ANON',SUPABASE_ANON_KEY:'QA_TEST_ANON',SUPABASE_SERVICE_ROLE_KEY:'QA_TEST_SERVER',GEMINI_API_KEY:'',GEMINI_COURSE_ENABLED:'false',GOOGLE_DRIVE_CLIENT_ID:'',GOOGLE_DRIVE_CLIENT_SECRET:'',GOOGLE_SERVICE_ACCOUNT_EMAIL:'',GOOGLE_PRIVATE_KEY:'',GOOGLE_SPREADSHEET_OWNER_EMAIL:'',VITE_ENABLE_REALTIME:'false',QA_RESULTS_FILE:'qa-audit/final/evidence/browser-results.json',NODE_OPTIONS:'--require='+JSON.stringify(path.resolve('qa-audit/final/network-guard.cjs'))});
+const args=process.argv.slice(2);if(!args.length)throw Error('Pass a Node script or --test options.');
+const child=spawn(process.execPath,args,{env,stdio:'inherit'});child.on('exit',code=>{process.exitCode=code??1;});child.on('error',error=>{console.error(error.message);process.exitCode=1;});

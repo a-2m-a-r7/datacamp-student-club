@@ -1,0 +1,2 @@
+ID,Severity,Layer,Page or endpoint,Role,Expected,Actual,Evidence,Status,Commit
+BUG-001,High,Test infrastructure/security,QA launcher and Vite QA mode,QA executor,Only isolated local dummy environment,Four canary regression failures for inherited external config,evidence/BUG-001-before.txt,Fixed and validated,

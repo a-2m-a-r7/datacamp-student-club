@@ -1,0 +1,101 @@
+✖ QA launcher strips inherited provider credentials in both child environments (2.4655ms)
+✖ QA launcher disables inherited optional integrations and external runner URL (1.4459ms)
+✖ QA launcher keeps canonical and authentication return URLs on isolated localhost (0.9886ms)
+✖ QA Vite mode cannot hydrate project dotenv files, including unlisted VITE variables (150.2689ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 218.5362
+
+✖ failing tests:
+
+test at qa-audit\final\tests\isolation.test.cjs:65:1
+✖ QA launcher strips inherited provider credentials in both child environments (2.4655ms)
+  AssertionError [ERR_ASSERTION]: build must clear inherited GOOGLE_DRIVE_CLIENT_ID
+      at TestContext.<anonymous> (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\isolation.test.cjs:68:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at qa-audit\final\tests\isolation.test.cjs:73:1
+✖ QA launcher disables inherited optional integrations and external runner URL (1.4459ms)
+  AssertionError [ERR_ASSERTION]: build must explicitly disable course AI
+  
+  'true' !== 'false'
+  
+      at TestContext.<anonymous> (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\isolation.test.cjs:75:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'true',
+    expected: 'false',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at qa-audit\final\tests\isolation.test.cjs:82:1
+✖ QA launcher keeps canonical and authentication return URLs on isolated localhost (0.9886ms)
+  AssertionError [ERR_ASSERTION]: build must isolate VITE_APP_URL
+  + actual - expected
+  
+  + 'https://qa-test-upstream.invalid'
+  - 'http://127.0.0.1:3100'
+         ^
+  
+      at TestContext.<anonymous> (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\isolation.test.cjs:86:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'https://qa-test-upstream.invalid',
+    expected: 'http://127.0.0.1:3100',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at qa-audit\final\tests\isolation.test.cjs:94:1
+✖ QA Vite mode cannot hydrate project dotenv files, including unlisted VITE variables (150.2689ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   'QA config must set envDir:false to prevent automatic project dotenv hydration',
+  +   'QA config must skip explicit loadEnv entirely; observed 1 call(s)'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\isolation.test.cjs:125:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'QA config must set envDir:false to prevent automatic project dotenv hydration', 'QA config must skip explicit loadEnv entirely; observed 1 call(s)' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
