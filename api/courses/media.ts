@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
-import {authorizeAdmin} from '../_lib/authorize';
-import {driveToken,driveFetch,uploadLocation,validateCourseFile,UUID,FILE_ID,readableAsset,memberIdentity,sign,verify,serverClient,boundedBytes} from '../../server/courseMedia';
+import {authorizeAdmin} from '../_lib/authorize.js';
+import {driveToken,driveFetch,uploadLocation,validateCourseFile,UUID,FILE_ID,readableAsset,memberIdentity,sign,verify,serverClient,boundedBytes} from '../../server/courseMedia.js';
 export const config={maxDuration:60};
 const MAX_RANGE=3*1024*1024;
 export default async function handler(req:any,res:any){

@@ -1,7 +1,7 @@
 import {randomUUID} from 'node:crypto';
-import {authorizeAdmin} from '../_lib/authorize';
-import {UUID,MAX_COURSE_FILE,VIDEO_TYPES,geminiLocation} from '../../server/courseMedia';
-import {parseLessonPlan,lessonVideoPrompt} from '../../server/courseAi';
+import {authorizeAdmin} from '../_lib/authorize.js';
+import {UUID,MAX_COURSE_FILE,VIDEO_TYPES,geminiLocation} from '../../server/courseMedia.js';
+import {parseLessonPlan,lessonVideoPrompt} from '../../server/courseAi.js';
 export const config={maxDuration:300};
 export default async function handler(req:any,res:any){
  res.setHeader('Cache-Control','no-store');if(req.method!=='POST')return res.status(405).json({error:'Use POST'});

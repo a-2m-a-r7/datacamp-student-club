@@ -1,6 +1,6 @@
 import {randomBytes} from 'node:crypto';
-import {authorizeAdmin} from '../_lib/authorize';
-import {driveOAuth,serverClient,seal,sign,verify,site} from '../../server/courseMedia';
+import {authorizeAdmin} from '../_lib/authorize.js';
+import {driveOAuth,serverClient,seal,sign,verify,site} from '../../server/courseMedia.js';
 export default async function handler(req:any,res:any){
  res.setHeader('Cache-Control','no-store');res.setHeader('Referrer-Policy','no-referrer');
  if(req.method==='GET'){
