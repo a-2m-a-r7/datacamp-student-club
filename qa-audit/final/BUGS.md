@@ -135,3 +135,21 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Fix: CLI-generated 20261016161816_declare_application_realtime_tables.sql adds the 16 subscribed application tables if absent. It preserves RLS and excludes server-only tables.
 - Validation: clean local replay confirms all 16 entries and all 33 table RLS flags. Hosted test waits for the actual PostgreSQL subscription system acknowledgement, then observes the exact newly inserted notification ID. All 12 actual Auth/REST/Storage/Realtime probes pass in runs/QA_TEST_hosted_readiness_after. Build, configured lint and explicit type-check passed.
 - Status: Fixed and validated locally and in isolated hosted QA; production excluded.
+
+## BUG-014 — Form choices are inaccessible to keyboard users
+
+- Severity: Medium. Layer: frontend accessibility.
+- Reproduce: open a published QA form with single/multiple choice and icon rating questions. The choices are click-only labels with no radio/checkbox inputs; rating buttons have no accessible name. Keyboard and role-based selection cannot reach the answer controls.
+- Evidence: runs/BUG-014-form-inputs-before retains EN/AR screenshots and failing radio assertions. The separate all-types failures from that run are tracked as BUG-015.
+- Fix: actual visually hidden native radio/checkbox inputs retain the current design, synchronize checked state, and show a focus ring on their existing label. Rating buttons expose translated score labels and aria-pressed.
+- Validation: all six EN/AR × 1440/768/375 keyboard regressions pass, submit through the real migrated SQL and persist a response. Build, configured lint and explicit type-check passed.
+- Status: Fixed and validated locally; no schema change.
+
+## BUG-015 — Returning to the final section can submit without pressing Submit
+
+- Severity: High. Layer: frontend forms / unintended save.
+- Reproduce: fill a two-section form including its attachment, return to the first section, then click Next. Instead of showing the final section for review, the response is saved and the success page appears. Both locales reproduce it.
+- Evidence: runs/BUG-014-form-inputs-before, all-14-types cases: the number field expected after Next is absent because the actual success page is already rendered.
+- Expected: Next only changes sections; saving requires the explicit Submit action.
+- Cause: React reuses the same button across Next and Submit branches and changes its type during the click before the browser's default action.
+- Status: Confirmed; pending fix.

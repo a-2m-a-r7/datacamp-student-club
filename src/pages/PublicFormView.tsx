@@ -649,13 +649,15 @@ export const PublicFormView: React.FC = () => {
                             return (
                               <label
                                 key={opt.id}
-                                onClick={() => handleAnswerChange(q.id, opt.id)}
-                                className={`flex items-center space-x-3 rtl:space-x-reverse p-3.5 rounded-xl border cursor-pointer transition-all ${
+                                className={`flex items-center space-x-3 rtl:space-x-reverse p-3.5 rounded-xl border cursor-pointer transition-all focus-within:ring-2 focus-within:ring-primary ${
                                   isChecked
                                     ? 'border-primary bg-primary/10 shadow-md shadow-primary/10'
                                     : 'border-white/5 bg-white/5 hover:border-white/20 hover:bg-white/10'
                                 }`}
                               >
+                                <input type="radio" name={`question-${q.id}`} value={opt.id}
+                                  checked={isChecked} onChange={() => handleAnswerChange(q.id, opt.id)}
+                                  className="sr-only" />
                                 <div
                                   className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-colors ${
                                     isChecked
@@ -680,13 +682,15 @@ export const PublicFormView: React.FC = () => {
                             return (
                               <label
                                 key={opt.id}
-                                onClick={() => handleMultipleChoiceToggle(q.id, opt.id)}
-                                className={`flex items-center space-x-3 rtl:space-x-reverse p-3.5 rounded-xl border cursor-pointer transition-all ${
+                                className={`flex items-center space-x-3 rtl:space-x-reverse p-3.5 rounded-xl border cursor-pointer transition-all focus-within:ring-2 focus-within:ring-primary ${
                                   isChecked
                                     ? 'border-primary bg-primary/10 shadow-md shadow-primary/10'
                                     : 'border-white/5 bg-white/5 hover:border-white/20 hover:bg-white/10'
                                 }`}
                               >
+                                <input type="checkbox" name={`question-${q.id}`} value={opt.id}
+                                  checked={isChecked} onChange={() => handleMultipleChoiceToggle(q.id, opt.id)}
+                                  className="sr-only" />
                                 <div
                                   className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
                                     isChecked
@@ -753,6 +757,8 @@ export const PublicFormView: React.FC = () => {
                               <button
                                 key={i}
                                 type="button"
+                                aria-label={isArabic ? `تقييم ${val} من ${q.settings?.maxRating || 5}` : `Rate ${val} of ${q.settings?.maxRating || 5}`}
+                                aria-pressed={Number(currentVal) === val}
                                 onClick={() => handleAnswerChange(q.id, val)}
                                 className="p-1 rounded-lg hover:scale-115 transition-transform"
                               >

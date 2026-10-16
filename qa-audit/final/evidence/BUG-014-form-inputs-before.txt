@@ -1,0 +1,166 @@
+
+Running 4 tests using 1 worker
+
+  x  1 [1440] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections en (24.0s)
+  x  2 [1440] › qa-audit\final\tests\form-inputs.spec.ts:36:2 › choice and rating controls expose names and accept keyboard input en (21.9s)
+  x  3 [1440] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections ar (24.8s)
+  x  4 [1440] › qa-audit\final\tests\form-inputs.spec.ts:36:2 › choice and rating controls expose names and accept keyboard input ar (23.0s)
+
+
+  1) [1440] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections en 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByText('QA_TEST_number', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').locator('input')
+    Expected: "7"
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" getByText('QA_TEST_number', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').locator('input') with timeout 20000ms
+      - waiting for getByText('QA_TEST_number', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').locator('input')
+
+
+      26 |   const rank=field('ranking');await rank.getByText('QA_TEST_باء',{exact:true}).dragTo(rank.getByText('QA_TEST_ألف',{exact:true}));
+      27 |   await page.getByRole('button',{name:locale==='ar'?'السابق':'Previous',exact:true}).click();await expect(field('short_text').locator('input')).toHaveValue(/العربية 😀/);
+    > 28 |   await page.getByRole('button',{name:locale==='ar'?'التالي':'Next',exact:true}).click();await expect(field('number').locator('input')).toHaveValue('7');
+         |                                                                                                                                         ^
+      29 |   await page.getByRole('button',{name:locale==='ar'?'إرسال الاستجابة':'Submit Form',exact:true}).click();await expect(page.getByText('QA_TEST_ALL_SAVED',{exact:true})).toBeVisible();
+      30 |   const rows=(await app.db.query<any>('SELECT question_id,value FROM form_answers WHERE response_id IN (SELECT id FROM form_responses WHERE form_id=$1)',[form.id])).rows;expect(rows).toHaveLength(13);
+      31 |   const saved=Object.fromEntries(rows.map(r=>[questions.find(q=>q.id===r.question_id)!.type,r.value]));
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-inputs.spec.ts:28:137
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-all-14-form-ty-afbad--answers-across-sections-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-all-14-form-ty-afbad--answers-across-sections-en-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-all-14-form-ty-afbad--answers-across-sections-en-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-all-14-form-ty-afbad--answers-across-sections-en-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [1440] › qa-audit\final\tests\form-inputs.spec.ts:36:2 › choice and rating controls expose names and accept keyboard input en 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText('QA_TEST_single_choice', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').getByRole('radio', { name: 'QA_TEST_ألف', exact: true })
+    Expected: 1
+    Received: 0
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText('QA_TEST_single_choice', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').getByRole('radio', { name: 'QA_TEST_ألف', exact: true }) with timeout 20000ms
+      - waiting for getByText('QA_TEST_single_choice', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').getByRole('radio', { name: 'QA_TEST_ألف', exact: true })
+        43 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      37 |   const {form}=await fixture(page,locale,['single_choice','multiple_choice','rating']);
+      38 |   const radio=card(page,'QA_TEST_single_choice').getByRole('radio',{name:'QA_TEST_ألف',exact:true});
+    > 39 |   await expect(radio).toHaveCount(1);await radio.focus();await page.keyboard.press('Space');await expect(radio).toBeChecked();
+         |                       ^
+      40 |   const checkbox=card(page,'QA_TEST_multiple_choice').getByRole('checkbox',{name:'QA_TEST_باء',exact:true});await checkbox.focus();await page.keyboard.press('Space');await expect(checkbox).toBeChecked();
+      41 |   const rating=card(page,'QA_TEST_rating').getByRole('button',{name:locale==='ar'?'تقييم 4 من 5':'Rate 4 of 5',exact:true});await rating.focus();await page.keyboard.press('Space');await expect(rating).toHaveAttribute('aria-pressed','true');
+      42 |   await page.getByRole('button',{name:locale==='ar'?'إرسال الاستجابة':'Submit Form',exact:true}).click();await expect(page.getByText('QA_TEST_ALL_SAVED',{exact:true})).toBeVisible();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-inputs.spec.ts:39:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-choice-and-rat-8a3ea-nd-accept-keyboard-input-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-choice-and-rat-8a3ea-nd-accept-keyboard-input-en-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-choice-and-rat-8a3ea-nd-accept-keyboard-input-en-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-choice-and-rat-8a3ea-nd-accept-keyboard-input-en-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [1440] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections ar 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByText('QA_TEST_number', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').locator('input')
+    Expected: "7"
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" getByText('QA_TEST_number', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').locator('input') with timeout 20000ms
+      - waiting for getByText('QA_TEST_number', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').locator('input')
+
+
+      26 |   const rank=field('ranking');await rank.getByText('QA_TEST_باء',{exact:true}).dragTo(rank.getByText('QA_TEST_ألف',{exact:true}));
+      27 |   await page.getByRole('button',{name:locale==='ar'?'السابق':'Previous',exact:true}).click();await expect(field('short_text').locator('input')).toHaveValue(/العربية 😀/);
+    > 28 |   await page.getByRole('button',{name:locale==='ar'?'التالي':'Next',exact:true}).click();await expect(field('number').locator('input')).toHaveValue('7');
+         |                                                                                                                                         ^
+      29 |   await page.getByRole('button',{name:locale==='ar'?'إرسال الاستجابة':'Submit Form',exact:true}).click();await expect(page.getByText('QA_TEST_ALL_SAVED',{exact:true})).toBeVisible();
+      30 |   const rows=(await app.db.query<any>('SELECT question_id,value FROM form_answers WHERE response_id IN (SELECT id FROM form_responses WHERE form_id=$1)',[form.id])).rows;expect(rows).toHaveLength(13);
+      31 |   const saved=Object.fromEntries(rows.map(r=>[questions.find(q=>q.id===r.question_id)!.type,r.value]));
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-inputs.spec.ts:28:137
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-all-14-form-ty-492ea--answers-across-sections-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-all-14-form-ty-492ea--answers-across-sections-ar-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-all-14-form-ty-492ea--answers-across-sections-ar-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-all-14-form-ty-492ea--answers-across-sections-ar-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [1440] › qa-audit\final\tests\form-inputs.spec.ts:36:2 › choice and rating controls expose names and accept keyboard input ar 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText('QA_TEST_single_choice', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').getByRole('radio', { name: 'QA_TEST_ألف', exact: true })
+    Expected: 1
+    Received: 0
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText('QA_TEST_single_choice', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').getByRole('radio', { name: 'QA_TEST_ألف', exact: true }) with timeout 20000ms
+      - waiting for getByText('QA_TEST_single_choice', { exact: true }).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]').getByRole('radio', { name: 'QA_TEST_ألف', exact: true })
+        43 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      37 |   const {form}=await fixture(page,locale,['single_choice','multiple_choice','rating']);
+      38 |   const radio=card(page,'QA_TEST_single_choice').getByRole('radio',{name:'QA_TEST_ألف',exact:true});
+    > 39 |   await expect(radio).toHaveCount(1);await radio.focus();await page.keyboard.press('Space');await expect(radio).toBeChecked();
+         |                       ^
+      40 |   const checkbox=card(page,'QA_TEST_multiple_choice').getByRole('checkbox',{name:'QA_TEST_باء',exact:true});await checkbox.focus();await page.keyboard.press('Space');await expect(checkbox).toBeChecked();
+      41 |   const rating=card(page,'QA_TEST_rating').getByRole('button',{name:locale==='ar'?'تقييم 4 من 5':'Rate 4 of 5',exact:true});await rating.focus();await page.keyboard.press('Space');await expect(rating).toHaveAttribute('aria-pressed','true');
+      42 |   await page.getByRole('button',{name:locale==='ar'?'إرسال الاستجابة':'Submit Form',exact:true}).click();await expect(page.getByText('QA_TEST_ALL_SAVED',{exact:true})).toBeVisible();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-inputs.spec.ts:39:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-choice-and-rat-28dd5-nd-accept-keyboard-input-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-choice-and-rat-28dd5-nd-accept-keyboard-input-ar-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-choice-and-rat-28dd5-nd-accept-keyboard-input-ar-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-014-form-inputs-before\artifacts\form-inputs-choice-and-rat-28dd5-nd-accept-keyboard-input-ar-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [1440] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections en 
+    [1440] › qa-audit\final\tests\form-inputs.spec.ts:36:2 › choice and rating controls expose names and accept keyboard input en 
+    [1440] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections ar 
+    [1440] › qa-audit\final\tests\form-inputs.spec.ts:36:2 › choice and rating controls expose names and accept keyboard input ar 
