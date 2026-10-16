@@ -1,0 +1,38 @@
+[api/ai/chat] Model gemini-2.5-flash returned HTTP 403: {}
+✔ public TS compiler rejects malformed boundaries and never executes submitted code (24.2879ms)
+✔ forms routes enforce method, body size and untrusted sheet authorization before provider access (14.1828ms)
+✔ AI validates input boundaries, handles provider failures and never returns server credentials (1.1144ms)
+✖ AI whitespace-only input is empty and must not consume provider calls (2.1803ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2983.1935
+
+✖ failing tests:
+
+test at qa-audit\final\tests\public-api-contracts.test.ts:1:3914
+✖ AI whitespace-only input is empty and must not consume provider calls (2.1803ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   providerCalls: 1,
+  +   status: 200
+  -   providerCalls: 0,
+  -   status: 400
+    }
+  
+      at TestContext.<anonymous> (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\public-api-contracts.test.ts:43:59)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 200, providerCalls: 1 },
+    expected: { status: 400, providerCalls: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -102,7 +102,9 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Reproduce: configure a dummy server provider key and intercept fetch, then POST prompt containing spaces/newline/tab directly to the actual AI handler. It returns 200 and performs one provider call.
 - Expected: an empty/whitespace-only prompt returns 400 before any provider call, consistent with the UI empty-input contract.
 - Evidence: `evidence/20261016-public-api-before.txt`, final case; other three new API contract tests passed.
-- Status: Confirmed, pending fix. Provider transport is an isolated adapter, not real Gemini.
+- Fix: validate the trimmed prompt before invoking a provider and send its trimmed text.
+- Validation: all four direct API boundary cases passed, including whitespace returning 400 with zero provider calls. The related Node suite passed 32/32. QA build, configured lint and explicit type-check passed. Evidence: BUG-010-api-after.txt, BUG-010-node-regression.txt and BUG-010-build/lint/typecheck.txt. Provider transport is an isolated adapter, not real Gemini.
+- Status: Fixed and validated locally.
 
 ## BUG-011 — Hidden/stale branches can bypass reachable required questions
 

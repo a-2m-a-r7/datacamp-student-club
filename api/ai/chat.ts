@@ -24,7 +24,7 @@ export default async function handler(req: any, res: any) {
 
   const { prompt, systemPrompt, history } = req.body || {};
 
-  if (!prompt || typeof prompt !== 'string' || prompt.length > 4000 ||
+  if (typeof prompt !== 'string' || !prompt.trim() || prompt.length > 4000 ||
     (systemPrompt && (typeof systemPrompt !== 'string' || systemPrompt.length > 20000)) ||
     (history && (!Array.isArray(history) || history.length > 12 || JSON.stringify(history).length > 30000))) {
     return res.status(400).json({ error: 'Missing prompt in request body.' });
@@ -41,7 +41,7 @@ export default async function handler(req: any, res: any) {
         ]
       : []),
     ...(Array.isArray(history) ? history.slice(-12) : []),
-    { role: 'user', parts: [{ text: prompt.slice(0, 4000) }] },
+    { role: 'user', parts: [{ text: prompt.trim() }] },
   ];
 
   for (const model of models) {
