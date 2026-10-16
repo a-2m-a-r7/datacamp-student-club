@@ -14,8 +14,8 @@ async function database(){
  CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  CREATE TABLE storage.objects(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),bucket_id text,name text); ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
  GRANT USAGE ON SCHEMA storage TO anon,authenticated; GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA storage TO anon,authenticated;`);
- for(const file of fs.readdirSync('supabase/migrations').filter(f=>/^202610(13|14|15)/.test(f)).sort())await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));
- await db.exec('GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO anon,authenticated; REVOKE ALL ON course_request_windows FROM anon,authenticated;');
+ for(const file of fs.readdirSync('supabase/migrations').filter(f=>/^\d{14}_.+\.sql$/.test(f)&&f>='20261013000000').sort())await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));
+ // Public table privileges come from the actual explicit-grants migration.
  await db.query("INSERT INTO auth.users(id,email,email_confirmed_at,raw_user_meta_data) VALUES($1,'QA_TEST_ADMIN@example.invalid',now(),'{\"full_name\":\"QA_TEST_ADMIN\"}'),($2,'QA_TEST_MEMBER@example.invalid',now(),'{\"full_name\":\"QA_TEST_MEMBER\"}')",[admin,member]);await db.query("UPDATE profiles SET role='admin' WHERE id=$1",[admin]);
 }
 async function connect(page:Page,uid=admin){
@@ -100,7 +100,7 @@ test('catalog displays actual Arabic text without invented population or unrated
  await database();const description='QA_TEST تعلم تحليل البيانات';
  await db.query("INSERT INTO courses(title,slug,description,short_description,is_published,rating,rating_count) VALUES('QA_TEST_TEXT','qa-test-text',$1,$1,true,5,0)",[description]);
  await connect(page,member);await page.goto('/courses');await expect(page.getByText(description,{exact:true})).toBeVisible();await expect(page.getByText('350+ Active Club Students',{exact:true})).toHaveCount(0);await expect(page.getByText('800 XP',{exact:true})).toHaveCount(0);await expect(page.getByLabel('Course rating',{exact:true})).toHaveCount(0);
- await page.locator('a[href="/courses/qa-test-text"]').click();await expect(page.getByRole('heading',{name:'QA_TEST_TEXT',exact:true})).toBeVisible();await expect(page.getByText('5 (0 reviews)',{exact:true})).toHaveCount(0);
+ await page.getByRole('heading',{name:'QA_TEST_TEXT',exact:true}).getByRole('link').click();await expect(page.getByRole('heading',{name:'QA_TEST_TEXT',exact:true})).toBeVisible();await expect(page.getByText('5 (0 reviews)',{exact:true})).toHaveCount(0);
 });
 
 test('lost course response retries the same draft and image tools never submit the form',async({page})=>{

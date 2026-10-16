@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## Unreleased — final audit branch, 2026-10-16
+
+- Added accessible drop/click/keyboard file selection for lesson videos, materials and subtitles, retaining resumable uploads and existing server validation.
+- Organized course catalog and enrolled-course cards with consistent covers, readable titles, saved progress and clear actions. Missing media uses neutral graphics.
+- These changes are local and have not been pushed or deployed. Detailed test evidence and external-service limitations are recorded in `qa-audit/final/COURSE-UI.md` and the final audit ledger. Historical release claims below are not verification of this branch.
+
 ## [1.0.0] - 2026-10-11
 
 ### 🚀 Production Release & Final Audit Delivery

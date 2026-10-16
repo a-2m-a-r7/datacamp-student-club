@@ -12,7 +12,7 @@ test('admin persists named units, reorders units and lessons, and sees an honest
  await units.getByRole('button',{name:'Move unit up QA_TEST_NEW_UNIT',exact:true}).click();await expect.poll(async()=>Number((await p.db.query<any>('SELECT position FROM course_modules WHERE id=$1',[unit])).rows[0].position)).toBe(2);
  await page.getByRole('button',{name:'Move lesson down QA_TEST_VIDEO',exact:true}).click();await expect.poll(async()=>(await p.db.query<any>('SELECT title FROM lessons WHERE course_id=$1 ORDER BY position',[cid])).rows.map(r=>r.title)).toEqual(['QA_TEST_ARTICLE','QA_TEST_VIDEO']);
  await page.getByRole('button',{name:'Edit lesson',exact:true}).last().click();await expect(page.getByLabel('Upload lesson video',{exact:true})).toBeDisabled();await expect(page.getByText('Configure Google Drive OAuth on the server to enable large uploads.',{exact:true})).toBeVisible();
- await page.getByLabel('Lesson unit',{exact:true}).selectOption(unit);await page.getByRole('button',{name:'SAVE_LESSON',exact:true}).click();await expect(page.getByText('Lesson saved successfully',{exact:true})).toBeVisible();await expect(page.getByLabel('Upload lesson material',{exact:true})).toBeVisible();
+ await page.getByLabel('Lesson unit',{exact:true}).selectOption(unit);await page.getByRole('button',{name:'SAVE_LESSON',exact:true}).click();await expect(page.getByText('Lesson saved successfully',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Choose lesson material',exact:true})).toBeVisible();
 });
 test('generated video quiz leads into runnable JavaScript practice and only persisted completion awards a certificate',async({page})=>{
  const {cid,video,article}=await seed();await p.db.query('DELETE FROM lessons WHERE id=$1',[article]);

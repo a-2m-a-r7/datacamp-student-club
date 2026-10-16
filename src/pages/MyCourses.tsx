@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AssetImage } from '../components/AssetImage';
+import { CourseCover } from '../components/courses/CourseCover';
 import { Link, useNavigate } from 'react-router-dom';
-import { BookOpen, Clock, GraduationCap, Search, Trophy } from 'lucide-react';
+import { ArrowRight, BookOpen, CheckCircle, Clock, GraduationCap, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -72,6 +72,7 @@ const MyCourses = () => {
         <div className="relative w-full md:w-80">
           <Search className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground ${isArabic ? 'right-3' : 'left-3'}`} />
           <Input
+            aria-label={isArabic ? 'البحث داخل كورساتك' : 'Search your courses'}
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder={isArabic ? 'ابحث داخل كورساتك...' : 'Search your courses...'}
@@ -79,6 +80,12 @@ const MyCourses = () => {
           />
         </div>
       </div>
+
+      {!loading && courses.length > 0 && <div aria-label={isArabic ? 'ملخص التعلم' : 'Learning summary'} className="grid grid-cols-3 gap-2 sm:gap-4">
+        {[{value:courses.length,label:isArabic?'كورساتك':'Enrolled courses'},
+          {value:courses.filter(course=>(enrollments[course.id]?.progress||0)<100).length,label:isArabic?'قيد التعلم':'In progress'},
+          {value:courses.filter(course=>(enrollments[course.id]?.progress||0)>=100).length,label:isArabic?'مكتملة':'Completed'}].map(item=><div key={item.label} className="min-w-0 rounded-2xl border border-white/10 bg-dark-navy/70 p-3 sm:p-5"><p className="text-2xl sm:text-3xl font-bold text-primary">{item.value}</p><p className="mt-1 text-[11px] sm:text-sm text-muted-foreground">{item.label}</p></div>)}
+      </div>}
 
       {loading ? (
         <div className="py-24 text-center text-primary font-cyber text-xs animate-pulse">
@@ -103,35 +110,37 @@ const MyCourses = () => {
             const enrollment = enrollments[course.id];
             const progress = enrollment?.progress || 0;
             return (
-              <div key={course.id} className="rounded-xl border border-primary/20 bg-dark-navy/60 overflow-hidden hover:border-primary/50 transition-all">
-                <div className="relative h-40 bg-black/40">
-                  <AssetImage src={course.coverImage} alt={course.title} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark-navy via-dark-navy/40 to-transparent" />
-                  <div className="absolute bottom-0 inset-x-0 h-2 bg-black/60">
-                    <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
-                  </div>
-                </div>
-                <div className="p-5 space-y-4">
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground mb-2">
-                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {course.durationHours}h</span>
-                      <span className="flex items-center gap-1"><Trophy className="w-3 h-3 text-primary" /> {progress}%</span>
+              <article key={course.id} className="group min-w-0 flex flex-col rounded-2xl border border-white/10 bg-dark-navy/80 overflow-hidden hover:border-primary/40 transition-colors shadow-lg">
+                <CourseCover src={course.coverImage} title={course.title}>
+                  <span className={`absolute bottom-3 start-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] backdrop-blur-md ${progress>=100?'border-primary/30 bg-dark-navy/90 text-primary':'border-white/20 bg-dark-navy/90 text-white'}`}>
+                    {progress>=100&&<CheckCircle className="h-3.5 w-3.5"/>}{progress>=100?(isArabic?'مكتمل':'Completed'):(isArabic?'قيد التعلم':'In progress')}
+                  </span>
+                </CourseCover>
+                <div className="flex flex-1 flex-col gap-5 p-5">
+                  <div className="flex-1 space-y-3">
+                    <h3 className="font-bold text-xl leading-snug text-foreground line-clamp-2 break-words"><Link to={`/courses/${course.slug}/learn`} className="hover:text-primary focus-visible:outline-primary">{course.title}</Link></h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed break-words">{course.shortDescription || course.description}</p>
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> {course.durationHours} {isArabic?'ساعة':course.durationHours===1?'Hour':'Hours'}</span>
+                      <span className="flex items-center gap-1.5"><BookOpen className="w-3.5 h-3.5"/> {course.totalLessons} {isArabic?'درس':course.totalLessons===1?'Lesson':'Lessons'}</span>
                     </div>
-                    <h3 className="font-cyber font-bold text-lg text-white line-clamp-1">{course.title}</h3>
-                    <p className="text-xs font-mono text-muted-foreground line-clamp-2 mt-1">{course.shortDescription || course.description}</p>
                   </div>
-                  <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      {isArabic ? 'آخر وصول:' : 'Last access:'} {enrollment?.lastAccessedAt ? new Date(enrollment.lastAccessedAt as string).toLocaleDateString() : '-'}
-                    </span>
-                    <Link to={`/courses/${course.slug}/learn`}>
-                      <Button variant="cyber" className="h-9 px-3 text-xs font-cyber">
-                        {progress >= 100 ? (isArabic ? 'مراجعة' : 'REVIEW') : (isArabic ? 'متابعة' : 'CONTINUE')}
-                      </Button>
-                    </Link>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs"><span className="text-muted-foreground">{isArabic?'تقدمك':'Your progress'}</span><span className="font-semibold text-primary" dir="ltr">{progress}%</span></div>
+                    <progress aria-label={isArabic?`تقدمك في ${course.title}`:`Progress in ${course.title}`} value={progress} max={100} className="block h-1.5 w-full overflow-hidden rounded-full accent-primary"/>
+                  </div>
+                  <div className="space-y-3 pt-4 border-t border-white/10">
+                    <p className="text-[11px] text-muted-foreground">
+                      {isArabic ? 'آخر وصول:' : 'Last access:'} {enrollment?.lastAccessedAt ? new Date(enrollment.lastAccessedAt as string).toLocaleDateString(isArabic?'ar-EG':'en-GB') : '—'}
+                    </p>
+                    <Button asChild variant="cyber" className="w-full min-h-11 px-3 text-xs">
+                     <Link to={`/courses/${course.slug}/learn`}>
+                      {progress >= 100 ? (isArabic ? 'مراجعة' : 'REVIEW') : (isArabic ? 'متابعة' : 'CONTINUE')}<ArrowRight className="ms-2 h-4 w-4 rtl:rotate-180"/>
+                     </Link>
+                    </Button>
                   </div>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>

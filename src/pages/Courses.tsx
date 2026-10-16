@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useCourseCatalog } from '../lib/useCourseCatalog';
+import { CourseCover } from '../components/courses/CourseCover';
 
 const Courses = () => {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ const Courses = () => {
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
       {/* Header Banner */}
-      <div className="relative rounded-2xl border border-primary/20 bg-dark-navy/60 backdrop-blur-xl p-8 sm:p-12 overflow-hidden shadow-[0_0_50px_rgba(0,255,204,0.06)]">
+      <div className="relative rounded-3xl border border-primary/20 bg-dark-navy/80 p-6 sm:p-10 overflow-hidden shadow-[0_0_50px_rgba(0,255,204,0.06)]">
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-cyber tracking-wider">
@@ -144,11 +145,11 @@ const Courses = () => {
               </p>
             </div>
           </div>
-          <Link to="/admin/courses">
-            <Button className="bg-amber-400 hover:bg-amber-500 text-black font-cyber font-bold text-xs h-9 px-4">
+            <Button asChild className="bg-amber-400 hover:bg-amber-500 text-black font-cyber font-bold text-xs h-9 px-4">
+             <Link to="/admin/courses">
               {isArabic ? '+ إضافة دورة جديدة' : '+ ADD NEW COURSE'}
+             </Link>
             </Button>
-          </Link>
         </div>
       ) : (
         <div className="p-3.5 rounded-xl border border-primary/20 bg-primary/5 flex items-center justify-between text-xs font-mono">
@@ -163,11 +164,12 @@ const Courses = () => {
       )}
 
       {/* Search & Filter Bar */}
-      <div className="space-y-4">
+      <section aria-label={isArabic ? 'البحث وتصفية الكورسات' : 'Course search and filters'} className="space-y-4 rounded-2xl border border-white/10 bg-dark-navy/50 p-4 sm:p-5">
         <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 rtl:left-auto rtl:right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
+              aria-label={isArabic ? 'البحث في الكورسات' : 'Search courses'}
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder={isArabic ? 'ابحث بالمهارة أو التقنية (مثل: بايثون، Pandas، Scikit-Learn)...' : 'Search by topic, skill, or library (e.g. Pandas, Scikit-Learn)...'}
@@ -179,6 +181,7 @@ const Courses = () => {
             {LEVELS.map(lvl => (
               <button
                 key={lvl.id}
+                aria-pressed={selectedLevel === lvl.id}
                 onClick={() => setSelectedLevel(lvl.id)}
                 className={`px-3 py-1.5 text-[11px] font-cyber tracking-wider rounded-md border transition-all ${
                   selectedLevel === lvl.id
@@ -197,6 +200,7 @@ const Courses = () => {
           {CATEGORIES.map(cat => (
             <button
               key={cat.id}
+              aria-pressed={selectedCategory === cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               className={`px-4 py-2 text-xs font-cyber tracking-widest uppercase rounded-lg border whitespace-nowrap transition-all ${
                 selectedCategory === cat.id
@@ -208,7 +212,12 @@ const Courses = () => {
             </button>
           ))}
         </div>
-      </div>
+      </section>
+
+      {!loading && !error && filteredCourses.length > 0 && <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-lg font-semibold">{isArabic ? 'اختر خطوتك التالية' : 'Find your next course'}</h2>
+        <p role="status" className="text-xs text-muted-foreground">{isArabic ? `${filteredCourses.length} كورس معروض${cursor ? ' · المزيد متاح' : ''}` : `${filteredCourses.length} ${filteredCourses.length===1?'course':'courses'} shown${cursor ? ' · More available' : ''}`}</p>
+      </div>}
 
       {/* Courses Grid */}
       {error && <div role="alert" className="p-4 border border-red-500/30 rounded-xl space-y-3"><p>{isArabic ? 'تعذر تحميل الدورات. أعد المحاولة.' : error}</p><Button onClick={courses.length ? loadMore : reload}>{isArabic ? 'إعادة المحاولة' : 'Retry courses'}</Button></div>}
@@ -239,28 +248,22 @@ const Courses = () => {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredCourses.map((course, idx) => {
             const enrollment = enrollments[course.id];
             const isEnrolled = !!enrollment;
             const progress = enrollment?.progress || 0;
 
             return (
-              <motion.div
+              <motion.article
                 key={course.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className="group flex flex-col rounded-xl border border-primary/20 hover:border-primary/50 bg-dark-navy/60 hover:bg-dark-navy/80 backdrop-blur-xl overflow-hidden transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_30px_rgba(0,255,204,0.15)]"
+                transition={{ duration: 0.3, delay: Math.min(idx, 5) * 0.04 }}
+                className="group min-w-0 flex flex-col rounded-2xl border border-white/10 hover:border-primary/40 bg-dark-navy/80 overflow-hidden transition-colors duration-300 shadow-lg"
               >
                 {/* Course Banner */}
-                <div className="relative h-44 w-full overflow-hidden bg-black/40">
-                  {course.coverImage ? <AssetImage
-                    src={course.coverImage}
-                    alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  /> : <div className="h-full flex items-center justify-center bg-primary/5"><BookOpen className="w-14 h-14 text-primary/40" /></div>}
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark-navy via-dark-navy/40 to-transparent" />
+                <CourseCover src={course.coverImage} title={course.title}>
 
                   {/* Level & XP Badges */}
                   <div className="absolute top-3 left-3 rtl:left-auto rtl:right-3 flex gap-2">
@@ -276,28 +279,26 @@ const Courses = () => {
                     </span>
                   </div>
 
-                  {/* Progress bar if enrolled */}
-                  {isEnrolled && (
-                    <div className="absolute bottom-0 inset-x-0 h-1.5 bg-black/60">
-                      <div
-                        className="h-full bg-primary shadow-[0_0_10px_rgba(0,255,204,0.8)] transition-all duration-500"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                  )}
-                </div>
+                </CourseCover>
 
                 {/* Card Content */}
-                <div className="flex-1 p-5 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+                <div className="flex-1 p-5 flex flex-col gap-5">
+                  <div className="flex-1 space-y-3">
+                    <p className="text-[11px] font-semibold text-primary">{CATEGORIES.find(category => category.id === course.category)?.label || course.category}</p>
+                    <h3 className="font-bold text-xl leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2 break-words">
+                      <Link to={`/courses/${course.slug}`} className="focus-visible:outline-primary">{course.title}</Link>
+                    </h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed break-words">
+                      {course.shortDescription || course.description}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5 text-primary" />
-                        {course.durationHours} {isArabic ? 'ساعة' : 'Hours'}
+                        {course.durationHours} {isArabic ? 'ساعة' : course.durationHours===1?'Hour':'Hours'}
                       </span>
                       <span className="flex items-center gap-1">
                         <BookOpen className="w-3.5 h-3.5 text-secondary" />
-                        {course.totalLessons} {isArabic ? 'درس' : 'Lessons'}
+                        {course.totalLessons} {isArabic ? 'درس' : course.totalLessons===1?'Lesson':'Lessons'}
                       </span>
                       {course.ratingCount > 0 && <span className="flex items-center gap-1 text-amber-400" aria-label={isArabic ? 'تقييم الكورس' : 'Course rating'}>
                         <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
@@ -305,20 +306,12 @@ const Courses = () => {
                       </span>}
                     </div>
 
-                    <h3 className="font-cyber font-bold text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                      {course.title}
-                    </h3>
-
-                    <p className="font-mono text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                      {course.shortDescription || course.description}
-                    </p>
-
                     {/* Tags */}
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       {course.tags.slice(0, 3).map((tag, tIdx) => (
                         <span
                           key={tIdx}
-                          className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 border border-white/10 text-muted-foreground"
+                          className="max-w-full break-words px-2 py-1 rounded-md text-[10px] bg-white/5 border border-white/10 text-muted-foreground"
                         >
                           #{tag}
                         </span>
@@ -327,63 +320,66 @@ const Courses = () => {
                   </div>
 
                   {/* Footer & CTA */}
-                  <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                    <div>
+                  <div className="pt-4 border-t border-white/10 space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                     <div className="min-w-0">
                       <p className="text-[10px] font-mono text-muted-foreground uppercase">{isArabic ? 'المدرب' : 'INSTRUCTOR'}</p>
-                      <p className="text-xs font-mono text-foreground font-medium">{course.instructorName}</p>
-                    </div>
-
-                    <div className="flex items-center gap-2">
+                      <p className="text-sm text-foreground font-medium break-words">{course.instructorName || (isArabic ? 'غير محدد' : 'Not specified')}</p>
+                     </div>
                       {(isAdmin || isEditor) && (
-                        <Link to="/admin/courses">
-                          <Button
+                          <Button asChild
                             size="sm"
                             variant="outline"
                             className="h-9 px-3 text-[11px] font-cyber border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-                            title="Edit course in admin panel"
+                            title={isArabic ? 'تعديل الكورس في لوحة الإدارة' : 'Edit course in admin panel'}
                           >
+                           <Link to="/admin/courses">
                             {isArabic ? 'تعديل' : 'EDIT'}
+                           </Link>
                           </Button>
-                        </Link>
                       )}
+                    </div>
+                    {isEnrolled && <div className="space-y-2">
+                      <div className="flex justify-between text-xs text-muted-foreground"><span>{isArabic ? 'تقدمك' : 'Your progress'}</span><span dir="ltr">{progress}%</span></div>
+                      <progress aria-label={isArabic ? `تقدمك في ${course.title}` : `Progress in ${course.title}`} value={progress} max={100} className="block h-1.5 w-full overflow-hidden rounded-full accent-primary"/>
+                    </div>}
                       {isEnrolled ? (
-                        <Link to={`/courses/${course.slug}`}>
-                          <Button
+                          <Button asChild
                             variant="cyber"
-                            className="h-9 px-4 text-xs font-cyber tracking-wider shadow-[0_0_15px_rgba(57,255,20,0.2)]"
+                            className="w-full h-auto min-h-11 py-2 px-3 text-[11px] whitespace-normal"
                           >
+                           <Link to={`/courses/${course.slug}`}>
                             {progress >= 100 ? (
                               <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> {isArabic ? 'مكتمل' : 'COMPLETED'}</span>
                             ) : (
                               <span className="flex items-center gap-1.5">{isArabic ? `متابعة التعلم (${progress}%)` : `CONTINUE LEARNING (${progress}%)`} <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" /></span>
                             )}
+                           </Link>
                           </Button>
-                        </Link>
                       ) : (
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-stretch gap-2">
                           <Button
                             variant="cyber"
                             onClick={(e) => handleEnrollCourse(e, course)}
                             disabled={enrollingIds.has(course.id)}
-                            className="h-9 px-3 text-xs font-cyber tracking-wider"
+                            className="flex-1 min-h-11 px-3 text-xs"
                           >
                             {isArabic ? 'سجل الآن ⚡' : 'ENROLL NOW ⚡'}
                           </Button>
-                          <Link to={`/courses/${course.slug}`}>
-                            <Button aria-label={isArabic ? 'معاينة تفاصيل المنهج' : 'View Course Syllabus'}
+                            <Button asChild aria-label={isArabic ? 'معاينة تفاصيل المنهج' : 'View Course Syllabus'}
                               variant="outline"
-                              className="h-9 px-2.5 text-xs font-cyber border-white/10 hover:border-primary/40"
+                              className="h-11 w-11 shrink-0 px-2.5 text-xs border-white/10 hover:border-primary/40"
                               title={isArabic ? 'معاينة تفاصيل المنهج' : 'View Course Syllabus'}
                             >
+                             <Link to={`/courses/${course.slug}`}>
                               <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                             </Link>
                             </Button>
-                          </Link>
                         </div>
                       )}
-                    </div>
                   </div>
                 </div>
-              </motion.div>
+              </motion.article>
             );
           })}
         </div>
@@ -394,4 +390,3 @@ const Courses = () => {
 };
 
 export default Courses;
-import { AssetImage } from '../components/AssetImage';

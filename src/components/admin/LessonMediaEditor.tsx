@@ -5,6 +5,7 @@ import {authenticatedPost} from '../../lib/apiClient';
 import {courseAssets,fileHashes,driveUpload,analyzeVideo,CourseAsset,VideoPlan} from '../../services/courseMediaService';
 import {toast} from 'sonner';
 import {quizText} from '../../lib/quizLanguage';
+import {CourseFileDropzone} from './CourseFileDropzone';
 export function LessonMediaEditor({lessonId,onSaved,onBusy}:{lessonId:string;onSaved:()=>Promise<void>;onBusy:(busy:boolean)=>void}){
  const {isArabic}=useLanguage();const [files,setFiles]=useState<CourseAsset[]>([]),[connection,setConnection]=useState<{configured:boolean;connected:boolean}|null>(null);
  const [busy,setBusy]=useState(false),[label,setLabel]=useState(''),[progress,setProgress]=useState(0),[error,setError]=useState(''),[autoAI,setAutoAI]=useState(true),[subtitleLanguage,setSubtitleLanguage]=useState('ar');
@@ -13,8 +14,12 @@ export function LessonMediaEditor({lessonId,onSaved,onBusy}:{lessonId:string;onS
  useEffect(()=>{let current=true;setPlan(null);setError('');courseAssets(lessonId).then(f=>{if(current)setFiles(f);}).catch(e=>{if(current)setError(e.message);});authenticatedPost('/api/courses/drive',{action:'status'}).then(r=>{if(current)setConnection(r);}).catch(e=>{if(current)setError(e.message);});authenticatedPost('/api/courses/analyze',{action:'latest',lessonId}).then(r=>{if(current&&r.plan&&r.status==='ready'){setJobId(r.id);setPlan(r.plan);}}).catch(()=>{});return()=>{current=false;controller.current?.abort();};},[lessonId]);
  const lock=(b:boolean)=>{setBusy(b);onBusy(b);};
  const runAnalysis=async(file:File,sha256:string,signal:AbortSignal)=>{setLabel(isArabic?'رفع نسخة للتحليل في Gemini':'Uploading video for Gemini analysis');const r=await analyzeVideo(file,lessonId,sha256,signal,(s,p)=>{setLabel(s);if(p!==undefined)setProgress(p);});setJobId(r.jobId);setPlan(r.plan);toast.success(isArabic?'تم تحليل الفيديو. راجع الملخص والكويز والتطبيق أدناه.':'Video analyzed. Review the generated learning plan below.');};
- const upload=async(event:React.ChangeEvent<HTMLInputElement>,kind:string)=>{
-  const file=event.target.files?.[0];event.target.value='';if(!file||busy)return;const control=new AbortController();controller.current=control;lock(true);setError('');setProgress(0);setPlan(null);
+ const upload=async(file:File,kind:string)=>{
+  if(busy||!connection?.connected)return;
+  const limit=kind==='subtitle'?5*1024*1024:2*1024*1024*1024;
+  if(!file.size||file.size>limit){setError(isArabic?`اختر ملفًا غير فارغ بحجم لا يتجاوز ${kind==='subtitle'?'5 ميجا':'2 جيجا'}.`:`Choose a nonempty file no larger than ${kind==='subtitle'?'5 MiB':'2 GiB'}.`);return;}
+  if(kind==='video'&&!['video/mp4','video/webm','video/quicktime'].includes(file.type)){setError(isArabic?'اختر فيديو بصيغة MP4 أو WebM أو MOV.':'Choose an MP4, WebM or MOV video.');return;}
+  const control=new AbortController();controller.current=control;lock(true);setError('');setProgress(0);setPlan(null);
   try{setLabel(isArabic?'التحقق من الملف وحساب بصمته':'Checking file integrity');const hashes=await fileHashes(file,control.signal,setProgress);setLabel(isArabic?'رفع الملف إلى Google Drive':'Uploading to Google Drive');setProgress(0);await driveUpload(file,lessonId,kind,hashes,control.signal,setProgress,subtitleLanguage);await load();await onSaved();toast.success(isArabic?'الملف محفوظ ومربوط بالدرس.':'File saved and linked to the lesson.');if(kind==='video'){chosen.current={file,sha256:hashes.sha256};if(autoAI)await runAnalysis(file,hashes.sha256,control.signal);}}
   catch(e:any){setError(control.signal.aborted?(isArabic?'توقف الرفع. اختر نفس الملف لاستكماله.':'Paused. Reselect the same file to resume.'):e.message||'Upload failed');}
   finally{lock(false);}
@@ -28,9 +33,11 @@ export function LessonMediaEditor({lessonId,onSaved,onBusy}:{lessonId:string;onS
   <Button type="button" disabled={busy||!connection?.configured} onClick={connect}>{connection?.connected?(isArabic?'إعادة ربط Google Drive':'Reconnect Google Drive'):(isArabic?'ربط Google Drive':'Connect Google Drive')}</Button>
   {connection&&!connection.configured&&<p role="status" className="text-sm text-amber-300">{isArabic?'يلزم إعداد Google Drive OAuth على الخادم قبل تفعيل رفع الملفات الكبيرة.':'Configure Google Drive OAuth on the server to enable large uploads.'}</p>}
   <fieldset disabled={busy||!connection?.connected} className="grid gap-3">
-   <label className="text-sm">{isArabic?'فيديو الدرس MP4 / WebM / MOV':'Lesson video MP4 / WebM / MOV'}<input aria-label="Upload lesson video" type="file" accept="video/mp4,video/webm,video/quicktime" className="block w-full text-xs mt-2" onChange={e=>upload(e,'video')}/></label>
-   <label className="text-sm">{isArabic?'ملفات الماتريال PDF، مستندات، عروض، كود أو ZIP':'Materials: PDF, documents, slides, code or ZIP'}<input aria-label="Upload lesson material" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.txt,.zip,.ipynb,.py,.js,.ts,.sql,.json" className="block w-full text-xs mt-2" onChange={e=>upload(e,'material')}/></label>
-   <label className="text-sm">{isArabic?'ملف الترجمة SRT / VTT':'Subtitles SRT / VTT'}<input aria-label="Upload lesson subtitles" type="file" accept=".srt,.vtt" className="block w-full text-xs mt-2" onChange={e=>upload(e,'subtitle')}/></label>
+   <CourseFileDropzone kind="video" inputLabel="Upload lesson video" accept="video/mp4,video/webm,video/quicktime" disabled={busy||!connection?.connected} onFile={file=>upload(file,'video')} onReject={setError}/>
+   <div className="grid gap-3 sm:grid-cols-2">
+    <CourseFileDropzone kind="material" inputLabel="Upload lesson material" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.txt,.zip,.ipynb,.py,.js,.ts,.sql,.json" disabled={busy||!connection?.connected} onFile={file=>upload(file,'material')} onReject={setError}/>
+    <CourseFileDropzone kind="subtitle" inputLabel="Upload lesson subtitles" accept=".srt,.vtt" disabled={busy||!connection?.connected} onFile={file=>upload(file,'subtitle')} onReject={setError}/>
+   </div>
    <label className="text-xs">{isArabic?'لغة الترجمة':'Subtitle language'} <select aria-label="Subtitle language" value={subtitleLanguage} onChange={e=>setSubtitleLanguage(e.target.value)} className="bg-dark-navy border border-white/20 rounded p-2"><option value="ar">العربية</option><option value="en">English</option></select></label>
   </fieldset>
   <label className="flex items-center gap-2 text-xs"><input type="checkbox" disabled={busy} checked={autoAI} onChange={e=>setAutoAI(e.target.checked)}/>{isArabic?'تحليل الفيديو تلقائيًا بعد الرفع وإرسال نسخة إلى Gemini':'Analyze automatically after upload; send a copy to Gemini'}</label>
