@@ -1,0 +1,18 @@
+{
+  "scope": "Actual package/lockfile compatibility metadata; not a Node20 execution test",
+  "before": ">=20.0.0",
+  "after": ">=22.0.0",
+  "installed": [
+    {
+      "name": "@supabase/supabase-js",
+      "version": "2.117.3",
+      "requiredNode": ">=22.0.0"
+    },
+    {
+      "name": "@supabase/auth-js",
+      "version": "2.117.3",
+      "requiredNode": ">=22.0.0"
+    }
+  ],
+  "testedRuntime": "v25.8.0"
+}

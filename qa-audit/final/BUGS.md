@@ -145,6 +145,15 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Validation: all six EN/AR × 1440/768/375 keyboard regressions pass, submit through the real migrated SQL and persist a response. Build, configured lint and explicit type-check passed.
 - Status: Fixed and validated locally; no schema change.
 
+## BUG-016 — Declared Node minimum contradicts locked Supabase packages
+
+- Severity: Low. Layer: installation / compatibility metadata.
+- Reproduce: root package.json and lockfile advertise Node >=20; installed/locked @supabase/supabase-js and auth-js 2.117.3 both require Node >=22. The root contract therefore accepts an unsupported runtime.
+- Evidence: BUG-016-engine-contract.json reads actual package metadata and the previous committed root manifest without executing Node20. No Node20 runtime success or failure is claimed.
+- Fix: root manifest and root lockfile metadata now require Node >=22. No dependency version or integrity changes.
+- Validation: QA build, configured lint and explicit type-check passed on recorded Node25.8.0; clean clone/install is a separate final gate.
+- Status: Fixed and validated locally.
+
 ## BUG-015 — Returning to the final section can submit without pressing Submit
 
 - Severity: High. Layer: frontend forms / unintended save.
