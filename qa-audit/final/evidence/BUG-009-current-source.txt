@@ -1,0 +1,1 @@
+{"status":"passed","summary":{"passed":792,"failed":0},"evidence":"qa-audit/final/evidence/runs/BUG-009-current-source/table-crud-source.json","failures":[]}

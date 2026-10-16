@@ -88,10 +88,10 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 
 - Severity: High. Layer: database setup / reproducibility.
 - Reproduce: replay the full chain with platform schema/roles but no simulated public DML defaults. On actual QA_TEST_ fixtures, `table-crud.mjs --source-grants` records 248 legitimate CRUD denials (including member own-profile access) with SQLSTATE 42501. The same cases pass when old provider defaults are simulated explicitly before migrations. This does not claim a failure on the deployed project.
-- Evidence: `evidence/BUG-009-before.txt`, `20261016-table-crud-source.json` before-fix copy recorded separately below; original `database-boundaries` also preserves migration-only ACL observations.
+- Evidence: `evidence/BUG-009-before.txt` and the independently replayed immutable `runs/BUG-009-historical-control/table-crud-source.json` (only the grants fix explicitly excluded). Original `database-boundaries` also preserves migration-only ACL observations.
 - Approval: user approved the exact proposed SQL for a local migration and tests only on 2026-10-16.
 - Fix: CLI-generated `20261016152338_explicit_datacamp_data_api_grants.sql` grants only the named DataCamp tables according to the existing RLS access model. Public SELECT/contact INSERT and authenticated RLS-governed DML are explicit. Server-only tables remain inaccessible to clients; unrelated public tables and default privileges are unchanged.
-- Validation: 792/792 own/foreign CRUD probes passed with source grants only, and 792/792 passed with old-default simulation. Both replay the complete migration chain and roll each probe back. Legacy promotion security regression also passed; build/lint/type checks are running.
+- Validation: 792/792 own/foreign CRUD probes passed with source grants only, and 792/792 passed with old-default simulation. Both replay the complete migration chain and roll each probe back. Legacy promotion security regression, build, lint and explicit type-check passed. The independent clean-schema RLS defect is fixed separately as BUG-012.
 - Status: Fixed locally; production application remains prohibited pending final approval.
 
 ## BUG-010 — Whitespace-only AI prompt consumes a provider request
