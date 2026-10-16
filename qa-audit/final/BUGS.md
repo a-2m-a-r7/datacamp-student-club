@@ -125,3 +125,13 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Approval: explicit local and isolated-QA approval received; production is excluded.
 - Validation: clean replay now has all 33 tables protected; own read succeeds, foreign SELECT/UPDATE return zero rows. Full-chain source-grants CRUD remains 792/792. Build/lint/explicit type-check passed.
 - Status: Fixed locally; isolated QA schema initialization follows the remaining approved fix. No production changes.
+
+## BUG-013 — Fresh schema omits the Realtime publication tables
+
+- Severity: Medium. Layer: database installation / Realtime.
+- Reproduce: clean hosted QA has zero public tables in supabase_realtime. A real signed-in member subscribes, an administrator inserts a private notification and REST confirms the row, but no change arrives. The corrected hosted control passed its other 11 service probes.
+- Evidence: runs/QA_TEST_hosted_control/hosted-services.json and the initial QA catalog. The first immediate after-run also missed the event because channel join preceded PostgreSQL replication readiness; that retained failure is not a pass.
+- Approval: owner explicitly approved this additive migration locally and in QA only.
+- Fix: CLI-generated 20261016161816_declare_application_realtime_tables.sql adds the 16 subscribed application tables if absent. It preserves RLS and excludes server-only tables.
+- Validation: clean local replay confirms all 16 entries and all 33 table RLS flags. Hosted test waits for the actual PostgreSQL subscription system acknowledgement, then observes the exact newly inserted notification ID. All 12 actual Auth/REST/Storage/Realtime probes pass in runs/QA_TEST_hosted_readiness_after. Build, configured lint and explicit type-check passed.
+- Status: Fixed and validated locally and in isolated hosted QA; production excluded.

@@ -1,0 +1,312 @@
+{
+  "projectRef": "kcqgnkfdpfibwkrghubl",
+  "scope": "real QA Auth/REST/Storage/Realtime only; no production, email or OAuth delivery claim",
+  "results": [
+    {
+      "name": "Auth: confirmed member/admin real password login and untrusted metadata cannot elevate",
+      "status": "PASS"
+    },
+    {
+      "name": "Auth: wrong password and unconfirmed email denied by GoTrue",
+      "status": "PASS"
+    },
+    {
+      "name": "Auth: refresh rotates real session and getUser validates it",
+      "status": "PASS"
+    },
+    {
+      "name": "REST RLS: own profile persists Arabic/emoji; foreign row and protected role denied",
+      "status": "PASS"
+    },
+    {
+      "name": "REST: visitor/member cannot read private administrative tables",
+      "status": "PASS"
+    },
+    {
+      "name": "Storage: owned avatar bytes upload, public URL loads, profile reference persists",
+      "status": "PASS"
+    },
+    {
+      "name": "Storage: avatar listing/overwrite/foreign path protected",
+      "status": "PASS"
+    },
+    {
+      "name": "Storage: unsupported MIME and oversized avatar rejected without stored object",
+      "status": "PASS"
+    },
+    {
+      "name": "Storage: admin course thumbnail/upload bytes persist; member write denied",
+      "status": "PASS"
+    },
+    {
+      "name": "REST/RPC: real event registration idempotency and private registration list",
+      "status": "PASS"
+    },
+    {
+      "name": "Realtime: subscribed member receives real admin notification INSERT",
+      "status": "FAIL",
+      "error": "Persisted INSERT was not delivered to subscribed client"
+    },
+    {
+      "name": "Auth: logout clears local session and old refresh token cannot start another session",
+      "status": "PASS"
+    }
+  ],
+  "network": [
+    {
+      "method": "POST",
+      "path": "/auth/v1/token",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/token",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/is_admin",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/is_admin",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/token",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/token",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/token",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/auth/v1/user",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/rest/v1/profiles",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/rest/v1/profiles",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/rest/v1/profiles",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/is_admin",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/audit_logs",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/messages",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/form_responses",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/course_drive_connections",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/member_cards",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/audit_logs",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/messages",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/form_responses",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/course_drive_connections",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/member_cards",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/avatars/f020efc6-2679-4fd1-a6a8-4b12b37b72e2/QA_TEST_94a385b1-fa46-49a4-bf64-975b0d1ac84b.png",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/storage/v1/object/public/avatars/f020efc6-2679-4fd1-a6a8-4b12b37b72e2/QA_TEST_94a385b1-fa46-49a4-bf64-975b0d1ac84b.png",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/rest/v1/profiles",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/avatars/dad09995-499d-4e37-aa45-15b060cb19e9/QA_TEST_09668891-dd88-4bb9-a871-b93ecc5002b2.png",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/avatars/dad09995-499d-4e37-aa45-15b060cb19e9/QA_TEST_09668891-dd88-4bb9-a871-b93ecc5002b2.png",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/list/avatars",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/storage/v1/object/public/avatars/dad09995-499d-4e37-aa45-15b060cb19e9/QA_TEST_09668891-dd88-4bb9-a871-b93ecc5002b2.png",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/avatars/f020efc6-2679-4fd1-a6a8-4b12b37b72e2/QA_TEST_invalid_372c3076-6971-46fc-9735-6b8a0eed48a9.png",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/list/avatars",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/avatars/f020efc6-2679-4fd1-a6a8-4b12b37b72e2/QA_TEST_invalid_2c8c45c0-12b5-47ce-998a-04b284c647ea.png",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/list/avatars",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/course-thumbnails/QA_TEST_13875244-cc93-4272-8d21-5fb9160a60d7.png",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/storage/v1/object/public/course-thumbnails/QA_TEST_13875244-cc93-4272-8d21-5fb9160a60d7.png",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/course-thumbnails/QA_TEST_denied_8a8064c9-ab16-4dd7-a1db-498c2714ddc3.png",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/uploads/QA_TEST_97943ec9-78f8-48d4-ad11-faa744e500d5.png",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/storage/v1/object/public/uploads/QA_TEST_97943ec9-78f8-48d4-ad11-faa744e500d5.png",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/storage/v1/object/uploads/QA_TEST_denied_bfe79963-3099-440e-a58f-86dadc658820.png",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/events",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/register_for_event",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/register_for_event",
+      "status": 400
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/events",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/public_events",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/notifications",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/logout",
+      "status": 204
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/token",
+      "status": 400
+    }
+  ]
+}

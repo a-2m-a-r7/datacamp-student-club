@@ -1,0 +1,13 @@
+Auth: confirmed member/admin real password login and untrusted metadata cannot elevate: PASS
+Auth: wrong password and unconfirmed email denied by GoTrue: PASS
+Auth: refresh rotates real session and getUser validates it: PASS
+REST RLS: own profile persists Arabic/emoji; foreign row and protected role denied: PASS
+REST: visitor/member cannot read private administrative tables: FAIL
+Storage: owned avatar bytes upload, public URL loads, profile reference persists: PASS
+Storage: avatar listing/overwrite/foreign path protected: PASS
+Storage: unsupported MIME and oversized avatar rejected without stored object: PASS
+Storage: admin course thumbnail/upload bytes persist; member write denied: PASS
+REST/RPC: real event registration idempotency and private registration list: FAIL
+Realtime: subscribed member receives real admin notification INSERT: FAIL
+Auth: logout clears local session and old refresh token cannot start another session: PASS
+{"passed":9,"failed":3}

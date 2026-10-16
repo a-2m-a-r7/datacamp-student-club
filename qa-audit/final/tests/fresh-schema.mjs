@@ -12,6 +12,8 @@ try{
  for(const file of fs.readdirSync('supabase/migrations').filter(f=>/^\d{14}_.+\.sql$/.test(f)&&f>='20261013000000').sort()){await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));report.migrations.push(file);}
  const tables=(await db.query("SELECT c.relname AS name,c.relrowsecurity AS rls FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relkind='r' ORDER BY c.relname")).rows;
  check('FRESH-33-TABLES-ALL-RLS',tables.length===33&&tables.every(t=>t.rls),{count:tables.length,withoutRls:tables.filter(t=>!t.rls).map(t=>t.name)});
+ const published=(await db.query("SELECT tablename FROM pg_publication_tables WHERE pubname='supabase_realtime' AND schemaname='public' ORDER BY tablename")).rows.map(r=>r.tablename);
+ check('FRESH-REALTIME-SUBSCRIPTION-TABLES',published.length===16&&['profiles','notifications','notification_reads','form_responses','points_log','user_achievements'].every(t=>published.includes(t)),{published});
  const a=randomUUID(),b=randomUUID();
  for(const [id,label]of [[a,'A'],[b,'B']]){await db.query('INSERT INTO auth.users(id,email,email_confirmed_at,raw_user_meta_data) VALUES($1,$2,now(),$3::jsonb)',[id,`QA_TEST_FRESH_${label}@example.invalid`,JSON.stringify({full_name:'QA_TEST_FRESH_'+label})]);
  await db.query('INSERT INTO users(id,email,full_name) VALUES($1,$2,$3) ON CONFLICT(id) DO NOTHING',[id,`QA_TEST_FRESH_${label}@example.invalid`,'QA_TEST_FRESH_'+label]);}
