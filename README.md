@@ -1,3 +1,19 @@
+> Current delivery audit: tester-final (16 October 2026). See qa-audit/final/TEST-MATRIX.md and BUGS.md for actual verification. Publication and production migration are pending final owner approval. Earlier report totals below are historical.
+
+## Current setup
+
+Use Node >=22 and npm >=10, then run npm ci. Copy .env.example to a local .env and fill only the selected environment's genuine credentials. Required browser settings are VITE_SUPABASE_URL, its public key VITE_SUPABASE_ANON_KEY and VITE_SITE_URL. Blank credentials deliberately leave remote services unconfigured; no test/demo data is substituted. Backend admin functions also require server-only SUPABASE_SERVICE_ROLE_KEY.
+
+Run npm run dev for the local app/server, npm run build for production assets and npm run preview for static preview. Static preview does not provide Vercel API handlers. npm run lint is TypeScript checking; also run node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json. Do not point QA scripts at production or use ordinary dev with production dotenv values.
+
+New database installation, effective roles, provider setup and troubleshooting are documented in docs/deployment-guide.md, docs/database-schema-rls.md, docs/roles-permissions.md, docs/architecture.md and docs/maintenance-guide.md. The canonical fresh-schema path starts at 20261013 and excludes historical sample seeds. Do not apply all legacy SQL blindly to a new project.
+
+The isolated regression command is node qa-audit/final/run-isolated.cjs --audit-run=UNIQUE_LABEL node_modules/@playwright/test/cli.js test --config qa-audit/final/full.config.ts. It uses fake transport/real in-memory SQL and a loopback-only build. The explicitly pinned hosted QA suite is separate and keeps credentials in ignored qa-audit/.runtime/final-hosted/. Never attach real Auth traces/HAR files.
+
+The effective product has member and administrator roles. Members cannot browse the club directory. A completed course automatically issues a unique linked certificate; downloading and LinkedIn publication remain learner actions. Large Drive uploads and Gemini generation depend on genuine configured providers and quotas; metadata size validation is not a 2 GiB transfer or 1000-viewer proof.
+
+---
+
 # 🚀 DataCamp Student Club Web Platform
 
 <div align="center">
