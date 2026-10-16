@@ -1,0 +1,45 @@
+
+Running 1 test using 1 worker
+
+  x  1 [1440] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question (22.2s)
+
+
+  1) [1440] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('QA_TEST_REACHABLE_TARGET', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('QA_TEST_REACHABLE_TARGET', { exact: true }) with timeout 20000ms
+      - waiting for getByText('QA_TEST_REACHABLE_TARGET', { exact: true })
+
+
+      206 |  const cards=(title:string)=>page.getByText(title,{exact:true}).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]');
+      207 |  await cards(hidden.title).locator('select').selectOption('QA_TEST_END');await expect(page.getByText(target.title,{exact:true})).toHaveCount(0);
+    > 208 |  await cards(start.title).locator('select').selectOption('QA_TEST_JUMP');await expect(page.getByText(target.title,{exact:true})).toBeVisible();
+          |                                                                                                                                  ^
+      209 |  await page.getByPlaceholder('QA_TEST_TARGET_ANSWER').fill('QA_TEST_REACHABLE');await page.getByRole('button',{name:'Submit Form',exact:true}).click();await expect(page.getByText('QA_TEST_RESPONSE_PERSISTED',{exact:true})).toBeVisible();
+      210 |  expect(submissions[0].answers.map(a=>a.question_id)).toEqual([start.id,target.id]);
+      211 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\form-question-types.spec.ts:208:130
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-011-ui-before\artifacts\form-question-types-changi-1acbd--now-hidden-branch-question-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-011-ui-before\artifacts\form-question-types-changi-1acbd--now-hidden-branch-question-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-011-ui-before\artifacts\form-question-types-changi-1acbd--now-hidden-branch-question-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-011-ui-before\artifacts\form-question-types-changi-1acbd--now-hidden-branch-question-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [1440] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question 

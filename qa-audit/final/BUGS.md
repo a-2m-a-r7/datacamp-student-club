@@ -108,8 +108,9 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Reproduce: question A jumps to required target C, skipping question B; B's stale/supplied answer targets end. UI previously applied B even though B became hidden, and SQL treated B as permission to skip C. The actual RPC accepted a payload without C; a browser change from B=end to A=jump also hid C.
 - Evidence: `evidence/BUG-011-sql-before.txt`, `BUG-011-ui-before.txt` and its run-specific screenshots/trace.
 - Expected: only reachable single-choice/dropdown questions control forward traversal; hidden answers cannot hide later questions or be stored in the selected path.
-- Proposed fix: `proposed-sql/BUG-011.sql` follows the ordered reachable path, validates its required questions, and rejects submitted hidden answers. A corresponding UI traversal fix is required.
-- Approval: user approved local and isolated-QA migrations/testing on 2026-10-16. Status: Approved, pending fix after the critical RLS fix.
+- Fix: `20261016154014_validate_reachable_form_branch.sql` follows the ordered reachable path, validates its required questions, and rejects submitted hidden answers. PublicFormView applies the same forward walk, so an unreachable stale branch never controls visibility. The browser SQL adapter now includes future timestamped schema migrations and relies on their actual grants instead of blanket re-grants.
+- Validation: the previously accepted bypass is rejected with no saved response; the valid path saves. All 12 form browser regressions passed across three viewports, including changing the earlier selection after choosing end. Fresh QA build, lint and explicit type-check passed.
+- Approval: user approved local and isolated-QA migrations/testing on 2026-10-16. Status: Fixed locally; no production application.
 
 ## BUG-012 — Clean schema installation leaves users mirror without RLS
 

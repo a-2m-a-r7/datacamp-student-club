@@ -17,8 +17,9 @@ export async function platform() {
  CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  CREATE TABLE storage.objects(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),bucket_id text,name text); ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
  GRANT USAGE ON SCHEMA storage TO anon,authenticated; GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA storage TO anon,authenticated;`);
- for (const file of fs.readdirSync('supabase/migrations').filter(f => /^202610(13|14|15)/.test(f)).sort()) await db.exec(fs.readFileSync('supabase/migrations/' + file, 'utf8'));
- await db.exec('GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO anon,authenticated; REVOKE ALL ON course_request_windows FROM anon,authenticated;');
+ for (const file of fs.readdirSync('supabase/migrations').filter(f => /^\d{14}_.+\.sql$/.test(f) && f >= '20261013000000').sort()) await db.exec(fs.readFileSync('supabase/migrations/' + file, 'utf8'));
+ // The actual migration chain declares grants. Do not re-grant private job
+ // tables after migrations or mask missing-grant defects in new installations.
  for (const [id, name] of [[admin,'ADMIN'],[member,'MEMBER'],[other,'OTHER']]) await db.query('INSERT INTO auth.users(id,email,email_confirmed_at,raw_user_meta_data) VALUES($1,$2,now(),$3)', [id, `QA_TEST_${name}@example.invalid`, JSON.stringify({full_name:'QA_TEST_'+name})]);
  await db.query("UPDATE profiles SET role='admin' WHERE id=$1", [admin]);
  const columns = (await db.query<any>("SELECT table_name,column_name,data_type FROM information_schema.columns WHERE table_schema='public'")).rows;
@@ -26,12 +27,12 @@ export async function platform() {
  const uploads = new Map<string,Buffer>();
  const calls:any[]=[];
  const asUser = async (uid:string|null, task:(tx:any)=>Promise<any>) => db.transaction(async tx => { await tx.query("SELECT set_config('qa.uid',$1,true)",[uid||'']); await tx.exec('SET LOCAL ROLE '+(uid?'authenticated':'anon')); return task(tx); });
- async function connect(page:Page,uid:string|null=admin) {
+ async function connect(page:Page,uid:string|null=admin,language:'en'|'ar'='en') {
   if (uid) {
    const user={id:uid,email:uid===admin?'QA_TEST_ADMIN@example.invalid':'QA_TEST_MEMBER@example.invalid',email_confirmed_at:'2026-10-14T00:00:00Z',app_metadata:{provider:'email'},user_metadata:{}};
    const token=Buffer.from('{"alg":"HS256"}').toString('base64url')+'.'+Buffer.from(JSON.stringify({sub:uid,exp:4102444800})).toString('base64url')+'.QA_TEST_SIGNATURE';
-   await page.addInitScript(({user,token})=>{localStorage.setItem('datacamp_language','en');sessionStorage.setItem('datacamp_supabase_auth_token',JSON.stringify({user,access_token:token,refresh_token:'QA_TEST',expires_at:4102444800,token_type:'bearer'}));},{user,token});
-  } else await page.addInitScript(()=>localStorage.setItem('datacamp_language','en'));
+   await page.addInitScript(({user,token,language})=>{localStorage.setItem('datacamp_language',language);sessionStorage.setItem('datacamp_supabase_auth_token',JSON.stringify({user,access_token:token,refresh_token:'QA_TEST',expires_at:4102444800,token_type:'bearer'}));},{user,token,language});
+  } else await page.addInitScript(language=>localStorage.setItem('datacamp_language',language),language);
   await page.route('https://fonts.googleapis.com/**',r=>r.fulfill({body:''}));
   await page.route('https://api.dicebear.com/**',r=>r.abort());
   await page.route('https://qa-test.supabase.co/**',async route=>{

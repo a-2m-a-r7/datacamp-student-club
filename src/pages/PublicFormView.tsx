@@ -143,27 +143,22 @@ export const PublicFormView: React.FC = () => {
   }, [questions, form]);
 
   const visibleQuestionIds = useMemo(() => {
-    const orderedQuestions = questions.filter((q) => q.type !== 'section_header');
-    const hidden = new Set<string>();
-
-    orderedQuestions.forEach((q, index) => {
-      if (q.type !== 'single_choice' && q.type !== 'dropdown') return;
+    const orderedQuestions = questions.filter((q) => q.type !== 'section_header')
+      .sort((a,b) => a.position-b.position || a.id.localeCompare(b.id));
+    const visible = new Set<string>();
+    let index = 0;
+    while (index < orderedQuestions.length) {
+      const q = orderedQuestions[index];
+      visible.add(q.id);
       const answer = answers[q.id];
-      if (answer === undefined || answer === null || answer === '') return;
-      const option = (q.options || []).find((candidate) => candidate.id === answer || candidate.text === answer);
-      const target = option?.goToQuestionId;
-      if (!target || target === 'next') return;
-      if (target === 'end') {
-        orderedQuestions.slice(index + 1).forEach((candidate) => hidden.add(candidate.id));
-        return;
-      }
-      const targetIndex = orderedQuestions.findIndex((candidate) => candidate.id === target);
-      if (targetIndex > index) {
-        orderedQuestions.slice(index + 1, targetIndex).forEach((candidate) => hidden.add(candidate.id));
-      }
-    });
-
-    return new Set(orderedQuestions.filter((q) => !hidden.has(q.id)).map((q) => q.id));
+      const option = (q.type === 'single_choice' || q.type === 'dropdown')
+        ? (q.options || []).find((candidate) => candidate.id === answer || candidate.text === answer)
+        : undefined;
+      if (option?.goToQuestionId === 'end') break;
+      const targetIndex = orderedQuestions.findIndex((candidate) => candidate.id === option?.goToQuestionId);
+      index = targetIndex > index ? targetIndex : index+1;
+    }
+    return visible;
   }, [answers, questions]);
 
   const activeSection = sections[currentSectionIndex] || sections[0];

@@ -1,0 +1,17 @@
+
+Running 12 tests using 1 worker
+
+  ok  1 [1440] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (3.0s)
+  ok  2 [1440] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (4.9s)
+  ok  3 [1440] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (5.5s)
+  ok  4 [1440] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question (2.2s)
+  ok  5 [768] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (2.6s)
+  ok  6 [768] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (5.5s)
+  ok  7 [768] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (5.2s)
+  ok  8 [768] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question (2.2s)
+  ok  9 [375] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (2.0s)
+  ok 10 [375] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (5.1s)
+  ok 11 [375] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (5.2s)
+  ok 12 [375] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question (2.0s)
+
+  12 passed (49.1s)

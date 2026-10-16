@@ -197,3 +197,15 @@ test('configured-go-to contract: forward branch skips intermediate optional and 
     { question_id: fixture.target.id, value: 'QA_TEST_FINISHED_BRANCH' },
   ]));
 });
+
+test('changing an earlier branch ignores the answer of a now-hidden branch question',async({page})=>{
+ const target=question('QA_TEST_REACHABLE_TARGET','short_text',2,{required:true,settings:{placeholder:'QA_TEST_TARGET_ANSWER'}});
+ const start=question('QA_TEST_START_BRANCH','dropdown',0,{options:[{id:'QA_TEST_NEXT',text:'QA_TEST_Continue'},{id:'QA_TEST_JUMP',text:'QA_TEST_Jump',goToQuestionId:target.id}]});
+ const hidden=question('QA_TEST_NESTED_BRANCH','dropdown',1,{options:[{id:'QA_TEST_NESTED_NEXT',text:'QA_TEST_Nested_continue'},{id:'QA_TEST_END',text:'QA_TEST_End',goToQuestionId:'end'}]});
+ const form=await createForm('qa-test-branch-change',[start,hidden,target]);const submissions=await connectRespondent(page);await page.goto('/f/'+form.slug);
+ const cards=(title:string)=>page.getByText(title,{exact:true}).locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]');
+ await cards(hidden.title).locator('select').selectOption('QA_TEST_END');await expect(page.getByText(target.title,{exact:true})).toHaveCount(0);
+ await cards(start.title).locator('select').selectOption('QA_TEST_JUMP');await expect(page.getByText(target.title,{exact:true})).toBeVisible();
+ await page.getByPlaceholder('QA_TEST_TARGET_ANSWER').fill('QA_TEST_REACHABLE');await page.getByRole('button',{name:'Submit Form',exact:true}).click();await expect(page.getByText('QA_TEST_RESPONSE_PERSISTED',{exact:true})).toBeVisible();
+ expect(submissions[0].answers.map(a=>a.question_id)).toEqual([start.id,target.id]);
+});
