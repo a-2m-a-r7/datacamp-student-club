@@ -66,3 +66,20 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Fix: replace the submission RPC in `20261015000018_branch_aware_form_validation.sql` with branch-aware required-question validation while preserving type, option, duplicate, attachment and authorization checks.
 - Validation: `form-question-types.spec.ts` passed 9/9 across 1440/768/375; database boundary suite passed 118 assertions; main Playwright suite passed 399/399.
 - Status: Fixed locally; production migration was not applied. Commit `d2ee0e5` (`fix(BUG-006): honor skipped required questions in branching`).
+
+## BUG-007 — QA executions overwrite evidence and historical image exports
+
+- Severity: High. Layer: test/report integrity.
+- Reproduce: the shared `browser-results.json` now contains `No tests found`, 0 executed cases, while AFTER.md refers to it as 399/399 proof. Other retained historical JSON reports also have different dates and failing totals. Fixed screenshot/export paths overwrite tracked historical PNGs, and concurrent form/route suites sharing an output directory caused trace ENOENT errors.
+- Evidence: the preserved original report/logs and `evidence/20261016-navigation-01.txt`; the independent 20261016 run folders demonstrate separate output ownership.
+- Fix: each isolated invocation has a validated unique run label; reusing an existing output folder is refused. Main and focused configurations put JSON, traces and screenshots under that run. Certificate/LinkedIn image outputs use Playwright's per-test output paths. Historical report claims will be reconciled against completed new JSON results, never inferred from an exit code or old file.
+- Validation: isolated Node suite 32/32; QA build, lint and explicit type-check passed. New certificate files and separate form/navigation results are retained under `evidence/runs/`; full rerun continues. No prior artifacts deleted.
+- Status: Fixed locally; full evidence reconciliation pending completed rerun.
+
+## BUG-008 — Enrolled course without a thumbnail displays a broken image
+
+- Severity: Medium. Layer: frontend / media fallback.
+- Reproduce: create and enroll in a published QA_TEST_ course with no thumbnail, visit `/my-courses` as member in English or Arabic. The rendered img has no src and naturalWidth 0.
+- Evidence: `evidence/runs/20261016-regression-02/artifacts/routes-locales-member-en-d-2f8a1-console-and-overflow-census-1440/QA_TEST__my_courses.png` and its error-context; Arabic reproduced independently.
+- Expected: missing/broken optional course media uses the existing neutral AssetImage fallback, with no random image.
+- Status: Confirmed, pending fix after current baseline run. No database changes required.

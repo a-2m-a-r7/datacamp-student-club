@@ -89,6 +89,6 @@ test('Arabic sharing keeps data selectable when clipboard permission fails', asy
   await expect(dialog.getByLabel('رابط الشهادة', { exact: true })).toHaveValue('http://127.0.0.1:3100/verify-certificate/' + certificate.verification_code);
   await expect(dialog.getByRole('link', { name: 'إضافة الشهادة للبروفايل', exact: true })).toBeVisible();
   await expect(dialog.getByLabel('نص المنشور')).toContainText('حصلت على شهادة');
-  await page.screenshot({ path: `qa-audit/linkedin-${test.info().project.name}.png` });
+  await page.screenshot({ path: test.info().outputPath(`linkedin-${test.info().project.name}.png`) });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

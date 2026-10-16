@@ -84,7 +84,7 @@ test('last lesson automatically issues one certificate, exports real PNG/PDF and
  await page.getByRole('button',{name:'View certificate for QA_TEST_OTHER_COURSE',exact:true}).click();
  const png=await pngPromise;
  expect(png.suggestedFilename()).toContain(cert.verification_code);const pngBytes=await bytes(png);
- if(test.info().project.name==='1440')await png.saveAs('qa-audit/course-certificate-preview.png');
+ if(test.info().project.name==='1440')await png.saveAs(test.info().outputPath('course-certificate-preview.png'));
  const pixels=await page.evaluate(async b=>{const i=new Image();i.src='data:image/png;base64,'+b;await i.decode();const c=document.createElement('canvas');c.width=i.width;c.height=i.height;const ctx=c.getContext('2d')!;ctx.drawImage(i,0,0);return{width:i.width,height:i.height,data:Array.from(ctx.getImageData(1355,1270,195,195).data)};},pngBytes.toString('base64'));
  expect([pixels.width,pixels.height]).toEqual([2400,1697]);expect(jsQR(new Uint8ClampedArray(pixels.data),195,195)?.data).toBe('http://127.0.0.1:3100/verify-certificate/'+cert.verification_code);
  await page.unroute('**/logos/*.png');await page.getByRole('button',{name:'View certificate for QA_TEST_AUTOMATIC_COURSE',exact:true}).click();

@@ -1,0 +1,41 @@
+✔ admin account API validates, creates, rolls back failed profile writes, refuses self-deletion and deletes Auth-owned records (22.3972ms)
+✔ backup exports all 1105 records in bounded pages, excludes credentials and rejects partial database failures (7031.9147ms)
+✔ server authorization rejects visitor, member, expired token and unverified administrator (20.5208ms)
+✔ avatar API validates real identity, saves owned Storage bytes and reference, and reuses stored photos (32.7312ms)
+✔ provider image fetch rejects arbitrary URLs, hostile redirects, oversized bodies and wrong signatures (1.1288ms)
+▶ course APIs preserve permissions, provider binding, bounded memory and private credentials
+  ✔ encrypted refresh tokens are randomized, reversible and tamper evident (1.2178ms)
+  ✔ signed tickets reject tampering and expiry (0.4065ms)
+  ✔ upload destinations reject foreign hosts, credentials and leaked API keys (0.206ms)
+  ✔ Gemini hashes accept base64 raw bytes and base64 hex text but reject malformed lengths and data (0.2719ms)
+  ✔ file validation rejects 2 GiB plus one, unsupported executables and oversized captions (0.1468ms)
+  ✔ bounded provider reads reject oversized streams without buffering the whole response (10.8751ms)
+  ✔ AI plans reject invalid answers, empty output tests and duplicate question IDs (2.1372ms)
+  ✔ new generated quizzes require complete aligned Arabic and English versions (0.5516ms)
+  ✔ changing quiz language preserves answer indices and legacy fallback (0.1422ms)
+  ✔ all administration endpoints reject visitors and ordinary members before provider access (7.8905ms)
+  ✔ OAuth callback with missing or mismatched nonce cannot exchange a code (0.42ms)
+  ✔ Drive connection exposes no refresh token or server secret (0.9742ms)
+  ✔ completed Drive sessions are recovered by the server without browser CORS or database writes (2.9843ms)
+  ✔ Gemini recovers an uploaded job file without returning its completed upload session (1.6112ms)
+  ✔ Gemini status validates the provider base64-encoded hex hash before advancing an uploaded job (0.9934ms)
+  ✔ file tickets require enrollment; active membership alone is insufficient (1.8801ms)
+  ✔ file completion rejects a provider hash mismatch before public sharing or database writes (1.3519ms)
+  ✔ file completion validates actual bytes and only then saves the lesson reference (1.6026ms)
+  ✔ video generation stays disabled until free-tier activation is configured (0.4127ms)
+✔ course APIs preserve permissions, provider binding, bounded memory and private credentials (38.4424ms)
+✔ QA launcher strips inherited provider credentials in both child environments (1.7298ms)
+✔ QA launcher disables inherited optional integrations and external runner URL (0.9604ms)
+✔ QA launcher keeps canonical and authentication return URLs on isolated localhost (0.9977ms)
+✔ QA Vite mode cannot hydrate project dotenv files, including unlisted VITE variables (874.0769ms)
+✔ background refresh needs no realtime connection; hidden/offline tabs stop work and resume fresh (4.9964ms)
+✔ slow responses do not overlap and cannot repopulate state after logout/unmount (0.6425ms)
+✔ a temporary backend failure retains known data and a later refresh receives the real update (0.7732ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7514.4065
