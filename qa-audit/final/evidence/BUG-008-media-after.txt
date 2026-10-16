@@ -1,0 +1,8 @@
+
+Running 3 tests using 1 worker
+
+  ok 1 [1440] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media (5.9s)
+  ok 2 [768] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media (3.8s)
+  ok 3 [375] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media (3.5s)
+
+  3 passed (15.6s)

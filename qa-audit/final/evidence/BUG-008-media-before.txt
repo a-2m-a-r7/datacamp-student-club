@@ -1,0 +1,164 @@
+
+Running 1 test using 1 worker
+
+  x  1 [1440] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media (4.4s)
+
+
+  1) [1440] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media 
+
+    Error: /courses
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "alt": "Profile",
+    +     "src": "https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png",
+    +   },
+    +   Object {
+    +     "alt": "QA_TEST_MEDIA_BAD",
+    +     "src": "http://127.0.0.1:3100/QA_TEST_broken.png",
+    +   },
+    + ]
+
+      17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));
+      18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\W/g,'_')+'.png')});
+    > 19 |    expect.soft(broken,route).toEqual([]);
+         |                              ^
+      20 |   }
+      21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});
+      22 |  }finally{await app.db.close();}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-fallbacks.spec.ts:19:30
+
+    Error: /my-courses
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "alt": "Profile",
+    +     "src": "https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png",
+    +   },
+    +   Object {
+    +     "alt": "QA_TEST_MEDIA_BAD",
+    +     "src": "http://127.0.0.1:3100/QA_TEST_broken.png",
+    +   },
+    + ]
+
+      17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));
+      18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\W/g,'_')+'.png')});
+    > 19 |    expect.soft(broken,route).toEqual([]);
+         |                              ^
+      20 |   }
+      21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});
+      22 |  }finally{await app.db.close();}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-fallbacks.spec.ts:19:30
+
+    Error: /courses/qa-test-media-bad
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "alt": "Profile",
+    +     "src": "https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png",
+    +   },
+    +   Object {
+    +     "alt": "QA_TEST_MEDIA_BAD",
+    +     "src": "http://127.0.0.1:3100/QA_TEST_broken.png",
+    +   },
+    + ]
+
+      17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));
+      18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\W/g,'_')+'.png')});
+    > 19 |    expect.soft(broken,route).toEqual([]);
+         |                              ^
+      20 |   }
+      21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});
+      22 |  }finally{await app.db.close();}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-fallbacks.spec.ts:19:30
+
+    Error: /admin/courses
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "alt": "Profile",
+    +     "src": "https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png",
+    +   },
+    +   Object {
+    +     "alt": "QA_TEST_MEDIA_BAD",
+    +     "src": "http://127.0.0.1:3100/QA_TEST_broken.png",
+    +   },
+    + ]
+
+      17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));
+      18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\W/g,'_')+'.png')});
+    > 19 |    expect.soft(broken,route).toEqual([]);
+         |                              ^
+      20 |   }
+      21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});
+      22 |  }finally{await app.db.close();}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-fallbacks.spec.ts:19:30
+
+    Error: /admin/users
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "alt": "Profile",
+    +     "src": "https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png",
+    +   },
+    +   Object {
+    +     "alt": "QA_TEST_ADMIN",
+    +     "src": "https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png",
+    +   },
+    + ]
+
+      17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));
+      18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\W/g,'_')+'.png')});
+    > 19 |    expect.soft(broken,route).toEqual([]);
+         |                              ^
+      20 |   }
+      21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});
+      22 |  }finally{await app.db.close();}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-fallbacks.spec.ts:19:30
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-008-media-before\artifacts\media-fallbacks-optional-c-52dd2-dle-absent-and-failed-media-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-008-media-before\artifacts\media-fallbacks-optional-c-52dd2-dle-absent-and-failed-media-1440\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-008-media-before\artifacts\media-fallbacks-optional-c-52dd2-dle-absent-and-failed-media-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-008-media-before\artifacts\media-fallbacks-optional-c-52dd2-dle-absent-and-failed-media-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [1440] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media 

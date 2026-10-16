@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { AssetImage } from '../components/AssetImage';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Clock, GraduationCap, Search, Trophy } from 'lucide-react';
 import { toast } from 'sonner';
@@ -104,7 +105,7 @@ const MyCourses = () => {
             return (
               <div key={course.id} className="rounded-xl border border-primary/20 bg-dark-navy/60 overflow-hidden hover:border-primary/50 transition-all">
                 <div className="relative h-40 bg-black/40">
-                  <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover" />
+                  <AssetImage src={course.coverImage} alt={course.title} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-dark-navy via-dark-navy/40 to-transparent" />
                   <div className="absolute bottom-0 inset-x-0 h-2 bg-black/60">
                     <div className="h-full bg-primary" style={{ width: `${progress}%` }} />

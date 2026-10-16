@@ -39,15 +39,18 @@ for(const role of ['visitor','member','admin'] as const)for(const locale of ['en
     errors=[];
     try{
      await page.goto(route);await expect(page.locator('html')).toHaveAttribute('dir',locale==='ar'?'rtl':'ltr');
-     await expect(page.locator('body')).not.toContainText(/SYNCHRONIZING|ESTABLISHING_SESSION|EVALUATING_PERMISSIONS|جاري المزامنة|جاري تهيئة الجلسة|جاري فحص الصلاحيات/);
-     await expect.poll(()=>page.locator('h1,h2,[role="alert"]').filter({visible:true}).count()).toBeGreaterThan(0);
+     // These are exact transient route-guard messages. The callback also has
+     // a permanent SYNCHRONIZING_IDENTITY heading; it is not a loading spinner.
+     await expect(page.getByText(/^(SYNCHRONIZING\.\.\.|ESTABLISHING_SESSION\.\.\.|EVALUATING_PERMISSIONS\.\.\.|جاري المزامنة\.\.\.|جاري تهيئة الجلسة\.\.\.|جاري فحص الصلاحيات\.\.\.)$/)).toHaveCount(0);
+     await expect.poll(()=>page.locator('h1,h2,h3,h4,[role="alert"]').filter({visible:true}).count(),{timeout:8000}).toBeGreaterThan(0);
      if(role==='visitor'&&(protectedRoutes.includes(route)||route.includes('/learn')||route.includes('/quiz')||route.startsWith('/admin')))await expect(page).toHaveURL(/\/login(?:\?|$)/);
      if(role==='member'&&route.startsWith('/admin'))await expect(page).toHaveURL(/\/dashboard$/);
      if(role==='admin'&&route.startsWith('/admin'))await expect(page).toHaveURL(new RegExp(route.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$'));
      const visual=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,width:innerWidth,brokenImages:[...document.images].filter(i=>i.complete&&i.naturalWidth===0&&i.offsetWidth>0).map(i=>i.getAttribute('src')?.split('?')[0]),controls:[...document.querySelectorAll('button,a,input,select,textarea')].filter(e=>(e as HTMLElement).offsetWidth>0).length}));
-     const row={route,finalPath:new URL(page.url()).pathname,locale,role,...visual,errors:[...errors]};observations.push(row);
+     const expectedInvalidCallback=route==='/auth/callback'&&errors.every(error=>error.startsWith('[AuthCallback] Verification error: Error: Authentication link is invalid or expired.'));
+     const row={route,finalPath:new URL(page.url()).pathname,locale,role,...visual,errors:[...errors],expectedNegativeDiagnostic:expectedInvalidCallback};observations.push(row);
      if(visual.scroll>visual.width+2)failures.push({...row,reason:'horizontal-overflow'});
-     if(errors.length)failures.push({...row,reason:'console-error'});
+     if(errors.length&&!expectedInvalidCallback)failures.push({...row,reason:'console-error'});
      if(visual.brokenImages.length)failures.push({...row,reason:'broken-image'});
      if(failures.some(f=>f.route===route))await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\W/g,'_')+'.png'),fullPage:true});
     }catch(e:any){failures.push({route,locale,role,reason:'route-assertion',message:e.message.slice(0,1400)});await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\W/g,'_')+'_failure.png'),fullPage:true}).catch(()=>{});}

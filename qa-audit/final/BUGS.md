@@ -76,13 +76,15 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Validation: isolated Node suite 32/32; QA build, lint and explicit type-check passed. New certificate files and separate form/navigation results are retained under `evidence/runs/`; full rerun continues. No prior artifacts deleted.
 - Status: Fixed locally; full evidence reconciliation pending completed rerun.
 
-## BUG-008 — Enrolled course without a thumbnail displays a broken image
+## BUG-008 — Missing course covers and account photos display broken images
 
 - Severity: Medium. Layer: frontend / media fallback.
 - Reproduce: create and enroll in a published QA_TEST_ course with no thumbnail, visit `/my-courses` as member in English or Arabic. The rendered img has no src and naturalWidth 0.
 - Evidence: `evidence/runs/20261016-regression-02/artifacts/routes-locales-member-en-d-2f8a1-console-and-overflow-census-1440/QA_TEST__my_courses.png` and its error-context; Arabic reproduced independently.
-- Expected: missing/broken optional course media uses the existing neutral AssetImage fallback, with no random image.
-- Status: Confirmed, pending fix after current baseline run. No database changes required.
+- Expected: missing/broken optional course and account media uses the existing neutral AssetImage fallback, with no random image.
+- Fix: reuse AssetImage on the catalog, enrollment list, course detail, admin course list, admin user list/detail and sidebar account photo. Existing layout and branding are preserved.
+- Validation: actual absent/404 media regression passed at 1440/768/375, including the admin user detail. All six member route/locale combinations now pass. QA build, configured lint and explicit type-check passed. Evidence: runs/BUG-008-media-before, BUG-008-media-detail-after and BUG-008-member-routes-after; BUG-008-build/lint/typecheck.txt.
+- Status: Fixed and validated locally. No database changes required.
 
 ## BUG-009 — Fresh installation depends on undeclared table default grants
 

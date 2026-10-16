@@ -188,7 +188,7 @@ const CourseDetail = () => {
         <div className="lg:col-span-1">
           <div className="sticky top-24 rounded-2xl border border-primary/30 bg-dark-navy/80 backdrop-blur-2xl overflow-hidden shadow-[0_0_40px_rgba(0,255,204,0.15)] space-y-6">
             <div className="relative h-48 w-full overflow-hidden">
-              {course.coverImage ? <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover" /> : <div className="h-full flex items-center justify-center bg-primary/5"><BookOpen className="w-14 h-14 text-primary/40" /></div>}
+              {course.coverImage ? <AssetImage src={course.coverImage} alt={course.title} className="w-full h-full object-cover" /> : <div className="h-full flex items-center justify-center bg-primary/5"><BookOpen className="w-14 h-14 text-primary/40" /></div>}
               <div className="absolute inset-0 bg-gradient-to-t from-dark-navy via-transparent to-transparent" />
               <div className={`absolute top-3 ${isArabic ? 'left-3' : 'right-3'}`}>
                 <span className="px-3 py-1 rounded-full text-xs font-cyber tracking-wider bg-black/70 backdrop-blur-md border border-primary/40 text-primary flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,255,204,0.4)]">
@@ -388,3 +388,4 @@ const CourseDetail = () => {
 };
 
 export default CourseDetail;
+import { AssetImage } from '../components/AssetImage';

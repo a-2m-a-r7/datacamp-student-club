@@ -1,0 +1,267 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/active-server.config.ts",
+      "media-fallbacks.spec.ts",
+      "--project=1440"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\active-server.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-008-media-before/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-008-media-before/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-008-media-before/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-008-media-before\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "1440",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "1440"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-008-media-before\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "media-fallbacks.spec.ts",
+      "file": "media-fallbacks.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "optional course covers and account photos handle absent and failed media",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4366,
+                  "error": {
+                    "message": "Error: /courses\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"Profile\",\u001b[39m\n\u001b[31m+     \"src\": \"https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"QA_TEST_MEDIA_BAD\",\u001b[39m\n\u001b[31m+     \"src\": \"http://127.0.0.1:3100/QA_TEST_broken.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: /courses\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"Profile\",\u001b[39m\n\u001b[31m+     \"src\": \"https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"QA_TEST_MEDIA_BAD\",\u001b[39m\n\u001b[31m+     \"src\": \"http://127.0.0.1:3100/QA_TEST_broken.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts:19:30",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts",
+                      "column": 30,
+                      "line": 19
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 17 |\u001b[39m    \u001b[36mconst\u001b[39m broken\u001b[33m=\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'img'\u001b[39m)\u001b[33m.\u001b[39mevaluateAll(images\u001b[33m=>\u001b[39mimages\u001b[33m.\u001b[39mfilter(image\u001b[33m=>\u001b[39m(image \u001b[36mas\u001b[39m \u001b[33mHTMLImageElement\u001b[39m)\u001b[33m.\u001b[39mcomplete\u001b[33m&&\u001b[39m(image \u001b[36mas\u001b[39m \u001b[33mHTMLImageElement\u001b[39m)\u001b[33m.\u001b[39mnaturalWidth\u001b[33m===\u001b[39m\u001b[35m0\u001b[39m\u001b[33m&&\u001b[39m(image \u001b[36mas\u001b[39m \u001b[33mHTMLElement\u001b[39m)\u001b[33m.\u001b[39moffsetWidth\u001b[33m>\u001b[39m\u001b[35m0\u001b[39m)\u001b[33m.\u001b[39mmap(image\u001b[33m=>\u001b[39m({src\u001b[33m:\u001b[39mimage\u001b[33m.\u001b[39mgetAttribute(\u001b[32m'src'\u001b[39m)\u001b[33m,\u001b[39malt\u001b[33m:\u001b[39mimage\u001b[33m.\u001b[39mgetAttribute(\u001b[32m'alt'\u001b[39m)})))\u001b[33m;\u001b[39m\n \u001b[90m 18 |\u001b[39m    observations\u001b[33m.\u001b[39mpush({route\u001b[33m,\u001b[39mbroken})\u001b[33m;\u001b[39m\u001b[36mif\u001b[39m(broken\u001b[33m.\u001b[39mlength)\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39minfo\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_'\u001b[39m\u001b[33m+\u001b[39mroute\u001b[33m.\u001b[39mreplace(\u001b[35m/\\W/g\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'_'\u001b[39m)\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m    expect\u001b[33m.\u001b[39msoft(broken\u001b[33m,\u001b[39mroute)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m   }\n \u001b[90m 21 |\u001b[39m   \u001b[36mawait\u001b[39m info\u001b[33m.\u001b[39mattach(\u001b[32m'media-observations'\u001b[39m\u001b[33m,\u001b[39m{body\u001b[33m:\u001b[39m\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(observations)\u001b[33m,\u001b[39mcontentType\u001b[33m:\u001b[39m\u001b[32m'application/json'\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m  }\u001b[36mfinally\u001b[39m{\u001b[36mawait\u001b[39m app\u001b[33m.\u001b[39mdb\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m}\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts",
+                        "column": 30,
+                        "line": 19
+                      },
+                      "message": "Error: /courses\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"Profile\",\u001b[39m\n\u001b[31m+     \"src\": \"https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"QA_TEST_MEDIA_BAD\",\u001b[39m\n\u001b[31m+     \"src\": \"http://127.0.0.1:3100/QA_TEST_broken.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));\n  18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\\W/g,'_')+'.png')});\n> 19 |    expect.soft(broken,route).toEqual([]);\n     |                              ^\n  20 |   }\n  21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});\n  22 |  }finally{await app.db.close();}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts:19:30"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts",
+                        "column": 30,
+                        "line": 19
+                      },
+                      "message": "Error: /my-courses\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"Profile\",\u001b[39m\n\u001b[31m+     \"src\": \"https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"QA_TEST_MEDIA_BAD\",\u001b[39m\n\u001b[31m+     \"src\": \"http://127.0.0.1:3100/QA_TEST_broken.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));\n  18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\\W/g,'_')+'.png')});\n> 19 |    expect.soft(broken,route).toEqual([]);\n     |                              ^\n  20 |   }\n  21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});\n  22 |  }finally{await app.db.close();}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts:19:30"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts",
+                        "column": 30,
+                        "line": 19
+                      },
+                      "message": "Error: /courses/qa-test-media-bad\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"Profile\",\u001b[39m\n\u001b[31m+     \"src\": \"https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"QA_TEST_MEDIA_BAD\",\u001b[39m\n\u001b[31m+     \"src\": \"http://127.0.0.1:3100/QA_TEST_broken.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));\n  18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\\W/g,'_')+'.png')});\n> 19 |    expect.soft(broken,route).toEqual([]);\n     |                              ^\n  20 |   }\n  21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});\n  22 |  }finally{await app.db.close();}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts:19:30"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts",
+                        "column": 30,
+                        "line": 19
+                      },
+                      "message": "Error: /admin/courses\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"Profile\",\u001b[39m\n\u001b[31m+     \"src\": \"https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"QA_TEST_MEDIA_BAD\",\u001b[39m\n\u001b[31m+     \"src\": \"http://127.0.0.1:3100/QA_TEST_broken.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));\n  18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\\W/g,'_')+'.png')});\n> 19 |    expect.soft(broken,route).toEqual([]);\n     |                              ^\n  20 |   }\n  21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});\n  22 |  }finally{await app.db.close();}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts:19:30"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts",
+                        "column": 30,
+                        "line": 19
+                      },
+                      "message": "Error: /admin/users\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"Profile\",\u001b[39m\n\u001b[31m+     \"src\": \"https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"alt\": \"QA_TEST_ADMIN\",\u001b[39m\n\u001b[31m+     \"src\": \"https://qa-test.supabase.co/storage/v1/object/public/avatars/00000000-0000-4000-8000-000000000301/QA_TEST_missing.png\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  17 |    const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>(image as HTMLImageElement).complete&&(image as HTMLImageElement).naturalWidth===0&&(image as HTMLElement).offsetWidth>0).map(image=>({src:image.getAttribute('src'),alt:image.getAttribute('alt')})));\n  18 |    observations.push({route,broken});if(broken.length)await page.screenshot({path:info.outputPath('QA_TEST_'+route.replace(/\\W/g,'_')+'.png')});\n> 19 |    expect.soft(broken,route).toEqual([]);\n     |                              ^\n  20 |   }\n  21 |   await info.attach('media-observations',{body:JSON.stringify(observations),contentType:'application/json'});\n  22 |  }finally{await app.db.close();}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts:19:30"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T15:44:23.633Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "media-observations",
+                      "contentType": "application/json",
+                      "body": "W3sicm91dGUiOiIvY291cnNlcyIsImJyb2tlbiI6W3sic3JjIjoiaHR0cHM6Ly9xYS10ZXN0LnN1cGFiYXNlLmNvL3N0b3JhZ2UvdjEvb2JqZWN0L3B1YmxpYy9hdmF0YXJzLzAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDMwMS9RQV9URVNUX21pc3NpbmcucG5nIiwiYWx0IjoiUHJvZmlsZSJ9LHsic3JjIjoiaHR0cDovLzEyNy4wLjAuMTozMTAwL1FBX1RFU1RfYnJva2VuLnBuZyIsImFsdCI6IlFBX1RFU1RfTUVESUFfQkFEIn1dfSx7InJvdXRlIjoiL215LWNvdXJzZXMiLCJicm9rZW4iOlt7InNyYyI6Imh0dHBzOi8vcWEtdGVzdC5zdXBhYmFzZS5jby9zdG9yYWdlL3YxL29iamVjdC9wdWJsaWMvYXZhdGFycy8wMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAzMDEvUUFfVEVTVF9taXNzaW5nLnBuZyIsImFsdCI6IlByb2ZpbGUifSx7InNyYyI6Imh0dHA6Ly8xMjcuMC4wLjE6MzEwMC9RQV9URVNUX2Jyb2tlbi5wbmciLCJhbHQiOiJRQV9URVNUX01FRElBX0JBRCJ9XX0seyJyb3V0ZSI6Ii9jb3Vyc2VzL3FhLXRlc3QtbWVkaWEtYmFkIiwiYnJva2VuIjpbeyJzcmMiOiJodHRwczovL3FhLXRlc3Quc3VwYWJhc2UuY28vc3RvcmFnZS92MS9vYmplY3QvcHVibGljL2F2YXRhcnMvMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMzAxL1FBX1RFU1RfbWlzc2luZy5wbmciLCJhbHQiOiJQcm9maWxlIn0seyJzcmMiOiJodHRwOi8vMTI3LjAuMC4xOjMxMDAvUUFfVEVTVF9icm9rZW4ucG5nIiwiYWx0IjoiUUFfVEVTVF9NRURJQV9CQUQifV19LHsicm91dGUiOiIvYWRtaW4vY291cnNlcyIsImJyb2tlbiI6W3sic3JjIjoiaHR0cHM6Ly9xYS10ZXN0LnN1cGFiYXNlLmNvL3N0b3JhZ2UvdjEvb2JqZWN0L3B1YmxpYy9hdmF0YXJzLzAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDMwMS9RQV9URVNUX21pc3NpbmcucG5nIiwiYWx0IjoiUHJvZmlsZSJ9LHsic3JjIjoiaHR0cDovLzEyNy4wLjAuMTozMTAwL1FBX1RFU1RfYnJva2VuLnBuZyIsImFsdCI6IlFBX1RFU1RfTUVESUFfQkFEIn1dfSx7InJvdXRlIjoiL2FkbWluL3VzZXJzIiwiYnJva2VuIjpbeyJzcmMiOiJodHRwczovL3FhLXRlc3Quc3VwYWJhc2UuY28vc3RvcmFnZS92MS9vYmplY3QvcHVibGljL2F2YXRhcnMvMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMzAxL1FBX1RFU1RfbWlzc2luZy5wbmciLCJhbHQiOiJQcm9maWxlIn0seyJzcmMiOiJodHRwczovL3FhLXRlc3Quc3VwYWJhc2UuY28vc3RvcmFnZS92MS9vYmplY3QvcHVibGljL2F2YXRhcnMvMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMzAxL1FBX1RFU1RfbWlzc2luZy5wbmciLCJhbHQiOiJRQV9URVNUX0FETUlOIn1dfV0="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-008-media-before\\artifacts\\media-fallbacks-optional-c-52dd2-dle-absent-and-failed-media-1440\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-008-media-before\\artifacts\\media-fallbacks-optional-c-52dd2-dle-absent-and-failed-media-1440\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-008-media-before\\artifacts\\media-fallbacks-optional-c-52dd2-dle-absent-and-failed-media-1440\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-fallbacks.spec.ts",
+                    "column": 30,
+                    "line": 19
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "50194a984581cef1dae7-6e22b1dcc997db032ae1",
+          "file": "media-fallbacks.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-16T15:44:23.243Z",
+    "duration": 5463.702,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

@@ -741,7 +741,7 @@ const UserManagement = () => {
                             <div className="relative">
                               <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs shrink-0 overflow-hidden">
                                 {user.photoURL ? (
-                                  <img src={user.photoURL} alt={user.fullName} className="w-full h-full object-cover" />
+                                  <AssetImage src={user.photoURL} alt={user.fullName} className="w-full h-full object-cover" />
                                 ) : (
                                   user.fullName?.charAt(0) || '?'
                                 )}
@@ -1221,7 +1221,7 @@ const UserManagement = () => {
               <div className="flex items-center space-x-4 rtl:space-x-reverse">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg overflow-hidden">
                   {viewingUser.photoURL ? (
-                    <img src={viewingUser.photoURL} alt={viewingUser.fullName} className="w-full h-full object-cover" />
+                    <AssetImage src={viewingUser.photoURL} alt={viewingUser.fullName} className="w-full h-full object-cover" />
                   ) : (
                     viewingUser.fullName?.charAt(0) || '?'
                   )}
@@ -1311,3 +1311,4 @@ const UserManagement = () => {
 };
 
 export default UserManagement;
+import { AssetImage } from '../../components/AssetImage';

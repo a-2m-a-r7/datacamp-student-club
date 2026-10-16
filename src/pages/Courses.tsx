@@ -255,7 +255,7 @@ const Courses = () => {
               >
                 {/* Course Banner */}
                 <div className="relative h-44 w-full overflow-hidden bg-black/40">
-                  {course.coverImage ? <img
+                  {course.coverImage ? <AssetImage
                     src={course.coverImage}
                     alt={course.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -394,3 +394,4 @@ const Courses = () => {
 };
 
 export default Courses;
+import { AssetImage } from '../components/AssetImage';

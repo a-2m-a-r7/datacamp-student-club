@@ -276,7 +276,7 @@ export const CourseManagement = () => {
                 <tr key={course.id} className="hover:bg-white/5 transition-colors">
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
-                      {course.coverImage ? <img
+                      {course.coverImage ? <AssetImage
                         src={course.coverImage}
                         alt={course.title}
                         className="w-12 h-12 rounded-lg object-cover border border-white/10 shrink-0 bg-dark-navy"
@@ -858,3 +858,4 @@ export const CourseManagement = () => {
 };
 
 export default CourseManagement;
+import { AssetImage } from '../../components/AssetImage';
