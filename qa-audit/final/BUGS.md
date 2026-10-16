@@ -152,4 +152,6 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Evidence: runs/BUG-014-form-inputs-before, all-14-types cases: the number field expected after Next is absent because the actual success page is already rendered.
 - Expected: Next only changes sections; saving requires the explicit Submit action.
 - Cause: React reuses the same button across Next and Submit branches and changes its type during the click before the browser's default action.
-- Status: Confirmed; pending fix.
+- Fix: give Next and Submit distinct React keys and cancel Next's browser default before advancing sections.
+- Validation: all 24 form regressions pass, including all 14 types, Arabic/emoji/injection text, attachment persistence, previous/next retained answers and zero stored responses until explicit Submit, both languages and three widths. QA build, configured lint and explicit type-check passed. Evidence: BUG-015-forms-after.txt and runs/BUG-015-forms-after.
+- Status: Fixed and validated locally; no schema change.

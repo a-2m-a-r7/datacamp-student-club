@@ -1,0 +1,1046 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/active-server.config.ts",
+      "form-inputs.spec.ts",
+      "form-question-types.spec.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\active-server.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-015-forms-after/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-015-forms-after/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-015-forms-after/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-015-forms-after\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "1440",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "1440"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-015-forms-after\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "768",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 768,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "768"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-015-forms-after\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "375",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 375,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "375"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-015-forms-after\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "form-inputs.spec.ts",
+      "file": "form-inputs.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all 14 form types persist exact answers across sections en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5934,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:30:36.787Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-787324cce47d9fc7ce6a",
+          "file": "form-inputs.spec.ts",
+          "line": 13,
+          "column": 2
+        },
+        {
+          "title": "choice and rating controls expose names and accept keyboard input en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4159,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:30:42.819Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-58de35cb244789ec7547",
+          "file": "form-inputs.spec.ts",
+          "line": 37,
+          "column": 2
+        },
+        {
+          "title": "all 14 form types persist exact answers across sections ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4266,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:30:46.998Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-8c3f2fdcadc4947e65d8",
+          "file": "form-inputs.spec.ts",
+          "line": 13,
+          "column": 2
+        },
+        {
+          "title": "choice and rating controls expose names and accept keyboard input ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2086,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:30:51.277Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-b1cd2d12c7d586479f8f",
+          "file": "form-inputs.spec.ts",
+          "line": 37,
+          "column": 2
+        },
+        {
+          "title": "all 14 form types persist exact answers across sections en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4778,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:09.552Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-40ce1d7b6718b67e5afd",
+          "file": "form-inputs.spec.ts",
+          "line": 13,
+          "column": 2
+        },
+        {
+          "title": "choice and rating controls expose names and accept keyboard input en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2071,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:14.414Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-956dc9beb03cb928228b",
+          "file": "form-inputs.spec.ts",
+          "line": 37,
+          "column": 2
+        },
+        {
+          "title": "all 14 form types persist exact answers across sections ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4447,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:16.494Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-430306f1884390d313c4",
+          "file": "form-inputs.spec.ts",
+          "line": 13,
+          "column": 2
+        },
+        {
+          "title": "choice and rating controls expose names and accept keyboard input ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2071,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:20.951Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-dfb4c45a48922c2c5393",
+          "file": "form-inputs.spec.ts",
+          "line": 37,
+          "column": 2
+        },
+        {
+          "title": "all 14 form types persist exact answers across sections en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2473,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:39.715Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-0c39bbeee2443e3563e2",
+          "file": "form-inputs.spec.ts",
+          "line": 13,
+          "column": 2
+        },
+        {
+          "title": "choice and rating controls expose names and accept keyboard input en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2021,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:42.271Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-4564755208309dfcf761",
+          "file": "form-inputs.spec.ts",
+          "line": 37,
+          "column": 2
+        },
+        {
+          "title": "all 14 form types persist exact answers across sections ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4371,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:44.301Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-9a77e71933709f40c521",
+          "file": "form-inputs.spec.ts",
+          "line": 13,
+          "column": 2
+        },
+        {
+          "title": "choice and rating controls expose names and accept keyboard input ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2063,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:48.680Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4e766c5e3a56741bd172-e9b920e954b1ac071982",
+          "file": "form-inputs.spec.ts",
+          "line": 37,
+          "column": 2
+        }
+      ]
+    },
+    {
+      "title": "form-question-types.spec.ts",
+      "file": "form-question-types.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ranking: public choices drag into a new order and persist the exact option IDs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2076,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:30:53.386Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-f67f025629f10e6a718c",
+          "file": "form-question-types.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "branching builder: explicit forward target survives autosave and editor reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5319,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:30:55.469Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-5f40da8b285e511a77eb",
+          "file": "form-question-types.spec.ts",
+          "line": 142,
+          "column": 1
+        },
+        {
+          "title": "configured-go-to contract: forward branch skips intermediate optional and required questions before saving",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4987,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:00.797Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-1ac066ad36ce1e13cc2b",
+          "file": "form-question-types.spec.ts",
+          "line": 163,
+          "column": 1
+        },
+        {
+          "title": "changing an earlier branch ignores the answer of a now-hidden branch question",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2017,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:05.792Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-2cffb70b2d7db6a16d4d",
+          "file": "form-question-types.spec.ts",
+          "line": 201,
+          "column": 1
+        },
+        {
+          "title": "ranking: public choices drag into a new order and persist the exact option IDs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2201,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:23.044Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-8be24acdd7697bcde468",
+          "file": "form-question-types.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "branching builder: explicit forward target survives autosave and editor reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5302,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:25.253Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-c72acdaf03b3a8dc8be1",
+          "file": "form-question-types.spec.ts",
+          "line": 142,
+          "column": 1
+        },
+        {
+          "title": "configured-go-to contract: forward branch skips intermediate optional and required questions before saving",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5482,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:30.565Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-a497afa0181f61f9cecc",
+          "file": "form-question-types.spec.ts",
+          "line": 163,
+          "column": 1
+        },
+        {
+          "title": "changing an earlier branch ignores the answer of a now-hidden branch question",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2031,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:36.056Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-11d22a5815a7d9efffcb",
+          "file": "form-question-types.spec.ts",
+          "line": 201,
+          "column": 1
+        },
+        {
+          "title": "ranking: public choices drag into a new order and persist the exact option IDs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2137,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:50.763Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-3af93d3d966597939c5f",
+          "file": "form-question-types.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "branching builder: explicit forward target survives autosave and editor reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5570,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:52.908Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-283d5be765d2c03e62e7",
+          "file": "form-question-types.spec.ts",
+          "line": 142,
+          "column": 1
+        },
+        {
+          "title": "configured-go-to contract: forward branch skips intermediate optional and required questions before saving",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5265,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:31:58.486Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-13e87e85dad01ca18b88",
+          "file": "form-question-types.spec.ts",
+          "line": 163,
+          "column": 1
+        },
+        {
+          "title": "changing an earlier branch ignores the answer of a now-hidden branch question",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2119,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:32:03.761Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "873bba8f5cb12f7989de-d5ec3faa2cd04b7c47c8",
+          "file": "form-question-types.spec.ts",
+          "line": 201,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-16T16:30:36.391Z",
+    "duration": 91116.58600000001,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -929,8 +929,9 @@ export const PublicFormView: React.FC = () => {
 
               {!isLastSection ? (
                 <button
+                  key="next-section"
                   type="button"
-                  onClick={handleNextSection}
+                  onClick={(event) => { event.preventDefault(); handleNextSection(); }}
                   className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-primary/25 transition-all"
                 >
                   <span>{isArabic ? 'التالي' : 'Next'}</span>
@@ -938,6 +939,7 @@ export const PublicFormView: React.FC = () => {
                 </button>
               ) : (
                 <button
+                  key="submit-response"
                   type="submit"
                   disabled={isSubmitting}
                   className="px-7 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white text-sm font-bold flex items-center gap-2 shadow-xl shadow-primary/30 transition-all hover:scale-102 disabled:opacity-50"

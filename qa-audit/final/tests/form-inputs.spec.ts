@@ -26,6 +26,7 @@ for(const locale of ['en','ar'] as const){
   const rank=field('ranking');await rank.getByText('QA_TEST_باء',{exact:true}).dragTo(rank.getByText('QA_TEST_ألف',{exact:true}));
   await page.getByRole('button',{name:locale==='ar'?'السابق':'Previous',exact:true}).click();await expect(field('short_text').locator('input')).toHaveValue(/العربية 😀/);
   await page.getByRole('button',{name:locale==='ar'?'التالي':'Next',exact:true}).click();await expect(field('number').locator('input')).toHaveValue('7');
+  expect((await app.db.query('SELECT * FROM form_responses WHERE form_id=$1',[form.id])).rows).toHaveLength(0);
   await page.getByRole('button',{name:locale==='ar'?'إرسال الاستجابة':'Submit Form',exact:true}).click();await expect(page.getByText('QA_TEST_ALL_SAVED',{exact:true})).toBeVisible();
   const rows=(await app.db.query<any>('SELECT question_id,value FROM form_answers WHERE response_id IN (SELECT id FROM form_responses WHERE form_id=$1)',[form.id])).rows;expect(rows).toHaveLength(13);
   const saved=Object.fromEntries(rows.map(r=>[questions.find(q=>q.id===r.question_id)!.type,r.value]));
