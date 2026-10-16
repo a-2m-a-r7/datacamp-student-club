@@ -145,6 +145,15 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Validation: all six EN/AR × 1440/768/375 keyboard regressions pass, submit through the real migrated SQL and persist a response. Build, configured lint and explicit type-check passed.
 - Status: Fixed and validated locally; no schema change.
 
+## BUG-017 — Password visibility buttons have a 16px touch target
+
+- Severity: Medium. Layer: frontend accessibility / authentication controls.
+- Reproduce: mobile Lighthouse on the real fresh-clone production build flags the login visibility control as a 16×16px target. The same pattern appears in Register and Reset Password. Six local before cases reproduce the undersized control in both languages.
+- Evidence: runs/QA_TEST_mobile_lighthouse_fresh_01/login.json, runs/BUG-017-password-before. The first after run used an exact floating-point 40px comparison during the route transition; 39.999px rounding was a test-oracle failure, retained separately.
+- Fix: 40px button hit areas, input text padding to match, visible keyboard focus, translated show/hide labels and aria-pressed. Existing password values and submit handlers are unchanged.
+- Validation: all 18 EN/AR × 1440/768/375 × login/register/reset cases pass in runs/BUG-017-password-after-02, including real bounds after the transition, Space/Enter toggles, value preservation and no horizontal overflow. QA build, configured lint and explicit type-check passed. These tests do not submit a password change to a real provider.
+- Status: Fixed and validated locally; full-suite rerun after subsequent audit fixes remains pending.
+
 ## BUG-016 — Declared Node minimum contradicts locked Supabase packages
 
 - Severity: Low. Layer: installation / compatibility metadata.

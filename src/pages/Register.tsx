@@ -227,13 +227,14 @@ const Register = () => {
                     value={password}
                     onChange={e => { setPassword(e.target.value); setErrors(p => ({...p, password: undefined})); }}
                     placeholder="••••••••••••"
-                    className={`${isArabic ? 'pr-10 pl-10' : 'pl-10 pr-10'} ${errors.password ? 'border-destructive' : ''}`}
+                    className={`${isArabic ? 'pr-10 pl-12' : 'pl-10 pr-12'} ${errors.password ? 'border-destructive' : ''}`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(v => !v)}
-                    className={`absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground ${isArabic ? 'left-3' : 'right-3'}`}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    className={`absolute top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${isArabic ? 'left-1' : 'right-1'}`}
+                    aria-label={showPassword ? (isArabic ? 'إخفاء كلمة المرور' : 'Hide password') : (isArabic ? 'إظهار كلمة المرور' : 'Show password')}
+                    aria-pressed={showPassword}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
