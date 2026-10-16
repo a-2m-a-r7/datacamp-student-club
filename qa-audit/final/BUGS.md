@@ -83,3 +83,40 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Evidence: `evidence/runs/20261016-regression-02/artifacts/routes-locales-member-en-d-2f8a1-console-and-overflow-census-1440/QA_TEST__my_courses.png` and its error-context; Arabic reproduced independently.
 - Expected: missing/broken optional course media uses the existing neutral AssetImage fallback, with no random image.
 - Status: Confirmed, pending fix after current baseline run. No database changes required.
+
+## BUG-009 — Fresh installation depends on undeclared table default grants
+
+- Severity: High. Layer: database setup / reproducibility.
+- Reproduce: replay the full chain with platform schema/roles but no simulated public DML defaults. On actual QA_TEST_ fixtures, `table-crud.mjs --source-grants` records 248 legitimate CRUD denials (including member own-profile access) with SQLSTATE 42501. The same cases pass when old provider defaults are simulated explicitly before migrations. This does not claim a failure on the deployed project.
+- Evidence: `evidence/BUG-009-before.txt`, `20261016-table-crud-source.json` before-fix copy recorded separately below; original `database-boundaries` also preserves migration-only ACL observations.
+- Approval: user approved the exact proposed SQL for a local migration and tests only on 2026-10-16.
+- Fix: CLI-generated `20261016152338_explicit_datacamp_data_api_grants.sql` grants only the named DataCamp tables according to the existing RLS access model. Public SELECT/contact INSERT and authenticated RLS-governed DML are explicit. Server-only tables remain inaccessible to clients; unrelated public tables and default privileges are unchanged.
+- Validation: 792/792 own/foreign CRUD probes passed with source grants only, and 792/792 passed with old-default simulation. Both replay the complete migration chain and roll each probe back. Legacy promotion security regression also passed; build/lint/type checks are running.
+- Status: Fixed locally; production application remains prohibited pending final approval.
+
+## BUG-010 — Whitespace-only AI prompt consumes a provider request
+
+- Severity: Medium. Layer: backend input validation.
+- Reproduce: configure a dummy server provider key and intercept fetch, then POST prompt containing spaces/newline/tab directly to the actual AI handler. It returns 200 and performs one provider call.
+- Expected: an empty/whitespace-only prompt returns 400 before any provider call, consistent with the UI empty-input contract.
+- Evidence: `evidence/20261016-public-api-before.txt`, final case; other three new API contract tests passed.
+- Status: Confirmed, pending fix. Provider transport is an isolated adapter, not real Gemini.
+
+## BUG-011 — Hidden/stale branches can bypass reachable required questions
+
+- Severity: High. Layer: public forms and SQL validation.
+- Reproduce: question A jumps to required target C, skipping question B; B's stale/supplied answer targets end. UI previously applied B even though B became hidden, and SQL treated B as permission to skip C. The actual RPC accepted a payload without C; a browser change from B=end to A=jump also hid C.
+- Evidence: `evidence/BUG-011-sql-before.txt`, `BUG-011-ui-before.txt` and its run-specific screenshots/trace.
+- Expected: only reachable single-choice/dropdown questions control forward traversal; hidden answers cannot hide later questions or be stored in the selected path.
+- Proposed fix: `proposed-sql/BUG-011.sql` follows the ordered reachable path, validates its required questions, and rejects submitted hidden answers. A corresponding UI traversal fix is required.
+- Approval: user approved local and isolated-QA migrations/testing on 2026-10-16. Status: Approved, pending fix after the critical RLS fix.
+
+## BUG-012 — Clean schema installation leaves users mirror without RLS
+
+- Severity: Critical. Layer: database privacy / installation security.
+- Reproduce: apply only the clean schema migrations (20261013 onward, excluding legacy sample migrations). Catalog shows 33 tables but `users` has RLS disabled. A QA member can SELECT and UPDATE a second QA member's users row. Legacy full-chain replay had enabled RLS earlier, which masked this distinct installation path.
+- Evidence: `evidence/20261016-fresh-schema-before.txt` and `runs/20261016-fresh-schema-before/fresh-schema.json` retain the actual foreign-row read/update results.
+- Fix: CLI-generated `20261016153551_enable_fresh_users_mirror_rls.sql` enables RLS and creates the three existing own/admin policy contracts only if missing. It preserves existing policies, server-only INSERT, protected-field trigger and all rows.
+- Approval: explicit local and isolated-QA approval received; production is excluded.
+- Validation: clean replay now has all 33 tables protected; own read succeeds, foreign SELECT/UPDATE return zero rows. Full-chain source-grants CRUD remains 792/792. Build/lint/explicit type-check passed.
+- Status: Fixed locally; isolated QA schema initialization follows the remaining approved fix. No production changes.

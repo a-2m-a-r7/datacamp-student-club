@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-16T15:36:04.016Z",
+  "scope": "Fresh schema-only migration chain from 20261013 onward, no legacy sample migrations or provider default grants; in-memory only",
+  "migrations": [
+    "20261013000000_missing_schema.sql",
+    "20261013000001_real_operations.sql",
+    "20261013000002_atomic_forms.sql",
+    "20261013000003_auth_notifications.sql",
+    "20261013000004_verified_quizzes.sql",
+    "20261013000005_storage.sql",
+    "20261013000006_verified_badges.sql",
+    "20261013000007_analytics.sql",
+    "20261013000008_member_directory_private.sql",
+    "20261013000009_staff_directory_private.sql",
+    "20261013000010_member_cards.sql",
+    "20261013000011_automatic_course_certificates.sql",
+    "20261014000012_course_growth.sql",
+    "20261014000013_profile_photos.sql",
+    "20261015000014_course_media.sql",
+    "20261015000015_restrict_legacy_promotion.sql",
+    "20261015000016_protect_users_mirror.sql",
+    "20261015000017_restrict_course_counter.sql",
+    "20261015000018_branch_aware_form_validation.sql",
+    "20261016152338_explicit_datacamp_data_api_grants.sql",
+    "20261016153551_enable_fresh_users_mirror_rls.sql"
+  ],
+  "cases": [
+    {
+      "id": "FRESH-33-TABLES-ALL-RLS",
+      "passed": true,
+      "observed": {
+        "count": 33,
+        "withoutRls": []
+      }
+    },
+    {
+      "id": "FRESH-OWN-MIRROR-VISIBLE",
+      "passed": true,
+      "observed": {
+        "rows": 1
+      }
+    },
+    {
+      "id": "FRESH-FOREIGN-MIRROR-PRIVATE",
+      "passed": true,
+      "observed": {
+        "rows": 0
+      }
+    },
+    {
+      "id": "FRESH-FOREIGN-MIRROR-UPDATE-DENIED",
+      "passed": true,
+      "observed": {
+        "rows": 0
+      }
+    }
+  ],
+  "status": "passed"
+}
