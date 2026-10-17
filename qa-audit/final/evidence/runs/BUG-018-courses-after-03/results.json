@@ -1,0 +1,887 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/full.config.ts",
+      "course-presentation.spec.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\full.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-018-courses-after-03/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit",
+        "testIgnore": [
+          "**/.runtime/**",
+          "**/node_modules/**",
+          "**/site-build/**",
+          "**/evidence/**",
+          "**/fix-results/**"
+        ],
+        "testMatch": [
+          "**/fix-tests/*.spec.ts",
+          "**/final/tests/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-018-courses-after-03/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit",
+        "testIgnore": [
+          "**/.runtime/**",
+          "**/node_modules/**",
+          "**/site-build/**",
+          "**/evidence/**",
+          "**/fix-results/**"
+        ],
+        "testMatch": [
+          "**/fix-tests/*.spec.ts",
+          "**/final/tests/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-018-courses-after-03/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit",
+        "testIgnore": [
+          "**/.runtime/**",
+          "**/node_modules/**",
+          "**/site-build/**",
+          "**/evidence/**",
+          "**/fix-results/**"
+        ],
+        "testMatch": [
+          "**/fix-tests/*.spec.ts",
+          "**/final/tests/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-018-courses-after-03\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "1440",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit",
+        "testIgnore": [
+          "**/.runtime/**",
+          "**/node_modules/**",
+          "**/site-build/**",
+          "**/evidence/**",
+          "**/fix-results/**"
+        ],
+        "testMatch": [
+          "**/fix-tests/*.spec.ts",
+          "**/final/tests/*.spec.ts"
+        ],
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "1440"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-018-courses-after-03\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "768",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit",
+        "testIgnore": [
+          "**/.runtime/**",
+          "**/node_modules/**",
+          "**/site-build/**",
+          "**/evidence/**",
+          "**/fix-results/**"
+        ],
+        "testMatch": [
+          "**/fix-tests/*.spec.ts",
+          "**/final/tests/*.spec.ts"
+        ],
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 768,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "768"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-018-courses-after-03\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "375",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit",
+        "testIgnore": [
+          "**/.runtime/**",
+          "**/node_modules/**",
+          "**/site-build/**",
+          "**/evidence/**",
+          "**/fix-results/**"
+        ],
+        "testMatch": [
+          "**/fix-tests/*.spec.ts",
+          "**/final/tests/*.spec.ts"
+        ],
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 375,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "375"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-018-courses-after-03\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node qa-audit/start-local.cjs",
+      "cwd": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp",
+      "url": "http://127.0.0.1:3100",
+      "reuseExistingServer": false,
+      "timeout": 60000
+    }
+  },
+  "suites": [
+    {
+      "title": "final\\tests\\course-presentation.spec.ts",
+      "file": "final/tests/course-presentation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10312,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:04.514Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-6c03b7e4207e26b459e9",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4525,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:14.996Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-bb0e7a35fd62763383b5",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 68,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6164,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:19.536Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-a6a235d4194cc73d060d",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 91,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9909,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:25.718Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-d38131996ccf0e05cd71",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2244,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:35.648Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-7194b47f6dd9e75f4625",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 68,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5175,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:37.899Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-57761cf75731c8f19eaf",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 91,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8734,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:43.963Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-f683f65df41b6a242cf5",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2519,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:52.773Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-9e6128a08a6eab3b937f",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 68,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5259,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:05:55.299Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-da8461c2d8de3a1d7450",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 91,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7734,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:00.565Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-fb205cebd428beb5be5d",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2074,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:08.306Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-24561aa40b9fd22fe3f3",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 68,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4812,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:10.388Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-c4b378711f1081ac69f4",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 91,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8977,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:17.134Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-23cce99f95a96d2f6db2",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3380,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:26.199Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-5982122abfa2677286d4",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 68,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5857,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:29.594Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-3b1370dd581892adec2b",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 91,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10203,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:35.462Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-38790330c1caf3da3a2e",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3701,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:45.681Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-7e0de819ba2800693a1d",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 68,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5358,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:06:49.401Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4aead8b85e43276b756-41612b5b81eb3b280d99",
+          "file": "final/tests/course-presentation.spec.ts",
+          "line": 91,
+          "column": 2
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-17T06:04:49.437Z",
+    "duration": 127871.646,
+    "expected": 18,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

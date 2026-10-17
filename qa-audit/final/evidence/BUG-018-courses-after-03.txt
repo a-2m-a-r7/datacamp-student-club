@@ -1,0 +1,23 @@
+
+Running 18 tests using 1 worker
+
+  ok  1 [1440] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (10.3s)
+  ok  2 [1440] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (4.5s)
+  ok  3 [1440] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (en) (6.2s)
+  ok  4 [1440] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (9.9s)
+  ok  5 [1440] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (2.2s)
+  ok  6 [1440] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (ar) (5.2s)
+  ok  7 [768] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (8.7s)
+  ok  8 [768] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (2.5s)
+  ok  9 [768] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (en) (5.3s)
+  ok 10 [768] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (7.7s)
+  ok 11 [768] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (2.1s)
+  ok 12 [768] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (ar) (4.8s)
+  ok 13 [375] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (9.0s)
+  ok 14 [375] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (3.4s)
+  ok 15 [375] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (en) (5.9s)
+  ok 16 [375] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (10.2s)
+  ok 17 [375] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (3.7s)
+  ok 18 [375] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (ar) (5.4s)
+
+  18 passed (2.1m)

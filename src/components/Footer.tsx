@@ -76,9 +76,9 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-cyber text-sm font-bold mb-6 tracking-widest text-neon-blue">
+            <h2 className="font-cyber text-sm font-bold mb-6 tracking-widest text-neon-blue">
               {t('footer.quick_links', 'Quick Links')}
-            </h4>
+            </h2>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li><Link to="/about" className="hover:text-primary transition-colors">{t('nav.about', 'About Us')}</Link></li>
               <li><Link to="/courses" className="hover:text-primary transition-colors">{t('nav.courses', 'Courses')}</Link></li>
@@ -91,9 +91,9 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-cyber text-sm font-bold mb-6 tracking-widest text-neon-purple">
+            <h2 className="font-cyber text-sm font-bold mb-6 tracking-widest text-neon-purple">
               {isArabic ? 'الدعم والمساعدة' : 'Support'}
-            </h4>
+            </h2>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li><Link to="/faq" className="hover:text-primary transition-colors">{t('nav.faq', 'FAQ')}</Link></li>
               <li><Link to="/contact" className="hover:text-primary transition-colors">{t('nav.contact', 'Contact Us')}</Link></li>
@@ -103,9 +103,9 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-cyber text-sm font-bold mb-6 tracking-widest text-neon-green">
+            <h2 className="font-cyber text-sm font-bold mb-6 tracking-widest text-neon-green">
               {isArabic ? 'معلومات التواصل' : 'Contact Info'}
-            </h4>
+            </h2>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li className="flex items-center space-x-3 rtl:space-x-reverse">
                 <Mail className="w-4 h-4 text-primary shrink-0" />

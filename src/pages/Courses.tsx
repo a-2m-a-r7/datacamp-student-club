@@ -231,9 +231,9 @@ const Courses = () => {
       ) : !error && filteredCourses.length === 0 ? (
         <div className="text-center py-20 border border-dashed border-white/10 rounded-2xl p-8">
           <BookOpen className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
-          <h3 className="text-lg font-cyber text-foreground mb-2">
+          <h2 className="text-lg font-cyber text-foreground mb-2">
             {isArabic ? 'لم يتم العثور على دورات مطابقة' : 'NO_COURSES_MATCHED'}
-          </h3>
+          </h2>
           <p className="text-xs font-mono text-muted-foreground max-w-sm mx-auto mb-6">
             {isArabic
               ? 'لا توجد دورات تدريبية تطابق معايير البحث الحالية. جرب إعادة تعيين الفلاتر أو تغيير كلمة البحث.'

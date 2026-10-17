@@ -155,6 +155,14 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: the final 480-case regression and updated Lighthouse sample are separate remaining gates. No production deployment is claimed.
 - Status: Fixed and validated locally against the isolated QA backend.
 
+## BUG-018 — Empty course and footer headings skip levels
+
+- Severity: Low. Layer: frontend accessibility.
+- Reproduce: the real fresh-production mobile Lighthouse sample reports the empty Courses h3 directly after h1 and footer h4 headings after h2. The failing DOM nodes are preserved in runs/QA_TEST_mobile_lighthouse_fresh_01/courses.json and home.json.
+- Fix: make the empty-state heading and the three independent footer section headings h2. Their classes and layout stay unchanged.
+- Validation: all 18 related course UI regressions pass across EN/AR and 1440/768/375; build, configured lint and explicit type-check pass. Updated production Lighthouse is a final verification gate, not claimed here.
+- Status: Fixed and validated locally; no schema change.
+
 ## BUG-017 — Password visibility buttons have a 16px touch target
 
 - Severity: Medium. Layer: frontend accessibility / authentication controls.
