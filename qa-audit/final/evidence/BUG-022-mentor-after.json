@@ -1,0 +1,7 @@
+{
+  "checkedAt": "2026-10-17T09:18:36.1048613+03:00",
+  "target": "http://127.0.0.1:3200/api/ai/chat",
+  "status": 200,
+  "model": "gemini-flash-latest",
+  "text": "QA_TEST_AI_OK"
+}

@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-17T06:17:13.531Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "syntheticVideo": "QA_TEST_Python_Basics.mp4",
+  "steps": [
+    {
+      "action": "prepare",
+      "http": 200,
+      "status": "active"
+    },
+    {
+      "action": "status",
+      "http": 200,
+      "status": "active"
+    },
+    {
+      "action": "generate",
+      "http": 200,
+      "status": "ready"
+    }
+  ],
+  "limits": "One actual synthetic video, free QA project; no 2GiB upload or sustained analysis capacity proof.",
+  "ready": true,
+  "questionCount": 3,
+  "bilingual": true,
+  "exerciseLanguage": "python"
+}

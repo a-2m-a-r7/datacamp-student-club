@@ -31,7 +31,7 @@ export default async function handler(req: any, res: any) {
   }
 
   const cleanApiKey = apiKey.trim();
-  const models = ['gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-2.0-flash'];
+  const models = [...new Set([process.env.GEMINI_CHAT_MODEL || 'gemini-flash-latest', 'gemini-flash-lite-latest'])];
 
   const contents = [
     ...(systemPrompt
@@ -46,10 +46,10 @@ export default async function handler(req: any, res: any) {
 
   for (const model of models) {
     try {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanApiKey}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
       const apiRes = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': cleanApiKey },
         body: JSON.stringify({
           contents,
           generationConfig: {

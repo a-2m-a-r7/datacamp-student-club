@@ -163,6 +163,16 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: the final 480-case regression and updated Lighthouse sample are separate remaining gates. No production deployment is claimed.
 - Status: Fixed and validated locally against the isolated QA backend.
 
+## BUG-022 — Retired Gemini defaults fail for a newly configured account
+
+- Severity: High. Layer: AI provider compatibility.
+- Reproduce: actual QA uploads and processes the synthetic course video, but generate returns HTTP 400. A direct diagnostic request establishes the cause: Gemini returns 404 NOT_FOUND because gemini-2.5-flash is unavailable to new users. Mentor fallback models are older retired names too.
+- Evidence: QA_TEST_actual_gemini.json, QA_TEST_gemini_diagnosis.json. A model catalogue listing alone was not counted as inference success.
+- Fix: default course analysis to gemini-flash-latest and mentor to configurable GEMINI_CHAT_MODEL with current Flash/Flash-Lite aliases. Retain GEMINI_COURSE_MODEL override. Use the x-goog-api-key header for mentor calls instead of a query-string credential. Update the environment example.
+- Validation: actual QA generation returns 200 with a validated three-question bilingual plan and Python exercise; manual review matches all questions and the exercise to the synthetic video's three slides. Actual mentor API returns the requested QA token. Four local public API contracts plus build/lint/explicit type-check pass. Evidence: BUG-022-gemini-after.json, BUG-022-mentor-after.json, BUG-022-api-contracts.txt.
+- Limits: generated-lesson application and learner execution are separate end-to-end gates. Aliases and free quotas remain provider-managed; no billing was enabled and no production setting changed.
+- Status: Fixed and verified locally with the real isolated provider.
+
 ## BUG-018 — Empty course and footer headings skip levels
 
 - Severity: Low. Layer: frontend accessibility.
