@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {QuizText} from './QuizText';
 import { QuizQuestion } from '../types';
 import { quizText } from '../lib/quizLanguage';
 import { Button } from './ui/Button';
@@ -161,7 +162,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
         <div className="space-y-6 py-2">
           <div className="space-y-2">
             <h3 className="text-base sm:text-lg font-semibold text-white leading-relaxed">
-              {currentQ.question}
+              <QuizText text={currentQ.question}/>
             </h3>
           </div>
 
@@ -288,7 +289,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
                 >
                   <div className="flex items-start justify-between gap-2">
                     <span className="font-semibold text-white">
-                      {isArabic ? `س${idx + 1}: ` : `Q${idx + 1}: `}{q.question}
+                      {isArabic ? `س${idx + 1}: ` : `Q${idx + 1}: `}<QuizText text={q.question}/>
                     </span>
                     {isCorrect ? (
                       <span className="text-emerald-400 font-bold flex items-center gap-1">

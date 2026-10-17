@@ -201,6 +201,14 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: append/retry/concurrent/resync scenarios are separate remaining provider tests; this entry proves creation and header read-back only.
 - Status: Fixed and verified with the isolated Google/Supabase QA services; production excluded.
 
+## BUG-026 — Quiz code fences display as collapsed prose
+
+- Severity: Medium. Layer: educational content rendering.
+- Reproduce: real generated Python questions show Markdown fences and lose code indentation in the review/learner UI. Six corrected before cases confirm that no code block is rendered; an earlier fixture used a nonexistent column and is retained as a harness failure.
+- Fix: a small text-only QuizText renderer preserves fenced-code lines and indentation with LTR direction in admin review and both quiz runners, including the results view. HTML remains escaped by React; no HTML or external renderer is introduced.
+- Validation: build, configured lint and explicit type-check pass. Twelve EN/AR browser cases across all three widths verify admin review, both runners, exact multiline content, escaped script text, no script execution and no horizontal overflow. The first after run had an ambiguous main locator; it was corrected without changing product behavior. Evidence: BUG-026-code-after-02.txt and matching run.
+- Status: Fixed and verified locally.
+
 ## BUG-024 — Google Sheets retries duplicate responses and retain removed columns
 
 - Severity: High. Layer: real external sync / concurrent writes.

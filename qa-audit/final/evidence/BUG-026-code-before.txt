@@ -1,0 +1,228 @@
+
+Running 6 tests using 1 worker
+
+  x  1 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (1.6s)
+  x  2 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (1.2s)
+  x  3 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (1.2s)
+  x  4 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (1.2s)
+  x  5 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (1.3s)
+  x  6 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (1.3s)
+
+
+  1) [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    error: column "quiz_passing_score" of relation "lessons" does not exist
+        at pe.Ue (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:17959)
+        at pe.tt (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:15347)
+        at pe.parse (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:14021)
+        at D.Ne (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1763)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1155
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5951576)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2629075)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2661584)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2662188)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5597545)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:4118241)
+        at Object.Module._PostgresMainLongJmp (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:213704)
+        at D.execProtocolRawSync (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:305828)
+        at D.execProtocolRaw (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306072)
+        at D.execProtocolStream (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306729)
+        at D.y (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2057)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2282
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    error: column "quiz_passing_score" of relation "lessons" does not exist
+        at pe.Ue (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:17959)
+        at pe.tt (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:15347)
+        at pe.parse (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:14021)
+        at D.Ne (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1763)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1155
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5951576)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2629075)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2661584)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2662188)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5597545)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:4118241)
+        at Object.Module._PostgresMainLongJmp (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:213704)
+        at D.execProtocolRawSync (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:305828)
+        at D.execProtocolRaw (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306072)
+        at D.execProtocolStream (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306729)
+        at D.y (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2057)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2282
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    error: column "quiz_passing_score" of relation "lessons" does not exist
+        at pe.Ue (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:17959)
+        at pe.tt (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:15347)
+        at pe.parse (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:14021)
+        at D.Ne (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1763)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1155
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5951576)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2629075)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2661584)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2662188)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5597545)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:4118241)
+        at Object.Module._PostgresMainLongJmp (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:213704)
+        at D.execProtocolRawSync (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:305828)
+        at D.execProtocolRaw (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306072)
+        at D.execProtocolStream (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306729)
+        at D.y (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2057)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2282
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    error: column "quiz_passing_score" of relation "lessons" does not exist
+        at pe.Ue (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:17959)
+        at pe.tt (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:15347)
+        at pe.parse (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:14021)
+        at D.Ne (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1763)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1155
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5951576)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2629075)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2661584)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2662188)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5597545)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:4118241)
+        at Object.Module._PostgresMainLongJmp (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:213704)
+        at D.execProtocolRawSync (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:305828)
+        at D.execProtocolRaw (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306072)
+        at D.execProtocolStream (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306729)
+        at D.y (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2057)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2282
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    error: column "quiz_passing_score" of relation "lessons" does not exist
+        at pe.Ue (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:17959)
+        at pe.tt (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:15347)
+        at pe.parse (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:14021)
+        at D.Ne (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1763)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1155
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5951576)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2629075)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2661584)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2662188)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5597545)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:4118241)
+        at Object.Module._PostgresMainLongJmp (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:213704)
+        at D.execProtocolRawSync (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:305828)
+        at D.execProtocolRaw (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306072)
+        at D.execProtocolStream (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306729)
+        at D.y (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2057)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2282
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    error: column "quiz_passing_score" of relation "lessons" does not exist
+        at pe.Ue (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:17959)
+        at pe.tt (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:15347)
+        at pe.parse (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-2BOC2OMW.js:1:14021)
+        at D.Ne (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1763)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1155
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5951576)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2629075)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2661584)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:2662188)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:5597545)
+        at null.<anonymous> (wasm://wasm/0269e01e:1:4118241)
+        at Object.Module._PostgresMainLongJmp (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:213704)
+        at D.execProtocolRawSync (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:305828)
+        at D.execProtocolRaw (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306072)
+        at D.execProtocolStream (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:3:306729)
+        at D.y (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2057)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\chunk-JDT7TZ73.js:8:2282
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+    [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+    [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 

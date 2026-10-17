@@ -1,0 +1,252 @@
+
+Running 6 tests using 1 worker
+
+  x  1 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (22.0s)
+  x  2 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (22.1s)
+  x  3 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (22.1s)
+  x  4 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (22.0s)
+  x  5 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (22.0s)
+  x  6 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (22.1s)
+
+
+  1) [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('main code[data-quiz-code]')
+    Expected: 1
+    Received: 0
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('main code[data-quiz-code]') with timeout 20000ms
+      - waiting for locator('main code[data-quiz-code]')
+        43 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                  ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('main code[data-quiz-code]')
+    Expected: 1
+    Received: 0
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('main code[data-quiz-code]') with timeout 20000ms
+      - waiting for locator('main code[data-quiz-code]')
+        43 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                  ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('main code[data-quiz-code]')
+    Expected: 1
+    Received: 0
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('main code[data-quiz-code]') with timeout 20000ms
+      - waiting for locator('main code[data-quiz-code]')
+        43 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                  ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('main code[data-quiz-code]')
+    Expected: 1
+    Received: 0
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('main code[data-quiz-code]') with timeout 20000ms
+      - waiting for locator('main code[data-quiz-code]')
+        43 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                  ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('main code[data-quiz-code]')
+    Expected: 1
+    Received: 0
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('main code[data-quiz-code]') with timeout 20000ms
+      - waiting for locator('main code[data-quiz-code]')
+        43 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                  ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('main code[data-quiz-code]')
+    Expected: 1
+    Received: 0
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('main code[data-quiz-code]') with timeout 20000ms
+      - waiting for locator('main code[data-quiz-code]')
+        43 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                  ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-before-02\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+    [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+    [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 

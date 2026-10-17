@@ -1,0 +1,17 @@
+
+Running 12 tests using 1 worker
+
+  ok  1 [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (2.9s)
+  ok  2 [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (4.2s)
+  ok  3 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (4.8s)
+  ok  4 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (4.6s)
+  ok  5 [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (2.9s)
+  ok  6 [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (3.2s)
+  ok  7 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (4.9s)
+  ok  8 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (5.5s)
+  ok  9 [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (2.5s)
+  ok 10 [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (4.1s)
+  ok 11 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (4.8s)
+  ok 12 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (4.8s)
+
+  12 passed (54.5s)

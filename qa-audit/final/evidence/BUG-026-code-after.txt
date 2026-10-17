@@ -1,0 +1,223 @@
+
+Running 12 tests using 1 worker
+
+  ok  1 [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (2.8s)
+  ok  2 [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (5.6s)
+  x   3 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (3.8s)
+  x   4 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (2.5s)
+  ok  5 [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (2.6s)
+  ok  6 [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (4.2s)
+  x   7 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (4.1s)
+  x   8 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (2.4s)
+  ok  9 [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (2.5s)
+  ok 10 [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (4.2s)
+  x  11 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (4.3s)
+  x  12 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (2.4s)
+
+
+  1) [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:
+        1) <main class="flex-grow w-full min-h-screen">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })
+        2) <main class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')
+
+    Call log:
+      - waiting for locator('main')
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:401
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:
+        1) <main class="flex-grow w-full min-h-screen">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })
+        2) <main class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')
+
+    Call log:
+      - waiting for locator('main')
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:401
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:
+        1) <main class="flex-grow w-full min-h-screen">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })
+        2) <main class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')
+
+    Call log:
+      - waiting for locator('main')
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:401
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:
+        1) <main class="flex-grow w-full min-h-screen">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })
+        2) <main class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')
+
+    Call log:
+      - waiting for locator('main')
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:401
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+
+    Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:
+        1) <main class="flex-grow w-full min-h-screen">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })
+        2) <main class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')
+
+    Call log:
+      - waiting for locator('main')
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').first().innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:401
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+
+    Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:
+        1) <main class="flex-grow w-full min-h-screen">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })
+        2) <main class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')
+
+    Call log:
+      - waiting for locator('main')
+
+
+       8 |  await p.connect(page,member,language);
+       9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){
+    > 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').first().innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});
+      12 |  }
+      13 | });
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\quiz-code-layout.spec.ts:10:401
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-026-code-after\artifacts\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+    [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+    [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en 
+    [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar 
+  6 passed (47.2s)
