@@ -1,0 +1,11 @@
+
+Running 6 tests using 1 worker
+
+  ok 1 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:23:1 › Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists (6.4s)
+  ok 2 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:31:1 › Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data (4.6s)
+  ok 3 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:23:1 › Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists (5.0s)
+  ok 4 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:31:1 › Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data (4.7s)
+  ok 5 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:23:1 › Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists (5.7s)
+  ok 6 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:31:1 › Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data (3.9s)
+
+  6 passed (43.6s)

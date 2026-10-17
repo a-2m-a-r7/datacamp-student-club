@@ -1,6 +1,15 @@
 # Confirmed bug log
 
-Only reproduced failures are entered here. Source inventory concerns remain pending until triggered. All results are local-only; no production database was contacted.
+## BUG-030 — Footer overlaps long page content and blocks administrator actions
+
+- Severity: High. Layer: application layout / interaction regression.
+- Reproduce: the 498-case complete run ends with 496 passes and two real click failures: Settings save and mobile Gallery delete. The footer/header/floating control intercept clicks. Six focused EN/AR geometry cases reproduce the footer starting at y=397 while the save button extends to y=868.
+- Cause: the route wrapper's h-full resolves against the main area's reserved minimum height instead of growing with long content, while flex shrinking permits content to overflow into the footer.
+- Fix: let the route wrapper use its natural height and prevent main from shrinking; keep the loading minimum height that solved CLS. No branding or page content is changed.
+- Validation: build, configured lint and explicit type-check pass. Six EN/AR geometry-and-save/delete cases and all six original Gallery/Content/Settings regressions pass at 1440/768/375. Evidence: BUG-030-flow-before/after, BUG-030-related-after and their logs. The complete current-source rerun and loading-layout regression remain separate final gates.
+- Status: Fixed and targeted checks passed; complete rerun pending.
+
+Only reproduced failures are entered here. Source inventory concerns remain pending until triggered. Results distinguish isolated local SQL/browser adapters from real hosted QA providers. Production is excluded throughout.
 
 ## BUG-001 — QA launcher can inherit production integration configuration
 
@@ -145,6 +154,43 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Validation: all six EN/AR × 1440/768/375 keyboard regressions pass, submit through the real migrated SQL and persist a response. Build, configured lint and explicit type-check passed.
 - Status: Fixed and validated locally; no schema change.
 
+## BUG-015 — Returning to the final section can submit without pressing Submit
+
+- Severity: High. Layer: frontend forms / unintended save.
+- Reproduce: fill a two-section form including its attachment, return to the first section, then click Next. Instead of showing the final section for review, the response is saved and the success page appears. Both locales reproduce it.
+- Evidence: runs/BUG-014-form-inputs-before, all-14-types cases: the number field expected after Next is absent because the actual success page is already rendered.
+- Expected: Next only changes sections; saving requires the explicit Submit action.
+- Cause: React reuses the same button across Next and Submit branches and changes its type during the click before the browser's default action.
+- Fix: give Next and Submit distinct React keys and cancel Next's browser default before advancing sections.
+- Validation: all 24 form regressions pass, including all 14 types, Arabic/emoji/injection text, attachment persistence, previous/next retained answers and zero stored responses until explicit Submit, both languages and three widths. QA build, configured lint and explicit type-check passed. Evidence: BUG-015-forms-after.txt and runs/BUG-015-forms-after.
+- Status: Fixed and validated locally; no schema change.
+
+## BUG-016 — Declared Node minimum contradicts locked Supabase packages
+
+- Severity: Low. Layer: installation / compatibility metadata.
+- Reproduce: root package.json and lockfile advertise Node >=20; installed/locked @supabase/supabase-js and auth-js 2.117.3 both require Node >=22. The root contract therefore accepts an unsupported runtime.
+- Evidence: BUG-016-engine-contract.json reads actual package metadata and the previous committed root manifest without executing Node20. No Node20 runtime success or failure is claimed.
+- Fix: root manifest and root lockfile metadata now require Node >=22. No dependency version or integrity changes.
+- Validation: QA build, configured lint and explicit type-check passed on recorded Node25.8.0; clean clone/install is a separate final gate.
+- Status: Fixed and validated locally.
+
+## BUG-017 — Password visibility buttons have a 16px touch target
+
+- Severity: Medium. Layer: frontend accessibility / authentication controls.
+- Reproduce: mobile Lighthouse on the real fresh-clone production build flags the login visibility control as a 16×16px target. The same pattern appears in Register and Reset Password. Six local before cases reproduce the undersized control in both languages.
+- Evidence: runs/QA_TEST_mobile_lighthouse_fresh_01/login.json, runs/BUG-017-password-before. The first after run used an exact floating-point 40px comparison during the route transition; 39.999px rounding was a test-oracle failure, retained separately.
+- Fix: 40px button hit areas, input text padding to match, visible keyboard focus, translated show/hide labels and aria-pressed. Existing password values and submit handlers are unchanged.
+- Validation: all 18 EN/AR × 1440/768/375 × login/register/reset cases pass in runs/BUG-017-password-after-02, including real bounds after the transition, Space/Enter toggles, value preservation and no horizontal overflow. QA build, configured lint and explicit type-check passed. These tests do not submit a password change to a real provider.
+- Status: Fixed and validated locally; full-suite rerun after subsequent audit fixes remains pending.
+
+## BUG-018 — Empty course and footer headings skip levels
+
+- Severity: Low. Layer: frontend accessibility.
+- Reproduce: the real fresh-production mobile Lighthouse sample reports the empty Courses h3 directly after h1 and footer h4 headings after h2. The failing DOM nodes are preserved in runs/QA_TEST_mobile_lighthouse_fresh_01/courses.json and home.json.
+- Fix: make the empty-state heading and the three independent footer section headings h2. Their classes and layout stay unchanged.
+- Validation: all 18 related course UI regressions pass across EN/AR and 1440/768/375; build, configured lint and explicit type-check pass. Updated production Lighthouse is a final verification gate, not claimed here.
+- Status: Fixed and validated locally; no schema change.
+
 ## BUG-019 — robots.txt resolves to the SPA HTML document
 
 - Severity: Low. Layer: deployment assets / SEO.
@@ -162,6 +208,16 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Validation: production-after-06 passes all three actual Chromium workflows: Login/Courses do not request PDF/chart packages, an administrator reads real hosted QA growth data and renders its month axis, and a member completes a real QA course then downloads a genuine PDF certificate. Synthetic course/certificate rows are removed in teardown. Final build, configured lint and explicit type-check pass; the final production build has no circular-chunk warnings.
 - Limits: the final 480-case regression and updated Lighthouse sample are separate remaining gates. No production deployment is claimed.
 - Status: Fixed and validated locally against the isolated QA backend.
+
+## BUG-021 — Automatic Sheets creation fails with a consumer service-account setup
+
+- Severity: High. Layer: Google Sheets integration / setup compatibility.
+- Reproduce: a real new QA service account, with Sheets and Drive APIs enabled and its private key configured, returns HTTP 500 from sync-sheet; Google reports the caller has no permission when creating the spreadsheet. Responses remain in Supabase.
+- Evidence: QA_TEST_actual_sheets_before.json. No successful sheet creation was inferred from configuration or mocks.
+- Fix: use the form creator's already-connected Drive OAuth account for app-owned Sheets when available; drive.file already covers these files. Retain service-account support for existing spreadsheet setups. The OAuth owner already owns the spreadsheet, so this path sends no sharing email. Update the setup guidance without adding scopes, IAM roles or database objects.
+- Validation: actual sync-sheet returns 200, persists its spreadsheet reference and writes a real QA_TEST spreadsheet; a separate Google Sheets read verifies the exact five-cell header. Build, configured lint, explicit type-check and four API boundary regressions pass. Evidence: BUG-021-sheets-after.json and BUG-021-api-contracts.txt.
+- Limits: append/retry/concurrent/resync scenarios are separate remaining provider tests; this entry proves creation and header read-back only.
+- Status: Fixed and verified with the isolated Google/Supabase QA services; production excluded.
 
 ## BUG-022 — Retired Gemini defaults fail for a newly configured account
 
@@ -182,41 +238,6 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Evidence: runs/BUG-023-loading-before, runs/BUG-023-loading-after and runs/BUG-023-lighthouse-after.
 - Status: Fixed and validated locally; no schema change or deployment.
 
-## BUG-028 — Embedded Run Code discards standard input
-
-- Severity: High. Layer: course coding runner.
-- Reproduce: the actual Gemini Python exercise calls input(). A real QA learner plays the Drive video, passes the bilingual quiz and opens Coding. Run Code invokes the language runner with no input; the correct solution raises ValueError from an empty input instead of printing 14. The enrollment correctly remains at 67%.
-- Evidence: runs/QA_TEST_actual_course_before_02 includes the actual video/quiz screenshots, terminal failure and persisted-state observations. The preceding run's 36s duration expectation was a QA fixture-oracle error; FFmpeg confirms the existing test video is 48s.
-- Fix: add an editable, labelled stdin field initialized from the instructor's first case; Run uses it, Reset restores it, and Submit continues to grade all configured cases independently.
-- Validation: all six EN/AR × 1440/768/375 browser/SQL regressions pass. Manual input 7 produces 14 without completing the lesson; reset restores input 3; Submit grades inputs 3 and 4, persists completion and automatically issues one certificate. Build/lint/explicit type-check pass. The actual Python provider flow remains a separate final gate.
-- Status: Fixed and validated locally; no database schema change.
-
-## BUG-021 — Automatic Sheets creation fails with a consumer service-account setup
-
-- Severity: High. Layer: Google Sheets integration / setup compatibility.
-- Reproduce: a real new QA service account, with Sheets and Drive APIs enabled and its private key configured, returns HTTP 500 from sync-sheet; Google reports the caller has no permission when creating the spreadsheet. Responses remain in Supabase.
-- Evidence: QA_TEST_actual_sheets_before.json. No successful sheet creation was inferred from configuration or mocks.
-- Fix: use the form creator's already-connected Drive OAuth account for app-owned Sheets when available; drive.file already covers these files. Retain service-account support for existing spreadsheet setups. The OAuth owner already owns the spreadsheet, so this path sends no sharing email. Update the setup guidance without adding scopes, IAM roles or database objects.
-- Validation: actual sync-sheet returns 200, persists its spreadsheet reference and writes a real QA_TEST spreadsheet; a separate Google Sheets read verifies the exact five-cell header. Build, configured lint, explicit type-check and four API boundary regressions pass. Evidence: BUG-021-sheets-after.json and BUG-021-api-contracts.txt.
-- Limits: append/retry/concurrent/resync scenarios are separate remaining provider tests; this entry proves creation and header read-back only.
-- Status: Fixed and verified with the isolated Google/Supabase QA services; production excluded.
-
-## BUG-027 — Small saved materials and subtitles display as 1 MB
-
-- Severity: Low. Layer: course file metadata display.
-- Reproduce: the real saved 335-byte material and 243-byte captions both display 1 MB because the UI rounds every size upward to a whole megabyte. Actual QA browser before evidence confirms the wrong text.
-- Fix: select B/KiB/MiB/GiB from the saved byte count and format the value for the active language, without changing files or stored sizes.
-- Validation: build, configured lint and explicit type-check pass; all six actual QA admin browser cases pass in EN/AR at 1440/768/375, reading the same real saved files. Evidence: BUG-027-sizes-before.txt, BUG-027-sizes-after.txt and the matching browser runs.
-- Status: Fixed and verified on isolated QA.
-
-## BUG-026 — Quiz code fences display as collapsed prose
-
-- Severity: Medium. Layer: educational content rendering.
-- Reproduce: real generated Python questions show Markdown fences and lose code indentation in the review/learner UI. Six corrected before cases confirm that no code block is rendered; an earlier fixture used a nonexistent column and is retained as a harness failure.
-- Fix: a small text-only QuizText renderer preserves fenced-code lines and indentation with LTR direction in admin review and both quiz runners, including the results view. HTML remains escaped by React; no HTML or external renderer is introduced.
-- Validation: build, configured lint and explicit type-check pass. Twelve EN/AR browser cases across all three widths verify admin review, both runners, exact multiline content, escaped script text, no script execution and no horizontal overflow. The first after run had an ambiguous main locator; it was corrected without changing product behavior. Evidence: BUG-026-code-after-02.txt and matching run.
-- Status: Fixed and verified locally.
-
 ## BUG-024 — Google Sheets retries duplicate responses and retain removed columns
 
 - Severity: High. Layer: real external sync / concurrent writes.
@@ -227,14 +248,6 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: user approved migration locally and in Supabase QA only. No production application or 1000 simultaneous hosted-user claim. An interrupted request may need Resync all after lease expiry; no unapproved scheduler was introduced.
 - Status: Fixed and verified in local/real isolated QA.
 
-## BUG-029 — Enrollment promises a different XP award from the saved result
-
-- Severity: Medium. Layer: course enrollment / profile data.
-- Reproduce: actual QA enrollment shows +50 XP in the toast while the persisted profile increases by 5. The CTA also assumes a fixed award although administrators can configure it.
-- Fix: confirm successful enrollment without inventing an XP number and refresh the saved profile. Enrollment remains server-authoritative.
-- Validation: build, configured lint and explicit type-check pass. Actual QA browser enrollment displays the corrected confirmation, records the database XP delta, then completes real Drive video, Arabic/English quiz and Python grading, persists 100% completion and one automatic certificate, and downloads a real PDF. Evidence: runs/QA_TEST_actual_course_after_03 and BUG-029 gate logs.
-- Status: Fixed and verified against isolated QA; no production write.
-
 ## BUG-025 — Applying a reviewed learning plan shows an ineffective Pause button
 
 - Severity: Medium. Layer: frontend lesson administration.
@@ -243,39 +256,35 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Validation: build, configured lint and explicit type-check passed. All 30 related browser cases pass: plan save state, real isolated SQL creation of two derived lessons, stdin grading and upload/card regressions in both languages at 1440/768/375. Evidence: BUG-025-apply-after.txt, runs/BUG-025-apply-after. No real provider inference is mocked as a pass here.
 - Status: Fixed and verified locally; production excluded.
 
-## BUG-018 — Empty course and footer headings skip levels
+## BUG-026 — Quiz code fences display as collapsed prose
 
-- Severity: Low. Layer: frontend accessibility.
-- Reproduce: the real fresh-production mobile Lighthouse sample reports the empty Courses h3 directly after h1 and footer h4 headings after h2. The failing DOM nodes are preserved in runs/QA_TEST_mobile_lighthouse_fresh_01/courses.json and home.json.
-- Fix: make the empty-state heading and the three independent footer section headings h2. Their classes and layout stay unchanged.
-- Validation: all 18 related course UI regressions pass across EN/AR and 1440/768/375; build, configured lint and explicit type-check pass. Updated production Lighthouse is a final verification gate, not claimed here.
-- Status: Fixed and validated locally; no schema change.
+- Severity: Medium. Layer: educational content rendering.
+- Reproduce: real generated Python questions show Markdown fences and lose code indentation in the review/learner UI. Six corrected before cases confirm that no code block is rendered; an earlier fixture used a nonexistent column and is retained as a harness failure.
+- Fix: a small text-only QuizText renderer preserves fenced-code lines and indentation with LTR direction in admin review and both quiz runners, including the results view. HTML remains escaped by React; no HTML or external renderer is introduced.
+- Validation: build, configured lint and explicit type-check pass. Twelve EN/AR browser cases across all three widths verify admin review, both runners, exact multiline content, escaped script text, no script execution and no horizontal overflow. The first after run had an ambiguous main locator; it was corrected without changing product behavior. Evidence: BUG-026-code-after-02.txt and matching run.
+- Status: Fixed and verified locally.
 
-## BUG-017 — Password visibility buttons have a 16px touch target
+## BUG-027 — Small saved materials and subtitles display as 1 MB
 
-- Severity: Medium. Layer: frontend accessibility / authentication controls.
-- Reproduce: mobile Lighthouse on the real fresh-clone production build flags the login visibility control as a 16×16px target. The same pattern appears in Register and Reset Password. Six local before cases reproduce the undersized control in both languages.
-- Evidence: runs/QA_TEST_mobile_lighthouse_fresh_01/login.json, runs/BUG-017-password-before. The first after run used an exact floating-point 40px comparison during the route transition; 39.999px rounding was a test-oracle failure, retained separately.
-- Fix: 40px button hit areas, input text padding to match, visible keyboard focus, translated show/hide labels and aria-pressed. Existing password values and submit handlers are unchanged.
-- Validation: all 18 EN/AR × 1440/768/375 × login/register/reset cases pass in runs/BUG-017-password-after-02, including real bounds after the transition, Space/Enter toggles, value preservation and no horizontal overflow. QA build, configured lint and explicit type-check passed. These tests do not submit a password change to a real provider.
-- Status: Fixed and validated locally; full-suite rerun after subsequent audit fixes remains pending.
+- Severity: Low. Layer: course file metadata display.
+- Reproduce: the real saved 335-byte material and 243-byte captions both display 1 MB because the UI rounds every size upward to a whole megabyte. Actual QA browser before evidence confirms the wrong text.
+- Fix: select B/KiB/MiB/GiB from the saved byte count and format the value for the active language, without changing files or stored sizes.
+- Validation: build, configured lint and explicit type-check pass; all six actual QA admin browser cases pass in EN/AR at 1440/768/375, reading the same real saved files. Evidence: BUG-027-sizes-before.txt, BUG-027-sizes-after.txt and the matching browser runs.
+- Status: Fixed and verified on isolated QA.
 
-## BUG-016 — Declared Node minimum contradicts locked Supabase packages
+## BUG-028 — Embedded Run Code discards standard input
 
-- Severity: Low. Layer: installation / compatibility metadata.
-- Reproduce: root package.json and lockfile advertise Node >=20; installed/locked @supabase/supabase-js and auth-js 2.117.3 both require Node >=22. The root contract therefore accepts an unsupported runtime.
-- Evidence: BUG-016-engine-contract.json reads actual package metadata and the previous committed root manifest without executing Node20. No Node20 runtime success or failure is claimed.
-- Fix: root manifest and root lockfile metadata now require Node >=22. No dependency version or integrity changes.
-- Validation: QA build, configured lint and explicit type-check passed on recorded Node25.8.0; clean clone/install is a separate final gate.
-- Status: Fixed and validated locally.
+- Severity: High. Layer: course coding runner.
+- Reproduce: the actual Gemini Python exercise calls input(). A real QA learner plays the Drive video, passes the bilingual quiz and opens Coding. Run Code invokes the language runner with no input; the correct solution raises ValueError from an empty input instead of printing 14. The enrollment correctly remains at 67%.
+- Evidence: runs/QA_TEST_actual_course_before_02 includes the actual video/quiz screenshots, terminal failure and persisted-state observations. The preceding run's 36s duration expectation was a QA fixture-oracle error; FFmpeg confirms the existing test video is 48s.
+- Fix: add an editable, labelled stdin field initialized from the instructor's first case; Run uses it, Reset restores it, and Submit continues to grade all configured cases independently.
+- Validation: all six EN/AR × 1440/768/375 browser/SQL regressions pass. Manual input 7 produces 14 without completing the lesson; reset restores input 3; Submit grades inputs 3 and 4, persists completion and automatically issues one certificate. Build/lint/explicit type-check pass. The actual Python provider flow remains a separate final gate.
+- Status: Fixed and validated locally; no database schema change.
 
-## BUG-015 — Returning to the final section can submit without pressing Submit
+## BUG-029 — Enrollment promises a different XP award from the saved result
 
-- Severity: High. Layer: frontend forms / unintended save.
-- Reproduce: fill a two-section form including its attachment, return to the first section, then click Next. Instead of showing the final section for review, the response is saved and the success page appears. Both locales reproduce it.
-- Evidence: runs/BUG-014-form-inputs-before, all-14-types cases: the number field expected after Next is absent because the actual success page is already rendered.
-- Expected: Next only changes sections; saving requires the explicit Submit action.
-- Cause: React reuses the same button across Next and Submit branches and changes its type during the click before the browser's default action.
-- Fix: give Next and Submit distinct React keys and cancel Next's browser default before advancing sections.
-- Validation: all 24 form regressions pass, including all 14 types, Arabic/emoji/injection text, attachment persistence, previous/next retained answers and zero stored responses until explicit Submit, both languages and three widths. QA build, configured lint and explicit type-check passed. Evidence: BUG-015-forms-after.txt and runs/BUG-015-forms-after.
-- Status: Fixed and validated locally; no schema change.
+- Severity: Medium. Layer: course enrollment / profile data.
+- Reproduce: actual QA enrollment shows +50 XP in the toast while the persisted profile increases by 5. The CTA also assumes a fixed award although administrators can configure it.
+- Fix: confirm successful enrollment without inventing an XP number and refresh the saved profile. Enrollment remains server-authoritative.
+- Validation: build, configured lint and explicit type-check pass. Actual QA browser enrollment displays the corrected confirmation, records the database XP delta, then completes real Drive video, Arabic/English quiz and Python grading, persists 100% completion and one automatic certificate, and downloads a real PDF. Evidence: runs/QA_TEST_actual_course_after_03 and BUG-029 gate logs.
+- Status: Fixed and verified against isolated QA; no production write.

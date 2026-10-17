@@ -211,7 +211,7 @@ function AppContent() {
           <LanguageSwitcher variant="toggle" />
         </div>
 
-        <main className="flex-grow w-full min-h-screen">
+        <main className="flex-grow shrink-0 w-full min-h-screen">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -222,7 +222,7 @@ function AppContent() {
                 duration: 0.5,
                 ease: [0.22, 1, 0.36, 1] // Custom cubic-bezier for smooth cinematic feel
               }}
-              className="w-full h-full"
+              className="w-full"
             >
               <React.Suspense fallback={<RouteLoadingFallback />}>
                 <Routes location={location}>

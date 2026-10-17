@@ -1,0 +1,210 @@
+
+Running 6 tests using 1 worker
+
+  x  1 [1440] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en (2.4s)
+  x  2 [1440] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar (2.2s)
+  x  3 [768] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en (2.0s)
+  x  4 [768] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar (2.0s)
+  x  5 [375] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en (2.0s)
+  x  6 [375] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar (2.0s)
+
+
+  1) [1440] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en 
+
+    Error: footer must follow the save action
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 867
+    Received:    397
+
+      3 | for(const language of ['en','ar'] as const)test('footer stays after long settings and gallery actions '+language,async({page})=>{
+      4 |  p=await platform();await p.connect(page,admin,language);await page.goto('/admin/settings');const save=page.getByRole('button',{name:'Commit Changes',exact:true});await expect(save).toBeVisible();await save.scrollIntoViewIfNeeded();
+    > 5 |  const settings=await save.evaluate(button=>({buttonBottom:button.getBoundingClientRect().bottom,footerTop:document.querySelector('footer')!.getBoundingClientRect().top}));expect(settings.footerTop,'footer must follow the save action').toBeGreaterThanOrEqual(settings.buttonBottom-1);
+        |                                                                                                                                                                                                                                             ^
+      6 |  await save.click();await expect(page.getByText('Settings updated successfully',{exact:true})).toBeVisible();
+      7 |  const ids=Array.from({length:8},()=>randomUUID());for(const[id,index]of ids.map((id,i)=>[id,i]as const))await p.db.query("INSERT INTO gallery(id,title,url,category) VALUES($1,$2,$3,'Workshops')",[id,'QA_TEST_FLOW_'+index,'https://qa-test.supabase.co/storage/v1/object/public/uploads/gallery/QA_TEST_'+index+'.png']);
+      8 |  await page.goto('/admin/gallery');const remove=page.getByRole('button',{name:'Delete',exact:true}).last();await expect(remove).toBeAttached();await remove.scrollIntoViewIfNeeded();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\content-flow.spec.ts:5:237
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [1440] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar 
+
+    Error: footer must follow the save action
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 867
+    Received:    397
+
+      3 | for(const language of ['en','ar'] as const)test('footer stays after long settings and gallery actions '+language,async({page})=>{
+      4 |  p=await platform();await p.connect(page,admin,language);await page.goto('/admin/settings');const save=page.getByRole('button',{name:'Commit Changes',exact:true});await expect(save).toBeVisible();await save.scrollIntoViewIfNeeded();
+    > 5 |  const settings=await save.evaluate(button=>({buttonBottom:button.getBoundingClientRect().bottom,footerTop:document.querySelector('footer')!.getBoundingClientRect().top}));expect(settings.footerTop,'footer must follow the save action').toBeGreaterThanOrEqual(settings.buttonBottom-1);
+        |                                                                                                                                                                                                                                             ^
+      6 |  await save.click();await expect(page.getByText('Settings updated successfully',{exact:true})).toBeVisible();
+      7 |  const ids=Array.from({length:8},()=>randomUUID());for(const[id,index]of ids.map((id,i)=>[id,i]as const))await p.db.query("INSERT INTO gallery(id,title,url,category) VALUES($1,$2,$3,'Workshops')",[id,'QA_TEST_FLOW_'+index,'https://qa-test.supabase.co/storage/v1/object/public/uploads/gallery/QA_TEST_'+index+'.png']);
+      8 |  await page.goto('/admin/gallery');const remove=page.getByRole('button',{name:'Delete',exact:true}).last();await expect(remove).toBeAttached();await remove.scrollIntoViewIfNeeded();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\content-flow.spec.ts:5:237
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [768] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en 
+
+    Error: footer must follow the save action
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 867
+    Received:    -5
+
+      3 | for(const language of ['en','ar'] as const)test('footer stays after long settings and gallery actions '+language,async({page})=>{
+      4 |  p=await platform();await p.connect(page,admin,language);await page.goto('/admin/settings');const save=page.getByRole('button',{name:'Commit Changes',exact:true});await expect(save).toBeVisible();await save.scrollIntoViewIfNeeded();
+    > 5 |  const settings=await save.evaluate(button=>({buttonBottom:button.getBoundingClientRect().bottom,footerTop:document.querySelector('footer')!.getBoundingClientRect().top}));expect(settings.footerTop,'footer must follow the save action').toBeGreaterThanOrEqual(settings.buttonBottom-1);
+        |                                                                                                                                                                                                                                             ^
+      6 |  await save.click();await expect(page.getByText('Settings updated successfully',{exact:true})).toBeVisible();
+      7 |  const ids=Array.from({length:8},()=>randomUUID());for(const[id,index]of ids.map((id,i)=>[id,i]as const))await p.db.query("INSERT INTO gallery(id,title,url,category) VALUES($1,$2,$3,'Workshops')",[id,'QA_TEST_FLOW_'+index,'https://qa-test.supabase.co/storage/v1/object/public/uploads/gallery/QA_TEST_'+index+'.png']);
+      8 |  await page.goto('/admin/gallery');const remove=page.getByRole('button',{name:'Delete',exact:true}).last();await expect(remove).toBeAttached();await remove.scrollIntoViewIfNeeded();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\content-flow.spec.ts:5:237
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [768] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar 
+
+    Error: footer must follow the save action
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 867
+    Received:    -5
+
+      3 | for(const language of ['en','ar'] as const)test('footer stays after long settings and gallery actions '+language,async({page})=>{
+      4 |  p=await platform();await p.connect(page,admin,language);await page.goto('/admin/settings');const save=page.getByRole('button',{name:'Commit Changes',exact:true});await expect(save).toBeVisible();await save.scrollIntoViewIfNeeded();
+    > 5 |  const settings=await save.evaluate(button=>({buttonBottom:button.getBoundingClientRect().bottom,footerTop:document.querySelector('footer')!.getBoundingClientRect().top}));expect(settings.footerTop,'footer must follow the save action').toBeGreaterThanOrEqual(settings.buttonBottom-1);
+        |                                                                                                                                                                                                                                             ^
+      6 |  await save.click();await expect(page.getByText('Settings updated successfully',{exact:true})).toBeVisible();
+      7 |  const ids=Array.from({length:8},()=>randomUUID());for(const[id,index]of ids.map((id,i)=>[id,i]as const))await p.db.query("INSERT INTO gallery(id,title,url,category) VALUES($1,$2,$3,'Workshops')",[id,'QA_TEST_FLOW_'+index,'https://qa-test.supabase.co/storage/v1/object/public/uploads/gallery/QA_TEST_'+index+'.png']);
+      8 |  await page.goto('/admin/gallery');const remove=page.getByRole('button',{name:'Delete',exact:true}).last();await expect(remove).toBeAttached();await remove.scrollIntoViewIfNeeded();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\content-flow.spec.ts:5:237
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [375] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en 
+
+    Error: footer must follow the save action
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 866
+    Received:    -198
+
+      3 | for(const language of ['en','ar'] as const)test('footer stays after long settings and gallery actions '+language,async({page})=>{
+      4 |  p=await platform();await p.connect(page,admin,language);await page.goto('/admin/settings');const save=page.getByRole('button',{name:'Commit Changes',exact:true});await expect(save).toBeVisible();await save.scrollIntoViewIfNeeded();
+    > 5 |  const settings=await save.evaluate(button=>({buttonBottom:button.getBoundingClientRect().bottom,footerTop:document.querySelector('footer')!.getBoundingClientRect().top}));expect(settings.footerTop,'footer must follow the save action').toBeGreaterThanOrEqual(settings.buttonBottom-1);
+        |                                                                                                                                                                                                                                             ^
+      6 |  await save.click();await expect(page.getByText('Settings updated successfully',{exact:true})).toBeVisible();
+      7 |  const ids=Array.from({length:8},()=>randomUUID());for(const[id,index]of ids.map((id,i)=>[id,i]as const))await p.db.query("INSERT INTO gallery(id,title,url,category) VALUES($1,$2,$3,'Workshops')",[id,'QA_TEST_FLOW_'+index,'https://qa-test.supabase.co/storage/v1/object/public/uploads/gallery/QA_TEST_'+index+'.png']);
+      8 |  await page.goto('/admin/gallery');const remove=page.getByRole('button',{name:'Delete',exact:true}).last();await expect(remove).toBeAttached();await remove.scrollIntoViewIfNeeded();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\content-flow.spec.ts:5:237
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--47982-ings-and-gallery-actions-en-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [375] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar 
+
+    Error: footer must follow the save action
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 850
+    Received:    -214
+
+      3 | for(const language of ['en','ar'] as const)test('footer stays after long settings and gallery actions '+language,async({page})=>{
+      4 |  p=await platform();await p.connect(page,admin,language);await page.goto('/admin/settings');const save=page.getByRole('button',{name:'Commit Changes',exact:true});await expect(save).toBeVisible();await save.scrollIntoViewIfNeeded();
+    > 5 |  const settings=await save.evaluate(button=>({buttonBottom:button.getBoundingClientRect().bottom,footerTop:document.querySelector('footer')!.getBoundingClientRect().top}));expect(settings.footerTop,'footer must follow the save action').toBeGreaterThanOrEqual(settings.buttonBottom-1);
+        |                                                                                                                                                                                                                                             ^
+      6 |  await save.click();await expect(page.getByText('Settings updated successfully',{exact:true})).toBeVisible();
+      7 |  const ids=Array.from({length:8},()=>randomUUID());for(const[id,index]of ids.map((id,i)=>[id,i]as const))await p.db.query("INSERT INTO gallery(id,title,url,category) VALUES($1,$2,$3,'Workshops')",[id,'QA_TEST_FLOW_'+index,'https://qa-test.supabase.co/storage/v1/object/public/uploads/gallery/QA_TEST_'+index+'.png']);
+      8 |  await page.goto('/admin/gallery');const remove=page.getByRole('button',{name:'Delete',exact:true}).last();await expect(remove).toBeAttached();await remove.scrollIntoViewIfNeeded();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\content-flow.spec.ts:5:237
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-030-flow-before\artifacts\content-flow-footer-stays--669fa-ings-and-gallery-actions-ar-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [1440] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en 
+    [1440] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar 
+    [768] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en 
+    [768] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar 
+    [375] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions en 
+    [375] › qa-audit\final\tests\content-flow.spec.ts:3:44 › footer stays after long settings and gallery actions ar 
