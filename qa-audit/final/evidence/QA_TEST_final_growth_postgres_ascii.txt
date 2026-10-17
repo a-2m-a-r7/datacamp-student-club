@@ -1,0 +1,12 @@
+PASS legacy Arabic repair is reversible and preserves valid/mixed text and ratings with actual reviews
+PASS new courses have genuine lesson counts and cannot publish an empty curriculum
+PASS member catalog uses keyset pages beyond 1000 rows without duplicates, including equal timestamps
+PASS Arabic search is generic; large limits are clamped and draft flags cannot bypass RLS
+PASS indexed catalog handles 1000 requests through 20 simultaneous real connections
+PASS concurrent enrollment retries create one enrollment/reward per member and accurate totals
+PASS concurrent lesson/quiz retries issue exactly one linked certificate and only persisted rewards
+PASS a later curriculum edit preserves historical certificates and requires new learners to finish new lessons
+PASS course request throttling is shared across connections, returns 429, and recovers next window
+PASS curriculum edits wait for a real completion transaction, with no mixed curriculum certificate
+PASS removing or renaming a course preserves earned public credentials
+{"passed":11,"metrics":{"catalog":{"requests":1000,"concurrentPool":20,"elapsedMs":308,"p50Ms":192,"p95Ms":295,"errors":0},"enrollment":{"requests":3000,"concurrentPool":20,"elapsedMs":1070,"p50Ms":875,"p95Ms":1047,"errors":0},"lessonCompletion":{"requests":3000,"concurrentPool":20,"elapsedMs":440,"p50Ms":252,"p95Ms":419,"errors":0},"quizCompletion":{"requests":3000,"concurrentPool":20,"elapsedMs":2036,"p50Ms":1239,"p95Ms":1950,"errors":0}}}

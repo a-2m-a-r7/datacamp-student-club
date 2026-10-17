@@ -1,0 +1,11 @@
+Error: Postgres init script failed (code: 1, signal: null). ERROR OUTPUT: invalid binary "C:\Users\AMMAR\OneDrive\Desktop\data camp\???? ???? ??????\ref_datacamp_temp\qa-audit\.runtime\node_modules\@embedded-postgres\windows-x64\native\bin\initdb.exe": No such file or directory
+initdb: error: could not start process for command ""C:\Users\AMMAR\OneDrive\Desktop\data camp\???? ???? ??????\ref_datacamp_temp\qa-audit\.runtime\node_modules\@embedded-postgres\windows-x64\native\bin\initdb.exe" "--pgdata=C:\Users\AMMAR\OneDrive\Desktop\data camp\???? ???? ??????\ref_datacamp_temp\qa-audit\.runtime\final-postgres\qa_run_dc584fa0-923a-4e46-9e38-844bb1dc54a3" --auth=password --username=qa_owner --pwfile=C:\Users\AMMAR\AppData\Local\Temp\pg-password-1k7h1sagrk --lc-messages=C --encoding=UTF8": error code 2
+initdb: error: could not re-execute with restricted token: error code 2
+invalid binary "C:\Users\AMMAR\OneDrive\Desktop\data camp\???? ???? ??????\ref_datacamp_temp\qa-audit\.runtime\node_modules\@embedded-postgres\windows-x64\native\bin\initdb.exe": No such file or directory
+invalid binary "C:\Users\AMMAR\OneDrive\Desktop\data camp\???? ???? ??????\ref_datacamp_temp\qa-audit\.runtime\node_modules\@embedded-postgres\windows-x64\native\bin\initdb.exe": No such file or directory
+initdb: error: program "postgres" is needed by initdb but was not found in the same directory as "initdb"
+
+    at ChildProcess.<anonymous> (file:///C:/Users/AMMAR/OneDrive/Desktop/data%20camp/%D8%AF%D8%A7%D8%AA%D8%A7%20%D9%83%D8%A7%D9%85%D8%A8%20%D8%A7%D9%84%D8%A7%D8%B1%D8%A8%D8%B9/ref_datacamp_temp/qa-audit/.runtime/node_modules/embedded-postgres/dist/index.js:176:36)
+    at ChildProcess.emit (node:events:508:20)
+    at maybeClose (node:internal/child_process:1108:16)
+    at ChildProcess._handle.onexit (node:internal/child_process:305:5)

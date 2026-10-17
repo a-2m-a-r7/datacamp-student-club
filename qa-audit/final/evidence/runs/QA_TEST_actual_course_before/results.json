@@ -1,0 +1,192 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/provider-browser.config.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\provider-browser.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/provider-browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/QA_TEST_actual_course_before/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/provider-browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_actual_course_before\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\provider-browser",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\provider-browser",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3200",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "trace": "off",
+          "video": "off",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost, EXCLUDE kcqgnkfdpfibwkrghubl.supabase.co, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_actual_course_before\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "actual-course.spec.ts",
+      "file": "actual-course.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "actual Drive video, bilingual Gemini quiz, Python practice and certificate",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 51761,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"duration\": 36,\u001b[39m\n\u001b[31m+   \"duration\": 48,\u001b[39m\n\u001b[2m    \"error\": 0,\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 45000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"duration\": 36,\u001b[39m\n\u001b[31m+   \"duration\": 48,\u001b[39m\n\u001b[2m    \"error\": 0,\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 45000ms exceeded while waiting on the predicate\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\provider-browser\\actual-course.spec.ts:27:126",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\provider-browser\\actual-course.spec.ts",
+                      "column": 126,
+                      "line": 27
+                    },
+                    "snippet": "  25 |   }\n  26 |   await page.goto('/courses/'+course.data!.slug+'/learn');const video=page.locator('video');await expect(video).toBeVisible();\n> 27 |   await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>({duration:Math.round(v.duration||0),error:v.error?.code||0}))).toEqual({duration:36,error:0});\n     |                                                                                                                              ^\n  28 |   await video.focus();await video.press('Space');await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(1);await video.press('Space');\n  29 |   await expect.poll(async()=>{const r=await server.from('lesson_watch_progress').select('seconds').eq('user_id',student.id).eq('lesson_id',fixture.lessonId).maybeSingle();return Number(r.data?.seconds||0);}).toBeGreaterThan(0);\n  30 |   notes.nativeVideoPlayed=true;await expect(page.locator('track')).toHaveAttribute('src',/^blob:/);notes.captionsLoaded=true;"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\provider-browser\\actual-course.spec.ts",
+                        "column": 126,
+                        "line": 27
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"duration\": 36,\u001b[39m\n\u001b[31m+   \"duration\": 48,\u001b[39m\n\u001b[2m    \"error\": 0,\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 45000ms exceeded while waiting on the predicate\n\n  25 |   }\n  26 |   await page.goto('/courses/'+course.data!.slug+'/learn');const video=page.locator('video');await expect(video).toBeVisible();\n> 27 |   await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>({duration:Math.round(v.duration||0),error:v.error?.code||0}))).toEqual({duration:36,error:0});\n     |                                                                                                                              ^\n  28 |   await video.focus();await video.press('Space');await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(1);await video.press('Space');\n  29 |   await expect.poll(async()=>{const r=await server.from('lesson_watch_progress').select('seconds').eq('user_id',student.id).eq('lesson_id',fixture.lessonId).maybeSingle();return Number(r.data?.seconds||0);}).toBeGreaterThan(0);\n  30 |   notes.nativeVideoPlayed=true;await expect(page.locator('track')).toHaveAttribute('src',/^blob:/);notes.captionsLoaded=true;\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\provider-browser\\actual-course.spec.ts:27:126"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:32:49.106Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_actual_course_before\\artifacts\\actual-course-actual-Drive-e0f84-on-practice-and-certificate\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_actual_course_before\\artifacts\\actual-course-actual-Drive-e0f84-on-practice-and-certificate\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\provider-browser\\actual-course.spec.ts",
+                    "column": 126,
+                    "line": 27
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ef724db499528e959455-bd8c9b7825a60d1dbe15",
+          "file": "actual-course.spec.ts",
+          "line": 14,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-17T06:32:48.703Z",
+    "duration": 54551.925,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

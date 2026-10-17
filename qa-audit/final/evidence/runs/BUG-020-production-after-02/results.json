@@ -1,0 +1,330 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/production.config.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/production-tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-020-production-after-02/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/production-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-02\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3301",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "trace": "off",
+          "video": "off",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost, EXCLUDE kcqgnkfdpfibwkrghubl.supabase.co, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-02\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "lazy-features.spec.ts",
+      "file": "lazy-features.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "public pages defer PDF and chart packages",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1819,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at http://127.0.0.1:3301/login\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3301/login\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at http://127.0.0.1:3301/login\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3301/login\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts:24:13",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                      "column": 13,
+                      "line": 24
+                    },
+                    "snippet": "  22 |  const scripts:string[]=[];const errors:string[]=[];\n  23 |  page.on('request',r=>{if(r.resourceType()==='script')scripts.push(new URL(r.url()).pathname);});page.on('pageerror',e=>errors.push(e.message));\n> 24 |  await page.goto('/login');await expect(page.locator('form input[type=email]')).toBeVisible();\n     |             ^\n  25 |  await page.goto('/courses');await expect(page.getByRole('heading',{name:'MASTER DATA SCIENCE & AI',exact:true})).toBeVisible();\n  26 |  await expect(page.getByRole('alert')).toHaveCount(0);\n  27 |  expect(scripts.filter(p=>/vendor-(pdf|charts)-/.test(p))).toEqual([]);expect(errors).toEqual([]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                        "column": 13,
+                        "line": 24
+                      },
+                      "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at http://127.0.0.1:3301/login\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3301/login\", waiting until \"load\"\u001b[22m\n\n\n  22 |  const scripts:string[]=[];const errors:string[]=[];\n  23 |  page.on('request',r=>{if(r.resourceType()==='script')scripts.push(new URL(r.url()).pathname);});page.on('pageerror',e=>errors.push(e.message));\n> 24 |  await page.goto('/login');await expect(page.locator('form input[type=email]')).toBeVisible();\n     |             ^\n  25 |  await page.goto('/courses');await expect(page.getByRole('heading',{name:'MASTER DATA SCIENCE & AI',exact:true})).toBeVisible();\n  26 |  await expect(page.getByRole('alert')).toHaveCount(0);\n  27 |  expect(scripts.filter(p=>/vendor-(pdf|charts)-/.test(p))).toEqual([]);expect(errors).toEqual([]);\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts:24:13"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T21:12:57.131Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-02\\artifacts\\lazy-features-public-pages-defer-PDF-and-chart-packages\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-02\\artifacts\\lazy-features-public-pages-defer-PDF-and-chart-packages\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                    "column": 13,
+                    "line": 24
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "6665c6ab4be6767ae401-2a6c7ec7b983469ba711",
+          "file": "lazy-features.spec.ts",
+          "line": 21,
+          "column": 1
+        },
+        {
+          "title": "administrator loads real growth data and renders lazy chart",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 325,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at http://127.0.0.1:3301/login\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3301/login\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at http://127.0.0.1:3301/login\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3301/login\", waiting until \"load\"\u001b[22m\n\n    at login (C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts:14:13)\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts:31:80",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                      "column": 13,
+                      "line": 14
+                    },
+                    "snippet": "  12 | async function login(page:Page,kind:string){\n  13 |  const account=cfg.accounts.find(a=>a.kind===kind);\n> 14 |  await page.goto('/login');await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n     |             ^\n  15 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/dashboard$/);\n  16 | }\n  17 | test.beforeEach(async({page,context})=>{"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                        "column": 13,
+                        "line": 14
+                      },
+                      "message": "Error: page.goto: net::ERR_NETWORK_ACCESS_DENIED at http://127.0.0.1:3301/login\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3301/login\", waiting until \"load\"\u001b[22m\n\n\n  12 | async function login(page:Page,kind:string){\n  13 |  const account=cfg.accounts.find(a=>a.kind===kind);\n> 14 |  await page.goto('/login');await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n     |             ^\n  15 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/dashboard$/);\n  16 | }\n  17 | test.beforeEach(async({page,context})=>{\n    at login (C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts:14:13)\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts:31:80"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T21:13:00.077Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-02\\artifacts\\lazy-features-administrato-6ca44-data-and-renders-lazy-chart\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-02\\artifacts\\lazy-features-administrato-6ca44-data-and-renders-lazy-chart\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                    "column": 13,
+                    "line": 14
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "6665c6ab4be6767ae401-6924f74201f150703657",
+          "file": "lazy-features.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "member downloads genuine PDF from automatically issued QA certificate",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 285,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeNull\u001b[2m()\u001b[22m\n\nReceived: \u001b[31m{\"code\": \"\", \"details\": \"TypeError: fetch failed·\u001b[39m\n\u001b[31mCaused by: Error: getaddrinfo ENOTFOUND kcqgnkfdpfibwkrghubl.supabase.co (ENOTFOUND)\u001b[39m\n\u001b[31mError: getaddrinfo ENOTFOUND kcqgnkfdpfibwkrghubl.supabase.co\u001b[39m\n\u001b[31m    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26)\", \"hint\": \"\", \"message\": \"TypeError: fetch failed\"}\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeNull\u001b[2m()\u001b[22m\n\nReceived: \u001b[31m{\"code\": \"\", \"details\": \"TypeError: fetch failed·\u001b[39m\n\u001b[31mCaused by: Error: getaddrinfo ENOTFOUND kcqgnkfdpfibwkrghubl.supabase.co (ENOTFOUND)\u001b[39m\n\u001b[31mError: getaddrinfo ENOTFOUND kcqgnkfdpfibwkrghubl.supabase.co\u001b[39m\n\u001b[31m    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26)\", \"hint\": \"\", \"message\": \"TypeError: fetch failed\"}\u001b[39m\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts:40:151",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                      "column": 151,
+                      "line": 40
+                    },
+                    "snippet": "  38 |  const user=createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:false,autoRefreshToken:false}});\n  39 |  try{\n> 40 |   const c=await server.from('courses').insert({id:courseId,title:'QA_TEST_Lazy_PDF',slug:'qa-test-lazy-'+courseId,is_published:true});expect(c.error).toBeNull();\n     |                                                                                                                                                       ^\n  41 |   const l=await server.from('lessons').insert({id:lessonId,course_id:courseId,title:'QA_TEST_Lazy_Lesson',type:'article',position:1,content:'QA_TEST_ONLY'});expect(l.error).toBeNull();\n  42 |   const signed=await user.auth.signInWithPassword({email:member.email,password:member.password});expect(signed.error).toBeNull();\n  43 |   expect((await user.rpc('enroll_course',{p_course_id:courseId})).error).toBeNull();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                        "column": 151,
+                        "line": 40
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeNull\u001b[2m()\u001b[22m\n\nReceived: \u001b[31m{\"code\": \"\", \"details\": \"TypeError: fetch failed·\u001b[39m\n\u001b[31mCaused by: Error: getaddrinfo ENOTFOUND kcqgnkfdpfibwkrghubl.supabase.co (ENOTFOUND)\u001b[39m\n\u001b[31mError: getaddrinfo ENOTFOUND kcqgnkfdpfibwkrghubl.supabase.co\u001b[39m\n\u001b[31m    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26)\", \"hint\": \"\", \"message\": \"TypeError: fetch failed\"}\u001b[39m\n\n  38 |  const user=createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:false,autoRefreshToken:false}});\n  39 |  try{\n> 40 |   const c=await server.from('courses').insert({id:courseId,title:'QA_TEST_Lazy_PDF',slug:'qa-test-lazy-'+courseId,is_published:true});expect(c.error).toBeNull();\n     |                                                                                                                                                       ^\n  41 |   const l=await server.from('lessons').insert({id:lessonId,course_id:courseId,title:'QA_TEST_Lazy_Lesson',type:'article',position:1,content:'QA_TEST_ONLY'});expect(l.error).toBeNull();\n  42 |   const signed=await user.auth.signInWithPassword({email:member.email,password:member.password});expect(signed.error).toBeNull();\n  43 |   expect((await user.rpc('enroll_course',{p_course_id:courseId})).error).toBeNull();\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts:40:151"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T21:13:02.015Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-02\\artifacts\\lazy-features-member-downl-44b1d-cally-issued-QA-certificate\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-02\\artifacts\\lazy-features-member-downl-44b1d-cally-issued-QA-certificate\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests\\lazy-features.spec.ts",
+                    "column": 151,
+                    "line": 40
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "6665c6ab4be6767ae401-38fe50dfe4e56445873c",
+          "file": "lazy-features.spec.ts",
+          "line": 37,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-16T21:12:56.299Z",
+    "duration": 6988.880999999999,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

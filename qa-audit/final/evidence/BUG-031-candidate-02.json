@@ -1,0 +1,60 @@
+{
+  "scope": "Isolated migrated PostgreSQL; metadata rows only, not a real Storage HTTP test",
+  "cases": [
+    {
+      "name": "missing-object",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "name": "zero-byte-object",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "name": "foreign-form-path",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "name": "valid-owned-metadata",
+      "expectedAccepted": true,
+      "actualAccepted": true,
+      "sqlstate": null,
+      "passed": true
+    },
+    {
+      "name": "canonical-size",
+      "expectedAccepted": true,
+      "actualAccepted": true,
+      "sqlstate": null,
+      "passed": true
+    },
+    {
+      "name": "saved-size-comes-from-Storage",
+      "expected": 8,
+      "actual": 8,
+      "passed": true
+    },
+    {
+      "name": "unsupported-mime",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "sqlstate": "P0001",
+      "passed": true
+    },
+    {
+      "name": "oversized-object",
+      "expectedAccepted": false,
+      "actualAccepted": false,
+      "sqlstate": "P0001",
+      "passed": true
+    }
+  ]
+}

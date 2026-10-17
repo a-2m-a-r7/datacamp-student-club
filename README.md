@@ -1,4 +1,4 @@
-> Current delivery audit: tester-final (16 October 2026). See qa-audit/final/TEST-MATRIX.md and BUGS.md for actual verification. Publication and production migration are pending final owner approval. Earlier report totals below are historical.
+> Current delivery audit: tester-final (17 October 2026). See qa-audit/final/RESULTS-20261017.md, TEST-MATRIX.md and BUGS.md for actual verification and remaining limits. Publication and production migration are pending final owner approval. Earlier report totals below are historical.
 
 ## Current setup
 
@@ -40,7 +40,7 @@ The effective product has member and administrator roles. Members cannot browse 
 
 منصة تعليمية وإدارية تفاعلية متكاملة، مصممة بأعلى معايير الويب الحديثة (Cyberpunk Dark Aesthetics) لخدمة مجتمع طلاب علم البيانات، وهندسة الذكاء الاصطناعي، والبرمجيات بجامعة الابتكار.
 
-تعتمد المنصة على **React 19** و **Supabase PostgreSQL** و **Vercel Serverless Functions**، وتشمل مرشدًا بالذكاء الاصطناعي ومترجم أكواد ونماذج تحفظ الردود في قاعدة البيانات. إكمال الكورس يصدر شهادة تلقائيًا داخل معاملة الإكمال، مع تحقق عبر QR. تصدير الردود إلى Google Sheets يتطلب إعداد حساب خدمة وصلاحيات جدول فعلية.
+تعتمد المنصة على **React 19** و **Supabase PostgreSQL** و **Vercel Serverless Functions**، وتشمل مرشدًا بالذكاء الاصطناعي ومترجم أكواد ونماذج تحفظ الردود في قاعدة البيانات. إكمال الكورس يصدر شهادة تلقائيًا داخل معاملة الإكمال، مع تحقق عبر QR. مزامنة Google Sheets تستخدم ربط Drive لمالك النموذج بصلاحية drive.file، أو حساب خدمة يملك صلاحيات ومساحة فعلية كمسار بديل.
 
 نتائج الإصلاح والتسليم الحالية: [HANDOVER.md](qa-audit/HANDOVER.md). تفاصيل ربط الشهادات: [COURSE_CERTIFICATES.md](qa-audit/COURSE_CERTIFICATES.md). الملفات والاختبارات المعزولة ليست بيانات مستخدمين في الإنتاج.
 
@@ -67,7 +67,7 @@ The effective product has member and administrator roles. Members cannot browse 
 محمية بنظام أدوار وصلاحيات هرمي (`super_admin`, `admin`, `hr`, `event_manager`, `content_manager`, `editor`):
 * **Form Builder (منشئ النماذج المتقدم):**
   * سحب وإفلات وإضافة 14 نوعاً من الأسئلة مع شروط الإلزام والحدود.
-  * تصدير ردود النماذج إلى Google Sheets بعد إعداد Google Service Account وصلاحيات الجدول.
+  * مزامنة ردود النماذج إلى Google Sheets دون تكرار عبر ربط Drive لمالك النموذج، مع مسار بديل لحساب خدمة مجهّز فعليًا.
   * لوحة تحليلات وإحصاءات بيانية فورية للردود وتصدير Excel / CSV بنقرة واحدة.
 * **إدارة المستخدمين والصلاحيات (User Management):** تعيين الأدوار وترقية المشرفين وتصدير السجلات.
 * **إدارة الفعاليات وماسح الحضور بالكاميرا (Event Scanner):** مسح تذاكر QR للطلاب بكاميرا المتصفح وتسجيل الحضور المباشر.
@@ -84,7 +84,7 @@ The effective product has member and administrator roles. Members cannot browse 
 | **Backend & Database** | Supabase (PostgreSQL 15+, Row Level Security, Realtime, Storage Buckets, Auth) |
 | **Serverless & Edge** | Vercel Serverless Functions (`api/ai/chat.ts`, `api/forms/sync-sheet.ts`, `api/admin/users.ts`) |
 | **AI Integration** | Google Gemini 2.5 Flash API via Serverless Proxy |
-| **Spreadsheet Sync** | Google Sheets API v4 & Google Drive API via Service Account |
+| **Spreadsheet Sync** | Google Sheets/Drive APIs via owner OAuth drive.file; configured service-account fallback |
 | **Testing & Automation**| Playwright E2E Suite, jsQR, Vitest-compatible tooling |
 | **Exports & Media** | jsPDF, html2canvas, SheetJS (xlsx), qrcode.react, html5-qrcode |
 
@@ -246,4 +246,4 @@ npm run test:qa
 
 See [qa-audit/FINAL_TAB_REPORT.md](qa-audit/FINAL_TAB_REPORT.md) for the final member/admin operation matrix, persisted database tests, production seed archival and external setup limits. Compiled languages require an independently hosted Piston server; set the public VITE_PISTON_API_URL endpoint and its CSP hostname after provisioning. Do not put credentials in client variables.
 
-Final profile/Storage review: see [qa-audit/PROFILE_FINAL_REPORT.md](qa-audit/PROFILE_FINAL_REPORT.md). Apply all 14 repair migrations in order on a new installation; the consolidated qa-audit/SETUP_SUPABASE.sql includes the profile-photo bucket constraints. Existing production pictures were copied to owned Storage without changing identity fields.
+Historical profile/Storage review: [qa-audit/PROFILE_FINAL_REPORT.md](qa-audit/PROFILE_FINAL_REPORT.md). For a new installation follow the current canonical migration sequence in [docs/deployment-guide.md](docs/deployment-guide.md), including the later security, Realtime and Sheets coordination fixes. The older consolidated qa-audit/SETUP_SUPABASE.sql is not a replacement for that current sequence. Previously migrated production pictures are historical work; this audit uses isolated QA only.

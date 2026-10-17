@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-10-16T20:24:03.911Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "httpStatus": 200,
+  "googleEnabled": true,
+  "emailEnabled": true,
+  "signupDisabled": false,
+  "limits": "Configuration readiness only. This is not a successful Google sign-in, Drive upload, Sheets sync or Gemini analysis."
+}

@@ -1,0 +1,4 @@
+{
+  "scope": "Isolated migrated PostgreSQL; metadata rows only, not a real Storage HTTP test",
+  "cases": []
+}

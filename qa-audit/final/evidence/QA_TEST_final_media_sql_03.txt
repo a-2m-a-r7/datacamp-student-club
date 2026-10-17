@@ -1,0 +1,17 @@
+PASS members cannot create or rename course units
+PASS unit reorder is atomic, checks exact membership and requires administrator
+PASS lesson reorder rejects missing IDs without partially updating positions
+PASS cross-course units and source lessons are rejected
+PASS asset boundary accepts 2 GiB metadata and rejects larger files
+PASS non-enrolled members cannot list private lesson assets
+PASS enrolled members can read assets but cannot forge file references
+PASS watch position persists privately and updates resume lesson without awarding completion
+PASS non-enrolled users and invalid bookmark values are rejected
+PASS private OAuth and upload/analysis capabilities are invisible to members and admins
+PASS AI approval atomically adds quiz then coding in the source unit
+PASS AI approval retries return the same IDs and do not duplicate lessons
+PASS generated quiz cannot complete before its source video
+PASS generated coding cannot complete before passing the linked quiz
+PASS certificate waits for all persisted lessons including the generated stages
+PASS approval rejects a plan generated for an edited source without partial writes
+PASS videos without code create a quiz only

@@ -1,0 +1,408 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: media-admin.spec.ts >> actual saved media sizes en 1440
+- Location: qa-audit\final\provider-browser\media-admin.spec.ts:3:78
+
+# Error details
+
+```
+Error: expect(received).toContain(expected) // indexOf
+
+Expected substring: "335 B"
+Received string:    "QA_TEST_material.txt · 1 MB · material"
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - complementary [ref=f1e313]:
+      - link [ref=f1e315] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f1e316]:
+          - generic "DataCamp Official Emblem" [ref=f1e318]:
+            - img "DataCamp Emblem" [ref=f1e319]
+          - generic "Innovation University Crest" [ref=f1e321]:
+            - img "Innovation University Crest" [ref=f1e322]
+      - generic [ref=f1e323]:
+        - generic [ref=f1e324]:
+          - paragraph [ref=f1e325]: Main Menu
+          - link "Home" [ref=f1e327] [cursor=pointer]:
+            - /url: /
+          - link "Courses" [ref=f1e334] [cursor=pointer]:
+            - /url: /courses
+          - link "My Courses" [ref=f1e340] [cursor=pointer]:
+            - /url: /my-courses
+          - link "Online Compiler" [ref=f1e347] [cursor=pointer]:
+            - /url: /compiler
+          - link "Leaderboard" [ref=f1e354] [cursor=pointer]:
+            - /url: /leaderboard
+          - link "Certificates" [ref=f1e364] [cursor=pointer]:
+            - /url: /certificates
+          - link "Notifications" [ref=f1e374] [cursor=pointer]:
+            - /url: /notifications
+          - link "Events" [ref=f1e381] [cursor=pointer]:
+            - /url: /events
+          - link "Projects" [ref=f1e387] [cursor=pointer]:
+            - /url: /projects
+          - link "Blog" [ref=f1e394] [cursor=pointer]:
+            - /url: /blog
+          - link "Staff & Board" [ref=f1e401] [cursor=pointer]:
+            - /url: /staff
+          - link "Gallery" [ref=f1e410] [cursor=pointer]:
+            - /url: /gallery
+          - link "About Us" [ref=f1e418] [cursor=pointer]:
+            - /url: /about
+          - link "Contact" [ref=f1e424] [cursor=pointer]:
+            - /url: /contact
+        - generic [ref=f1e430]:
+          - paragraph [ref=f1e431]: Admin Portal
+          - link "Overview" [ref=f1e432] [cursor=pointer]:
+            - /url: /admin
+          - link "Courses" [ref=f1e436] [cursor=pointer]:
+            - /url: /admin/courses
+          - link "Points & XP" [ref=f1e440] [cursor=pointer]:
+            - /url: /admin/points
+          - link "Users" [ref=f1e445] [cursor=pointer]:
+            - /url: /admin/users
+          - link "Events" [ref=f1e452] [cursor=pointer]:
+            - /url: /admin/events
+          - link "Forms" [ref=f1e456] [cursor=pointer]:
+            - /url: /admin/forms
+          - link "Staff" [ref=f1e461] [cursor=pointer]:
+            - /url: /admin/staff
+          - link "Gallery" [ref=f1e466] [cursor=pointer]:
+            - /url: /admin/gallery
+          - link "Projects" [ref=f1e472] [cursor=pointer]:
+            - /url: /admin/projects
+          - link "Blog" [ref=f1e477] [cursor=pointer]:
+            - /url: /admin/blog
+          - link "Messages" [ref=f1e482] [cursor=pointer]:
+            - /url: /admin/messages
+          - link "Content" [ref=f1e487] [cursor=pointer]:
+            - /url: /admin/content
+          - link "Security" [ref=f1e494] [cursor=pointer]:
+            - /url: /admin/security
+          - link "Profile" [ref=f1e498] [cursor=pointer]:
+            - /url: /profile
+          - link "Settings" [ref=f1e503] [cursor=pointer]:
+            - /url: /admin/settings
+      - generic [ref=f1e508]:
+        - generic [ref=f1e509]:
+          - link "Q QA_TEST_admin Admin" [ref=f1e510] [cursor=pointer]:
+            - /url: /profile
+            - generic [ref=f1e511]: Q
+            - generic [ref=f1e513]:
+              - paragraph [ref=f1e514]: QA_TEST_admin
+              - paragraph [ref=f1e515]: Admin
+          - button "Logout" [ref=f1e516]
+        - generic [ref=f1e522]:
+          - button "العربية" [ref=f1e523]
+          - button "English" [ref=f1e525]
+        - button [ref=f1e527]
+    - generic [ref=f1e530]:
+      - generic [ref=f1e532]:
+        - button "العربية" [ref=f1e533]
+        - button "EN" [ref=f1e535]
+      - main [ref=f1e538]:
+        - generic [ref=f1e541]:
+          - generic [ref=f1e542]:
+            - generic [ref=f1e543]:
+              - heading "COURSE_MANAGEMENT" [level=2] [ref=f1e544]
+              - paragraph [ref=f1e547]: Manage club curricula, lesson units, XP bounties, and student enrollments.
+            - button "NEW_COURSE" [ref=f1e548]
+          - textbox "Filter courses by title, category, instructor..." [ref=f1e554]
+          - table [ref=f1e557]:
+            - rowgroup [ref=f1e558]:
+              - row [ref=f1e559]:
+                - columnheader "COURSE" [ref=f1e560]
+                - columnheader "CATEGORY" [ref=f1e561]
+                - columnheader "LEVEL" [ref=f1e562]
+                - columnheader "XP BOUNTY" [ref=f1e563]
+                - columnheader "STATUS" [ref=f1e564]
+                - columnheader "ACTIONS" [ref=f1e565]
+            - rowgroup [ref=f1e566]:
+              - row [ref=f1e567]:
+                - cell "QA_TEST_Synthetic_Drive DataCamp Instructor • 3 Lessons • 12h • 3 Enrolled" [ref=f1e568]:
+                  - generic [ref=f1e572]:
+                    - generic [ref=f1e573]: QA_TEST_Synthetic_Drive
+                    - generic [ref=f1e574]:
+                      - generic [ref=f1e575]: DataCamp Instructor
+                      - generic [ref=f1e576]: •
+                      - generic [ref=f1e577]: 3 Lessons
+                      - generic [ref=f1e578]: •
+                      - generic [ref=f1e579]: 12h
+                      - generic [ref=f1e580]: •
+                      - generic [ref=f1e581]: 3 Enrolled
+                - cell "data science" [ref=f1e582]
+                - cell "beginner" [ref=f1e583]
+                - cell "+500 XP" [ref=f1e584]
+                - cell "PUBLISHED" [ref=f1e585]
+                - cell [ref=f1e586]:
+                  - generic [ref=f1e587]:
+                    - link "View in Catalog" [ref=f1e588] [cursor=pointer]:
+                      - /url: /courses/qa-test-synthetic-e2720b4a-fe1b-4e96-97b8-6423d9537bce
+                    - link "Open Learning Room" [ref=f1e592] [cursor=pointer]:
+                      - /url: /courses/qa-test-synthetic-e2720b4a-fe1b-4e96-97b8-6423d9537bce/learn
+                    - button "Manage Lessons" [ref=f1e596]
+                    - button "Unpublish" [ref=f1e599]
+                    - button "Edit Course" [ref=f1e603]
+                    - button "Delete Course" [ref=f1e607]
+              - row [ref=f1e611]:
+                - cell "QA_TEST_Drive_Upload_20261016 QA_TEST_Instructor • 1 Lessons • 12h • 0 Enrolled" [ref=f1e612]:
+                  - generic [ref=f1e616]:
+                    - generic [ref=f1e617]: QA_TEST_Drive_Upload_20261016
+                    - generic [ref=f1e618]:
+                      - generic [ref=f1e619]: QA_TEST_Instructor
+                      - generic [ref=f1e620]: •
+                      - generic [ref=f1e621]: 1 Lessons
+                      - generic [ref=f1e622]: •
+                      - generic [ref=f1e623]: 12h
+                      - generic [ref=f1e624]: •
+                      - generic [ref=f1e625]: 0 Enrolled
+                - cell "data science" [ref=f1e626]
+                - cell "beginner" [ref=f1e627]
+                - cell "+500 XP" [ref=f1e628]
+                - cell "DRAFT" [ref=f1e629]
+                - cell [ref=f1e630]:
+                  - generic [ref=f1e631]:
+                    - link "View in Catalog" [ref=f1e632] [cursor=pointer]:
+                      - /url: /courses/qa-test-drive-upload-20261016
+                    - link "Open Learning Room" [ref=f1e636] [cursor=pointer]:
+                      - /url: /courses/qa-test-drive-upload-20261016/learn
+                    - button "Manage Lessons" [ref=f1e640]
+                    - button "Publish" [ref=f1e643]
+                    - button "Edit Course" [ref=f1e647]
+                    - button "Delete Course" [ref=f1e651]
+      - contentinfo [ref=f1e655]:
+        - generic [ref=f1e656]:
+          - generic [ref=f1e657]:
+            - generic [ref=f1e658]:
+              - link [ref=f1e659] [cursor=pointer]:
+                - /url: /
+                - generic [ref=f1e660]:
+                  - generic "DataCamp Official Emblem" [ref=f1e662]:
+                    - img "DataCamp Emblem" [ref=f1e663]
+                  - generic "Innovation University Crest" [ref=f1e665]:
+                    - img "Innovation University Crest" [ref=f1e666]
+              - paragraph [ref=f1e667]: Empowering students with data science, AI, and software engineering skills.
+            - generic [ref=f1e668]:
+              - heading "Quick Links" [level=2] [ref=f1e669]
+              - list [ref=f1e670]:
+                - listitem [ref=f1e671]:
+                  - link "About Us" [ref=f1e672] [cursor=pointer]:
+                    - /url: /about
+                - listitem [ref=f1e673]:
+                  - link "Courses" [ref=f1e674] [cursor=pointer]:
+                    - /url: /courses
+                - listitem [ref=f1e675]:
+                  - link "Events" [ref=f1e676] [cursor=pointer]:
+                    - /url: /events
+                - listitem [ref=f1e677]:
+                  - link "Projects" [ref=f1e678] [cursor=pointer]:
+                    - /url: /projects
+                - listitem [ref=f1e679]:
+                  - link "Blog" [ref=f1e680] [cursor=pointer]:
+                    - /url: /blog
+                - listitem [ref=f1e681]:
+                  - link "Staff & Board" [ref=f1e682] [cursor=pointer]:
+                    - /url: /staff
+                - listitem [ref=f1e683]:
+                  - link "Gallery" [ref=f1e684] [cursor=pointer]:
+                    - /url: /gallery
+            - generic [ref=f1e685]:
+              - heading "Support" [level=2] [ref=f1e686]
+              - list [ref=f1e687]:
+                - listitem [ref=f1e688]:
+                  - link "FAQ" [ref=f1e689] [cursor=pointer]:
+                    - /url: /faq
+                - listitem [ref=f1e690]:
+                  - link "Contact" [ref=f1e691] [cursor=pointer]:
+                    - /url: /contact
+                - listitem [ref=f1e692]:
+                  - link "Privacy Policy" [ref=f1e693] [cursor=pointer]:
+                    - /url: /privacy
+                - listitem [ref=f1e694]:
+                  - link "Terms of Service" [ref=f1e695] [cursor=pointer]:
+                    - /url: /terms
+            - generic [ref=f1e696]:
+              - heading "Contact Info" [level=2] [ref=f1e697]
+              - list [ref=f1e698]:
+                - listitem [ref=f1e699]:
+                  - generic [ref=f1e703]: Not configured
+                - listitem [ref=f1e704]:
+                  - generic [ref=f1e707]: Not configured
+                - listitem [ref=f1e708]:
+                  - generic [ref=f1e712]: Not configured
+          - generic [ref=f1e713]:
+            - paragraph [ref=f1e714]: © 2026 DataCamp. All rights reserved.
+            - generic [ref=f1e715]:
+              - button "العربية" [ref=f1e716]
+              - generic [ref=f1e721]: "VERSION: 2.5.0-AR"
+    - generic [ref=f1e722]:
+      - generic: NEXUS AI MENTOR
+      - button "Open AI Mentor" [ref=f1e723]
+    - region "Notifications alt+T"
+  - dialog "Course lessons" [ref=f1e730]:
+    - generic [ref=f1e731]:
+      - generic [ref=f1e732]:
+        - generic [ref=f1e733]:
+          - heading "MANAGE_COURSE_LESSONS" [level=3] [ref=f1e734]
+          - paragraph [ref=f1e738]: QA_TEST_Synthetic_Drive
+        - generic [ref=f1e739]:
+          - button "NEW_LESSON" [ref=f1e740]
+          - button "CLOSE" [ref=f1e742]
+      - region "Course units" [ref=f1e743]:
+        - heading "Course units" [level=4] [ref=f1e744]
+        - generic [ref=f1e745]:
+          - textbox "Unit title" [ref=f1e746]
+          - button "Add unit" [disabled]
+        - paragraph [ref=f1e747]: Drag units to reorder, or use the arrow buttons.
+      - paragraph [ref=f1e748]: Drag lessons to reorder or use arrows. Save a lesson first to attach videos and files.
+      - generic [ref=f1e749]:
+        - generic [ref=f1e750]:
+          - generic [ref=f1e751]:
+            - generic [ref=f1e752]:
+              - generic [ref=f1e753]:
+                - generic [ref=f1e754]: "#1"
+                - generic [ref=f1e755]: video
+              - heading "QA_TEST_Synthetic_Python" [level=4] [ref=f1e756]
+              - paragraph
+              - paragraph [ref=f1e757]: 20 min • +30 XP
+            - generic [ref=f1e758]:
+              - button "Move lesson up QA_TEST_Synthetic_Python" [disabled] [ref=f1e759]: ↑
+              - button "Move lesson down QA_TEST_Synthetic_Python" [ref=f1e760]: ↓
+              - button "Edit lesson" [active] [ref=f1e761]
+              - button "Delete lesson" [ref=f1e765]
+          - generic [ref=f1e769]:
+            - generic [ref=f1e770]:
+              - generic [ref=f1e771]:
+                - generic [ref=f1e772]: "#2"
+                - generic [ref=f1e773]: quiz
+              - heading "QA_TEST_Synthetic_Python — Quiz" [level=4] [ref=f1e774]
+              - paragraph
+              - paragraph [ref=f1e775]: 5 min • +10 XP
+            - generic [ref=f1e776]:
+              - button "Move lesson up QA_TEST_Synthetic_Python — Quiz" [ref=f1e777]: ↑
+              - button "Move lesson down QA_TEST_Synthetic_Python — Quiz" [ref=f1e778]: ↓
+              - button "Edit lesson" [ref=f1e779]
+              - button "Delete lesson" [ref=f1e783]
+          - generic [ref=f1e787]:
+            - generic [ref=f1e788]:
+              - generic [ref=f1e789]:
+                - generic [ref=f1e790]: "#3"
+                - generic [ref=f1e791]: exercise
+              - heading "QA_TEST_Synthetic_Python — Coding" [level=4] [ref=f1e792]
+              - paragraph
+              - paragraph [ref=f1e793]: 10 min • +10 XP
+            - generic [ref=f1e794]:
+              - button "Move lesson up QA_TEST_Synthetic_Python — Coding" [ref=f1e795]: ↑
+              - button "Move lesson down QA_TEST_Synthetic_Python — Coding" [disabled] [ref=f1e796]: ↓
+              - button "Edit lesson" [ref=f1e797]
+              - button "Delete lesson" [ref=f1e801]
+        - generic [ref=f1e806]:
+          - group [ref=f1e807]:
+            - generic [ref=f1e808]:
+              - heading "EDIT_LESSON" [level=4] [ref=f1e809]
+              - button "Close" [ref=f1e810]
+            - textbox "Lesson title" [ref=f1e814]: QA_TEST_Synthetic_Python
+            - generic [ref=f1e815]:
+              - text: Unit
+              - combobox "Lesson unit" [ref=f1e816]:
+                - option "General lessons" [selected]
+            - generic [ref=f1e817]:
+              - combobox "Lesson type" [ref=f1e818]:
+                - option "Article"
+                - option "Video" [selected]
+                - option "Quiz"
+                - option "Exercise"
+                - option "Project"
+              - spinbutton "Position" [ref=f1e819]: "1"
+            - generic [ref=f1e820]:
+              - spinbutton "Duration minutes" [ref=f1e821]: "20"
+              - spinbutton "XP" [ref=f1e822]: "30"
+            - textbox "https://www.youtube.com/embed/..." [ref=f1e823]: https://drive.google.com/file/d/1EH4hLLVJl-L9XM6Oqiy71DcaI7JstOIr/preview
+            - textbox "Lesson content or exercise instructions..." [ref=f1e824]: "This lesson introduces three fundamental concepts in Python: variables and basic arithmetic operations (such as multiplying variables), iterating through lists using a `for` loop to process each element, and defining reusable functions using the `def` keyword with return values."
+            - generic [ref=f1e825]:
+              - checkbox "Available as free preview" [ref=f1e826]
+              - text: Available as free preview
+          - region "Lesson media and analysis" [ref=f1e827]:
+            - heading "Video, materials and subtitles" [level=4] [ref=f1e828]
+            - paragraph [ref=f1e829]: Up to 2 GiB per file within available Drive storage. Uploads can resume. Files are accessible to anyone with their link.
+            - button "Connect Google Drive" [disabled]
+            - group [ref=f1e830]:
+              - generic [ref=f1e831]:
+                - button "Upload lesson video" [disabled] [ref=f1e832]
+                - button "Choose lesson video" [disabled] [ref=f1e833]:
+                  - generic [ref=f1e837]: Lesson video
+                  - generic [ref=f1e838]: Drag and drop a file here, or click to browse
+                  - generic [ref=f1e839]: MP4 · WebM · MOV · 2 GiB
+              - generic [ref=f1e840]:
+                - generic [ref=f1e841]:
+                  - button "Upload lesson material" [disabled] [ref=f1e842]
+                  - button "Choose lesson material" [disabled] [ref=f1e843]:
+                    - generic [ref=f1e848]: Lesson materials
+                    - generic [ref=f1e849]: Drag and drop a file here, or click to browse
+                    - generic [ref=f1e850]: PDF · Documents · Slides · Code · ZIP · 2 GiB
+                - generic [ref=f1e851]:
+                  - button "Upload lesson subtitles" [disabled] [ref=f1e852]
+                  - button "Choose lesson subtitles" [disabled] [ref=f1e853]:
+                    - generic [ref=f1e858]: Lesson subtitles
+                    - generic [ref=f1e859]: Drag and drop a file here, or click to browse
+                    - generic [ref=f1e860]: SRT · VTT · 5 MiB
+              - generic [ref=f1e861]:
+                - text: Subtitle language
+                - combobox "Subtitle language" [disabled] [ref=f1e862]:
+                  - option "العربية" [disabled] [selected]
+                  - option "English" [disabled]
+            - generic [ref=f1e863]:
+              - checkbox "Analyze automatically after upload; send a copy to Gemini" [checked] [ref=f1e864]
+              - text: Analyze automatically after upload; send a copy to Gemini
+            - paragraph [ref=f1e865]:
+              - text: Analysis uses unpaid Gemini; do not select personal, confidential or sensitive content.
+              - link "File processing details" [ref=f1e866] [cursor=pointer]:
+                - /url: /privacy
+            - generic [ref=f1e867]:
+              - text: "Retry analysis: select the same lesson video"
+              - button "Analyze saved lesson video" [ref=f1e868]
+            - generic [ref=f1e869]:
+              - generic [ref=f1e870]: QA_TEST_Python_Basics.mp4 · 46 MB · video
+              - link "Open file" [ref=f1e871] [cursor=pointer]:
+                - /url: https://drive.google.com/file/d/1EH4hLLVJl-L9XM6Oqiy71DcaI7JstOIr/view
+            - generic [ref=f1e872]:
+              - generic [ref=f1e873]: QA_TEST_material.txt · 1 MB · material
+              - link "Open file" [ref=f1e874] [cursor=pointer]:
+                - /url: https://drive.google.com/file/d/1fExHMwfI98oUY9BsZ7IFyuZttozIUNxv/view
+            - generic [ref=f1e875]:
+              - generic [ref=f1e876]: QA_TEST_captions.srt · 1 MB · subtitle
+              - link "Open file" [ref=f1e877] [cursor=pointer]:
+                - /url: https://drive.google.com/file/d/1er6a8muuXcu-B53fHFQStiP1bh0xtoCb/view
+          - generic [ref=f1e878]:
+            - button "CANCEL" [ref=f1e879]
+            - button "SAVE_LESSON" [ref=f1e880]
+```
+
+# Test source
+
+```ts
+  1  | import {test,expect} from '@playwright/test';import fs from 'node:fs';
+  2  | const cfg=JSON.parse(fs.readFileSync('qa-audit/.runtime/final-hosted/config.json','utf8'));if(cfg.projectRef!=='kcqgnkfdpfibwkrghubl')throw Error('Wrong QA host');
+  3  | for(const language of ['en','ar'] as const)for(const width of [1440,768,375])test('actual saved media sizes '+language+' '+width,async({page})=>{
+  4  |  const account=cfg.accounts.find(a=>a.kind==='admin');await page.setViewportSize({width,height:1000});await page.addInitScript(language=>localStorage.setItem('datacamp_language',language),language);
+  5  |  await page.goto('/login');await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/dashboard$/);await page.goto('/admin/courses');
+  6  |  const row=page.getByRole('row').filter({hasText:'QA_TEST_Synthetic_Drive'});await row.getByRole('button',{name:language==='ar'?'إدارة دروس الدورة':'Manage Lessons',exact:true}).click();
+  7  |  const lesson=page.getByText('QA_TEST_Synthetic_Python',{exact:true}).locator('..').locator('..');await lesson.getByRole('button',{name:language==='ar'?'تعديل الدرس':'Edit lesson',exact:true}).click();
+  8  |  const material=page.getByText(/QA_TEST_material\.txt ·/);await expect(material).toBeVisible();const captions=page.getByText(/QA_TEST_captions\.srt ·/);await expect(captions).toBeVisible();
+  9  |  await page.screenshot({path:test.info().outputPath('QA_TEST_real_saved_media_'+language+'.png')});
+> 10 |  expect(await material.innerText()).toContain(new Intl.NumberFormat(language).format(335)+' B');expect(await captions.innerText()).toContain(new Intl.NumberFormat(language).format(243)+' B');
+     |                                     ^ Error: expect(received).toContain(expected) // indexOf
+  11 | });
+  12 | 
+```

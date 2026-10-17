@@ -1,0 +1,264 @@
+{
+  "target": "http://127.0.0.1:3300 with exact Supabase QA host; anonymous sessions",
+  "limitations": "One mobile simulated-throttling sample per route. Local static transport does not reproduce Vercel compression/CDN behavior. These scores are not production capacity or a 1000-user load test.",
+  "scores": [
+    {
+      "route": "/login",
+      "fetchTime": "2026-10-16T20:52:30.500Z",
+      "version": "13.5.0",
+      "formFactor": "mobile",
+      "categories": {
+        "performance": 66,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "score": 0.22
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.18
+        },
+        {
+          "id": "speed-index",
+          "title": "Speed Index",
+          "score": 0.55
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.95
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.83
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.7
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0
+        },
+        {
+          "id": "target-size",
+          "title": "Touch targets do not have sufficient size or spacing.",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0
+        },
+        {
+          "id": "robots-txt",
+          "title": "robots.txt is not valid",
+          "score": 0
+        },
+        {
+          "id": "forced-reflow-insight",
+          "title": "Forced reflow",
+          "score": 0
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "route": "/courses",
+      "fetchTime": "2026-10-16T20:52:43.072Z",
+      "version": "13.5.0",
+      "formFactor": "mobile",
+      "categories": {
+        "performance": 66,
+        "accessibility": 98,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "score": 0.23
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.14
+        },
+        {
+          "id": "speed-index",
+          "title": "Speed Index",
+          "score": 0.69
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.94
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.81
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.66
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0
+        },
+        {
+          "id": "robots-txt",
+          "title": "robots.txt is not valid",
+          "score": 0
+        },
+        {
+          "id": "forced-reflow-insight",
+          "title": "Forced reflow",
+          "score": 0
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "fetchTime": "2026-10-16T20:52:54.899Z",
+      "version": "13.5.0",
+      "formFactor": "mobile",
+      "categories": {
+        "performance": 63,
+        "accessibility": 98,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "score": 0.2
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.11
+        },
+        {
+          "id": "speed-index",
+          "title": "Speed Index",
+          "score": 0.51
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.93
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.82
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.62
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0
+        },
+        {
+          "id": "heading-order",
+          "title": "Heading elements are not in a sequentially-descending order",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0
+        },
+        {
+          "id": "robots-txt",
+          "title": "robots.txt is not valid",
+          "score": 0
+        },
+        {
+          "id": "forced-reflow-insight",
+          "title": "Forced reflow",
+          "score": 0
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"phase":"plan","status":"failed","steps":6,"evidence":"qa-audit/final/evidence/QA_TEST_cleanup_plan_02.json","retained":["Google owner QA identity and its existing Drive connection","Personal recording/course selected by owner","Google QA credentials/project and local runtime files; deletion not requested here"]}

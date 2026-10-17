@@ -1,0 +1,105 @@
+
+Running 18 tests using 1 worker
+
+  ok  1 [1440] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (6.0s)
+  ok  2 [1440] › qa-audit\final\tests\course-presentation.spec.ts:67:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (3.2s)
+  ok  3 [1440] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (en) (5.5s)
+  ok  4 [1440] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (4.4s)
+  ok  5 [1440] › qa-audit\final\tests\course-presentation.spec.ts:67:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (3.4s)
+  ok  6 [1440] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (ar) (5.2s)
+  ok  7 [768] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (5.5s)
+  ok  8 [768] › qa-audit\final\tests\course-presentation.spec.ts:67:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (3.4s)
+  ok  9 [768] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (en) (5.9s)
+  ok 10 [768] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (5.2s)
+  ok 11 [768] › qa-audit\final\tests\course-presentation.spec.ts:67:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (2.9s)
+  ok 12 [768] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (ar) (5.7s)
+  ok 13 [375] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (5.3s)
+  ok 14 [375] › qa-audit\final\tests\course-presentation.spec.ts:67:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (3.0s)
+  x  15 [375] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (en) (24.8s)
+  ok 16 [375] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (5.5s)
+  ok 17 [375] › qa-audit\final\tests\course-presentation.spec.ts:67:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (3.2s)
+  x  18 [375] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (ar) (25.6s)
+
+
+  1) [375] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (en) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  getByText('QA_TEST_LESSON', { exact: true }).first()
+    Expected: visible
+    Received: hidden
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toBeVisible" getByText('QA_TEST_LESSON', { exact: true }).first() with timeout 20000ms
+      - waiting for getByText('QA_TEST_LESSON', { exact: true }).first()
+        38 × locator resolved to <p class="text-[10px] font-mono text-muted-foreground">QA_TEST_LESSON</p>
+           - unexpected value "hidden"
+
+
+      103 |   const mySearch=page.getByRole('textbox',{name:language==='ar'?'البحث داخل كورساتك':'Search your courses',exact:true});await mySearch.fill('QA_TEST_NO_MATCH');await expect(enrolled).toHaveCount(0);await mySearch.clear();await expect(enrolled).toHaveCount(1);
+      104 |   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:info.outputPath(`my-courses-${language}.png`),fullPage:true});
+    > 105 |   await enrolled.getByRole('link',{name:language==='ar'?'متابعة':'CONTINUE',exact:true}).click();await expect(page).toHaveURL(/\/courses\/qa-test-course-layout\/learn$/);await expect(page.getByText('QA_TEST_LESSON',{exact:true}).first()).toBeVisible();
+          |                                                                                                                                                                                                                                               ^
+      106 |  });
+      107 | }
+      108 |
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\course-presentation.spec.ts:105:239
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_course_presentation_02\artifacts\course-presentation-organi-23e1b-ment-and-saved-progress-en--375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_course_presentation_02\artifacts\course-presentation-organi-23e1b-ment-and-saved-progress-en--375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_course_presentation_02\artifacts\course-presentation-organi-23e1b-ment-and-saved-progress-en--375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\QA_TEST_course_presentation_02\artifacts\course-presentation-organi-23e1b-ment-and-saved-progress-en--375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [375] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (ar) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  getByText('QA_TEST_LESSON', { exact: true }).first()
+    Expected: visible
+    Received: hidden
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "toBeVisible" getByText('QA_TEST_LESSON', { exact: true }).first() with timeout 20000ms
+      - waiting for getByText('QA_TEST_LESSON', { exact: true }).first()
+        38 × locator resolved to <p class="text-[10px] font-mono text-muted-foreground">QA_TEST_LESSON</p>
+           - unexpected value "hidden"
+
+
+      103 |   const mySearch=page.getByRole('textbox',{name:language==='ar'?'البحث داخل كورساتك':'Search your courses',exact:true});await mySearch.fill('QA_TEST_NO_MATCH');await expect(enrolled).toHaveCount(0);await mySearch.clear();await expect(enrolled).toHaveCount(1);
+      104 |   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:info.outputPath(`my-courses-${language}.png`),fullPage:true});
+    > 105 |   await enrolled.getByRole('link',{name:language==='ar'?'متابعة':'CONTINUE',exact:true}).click();await expect(page).toHaveURL(/\/courses\/qa-test-course-layout\/learn$/);await expect(page.getByText('QA_TEST_LESSON',{exact:true}).first()).toBeVisible();
+          |                                                                                                                                                                                                                                               ^
+      106 |  });
+      107 | }
+      108 |
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\course-presentation.spec.ts:105:239
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_course_presentation_02\artifacts\course-presentation-organi-04f9d-ment-and-saved-progress-ar--375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_course_presentation_02\artifacts\course-presentation-organi-04f9d-ment-and-saved-progress-ar--375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_course_presentation_02\artifacts\course-presentation-organi-04f9d-ment-and-saved-progress-ar--375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\QA_TEST_course_presentation_02\artifacts\course-presentation-organi-04f9d-ment-and-saved-progress-ar--375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [375] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (en) 
+    [375] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (ar) 
+  16 passed (2.4m)

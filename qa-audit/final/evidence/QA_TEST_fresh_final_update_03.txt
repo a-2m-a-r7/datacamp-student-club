@@ -1,0 +1,25 @@
+Updating d27eb58..c64e711
+Fast-forward
+ qa-audit/final/BUGS.md                             | 155 ++---
+ qa-audit/final/evidence/BUG-030-build.txt          |  88 +++
+ qa-audit/final/evidence/BUG-030-flow-after.txt     |  11 +
+ qa-audit/final/evidence/BUG-030-flow-before.txt    | 210 +++++++
+ qa-audit/final/evidence/BUG-030-lint.txt           |   4 +
+ qa-audit/final/evidence/BUG-030-related-after.txt  |  11 +
+ qa-audit/final/evidence/BUG-030-types.txt          |   0
+ .../evidence/runs/BUG-030-flow-after/results.json  | 425 +++++++++++++
+ .../evidence/runs/BUG-030-flow-before/results.json | 665 +++++++++++++++++++++
+ .../runs/BUG-030-related-after/results.json        | 480 +++++++++++++++
+ qa-audit/final/tests/content-flow.spec.ts          |  12 +
+ src/App.tsx                                        |   4 +-
+ 12 files changed, 1990 insertions(+), 75 deletions(-)
+ create mode 100644 qa-audit/final/evidence/BUG-030-build.txt
+ create mode 100644 qa-audit/final/evidence/BUG-030-flow-after.txt
+ create mode 100644 qa-audit/final/evidence/BUG-030-flow-before.txt
+ create mode 100644 qa-audit/final/evidence/BUG-030-lint.txt
+ create mode 100644 qa-audit/final/evidence/BUG-030-related-after.txt
+ create mode 100644 qa-audit/final/evidence/BUG-030-types.txt
+ create mode 100644 qa-audit/final/evidence/runs/BUG-030-flow-after/results.json
+ create mode 100644 qa-audit/final/evidence/runs/BUG-030-flow-before/results.json
+ create mode 100644 qa-audit/final/evidence/runs/BUG-030-related-after/results.json
+ create mode 100644 qa-audit/final/tests/content-flow.spec.ts

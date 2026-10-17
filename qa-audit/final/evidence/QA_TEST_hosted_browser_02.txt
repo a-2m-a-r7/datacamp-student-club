@@ -1,0 +1,204 @@
+
+Running 6 tests using 1 worker
+
+(node:56168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [1440] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en (23.6s)
+(node:9044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [1440] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar (20.9s)
+(node:26276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [768] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en (20.8s)
+(node:49600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [768] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar (20.7s)
+(node:29456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [375] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en (20.6s)
+(node:51284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [375] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar (20.6s)
+
+
+  1) [1440] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/login\?redirect=/
+    Received string:  "http://127.0.0.1:3200/login"
+    Timeout: 20000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 20000ms
+        41 × locator resolved to <html lang="en" dir="ltr" class="lang-en">…</html>
+           - unexpected value "http://127.0.0.1:3200/login"
+
+
+       8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});
+       9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);
+    > 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\/login\?redirect=/);
+         |                                                 ^
+      11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);
+      12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/profile$/);
+      13 |  const isAr=locale==='ar';
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\hosted-tests\auth-profile.spec.ts:10:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-en-1440\error-context.md
+
+  2) [1440] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/login\?redirect=/
+    Received string:  "http://127.0.0.1:3200/login"
+    Timeout: 20000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 20000ms
+        41 × locator resolved to <html lang="ar" dir="rtl" class="lang-ar">…</html>
+           - unexpected value "http://127.0.0.1:3200/login"
+
+
+       8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});
+       9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);
+    > 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\/login\?redirect=/);
+         |                                                 ^
+      11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);
+      12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/profile$/);
+      13 |  const isAr=locale==='ar';
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\hosted-tests\auth-profile.spec.ts:10:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-ar-1440\error-context.md
+
+  3) [768] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/login\?redirect=/
+    Received string:  "http://127.0.0.1:3200/login"
+    Timeout: 20000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 20000ms
+        42 × locator resolved to <html lang="en" dir="ltr" class="lang-en">…</html>
+           - unexpected value "http://127.0.0.1:3200/login"
+
+
+       8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});
+       9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);
+    > 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\/login$/);
+         |                                                 ^
+      11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);
+      12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/profile$/);
+      13 |  const isAr=locale==='ar';
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\hosted-tests\auth-profile.spec.ts:10:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-en-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-en-768\error-context.md
+
+  4) [768] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/login\?redirect=/
+    Received string:  "http://127.0.0.1:3200/login"
+    Timeout: 20000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 20000ms
+        41 × locator resolved to <html lang="ar" dir="rtl" class="lang-ar">…</html>
+           - unexpected value "http://127.0.0.1:3200/login"
+
+
+       8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});
+       9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);
+    > 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\/login$/);
+         |                                                 ^
+      11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);
+      12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/profile$/);
+      13 |  const isAr=locale==='ar';
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\hosted-tests\auth-profile.spec.ts:10:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-ar-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-ar-768\error-context.md
+
+  5) [375] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/login\?redirect=/
+    Received string:  "http://127.0.0.1:3200/login"
+    Timeout: 20000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 20000ms
+        42 × locator resolved to <html lang="en" dir="ltr" class="lang-en">…</html>
+           - unexpected value "http://127.0.0.1:3200/login"
+
+
+       8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});
+       9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);
+    > 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\/login$/);
+         |                                                 ^
+      11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);
+      12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/profile$/);
+      13 |  const isAr=locale==='ar';
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\hosted-tests\auth-profile.spec.ts:10:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-en-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-en-375\error-context.md
+
+  6) [375] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/login\?redirect=/
+    Received string:  "http://127.0.0.1:3200/login"
+    Timeout: 20000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 20000ms
+        42 × locator resolved to <html lang="ar" dir="rtl" class="lang-ar">…</html>
+           - unexpected value "http://127.0.0.1:3200/login"
+
+
+       8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});
+       9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);
+    > 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\/login$/);
+         |                                                 ^
+      11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);
+      12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/profile$/);
+      13 |  const isAr=locale==='ar';
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\hosted-tests\auth-profile.spec.ts:10:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-ar-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_hosted_browser_02\artifacts\auth-profile-actual-Auth-and-profile-persistence-ar-375\error-context.md
+
+  6 failed
+    [1440] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en 
+    [1440] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar 
+    [768] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en 
+    [768] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar 
+    [375] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en 
+    [375] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar 

@@ -1,0 +1,919 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/regression.config.ts",
+      "course-presentation.spec.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\regression.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/QA_TEST_course_presentation_02/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/QA_TEST_course_presentation_02/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/QA_TEST_course_presentation_02/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "1440",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "1440"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "768",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 768,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "768"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "375",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 375,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "375"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node qa-audit/start-local.cjs",
+      "cwd": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp",
+      "url": "http://127.0.0.1:3100",
+      "reuseExistingServer": false,
+      "timeout": 60000
+    }
+  },
+  "suites": [
+    {
+      "title": "course-presentation.spec.ts",
+      "file": "course-presentation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6023,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:16:57.391Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-3b06f2071362b51ca990",
+          "file": "course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3235,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:03.530Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-36dffcec1530df37d355",
+          "file": "course-presentation.spec.ts",
+          "line": 67,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5492,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:06.775Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-95a297df888f52b7a403",
+          "file": "course-presentation.spec.ts",
+          "line": 90,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4351,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:12.278Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-f0872628576a1089a08b",
+          "file": "course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3358,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:16.639Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-dcada18d1a5a164cea52",
+          "file": "course-presentation.spec.ts",
+          "line": 67,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5175,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:20.009Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-794f175c63d71f0fe6f4",
+          "file": "course-presentation.spec.ts",
+          "line": 90,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5519,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:27.221Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-28ab5c4820d45394dff1",
+          "file": "course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3377,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:32.850Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-ff6b743a4fef0355a0ed",
+          "file": "course-presentation.spec.ts",
+          "line": 67,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5860,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:36.240Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-9e2429d60d2e0286bfcc",
+          "file": "course-presentation.spec.ts",
+          "line": 90,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5180,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:42.112Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-d5aaf763796a7f648912",
+          "file": "course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2902,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:47.304Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-c8d35d6b236f86aaa93f",
+          "file": "course-presentation.spec.ts",
+          "line": 67,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5703,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:50.216Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-376c5901fcec732058c0",
+          "file": "course-presentation.spec.ts",
+          "line": 90,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5296,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:17:57.989Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-5f9cf7d828b1381e526d",
+          "file": "course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3005,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:18:03.410Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-2cbbcb379bc9c8fbcdcc",
+          "file": "course-presentation.spec.ts",
+          "line": 67,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (en)",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 24775,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('QA_TEST_LESSON', { exact: true }).first()\nExpected: visible\nReceived: hidden\nTimeout:  20000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('QA_TEST_LESSON', { exact: true }).first() with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByText('QA_TEST_LESSON', { exact: true }).first()\u001b[22m\n\u001b[2m    38 × locator resolved to <p class=\"text-[10px] font-mono text-muted-foreground\">QA_TEST_LESSON</p>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('QA_TEST_LESSON', { exact: true }).first()\nExpected: visible\nReceived: hidden\nTimeout:  20000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('QA_TEST_LESSON', { exact: true }).first() with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByText('QA_TEST_LESSON', { exact: true }).first()\u001b[22m\n\u001b[2m    38 × locator resolved to <p class=\"text-[10px] font-mono text-muted-foreground\">QA_TEST_LESSON</p>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts:105:239",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts",
+                      "column": 239,
+                      "line": 105
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 103 |\u001b[39m   \u001b[36mconst\u001b[39m mySearch\u001b[33m=\u001b[39mpage\u001b[33m.\u001b[39mgetByRole(\u001b[32m'textbox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'البحث داخل كورساتك'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'Search your courses'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m mySearch\u001b[33m.\u001b[39mfill(\u001b[32m'QA_TEST_NO_MATCH'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(enrolled)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m mySearch\u001b[33m.\u001b[39mclear()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(enrolled)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 104 |\u001b[39m   expect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mdocument\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth\u001b[33m<=\u001b[39mwindow\u001b[33m.\u001b[39minnerWidth))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39minfo\u001b[33m.\u001b[39moutputPath(\u001b[32m`my-courses-${language}.png`\u001b[39m)\u001b[33m,\u001b[39mfullPage\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 105 |\u001b[39m   \u001b[36mawait\u001b[39m enrolled\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'متابعة'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'CONTINUE'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/\\/courses\\/qa-test-course-layout\\/learn$/\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'QA_TEST_LESSON'\u001b[39m\u001b[33m,\u001b[39m{exact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mfirst())\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                                                                                                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 106 |\u001b[39m  })\u001b[33m;\u001b[39m\n \u001b[90m 107 |\u001b[39m }\n \u001b[90m 108 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts",
+                        "column": 239,
+                        "line": 105
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('QA_TEST_LESSON', { exact: true }).first()\nExpected: visible\nReceived: hidden\nTimeout:  20000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('QA_TEST_LESSON', { exact: true }).first() with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByText('QA_TEST_LESSON', { exact: true }).first()\u001b[22m\n\u001b[2m    38 × locator resolved to <p class=\"text-[10px] font-mono text-muted-foreground\">QA_TEST_LESSON</p>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n\n  103 |   const mySearch=page.getByRole('textbox',{name:language==='ar'?'البحث داخل كورساتك':'Search your courses',exact:true});await mySearch.fill('QA_TEST_NO_MATCH');await expect(enrolled).toHaveCount(0);await mySearch.clear();await expect(enrolled).toHaveCount(1);\n  104 |   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:info.outputPath(`my-courses-${language}.png`),fullPage:true});\n> 105 |   await enrolled.getByRole('link',{name:language==='ar'?'متابعة':'CONTINUE',exact:true}).click();await expect(page).toHaveURL(/\\/courses\\/qa-test-course-layout\\/learn$/);await expect(page.getByText('QA_TEST_LESSON',{exact:true}).first()).toBeVisible();\n      |                                                                                                                                                                                                                                               ^\n  106 |  });\n  107 | }\n  108 |\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts:105:239"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:18:06.425Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts\\course-presentation-organi-23e1b-ment-and-saved-progress-en--375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts\\course-presentation-organi-23e1b-ment-and-saved-progress-en--375\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts\\course-presentation-organi-23e1b-ment-and-saved-progress-en--375\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts",
+                    "column": 239,
+                    "line": 105
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-7985a0b48c6e20818ff3",
+          "file": "course-presentation.spec.ts",
+          "line": 90,
+          "column": 2
+        },
+        {
+          "title": "course file zones select with mouse, keyboard and drop, then persist three assets (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5542,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:18:32.618Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-9dc761e78b61aa8f7f42",
+          "file": "course-presentation.spec.ts",
+          "line": 31,
+          "column": 2
+        },
+        {
+          "title": "course drop rejects invalid selection, blocks another upload while busy and pauses (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3161,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:18:38.272Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-8f8a8c0ccdf3f888421b",
+          "file": "course-presentation.spec.ts",
+          "line": 67,
+          "column": 2
+        },
+        {
+          "title": "organized course cards retain filtering, enrollment and saved progress (ar)",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 25577,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('QA_TEST_LESSON', { exact: true }).first()\nExpected: visible\nReceived: hidden\nTimeout:  20000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('QA_TEST_LESSON', { exact: true }).first() with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByText('QA_TEST_LESSON', { exact: true }).first()\u001b[22m\n\u001b[2m    38 × locator resolved to <p class=\"text-[10px] font-mono text-muted-foreground\">QA_TEST_LESSON</p>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('QA_TEST_LESSON', { exact: true }).first()\nExpected: visible\nReceived: hidden\nTimeout:  20000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('QA_TEST_LESSON', { exact: true }).first() with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByText('QA_TEST_LESSON', { exact: true }).first()\u001b[22m\n\u001b[2m    38 × locator resolved to <p class=\"text-[10px] font-mono text-muted-foreground\">QA_TEST_LESSON</p>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts:105:239",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts",
+                      "column": 239,
+                      "line": 105
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 103 |\u001b[39m   \u001b[36mconst\u001b[39m mySearch\u001b[33m=\u001b[39mpage\u001b[33m.\u001b[39mgetByRole(\u001b[32m'textbox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'البحث داخل كورساتك'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'Search your courses'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m mySearch\u001b[33m.\u001b[39mfill(\u001b[32m'QA_TEST_NO_MATCH'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(enrolled)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m mySearch\u001b[33m.\u001b[39mclear()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(enrolled)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 104 |\u001b[39m   expect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mdocument\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth\u001b[33m<=\u001b[39mwindow\u001b[33m.\u001b[39minnerWidth))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39minfo\u001b[33m.\u001b[39moutputPath(\u001b[32m`my-courses-${language}.png`\u001b[39m)\u001b[33m,\u001b[39mfullPage\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 105 |\u001b[39m   \u001b[36mawait\u001b[39m enrolled\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'متابعة'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'CONTINUE'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/\\/courses\\/qa-test-course-layout\\/learn$/\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'QA_TEST_LESSON'\u001b[39m\u001b[33m,\u001b[39m{exact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mfirst())\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                                                                                                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 106 |\u001b[39m  })\u001b[33m;\u001b[39m\n \u001b[90m 107 |\u001b[39m }\n \u001b[90m 108 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts",
+                        "column": 239,
+                        "line": 105
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('QA_TEST_LESSON', { exact: true }).first()\nExpected: visible\nReceived: hidden\nTimeout:  20000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('QA_TEST_LESSON', { exact: true }).first() with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByText('QA_TEST_LESSON', { exact: true }).first()\u001b[22m\n\u001b[2m    38 × locator resolved to <p class=\"text-[10px] font-mono text-muted-foreground\">QA_TEST_LESSON</p>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n\n  103 |   const mySearch=page.getByRole('textbox',{name:language==='ar'?'البحث داخل كورساتك':'Search your courses',exact:true});await mySearch.fill('QA_TEST_NO_MATCH');await expect(enrolled).toHaveCount(0);await mySearch.clear();await expect(enrolled).toHaveCount(1);\n  104 |   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:info.outputPath(`my-courses-${language}.png`),fullPage:true});\n> 105 |   await enrolled.getByRole('link',{name:language==='ar'?'متابعة':'CONTINUE',exact:true}).click();await expect(page).toHaveURL(/\\/courses\\/qa-test-course-layout\\/learn$/);await expect(page.getByText('QA_TEST_LESSON',{exact:true}).first()).toBeVisible();\n      |                                                                                                                                                                                                                                               ^\n  106 |  });\n  107 | }\n  108 |\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts:105:239"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T20:18:41.444Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts\\course-presentation-organi-04f9d-ment-and-saved-progress-ar--375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts\\course-presentation-organi-04f9d-ment-and-saved-progress-ar--375\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_course_presentation_02\\artifacts\\course-presentation-organi-04f9d-ment-and-saved-progress-ar--375\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\course-presentation.spec.ts",
+                    "column": 239,
+                    "line": 105
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0c9106ce5beb8e3ede03-850e40e99411c9d76800",
+          "file": "course-presentation.spec.ts",
+          "line": 90,
+          "column": 2
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-16T20:16:47.853Z",
+    "duration": 141890.836,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

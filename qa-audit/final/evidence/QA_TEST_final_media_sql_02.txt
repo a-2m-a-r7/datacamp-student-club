@@ -1,0 +1,47 @@
+PASS members cannot create or rename course units
+PASS unit reorder is atomic, checks exact membership and requires administrator
+PASS lesson reorder rejects missing IDs without partially updating positions
+PASS cross-course units and source lessons are rejected
+PASS asset boundary accepts 2 GiB metadata and rejects larger files
+PASS non-enrolled members cannot list private lesson assets
+PASS enrolled members can read assets but cannot forge file references
+PASS watch position persists privately and updates resume lesson without awarding completion
+PASS non-enrolled users and invalid bookmark values are rejected
+C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pg-protocol\src\parser.ts:442
+        : new DatabaseError(messageValue, length, name)
+          ^
+
+error: permission denied for table course_drive_connections
+    at pe.Ue (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pg-protocol\src\parser.ts:442:11)
+    at pe.tt (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pg-protocol\src\parser.ts:220:16)
+    at pe.parse (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pg-protocol\src\parser.ts:104:21)
+    at D.Ne (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1763)
+    at <anonymous> (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\node_modules\@electric-sql\pglite\dist\index.js:5:1155)
+    at wasm://wasm/0269e01e:wasm-function[10979]:0x5ad057
+    at wasm://wasm/0269e01e:wasm-function[3598]:0x281dd2
+    at wasm://wasm/0269e01e:wasm-function[3640]:0x289ccf
+    at wasm://wasm/0269e01e:wasm-function[3650]:0x289f2b
+    at wasm://wasm/0269e01e:wasm-function[9956]:0x556968 {
+  length: 112,
+  severity: 'ERROR',
+  code: '42501',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'aclchk.c',
+  line: '2795',
+  routine: 'aclcheck_error',
+  query: 'SELECT * FROM course_drive_connections',
+  params: [],
+  queryOptions: undefined
+}
+
+Node.js v25.8.0

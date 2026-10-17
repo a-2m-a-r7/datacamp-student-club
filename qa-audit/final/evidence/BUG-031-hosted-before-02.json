@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-17T11:28:48.606Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "mode": "before",
+  "cases": [
+    {
+      "name": "private-bucket-limit-and-allowed-MIME",
+      "passed": true
+    },
+    {
+      "name": "anonymous-upload-to-open-form-really-stored",
+      "passed": true,
+      "size": 48
+    },
+    {
+      "name": "admin-signed-download-has-exact-UTF8-bytes",
+      "passed": true,
+      "sha256": "0650810618753cbed5bfa32ad9e62d47ffa020cd5875592d40f681bf7444cd18"
+    },
+    {
+      "name": "visitor-cannot-read-sign-or-overwrite",
+      "passed": true
+    },
+    {
+      "name": "member-cannot-read-sign-or-overwrite",
+      "passed": true
+    },
+    {
+      "name": "public-URL-does-not-expose-private-bytes",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "name": "Storage-rejects-disallowed-MIME",
+      "passed": true
+    },
+    {
+      "name": "missing-object-denied",
+      "passed": false,
+      "actual": "accepted",
+      "knownBugBefore": true
+    },
+    {
+      "name": "empty-file-denied-by-RPC",
+      "passed": false,
+      "actual": "accepted",
+      "knownBugBefore": true
+    },
+    {
+      "name": "answer-size-canonical-from-Storage",
+      "passed": false,
+      "expected": 48,
+      "actual": 999,
+      "knownBugBefore": true
+    }
+  ],
+  "status": "reproduced"
+}

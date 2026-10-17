@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-10-17T06:11:25.018Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "syntheticVideo": "QA_TEST_Python_Basics.mp4",
+  "steps": [
+    {
+      "action": "prepare",
+      "http": 200,
+      "status": null
+    },
+    {
+      "action": "status",
+      "http": 200,
+      "status": "processing"
+    },
+    {
+      "action": "status",
+      "http": 200,
+      "status": "active"
+    },
+    {
+      "action": "generate",
+      "http": 400,
+      "status": null
+    }
+  ],
+  "limits": "One actual synthetic video, free QA project; no 2GiB upload or sustained analysis capacity proof.",
+  "failure": "QA analyze generate HTTP 400: Video generation failed or returned an invalid plan. No quiz or coding lesson was added. Retry later."
+}

@@ -1,0 +1,1 @@
+{"at":"2026-10-17T07:13:26.805Z","target":"kcqgnkfdpfibwkrghubl","handlerInvoked":true,"noServiceAccountConfigured":true,"anonymousResponseSaved":true,"syncStatus":"synced","actualSheetRowMatches":true,"limits":"Direct real handler -> QA REST/RPC -> Google Sheets, not a browser submission test."}

@@ -1,0 +1,47 @@
+✔ admin account API validates, creates, rolls back failed profile writes, refuses self-deletion and deletes Auth-owned records (32.4432ms)
+✔ backup exports all 1105 records in bounded pages, excludes credentials and rejects partial database failures (7027.8949ms)
+✔ server authorization rejects visitor, member, expired token and unverified administrator (28.7111ms)
+✔ avatar API validates real identity, saves owned Storage bytes and reference, and reuses stored photos (41.3459ms)
+✔ provider image fetch rejects arbitrary URLs, hostile redirects, oversized bodies and wrong signatures (1.4799ms)
+▶ course APIs preserve permissions, provider binding, bounded memory and private credentials
+  ✔ encrypted refresh tokens are randomized, reversible and tamper evident (1.1406ms)
+  ✔ signed tickets reject tampering and expiry (0.3682ms)
+  ✔ upload destinations reject foreign hosts, credentials and leaked API keys (0.2029ms)
+  ✔ Gemini hashes accept base64 raw bytes and base64 hex text but reject malformed lengths and data (0.2618ms)
+  ✔ file validation rejects 2 GiB plus one, unsupported executables and oversized captions (0.1506ms)
+  ✔ bounded provider reads reject oversized streams without buffering the whole response (10.4322ms)
+  ✔ AI plans reject invalid answers, empty output tests and duplicate question IDs (2.1264ms)
+  ✔ new generated quizzes require complete aligned Arabic and English versions (0.5434ms)
+  ✔ changing quiz language preserves answer indices and legacy fallback (0.1452ms)
+  ✔ all administration endpoints reject visitors and ordinary members before provider access (7.6637ms)
+  ✔ OAuth callback with missing or mismatched nonce cannot exchange a code (0.4772ms)
+  ✔ Drive connection exposes no refresh token or server secret (0.9489ms)
+  ✔ completed Drive sessions are recovered by the server without browser CORS or database writes (2.776ms)
+  ✔ Gemini recovers an uploaded job file without returning its completed upload session (1.5606ms)
+  ✔ Gemini status validates the provider base64-encoded hex hash before advancing an uploaded job (0.8909ms)
+  ✔ file tickets require enrollment; active membership alone is insufficient (1.7098ms)
+  ✔ file completion rejects a provider hash mismatch before public sharing or database writes (1.2104ms)
+  ✔ file completion validates actual bytes and only then saves the lesson reference (1.5451ms)
+  ✔ video generation stays disabled until free-tier activation is configured (0.3749ms)
+✔ course APIs preserve permissions, provider binding, bounded memory and private credentials (36.7566ms)
+✔ hidden branch answer cannot bypass a reachable required target or save a response (1371.1981ms)
+✔ QA launcher strips inherited provider credentials in both child environments (1.983ms)
+✔ QA launcher disables inherited optional integrations and external runner URL (1.316ms)
+✔ QA launcher keeps canonical and authentication return URLs on isolated localhost (1.0214ms)
+✔ QA Vite mode cannot hydrate project dotenv files, including unlisted VITE variables (362.8814ms)
+[api/ai/chat] Model gemini-flash-latest returned HTTP 403: {}
+✔ public TS compiler rejects malformed boundaries and never executes submitted code (23.2946ms)
+✔ forms routes enforce method, body size and untrusted sheet authorization before provider access (15.4535ms)
+✔ AI validates input boundaries, handles provider failures and never returns server credentials (1.2151ms)
+✔ AI whitespace-only input is empty and must not consume provider calls (0.5112ms)
+✔ background refresh needs no realtime connection; hidden/offline tabs stop work and resume fresh (6.432ms)
+✔ slow responses do not overlap and cannot repopulate state after logout/unmount (1.1072ms)
+✔ a temporary backend failure retains known data and a later refresh receives the real update (0.9492ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7431.7089

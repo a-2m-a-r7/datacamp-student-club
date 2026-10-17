@@ -1,0 +1,1442 @@
+{
+  "security": {
+    "lints": [
+      {
+        "name": "rls_enabled_no_policy",
+        "title": "RLS Enabled No Policy",
+        "level": "INFO",
+        "facing": "EXTERNAL",
+        "categories": [
+          "SECURITY"
+        ],
+        "description": "Detects cases where row level security (RLS) has been enabled on a table but no RLS policies have been created.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+        "count": 5,
+        "findings": [
+          {
+            "detail": "Table \\`public.course_drive_connections\\` has RLS enabled, but no policies exist",
+            "metadata": {
+              "name": "course_drive_connections",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Table \\`public.course_request_windows\\` has RLS enabled, but no policies exist",
+            "metadata": {
+              "name": "course_request_windows",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Table \\`public.course_upload_jobs\\` has RLS enabled, but no policies exist",
+            "metadata": {
+              "name": "course_upload_jobs",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Table \\`public.lesson_analysis_jobs\\` has RLS enabled, but no policies exist",
+            "metadata": {
+              "name": "lesson_analysis_jobs",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Table \\`public.member_cards\\` has RLS enabled, but no policies exist",
+            "metadata": {
+              "name": "member_cards",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          }
+        ]
+      },
+      {
+        "name": "security_definer_view",
+        "title": "Security Definer View",
+        "level": "ERROR",
+        "facing": "EXTERNAL",
+        "categories": [
+          "SECURITY"
+        ],
+        "description": "Detects views defined with the SECURITY DEFINER property. These views enforce Postgres permissions and row level security policies (RLS) of the view creator, rather than that of the querying user",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0010_security_definer_view",
+        "count": 1,
+        "findings": [
+          {
+            "detail": "View \\`public.public_events\\` is defined with the SECURITY DEFINER property",
+            "metadata": {
+              "name": "public_events",
+              "type": "view",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          }
+        ]
+      },
+      {
+        "name": "anon_security_definer_function_executable",
+        "title": "Public Can Execute SECURITY DEFINER Function",
+        "level": "WARN",
+        "facing": "EXTERNAL",
+        "categories": [
+          "SECURITY"
+        ],
+        "description": "Detects `SECURITY DEFINER` functions that are callable without signing in. Revoke `EXECUTE`, switch the function to `SECURITY INVOKER`, or move it out of your exposed API schema if it is not meant to be public.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable",
+        "count": 13,
+        "findings": [
+          {
+            "detail": "Function `public.handle_new_user()` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/handle_new_user`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "handle_new_user",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.has_user_responded(p_form_id uuid, p_email text)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/has_user_responded`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "has_user_responded",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "p_form_id uuid, p_email text",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.is_admin()` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/is_admin`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "is_admin",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.public_stats()` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/public_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "public_stats",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.reorder_course_lessons(p_course_id uuid, p_ids uuid[])` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/reorder_course_lessons`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "reorder_course_lessons",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_course_id uuid, p_ids uuid[]",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.reorder_course_modules(p_course_id uuid, p_ids uuid[])` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/reorder_course_modules`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "reorder_course_modules",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_course_id uuid, p_ids uuid[]",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.require_active_user()` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/require_active_user`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "require_active_user",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.save_lesson_watch_progress(p_lesson_id uuid, p_seconds numeric)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/save_lesson_watch_progress`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "save_lesson_watch_progress",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_lesson_id uuid, p_seconds numeric",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.submit_form_response(p_form_id uuid, p_answers jsonb, p_respondent_email text, p_metadata jsonb)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/submit_form_response`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "submit_form_response",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_form_id uuid, p_answers jsonb, p_respondent_email text, p_metadata jsonb",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.sync_verified_identity()` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/sync_verified_identity`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "sync_verified_identity",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.validate_generated_lesson_progress()` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/validate_generated_lesson_progress`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "validate_generated_lesson_progress",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.verify_certificate(p_code text)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/verify_certificate`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "verify_certificate",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "p_code text",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.verify_member_card(p_token uuid)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/verify_member_card`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "verify_member_card",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "p_token uuid",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          }
+        ]
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "title": "Signed-In Users Can Execute SECURITY DEFINER Function",
+        "level": "WARN",
+        "facing": "EXTERNAL",
+        "categories": [
+          "SECURITY"
+        ],
+        "description": "Detects `SECURITY DEFINER` functions that are callable by signed-in users. Revoke `EXECUTE`, switch the function to `SECURITY INVOKER`, or move it out of your exposed API schema if signed-in users should not call it.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+        "count": 32,
+        "findings": [
+          {
+            "detail": "Function `public.acknowledge_badges()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/acknowledge_badges`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "acknowledge_badges",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.admin_growth()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/admin_growth`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "admin_growth",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.assign_member_role(p_user_id uuid, p_role text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/assign_member_role`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "assign_member_role",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_user_id uuid, p_role text",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.award_points(p_user_id uuid, p_action text, p_description text, p_custom_points integer, p_reference_id text, p_reference_type text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/award_points`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "award_points",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_user_id uuid, p_action text, p_description text, p_custom_points integer, p_reference_id text, p_reference_type text",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.check_in_event(p_event_id uuid, p_ticket text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/check_in_event`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "check_in_event",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_event_id uuid, p_ticket text",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.complete_course_lesson(p_course_id uuid, p_lesson_id uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/complete_course_lesson`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "complete_course_lesson",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_course_id uuid, p_lesson_id uuid",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.enroll_course(p_course_id uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/enroll_course`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "enroll_course",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_course_id uuid",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.get_notifications()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/get_notifications`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "get_notifications",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.get_own_member_card()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/get_own_member_card`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "get_own_member_card",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.handle_new_user()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/handle_new_user`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "handle_new_user",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.has_user_responded(p_form_id uuid, p_email text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/has_user_responded`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "has_user_responded",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "p_form_id uuid, p_email text",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.import_member_metadata(p_rows jsonb)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/import_member_metadata`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "import_member_metadata",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_rows jsonb",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.is_admin()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/is_admin`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "is_admin",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.issue_course_certificate(p_course_id uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/issue_course_certificate`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "issue_course_certificate",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_course_id uuid",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.public_leaderboard(p_limit integer)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/public_leaderboard`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "public_leaderboard",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_limit integer",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.public_stats()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/public_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "public_stats",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.read_notifications(p_id uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/read_notifications`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "read_notifications",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_id uuid",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.refresh_badges()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/refresh_badges`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "refresh_badges",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.register_for_event(target_event_id uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/register_for_event`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "register_for_event",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "target_event_id uuid",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.reorder_course_lessons(p_course_id uuid, p_ids uuid[])` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/reorder_course_lessons`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "reorder_course_lessons",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_course_id uuid, p_ids uuid[]",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.reorder_course_modules(p_course_id uuid, p_ids uuid[])` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/reorder_course_modules`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "reorder_course_modules",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_course_id uuid, p_ids uuid[]",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.require_active_user()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/require_active_user`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "require_active_user",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.resolve_member_card_ticket(p_ticket text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/resolve_member_card_ticket`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "resolve_member_card_ticket",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_ticket text",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.save_form(p_form jsonb, p_questions jsonb)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/save_form`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "save_form",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_form jsonb, p_questions jsonb",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.save_form_questions(p_form_id uuid, p_questions jsonb)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/save_form_questions`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "save_form_questions",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_form_id uuid, p_questions jsonb",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.save_lesson_watch_progress(p_lesson_id uuid, p_seconds numeric)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/save_lesson_watch_progress`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "save_lesson_watch_progress",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_lesson_id uuid, p_seconds numeric",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.submit_course_quiz(p_lesson_id uuid, p_answers jsonb)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/submit_course_quiz`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "submit_course_quiz",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_lesson_id uuid, p_answers jsonb",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.submit_form_response(p_form_id uuid, p_answers jsonb, p_respondent_email text, p_metadata jsonb)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/submit_form_response`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "submit_form_response",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "p_form_id uuid, p_answers jsonb, p_respondent_email text, p_metadata jsonb",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.sync_verified_identity()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/sync_verified_identity`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "sync_verified_identity",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.validate_generated_lesson_progress()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/validate_generated_lesson_progress`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "validate_generated_lesson_progress",
+              "schema": "public",
+              "language": "plpgsql",
+              "arguments": "",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.verify_certificate(p_code text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/verify_certificate`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "verify_certificate",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "p_code text",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          },
+          {
+            "detail": "Function `public.verify_member_card(p_token uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/verify_member_card`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+            "metadata": {
+              "name": "verify_member_card",
+              "schema": "public",
+              "language": "sql",
+              "arguments": "p_token uuid",
+              "security_definer": true
+            },
+            "observed_at": "2026-10-16T16:11:56.508Z"
+          }
+        ]
+      }
+    ]
+  },
+  "performance": {
+    "lints": [
+      {
+        "name": "unindexed_foreign_keys",
+        "title": "Unindexed foreign keys",
+        "level": "INFO",
+        "facing": "EXTERNAL",
+        "categories": [
+          "PERFORMANCE"
+        ],
+        "description": "Identifies foreign key constraints without a covering index, which can impact database performance.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys",
+        "count": 24,
+        "findings": [
+          {
+            "detail": "Table \\`public.audit_logs\\` has a foreign key \\`audit_logs_user_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "audit_logs",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "audit_logs_user_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.auth_events\\` has a foreign key \\`auth_events_user_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "auth_events",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "auth_events_user_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.certificates\\` has a foreign key \\`certificates_course_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "certificates",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "certificates_course_id_fkey",
+              "fkey_columns": [
+                4
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.certificates\\` has a foreign key \\`certificates_event_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "certificates",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "certificates_event_id_fkey",
+              "fkey_columns": [
+                6
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.course_assets\\` has a foreign key \\`course_assets_course_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "course_assets",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "course_assets_course_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.course_assets\\` has a foreign key \\`course_assets_owner_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "course_assets",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "course_assets_owner_id_fkey",
+              "fkey_columns": [
+                4
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.course_modules\\` has a foreign key \\`course_modules_course_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "course_modules",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "course_modules_course_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.course_upload_jobs\\` has a foreign key \\`course_upload_jobs_asset_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "course_upload_jobs",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "course_upload_jobs_asset_id_fkey",
+              "fkey_columns": [
+                12
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.course_upload_jobs\\` has a foreign key \\`course_upload_jobs_lesson_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "course_upload_jobs",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "course_upload_jobs_lesson_id_fkey",
+              "fkey_columns": [
+                3
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.courses\\` has a foreign key \\`courses_created_by_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "courses",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "courses_created_by_fkey",
+              "fkey_columns": [
+                16
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.form_answers\\` has a foreign key \\`form_answers_question_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "form_answers",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "form_answers_question_id_fkey",
+              "fkey_columns": [
+                3
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.form_answers\\` has a foreign key \\`form_answers_response_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "form_answers",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "form_answers_response_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.form_questions\\` has a foreign key \\`form_questions_form_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "form_questions",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "form_questions_form_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.form_responses\\` has a foreign key \\`form_responses_form_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "form_responses",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "form_responses_form_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.form_responses\\` has a foreign key \\`form_responses_respondent_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "form_responses",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "form_responses_respondent_id_fkey",
+              "fkey_columns": [
+                3
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.forms\\` has a foreign key \\`forms_created_by_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "forms",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "forms_created_by_fkey",
+              "fkey_columns": [
+                16
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.lesson_analysis_jobs\\` has a foreign key \\`lesson_analysis_jobs_lesson_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "lesson_analysis_jobs",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "lesson_analysis_jobs_lesson_id_fkey",
+              "fkey_columns": [
+                3
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.lesson_watch_progress\\` has a foreign key \\`lesson_watch_progress_lesson_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "lesson_watch_progress",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "lesson_watch_progress_lesson_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.lessons\\` has a foreign key \\`lessons_video_asset_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "lessons",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "lessons_video_asset_id_fkey",
+              "fkey_columns": [
+                18
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notification_reads\\` has a foreign key \\`notification_reads_notification_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "notification_reads",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "notification_reads_notification_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notifications\\` has a foreign key \\`notifications_user_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "notifications",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "notifications_user_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.projects\\` has a foreign key \\`projects_created_by_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "projects",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "projects_created_by_fkey",
+              "fkey_columns": [
+                14
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.sync_logs\\` has a foreign key \\`sync_logs_form_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "sync_logs",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "sync_logs_form_id_fkey",
+              "fkey_columns": [
+                2
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.sync_logs\\` has a foreign key \\`sync_logs_response_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+            "metadata": {
+              "name": "sync_logs",
+              "type": "table",
+              "schema": "public",
+              "fkey_name": "sync_logs_response_id_fkey",
+              "fkey_columns": [
+                3
+              ]
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          }
+        ]
+      },
+      {
+        "name": "auth_rls_initplan",
+        "title": "Auth RLS Initialization Plan",
+        "level": "WARN",
+        "facing": "EXTERNAL",
+        "categories": [
+          "PERFORMANCE"
+        ],
+        "description": "Detects if calls to \\`current_setting()\\` and \\`auth.<function>()\\` in RLS policies are being unnecessarily re-evaluated for each row",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0003_auth_rls_initplan",
+        "count": 18,
+        "findings": [
+          {
+            "detail": "Table \\`public.profiles\\` has a row level security policy \\`qa_profile_read\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "profiles",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.profiles\\` has a row level security policy \\`qa_profile_update\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "profiles",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.enrollments\\` has a row level security policy \\`qa_enrollment_read\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "enrollments",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.projects\\` has a row level security policy \\`qa_project_submit\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "projects",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.projects\\` has a row level security policy \\`qa_project_own\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "projects",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notifications\\` has a row level security policy \\`qa_notifications_read\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "notifications",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notifications\\` has a row level security policy \\`qa_notifications_update\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "notifications",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notifications\\` has a row level security policy \\`qa_notifications_insert\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "notifications",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.auth_events\\` has a row level security policy \\`qa_auth_events_read\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "auth_events",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.auth_events\\` has a row level security policy \\`qa_auth_events_insert\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "auth_events",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.points_log\\` has a row level security policy \\`qa_points_read\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "points_log",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.user_achievements\\` has a row level security policy \\`qa_badges_read\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "user_achievements",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.certificates\\` has a row level security policy \\`qa_certificates_read\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "certificates",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notification_reads\\` has a row level security policy \\`qa_reads\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "notification_reads",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.course_assets\\` has a row level security policy \\`course_assets_read\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "course_assets",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.lesson_watch_progress\\` has a row level security policy \\`own_watch_progress\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "lesson_watch_progress",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.users\\` has a row level security policy \\`Users can read own users mirror\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "users",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.users\\` has a row level security policy \\`Users can update own users mirror\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+            "metadata": {
+              "name": "users",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          }
+        ]
+      },
+      {
+        "name": "unused_index",
+        "title": "Unused Index",
+        "level": "INFO",
+        "facing": "EXTERNAL",
+        "categories": [
+          "PERFORMANCE"
+        ],
+        "description": "Detects if an index has never been used and may be a candidate for removal.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+        "count": 11,
+        "findings": [
+          {
+            "detail": "Index \\`dc_course_catalog\\` on table \\`public.courses\\` has not been used",
+            "metadata": {
+              "name": "courses",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`dc_published_catalog\\` on table \\`public.courses\\` has not been used",
+            "metadata": {
+              "name": "courses",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`dc_course_lessons\\` on table \\`public.lessons\\` has not been used",
+            "metadata": {
+              "name": "lessons",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`dc_course_enrollments\\` on table \\`public.enrollments\\` has not been used",
+            "metadata": {
+              "name": "enrollments",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`dc_member_enrollments\\` on table \\`public.enrollments\\` has not been used",
+            "metadata": {
+              "name": "enrollments",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`dc_member_certificates\\` on table \\`public.certificates\\` has not been used",
+            "metadata": {
+              "name": "certificates",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`dc_reward_lookup\\` on table \\`public.points_log\\` has not been used",
+            "metadata": {
+              "name": "points_log",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`course_assets_lesson\\` on table \\`public.course_assets\\` has not been used",
+            "metadata": {
+              "name": "course_assets",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`lessons_source_lesson\\` on table \\`public.lessons\\` has not been used",
+            "metadata": {
+              "name": "lessons",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`course_upload_jobs_owner\\` on table \\`public.course_upload_jobs\\` has not been used",
+            "metadata": {
+              "name": "course_upload_jobs",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Index \\`lesson_analysis_jobs_owner\\` on table \\`public.lesson_analysis_jobs\\` has not been used",
+            "metadata": {
+              "name": "lesson_analysis_jobs",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          }
+        ]
+      },
+      {
+        "name": "multiple_permissive_policies",
+        "title": "Multiple Permissive Policies",
+        "level": "WARN",
+        "facing": "EXTERNAL",
+        "categories": [
+          "PERFORMANCE"
+        ],
+        "description": "Detects if multiple permissive row level security policies are present on a table for the same \\`role\\` and \\`action\\` (e.g. insert). Multiple permissive policies are suboptimal for performance as each policy must be executed for every relevant query.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies",
+        "count": 22,
+        "findings": [
+          {
+            "detail": "Table \\`public.auth_events\\` has multiple permissive policies for role \\`authenticated\\` for action \\`INSERT\\`. Policies include \\`{qa_admin,qa_auth_events_insert}\\`",
+            "metadata": {
+              "name": "auth_events",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.auth_events\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_auth_events_read}\\`",
+            "metadata": {
+              "name": "auth_events",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.blog\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_blog_read}\\`",
+            "metadata": {
+              "name": "blog",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.certificates\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_certificates_read}\\`",
+            "metadata": {
+              "name": "certificates",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.course_modules\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{course_modules_admin,course_modules_read}\\`",
+            "metadata": {
+              "name": "course_modules",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.courses\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_course_read}\\`",
+            "metadata": {
+              "name": "courses",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.enrollments\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_enrollment_read}\\`",
+            "metadata": {
+              "name": "enrollments",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.form_questions\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_questions_read}\\`",
+            "metadata": {
+              "name": "form_questions",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.forms\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_forms_read}\\`",
+            "metadata": {
+              "name": "forms",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.gallery\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_gallery_read}\\`",
+            "metadata": {
+              "name": "gallery",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.lessons\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_lesson_read}\\`",
+            "metadata": {
+              "name": "lessons",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.messages\\` has multiple permissive policies for role \\`authenticated\\` for action \\`INSERT\\`. Policies include \\`{qa_admin,qa_messages_insert}\\`",
+            "metadata": {
+              "name": "messages",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notifications\\` has multiple permissive policies for role \\`authenticated\\` for action \\`INSERT\\`. Policies include \\`{qa_admin,qa_notifications_insert}\\`",
+            "metadata": {
+              "name": "notifications",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notifications\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_notifications_read}\\`",
+            "metadata": {
+              "name": "notifications",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.notifications\\` has multiple permissive policies for role \\`authenticated\\` for action \\`UPDATE\\`. Policies include \\`{qa_admin,qa_notifications_update}\\`",
+            "metadata": {
+              "name": "notifications",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.points_log\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_points_read}\\`",
+            "metadata": {
+              "name": "points_log",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.profiles\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_profile_read}\\`",
+            "metadata": {
+              "name": "profiles",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.profiles\\` has multiple permissive policies for role \\`authenticated\\` for action \\`UPDATE\\`. Policies include \\`{qa_admin,qa_profile_update}\\`",
+            "metadata": {
+              "name": "profiles",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.projects\\` has multiple permissive policies for role \\`authenticated\\` for action \\`INSERT\\`. Policies include \\`{qa_admin,qa_project_submit}\\`",
+            "metadata": {
+              "name": "projects",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.projects\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_project_own,qa_project_read}\\`",
+            "metadata": {
+              "name": "projects",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.settings\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_settings_read}\\`",
+            "metadata": {
+              "name": "settings",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          },
+          {
+            "detail": "Table \\`public.user_achievements\\` has multiple permissive policies for role \\`authenticated\\` for action \\`SELECT\\`. Policies include \\`{qa_admin,qa_badges_read}\\`",
+            "metadata": {
+              "name": "user_achievements",
+              "type": "table",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-16T16:11:55.789Z"
+          }
+        ]
+      }
+    ]
+  }
+}

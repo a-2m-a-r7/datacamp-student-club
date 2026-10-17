@@ -1,0 +1,3 @@
+{"name":"QA_TEST_Python_Basics.mp4","kind":"video","size":47808659,"chunks":6,"resumeProbe":true,"persistedHashVerified":true,"rangeBytesVerified":true,"wholeFileVerified":false,"idempotentFinish":true,"elapsedMs":97264}
+{"name":"QA_TEST_material.txt","kind":"material","size":335,"chunks":1,"resumeProbe":false,"persistedHashVerified":true,"rangeBytesVerified":true,"wholeFileVerified":true,"idempotentFinish":true,"elapsedMs":6496}
+{"name":"QA_TEST_captions.srt","kind":"subtitle","size":243,"chunks":1,"resumeProbe":false,"persistedHashVerified":true,"rangeBytesVerified":true,"wholeFileVerified":true,"idempotentFinish":true,"elapsedMs":8182}

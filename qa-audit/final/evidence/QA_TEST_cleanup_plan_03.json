@@ -1,0 +1,203 @@
+{
+  "at": "2026-10-17T11:18:57.969Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "phase": "plan",
+  "steps": [
+    {
+      "kind": "owner-role-verified",
+      "id": "cf94bf7d-15ab-48be-b9c7-c537a8b0b299",
+      "role": "user"
+    },
+    {
+      "kind": "drive-trash-candidate",
+      "id": "1EH4hLLVJl-L9XM6Oqiy71DcaI7JstOIr",
+      "name": "QA_TEST_Python_Basics.mp4"
+    },
+    {
+      "kind": "drive-trash-candidate",
+      "id": "1fExHMwfI98oUY9BsZ7IFyuZttozIUNxv",
+      "name": "QA_TEST_material.txt"
+    },
+    {
+      "kind": "drive-trash-candidate",
+      "id": "1er6a8muuXcu-B53fHFQStiP1bh0xtoCb",
+      "name": "QA_TEST_captions.srt"
+    },
+    {
+      "kind": "drive-trash-candidate",
+      "id": "1sFS2cmlwaGb6R5wwY-CqMCGJGRmsxRN5XRZRv4IHcGU",
+      "name": "[DataCamp] QA_TEST_Sheets_Actual (Responses)"
+    },
+    {
+      "kind": "gemini-file-candidate",
+      "id": "e68b1b9a-854f-4cf1-a244-025cd0a724f7"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "QA_TEST_0ad4cf76-fbce-470f-8aad-1ea656f84692.png",
+      "bucket": "course-thumbnails"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "QA_TEST_13875244-cc93-4272-8d21-5fb9160a60d7.png",
+      "bucket": "course-thumbnails"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "QA_TEST_b5208489-41bb-4ef7-9d32-64906fd4e6dd.png",
+      "bucket": "course-thumbnails"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "QA_TEST_e25e3a39-809b-47c9-8aa2-bd9430addeff.png",
+      "bucket": "course-thumbnails"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "QA_TEST_278ce41c-9d06-442d-bba5-ed0eaa74d3d3.png",
+      "bucket": "uploads"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "QA_TEST_97943ec9-78f8-48d4-ad11-faa744e500d5.png",
+      "bucket": "uploads"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "QA_TEST_b01dffdf-bdee-4b1c-978e-ded06a768956.png",
+      "bucket": "uploads"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "QA_TEST_e44b0401-0b1a-402d-9142-f380825b811a.png",
+      "bucket": "uploads"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "dad09995-499d-4e37-aa45-15b060cb19e9/QA_TEST_09668891-dd88-4bb9-a871-b93ecc5002b2.png",
+      "bucket": "avatars"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "dad09995-499d-4e37-aa45-15b060cb19e9/QA_TEST_ad81d421-ee01-4852-b4e3-fb027e26cea3.png",
+      "bucket": "avatars"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "dad09995-499d-4e37-aa45-15b060cb19e9/QA_TEST_d49e6039-0f8b-4c83-acac-8f62b04b97c9.png",
+      "bucket": "avatars"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "dad09995-499d-4e37-aa45-15b060cb19e9/QA_TEST_f08d191f-10a1-4d14-973b-fd59debc6c22.png",
+      "bucket": "avatars"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "f020efc6-2679-4fd1-a6a8-4b12b37b72e2/avatar_bc86d72f-85b8-4b3b-ba2a-bd331f88526a.png",
+      "bucket": "avatars"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "f020efc6-2679-4fd1-a6a8-4b12b37b72e2/QA_TEST_050f3813-31dd-46c9-b01e-c471fa4f7cfc.png",
+      "bucket": "avatars"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "f020efc6-2679-4fd1-a6a8-4b12b37b72e2/QA_TEST_4623b523-1869-4e26-bd21-919c82ef6aee.png",
+      "bucket": "avatars"
+    },
+    {
+      "kind": "storage-candidate",
+      "id": "f020efc6-2679-4fd1-a6a8-4b12b37b72e2/QA_TEST_94a385b1-fa46-49a4-bf64-975b0d1ac84b.png",
+      "bucket": "avatars"
+    },
+    {
+      "kind": "form-candidate",
+      "id": "6c46df86-0d6d-46f0-a93c-b7b2856748ee",
+      "title": "QA_TEST_Sheets_Actual"
+    },
+    {
+      "kind": "synthetic-course-candidate",
+      "id": "e2720b4a-fe1b-4e96-97b8-6423d9537bce"
+    },
+    {
+      "kind": "row-candidate",
+      "id": "b2e9d708-ecc0-48ce-815a-ce612fd024e2",
+      "table": "events"
+    },
+    {
+      "kind": "row-candidate",
+      "id": "b60d3ff3-d612-41b7-8a9d-a3335abf065e",
+      "table": "notifications"
+    },
+    {
+      "kind": "row-candidate",
+      "id": "55d83e27-b502-4cb7-83cd-c3786d5201ef",
+      "table": "events"
+    },
+    {
+      "kind": "row-candidate",
+      "id": "ff45520b-8968-4b63-a74e-9fd30089f713",
+      "table": "notifications"
+    },
+    {
+      "kind": "row-candidate",
+      "id": "ba973f49-b984-4041-8c2f-25637e89f65e",
+      "table": "events"
+    },
+    {
+      "kind": "row-candidate",
+      "id": "a69fa101-8f17-4023-99d9-e12622008b80",
+      "table": "notifications"
+    },
+    {
+      "kind": "row-candidate",
+      "id": "6a0432f8-3255-4799-87ee-f7e648f7040c",
+      "table": "events"
+    },
+    {
+      "kind": "row-candidate",
+      "id": "2bb76ffa-dae7-45d1-bb4e-7533d8e69001",
+      "table": "notifications"
+    },
+    {
+      "kind": "auth-user-candidate",
+      "id": "ce1c08f5-3c3a-4ad3-ab72-dd3a0e3b0613"
+    },
+    {
+      "kind": "auth-user-candidate",
+      "id": "095bac95-c4ad-484f-a2f2-923ba0f7c8bf"
+    },
+    {
+      "kind": "auth-user-candidate",
+      "id": "f6e5d7ca-50f0-462b-a14d-9548ace10024"
+    },
+    {
+      "kind": "auth-user-candidate",
+      "id": "a5f60ae1-eec0-4f70-8fdf-df4808a6190c"
+    },
+    {
+      "kind": "auth-user-candidate",
+      "id": "dad09995-499d-4e37-aa45-15b060cb19e9"
+    },
+    {
+      "kind": "auth-user-candidate",
+      "id": "f020efc6-2679-4fd1-a6a8-4b12b37b72e2"
+    },
+    {
+      "kind": "auth-user-candidate",
+      "id": "689bcb5f-e34a-4e16-8a21-89b500ab94d9"
+    }
+  ],
+  "protected": {
+    "ownerIdentity": "cf94bf7d-15ab-48be-b9c7-c537a8b0b299",
+    "personalCourse": "7939c9e9-0699-403c-be07-8cb270a2843f"
+  },
+  "retained": [
+    "Google owner QA identity and its existing Drive connection",
+    "Personal recording/course selected by owner",
+    "Google QA credentials/project and local runtime files; deletion not requested here"
+  ],
+  "status": "passed"
+}

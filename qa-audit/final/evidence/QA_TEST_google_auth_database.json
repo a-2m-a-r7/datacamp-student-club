@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-10-16T20:34:14.670Z",
+  "scope": "Isolated QA project kcqgnkfdpfibwkrghubl only",
+  "observation": {
+    "content": [
+      {
+        "type": "text",
+        "text": "This action was rejected due to unacceptable risk.\nReason: The SQL mutates the QA profile name for the real owner email before reading it; Google-login verification can use a read-only query or a dedicated QA identity, and this profile change was not specifically authorized.\nDo not bypass this rejection through a workaround or indirect execution. Continue with a safer alternative, or carry out checks to prove that the action is authorized or low risk before trying again. Complete unaffected work without asking for confirmation. Report anything that remains blocked, clarify why it was blocked by auto-review, inform the user of the risk and ask for approval."
+      }
+    ],
+    "isError": true
+  }
+}

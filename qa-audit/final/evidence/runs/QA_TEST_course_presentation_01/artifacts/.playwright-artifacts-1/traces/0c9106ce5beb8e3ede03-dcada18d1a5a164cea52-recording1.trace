@@ -1,0 +1,1 @@
+{"version":10,"type":"context-options","origin":"library","browserName":"","playwrightVersion":"1.64.0","options":{},"platform":"win32","wallTime":1792181765724,"monotonicTime":87388.757,"sdkLanguage":"javascript","title":"course-presentation.spec.ts:67 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar)"}

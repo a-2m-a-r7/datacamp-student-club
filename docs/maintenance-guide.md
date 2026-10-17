@@ -12,4 +12,8 @@ This audit has deletion approval only for dist, node_modules/.vite, test-results
 
 Keep the repository private with package license UNLICENSED. Existing ownership and third-party copyright/license notices remain. No open-source licensing grant is introduced by this audit.
 
+Sheets exports canonical saved responses. The server-only form_sheet_sync_jobs table records requested/synced revisions, a five-minute lease and a bounded error. A 202 response means queued, not synced. The owner drains up to three snapshots per request; retry Resync all after lease expiry if a request is interrupted. No cron or paid worker is assumed. Inspect pending jobs only through a trusted server connection. Rebuilding Responses replaces its values, including removed columns; keep personal notes on another tab. Database reads are paginated and all answer values remain literal text.
+
+Google QA credentials stay in ignored runtime files and are not deployment credentials. The owner's temporary QA admin role has been restored to user. Preserve the real-name owner identity and the personal recording selected during upload handoff unless separately approved for removal. Record exact IDs/results when cleaning synthetic fixtures.
+
 Use qa-audit/final/TEST-MATRIX.md, BUGS.md, BEFORE.md and AFTER.md for evidence-backed delivery status. Older reports/PDFs are historical; they do not replace the latest audit or prove an unexecuted provider flow.

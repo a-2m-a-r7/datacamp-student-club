@@ -1,0 +1,84 @@
+APPLIED 20261013000000_missing_schema.sql
+APPLIED 20261013000001_real_operations.sql
+APPLIED 20261013000002_atomic_forms.sql
+APPLIED 20261013000003_auth_notifications.sql
+APPLIED 20261013000004_verified_quizzes.sql
+APPLIED 20261013000005_storage.sql
+APPLIED 20261013000006_verified_badges.sql
+APPLIED 20261013000007_analytics.sql
+APPLIED 20261013000008_member_directory_private.sql
+APPLIED 20261013000009_staff_directory_private.sql
+APPLIED 20261013000010_member_cards.sql
+APPLIED 20261013000011_automatic_course_certificates.sql
+APPLIED 20261014000012_course_growth.sql
+APPLIED 20261014000013_profile_photos.sql
+APPLIED 20261015000014_course_media.sql
+APPLIED 20261015000015_restrict_legacy_promotion.sql
+APPLIED 20261015000016_protect_users_mirror.sql
+APPLIED 20261015000017_restrict_course_counter.sql
+APPLIED 20261015000018_branch_aware_form_validation.sql
+APPLIED 20261016152338_explicit_datacamp_data_api_grants.sql
+APPLIED 20261016153551_enable_fresh_users_mirror_rls.sql
+APPLIED 20261016154014_validate_reachable_form_branch.sql
+APPLIED 20261016161816_declare_application_realtime_tables.sql
+PASS SQL schema applies without seeds
+PASS anonymous profiles are private
+PASS member reads only their own profile
+PASS member can persist own profile name
+PASS member cannot edit another profile
+PASS member cannot read staff directory
+PASS member cannot assign own admin role
+PASS member cannot mint admin XP
+PASS enrollment creates persisted record and repeat does not reset it
+PASS lesson completion is idempotent
+PASS finishing a lesson automatically persists and links its course certificate
+PASS completion response contains the persisted certificate link
+PASS member cannot invoke arbitrary-owner certificate routine
+PASS certificate issuance is idempotent
+PASS database uniqueness rejects duplicate course certificates
+PASS historical repair is idempotent and restores a missing enrollment link
+PASS certificate storage failure rolls back completion and reward atomically
+PASS an unfinished course cannot claim a certificate
+PASS completion retry persists exactly one certificate after storage recovery
+PASS invalid required form response is rejected
+PASS valid form response is persisted
+PASS question edit preserves original saved answer
+PASS removing answered question rolls back
+PASS repeat response allowed when setting is off
+PASS form and questions save together after initial creation
+PASS one-response setting rejects a second recorded submission
+PASS answers cannot reference questions outside the form
+PASS growth analytics use real rows
+PASS public verification excludes private account fields
+PASS badge eligibility is derived from persisted lessons
+PASS member cannot directly forge a badge
+PASS quiz completion cannot bypass server grading
+PASS wrong quiz answers persist a failing result
+PASS failed assessment does not issue a certificate
+PASS correct quiz answers persist completion and points
+PASS final quiz automatically issues its matching course certificate
+PASS a failed retake preserves earned completion, best score and certificate
+PASS member cannot see event registration list
+PASS public event projection omits registrations
+PASS scanner rejects unknown ticket
+PASS scanner saves registered attendance
+PASS scanner rejects duplicate attendance
+PASS administrator cannot revoke current own access
+PASS announcement read state is saved per member
+PASS another member retains independent unread state
+PASS administrator can query member directory
+PASS member cannot query directory RPC directly
+PASS member card token persists and is idempotent
+PASS member cannot enumerate card tokens
+PASS member cannot resolve other membership cards for attendance
+PASS public card verification shows status and number without private profile
+PASS unknown card does not validate
+PASS visitor cannot issue membership card
+PASS admin resolves membership QR for attendance
+PASS inactive member card no longer verifies
+PASS visitor cannot query directory RPC directly
+PASS visitor cannot enumerate avatar object directory
+PASS member lists only their own avatar directory
+PASS member cannot replace another account avatar
+PASS administrator can inspect avatar directory
+PASS avatar bucket enforces 5 MB and raster types

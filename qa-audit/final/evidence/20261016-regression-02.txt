@@ -1,0 +1,442 @@
+
+Running 27 tests using 1 worker
+
+  ok  1 [1440] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (3.2s)
+  ok  2 [1440] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (7.4s)
+  ok  3 [1440] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (6.9s)
+  ok  4 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (26.9s)
+  ok  5 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor ar: direct route, direction, console and overflow census (38.1s)
+  x   6 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census (31.3s)
+  x   7 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census (36.8s)
+  ok  8 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin en: direct route, direction, console and overflow census (39.5s)
+  ok  9 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin ar: direct route, direction, console and overflow census (53.1s)
+  ok 10 [768] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (2.4s)
+  ok 11 [768] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (8.3s)
+  ok 12 [768] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (7.5s)
+  ok 13 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (34.3s)
+  ok 14 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor ar: direct route, direction, console and overflow census (38.1s)
+  x  15 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census (33.3s)
+  x  16 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census (35.0s)
+  ok 17 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin en: direct route, direction, console and overflow census (32.4s)
+  ok 18 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin ar: direct route, direction, console and overflow census (26.5s)
+  ok 19 [375] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (3.1s)
+  ok 20 [375] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (5.7s)
+  ok 21 [375] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (5.8s)
+  ok 22 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (19.3s)
+  ok 23 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor ar: direct route, direction, console and overflow census (22.6s)
+  x  24 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census (16.4s)
+  x  25 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census (21.9s)
+  ok 26 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin en: direct route, direction, console and overflow census (28.4s)
+  ok 27 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin ar: direct route, direction, console and overflow census (35.7s)
+
+
+  1) [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census 
+
+    Error: [
+      {
+        "route": "/my-courses",
+        "finalPath": "/my-courses",
+        "locale": "en",
+        "role": "member",
+        "scroll": 1440,
+        "width": 1440,
+        "brokenImages": [
+          null
+        ],
+        "controls": 38,
+        "errors": [],
+        "expectedNegativeDiagnostic": false,
+        "reason": "broken-image"
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 17
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "brokenImages": Array [
+    +       undefined,
+    +     ],
+    +     "controls": 38,
+    +     "errors": Array [],
+    +     "expectedNegativeDiagnostic": false,
+    +     "finalPath": "/my-courses",
+    +     "locale": "en",
+    +     "reason": "broken-image",
+    +     "role": "member",
+    +     "route": "/my-courses",
+    +     "scroll": 1440,
+    +     "width": 1440,
+    +   },
+    + ]
+
+      57 |    }
+      58 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});
+    > 59 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);
+         |                                                     ^
+      60 |   }finally{await app.db.close();}
+      61 |  });
+      62 | }
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\routes-locales.spec.ts:59:53
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-1440\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census 
+
+    Error: [
+      {
+        "route": "/my-courses",
+        "finalPath": "/my-courses",
+        "locale": "ar",
+        "role": "member",
+        "scroll": 1440,
+        "width": 1440,
+        "brokenImages": [
+          null
+        ],
+        "controls": 38,
+        "errors": [],
+        "expectedNegativeDiagnostic": false,
+        "reason": "broken-image"
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 17
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "brokenImages": Array [
+    +       undefined,
+    +     ],
+    +     "controls": 38,
+    +     "errors": Array [],
+    +     "expectedNegativeDiagnostic": false,
+    +     "finalPath": "/my-courses",
+    +     "locale": "ar",
+    +     "reason": "broken-image",
+    +     "role": "member",
+    +     "route": "/my-courses",
+    +     "scroll": 1440,
+    +     "width": 1440,
+    +   },
+    + ]
+
+      57 |    }
+      58 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});
+    > 59 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);
+         |                                                     ^
+      60 |   }finally{await app.db.close();}
+      61 |  });
+      62 | }
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\routes-locales.spec.ts:59:53
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-1440\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census 
+
+    Error: [
+      {
+        "route": "/my-courses",
+        "finalPath": "/my-courses",
+        "locale": "en",
+        "role": "member",
+        "scroll": 768,
+        "width": 768,
+        "brokenImages": [
+          null
+        ],
+        "controls": 39,
+        "errors": [],
+        "expectedNegativeDiagnostic": false,
+        "reason": "broken-image"
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 17
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "brokenImages": Array [
+    +       undefined,
+    +     ],
+    +     "controls": 39,
+    +     "errors": Array [],
+    +     "expectedNegativeDiagnostic": false,
+    +     "finalPath": "/my-courses",
+    +     "locale": "en",
+    +     "reason": "broken-image",
+    +     "role": "member",
+    +     "route": "/my-courses",
+    +     "scroll": 768,
+    +     "width": 768,
+    +   },
+    + ]
+
+      57 |    }
+      58 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});
+    > 59 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);
+         |                                                     ^
+      60 |   }finally{await app.db.close();}
+      61 |  });
+      62 | }
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\routes-locales.spec.ts:59:53
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-768\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census 
+
+    Error: [
+      {
+        "route": "/my-courses",
+        "finalPath": "/my-courses",
+        "locale": "ar",
+        "role": "member",
+        "scroll": 768,
+        "width": 768,
+        "brokenImages": [
+          null
+        ],
+        "controls": 39,
+        "errors": [],
+        "expectedNegativeDiagnostic": false,
+        "reason": "broken-image"
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 17
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "brokenImages": Array [
+    +       undefined,
+    +     ],
+    +     "controls": 39,
+    +     "errors": Array [],
+    +     "expectedNegativeDiagnostic": false,
+    +     "finalPath": "/my-courses",
+    +     "locale": "ar",
+    +     "reason": "broken-image",
+    +     "role": "member",
+    +     "route": "/my-courses",
+    +     "scroll": 768,
+    +     "width": 768,
+    +   },
+    + ]
+
+      57 |    }
+      58 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});
+    > 59 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);
+         |                                                     ^
+      60 |   }finally{await app.db.close();}
+      61 |  });
+      62 | }
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\routes-locales.spec.ts:59:53
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-768\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census 
+
+    Error: [
+      {
+        "route": "/my-courses",
+        "finalPath": "/my-courses",
+        "locale": "en",
+        "role": "member",
+        "scroll": 375,
+        "width": 375,
+        "brokenImages": [
+          null
+        ],
+        "controls": 39,
+        "errors": [],
+        "expectedNegativeDiagnostic": false,
+        "reason": "broken-image"
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 17
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "brokenImages": Array [
+    +       undefined,
+    +     ],
+    +     "controls": 39,
+    +     "errors": Array [],
+    +     "expectedNegativeDiagnostic": false,
+    +     "finalPath": "/my-courses",
+    +     "locale": "en",
+    +     "reason": "broken-image",
+    +     "role": "member",
+    +     "route": "/my-courses",
+    +     "scroll": 375,
+    +     "width": 375,
+    +   },
+    + ]
+
+      57 |    }
+      58 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});
+    > 59 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);
+         |                                                     ^
+      60 |   }finally{await app.db.close();}
+      61 |  });
+      62 | }
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\routes-locales.spec.ts:59:53
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-375\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-en-d-2f8a1-console-and-overflow-census-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census 
+
+    Error: [
+      {
+        "route": "/my-courses",
+        "finalPath": "/my-courses",
+        "locale": "ar",
+        "role": "member",
+        "scroll": 375,
+        "width": 375,
+        "brokenImages": [
+          null
+        ],
+        "controls": 39,
+        "errors": [],
+        "expectedNegativeDiagnostic": false,
+        "reason": "broken-image"
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 17
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "brokenImages": Array [
+    +       undefined,
+    +     ],
+    +     "controls": 39,
+    +     "errors": Array [],
+    +     "expectedNegativeDiagnostic": false,
+    +     "finalPath": "/my-courses",
+    +     "locale": "ar",
+    +     "reason": "broken-image",
+    +     "role": "member",
+    +     "route": "/my-courses",
+    +     "scroll": 375,
+    +     "width": 375,
+    +   },
+    + ]
+
+      57 |    }
+      58 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});
+    > 59 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);
+         |                                                     ^
+      60 |   }finally{await app.db.close();}
+      61 |  });
+      62 | }
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\routes-locales.spec.ts:59:53
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-375\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\20261016-regression-02\artifacts\routes-locales-member-ar-d-7a6b8-console-and-overflow-census-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census 
+    [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census 
+    [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census 
+    [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census 
+    [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census 
+    [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census 
+  21 passed (10.8m)

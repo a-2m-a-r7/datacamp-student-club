@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-17T11:18:18.697Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "phase": "plan",
+  "steps": [
+    {
+      "kind": "owner-role-verified",
+      "id": "cf94bf7d-15ab-48be-b9c7-c537a8b0b299",
+      "role": "user"
+    },
+    {
+      "kind": "drive-trash-candidate",
+      "id": "1EH4hLLVJl-L9XM6Oqiy71DcaI7JstOIr",
+      "name": "QA_TEST_Python_Basics.mp4"
+    },
+    {
+      "kind": "drive-trash-candidate",
+      "id": "1fExHMwfI98oUY9BsZ7IFyuZttozIUNxv",
+      "name": "QA_TEST_material.txt"
+    },
+    {
+      "kind": "drive-trash-candidate",
+      "id": "1er6a8muuXcu-B53fHFQStiP1bh0xtoCb",
+      "name": "QA_TEST_captions.srt"
+    },
+    {
+      "kind": "drive-trash-candidate",
+      "id": "1sFS2cmlwaGb6R5wwY-CqMCGJGRmsxRN5XRZRv4IHcGU",
+      "name": "[DataCamp] QA_TEST_Sheets_Actual (Responses)"
+    },
+    {
+      "kind": "gemini-file-candidate",
+      "id": "e68b1b9a-854f-4cf1-a244-025cd0a724f7"
+    }
+  ],
+  "protected": {
+    "ownerIdentity": "cf94bf7d-15ab-48be-b9c7-c537a8b0b299",
+    "personalCourse": "7939c9e9-0699-403c-be07-8cb270a2843f"
+  },
+  "retained": [
+    "Google owner QA identity and its existing Drive connection",
+    "Personal recording/course selected by owner",
+    "Google QA credentials/project and local runtime files; deletion not requested here"
+  ],
+  "status": "failed",
+  "failure": "Cleanup stopped at a validation/provider failure; inspect the completed step IDs and retain remaining resources."
+}

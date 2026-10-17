@@ -1,3 +1,34 @@
+# Test matrix and execution index - 17 October 2026
+
+The CSV is the master source-template inventory with current status and evidence. EXECUTED-CASES.csv is the separate runtime-case index. These are different denominators: a source census, a shared-control regression and a provider round trip must not be counted as the same kind of pass.
+
+Execution was authorized by the owner's instruction to begin and continue. Rows no longer imply that matrix approval is still awaited. Final report approval is still required before merge/push/deploy.
+
+## Reading the final status
+
+- PASS applies only to the named observed result. The new coordination entries have explicit local ACL/lease and actual QA provider evidence.
+- PARTIAL for a table means its 24 grant/RLS CRUD probes passed; its broader expected FK/trigger/concurrency behavior is covered only where separately named.
+- A UI/route source row linked to module evidence does not claim every offline/timeout/input variant was independently executed. The exact triggered scenarios are in the runtime index and results JSON.
+- Email inbox delivery, a second Google identity, actual 2 GiB transfer and 1000 simultaneous hosted viewers are not established. Piston setup is the previously accepted external requirement. Legacy roles have no invented positive privileges; see DECISIONS.md.
+- Historical SQL policies/triggers may be superseded. Use the effective replay/permission reports instead of treating each old declaration as a current object.
+
+## Source inventory status
+
+| Status | Rows |
+|---|---:|
+| Current module rerun in progress; no individual-template pass inferred | 955 |
+| Execution approved; individual variants not separately verified | 322 |
+| Blocked — external test setup / approval | 3 |
+| Needs decision | 3 |
+| PARTIAL: 24/24 local grants/RLS CRUD probes pass; other table behavior is separate | 33 |
+| Blocked — real local Storage setup / approval | 4 |
+| PASS for explicit coordination/ACL cases; not a hosted capacity claim | 3 |
+
+Runtime index: 0 completed case records. Current run: QA_TEST_full_delivery_504. Still running; no completion pass is asserted.
+
+The original detailed route/control/SQL census is preserved below as a historical plan. Its old Pending approval wording is superseded by the current CSV status, not by a blanket pass.
+
+<!-- ORIGINAL SOURCE CENSUS -->
 # TEST-MATRIX — executed coverage ledger
 
 **Branch:** tester-final. **Baseline:** 4d4ea0964dfc6671cd76bc24d1e2bf96c401f821. Local isolated adapter suites and read-only staging smoke checks have executed; individual rows retain their evidence/status labels. STEP 0 build/lint/type-check results are recorded separately in BEFORE.md.

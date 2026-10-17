@@ -1,0 +1,5 @@
+{
+  "runtime": "C:\\Users\\AMMAR\\AppData\\Local\\Temp\\QA_TEST_datacamp_pg_cfc3500739d846b7882cfae005a084b7",
+  "retained": true,
+  "reason": "PostgreSQL initdb cannot execute its Unicode Windows path"
+}

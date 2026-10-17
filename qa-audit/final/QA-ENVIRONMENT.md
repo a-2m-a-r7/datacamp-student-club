@@ -1,5 +1,13 @@
 # Isolated hosted QA environment
 
+## Current update - 17 October 2026
+
+The separately approved BUG-024 migration is applied to QA only: 34 RLS tables, 16 Realtime entries. Its server-only coordination table/RPCs deny anon/authenticated access and are excluded from Realtime. BUG-031's attachment-integrity migration is also applied to QA only. 816 source-grant CRUD probes and a clean schema replay pass locally.
+
+The Google QA project qa-test-datacamp-final now has an actual consented drive.file connection, a working Gemini key and a service account without added IAM roles. Actual Google sign-in, synthetic Drive upload/read-back, Gemini generation/apply, learner/Python/certificate flow and Sheets retry/schema/parallel/pagination were exercised. See RESULTS-20261017.md for current results/limits; these supersede readiness-only descriptions below. The Google owner's QA role is restored to user. Its identity and the personal recording are excluded from disposable fixture cleanup.
+
+## Initial setup record
+
 User explicitly approved creating a free QA project in the selected organization, populating only QA_TEST_ fixtures and cleaning those fixtures afterward. The connector confirmed the organization plan is `free` / `tier_free`; no nonzero charge or plan upgrade was authorized.
 
 - Project name: `QA_TEST_DataCamp_final`.
@@ -15,4 +23,4 @@ The 22 reviewed schema migrations were applied separately after the clean-instal
 
 Three temporary QA_TEST_ Auth identities (member, administrator, unconfirmed) were generated with private random passwords. The actual signup trigger created their profiles, ignoring a forged administrator role in user metadata. One known QA profile was explicitly promoted through the trusted setup connection. Hosted service results are retained under runs/QA_TEST_hosted_readiness_after: 12 probes passed. This includes GoTrue password/refresh/logout, REST privacy, persisted avatar bytes and references, Storage foreign-write/MIME/size denial, event registration and actual Realtime notification delivery. It does not prove email, Google OAuth, Drive, Sheets, Gemini, all frontend controls or production capacity.
 
-Credentials are stored only in ignored `qa-audit/.runtime/final-hosted/` or session memory; never in this report, a committed trace or the chat. Exact temporary object/row inventories are retained there for the authorized cleanup after testing. Cleanup is not yet complete.
+Credentials are stored only in ignored `qa-audit/.runtime/final-hosted/` or session memory; never in this report, a committed trace or the chat. Exact temporary object/row inventories are retained there for the authorized cleanup after testing. Cleanup is executed only through the exact allowlisted hosted cleanup script after the final provider checks.

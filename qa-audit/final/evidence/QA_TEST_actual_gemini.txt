@@ -1,0 +1,7 @@
+QA_TEST Gemini upload 18%
+QA_TEST Gemini upload 35%
+QA_TEST Gemini upload 53%
+QA_TEST Gemini upload 70%
+QA_TEST Gemini upload 88%
+QA_TEST Gemini upload 100%
+QA analyze generate HTTP 400: Video generation failed or returned an invalid plan. No quiz or coding lesson was added. Retry later.

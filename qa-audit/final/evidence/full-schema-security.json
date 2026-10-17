@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-15T17:41:11.455Z",
+  "checkedAt": "2026-10-16T15:25:03.814Z",
   "environment": "Two independent in-memory PGlite PostgreSQL databases, no network or .env reads",
   "mode": "unmodified baseline",
   "limitations": [
@@ -145,6 +145,16 @@
         "migration": "20261015000017_restrict_course_counter.sql",
         "sha256": "6216ec9a59076abdcaa9dec6644a12d2d5264c60bfea0d83c39f68ec1b9ac240",
         "status": "passed"
+      },
+      {
+        "migration": "20261015000018_branch_aware_form_validation.sql",
+        "sha256": "315b9601eb1e6b8b4c249565d28630682fa10e765b9bf58e0e2b63a03eb3a151",
+        "status": "passed"
+      },
+      {
+        "migration": "20261016152338_explicit_datacamp_data_api_grants.sql",
+        "sha256": "00f11b7516f21932285f81e3c0d37adae2801424fa352786b5ba052c006116c1",
+        "status": "passed"
       }
     ],
     "bootstrap": [
@@ -154,7 +164,7 @@
       "Empty supabase_realtime publication; original migrations add tables",
       "PGlite bundled uuid-ossp/pgcrypto/citext enabled; original CREATE EXTENSION statements unchanged"
     ],
-    "migrationCount": 27,
+    "migrationCount": 29,
     "excludedAlternateInputs": [
       "combined_migration.sql",
       "../full_schema.sql",
@@ -269,7 +279,7 @@
         "member_execute": false,
         "service_execute": true,
         "anon_direct_profile_update": false,
-        "member_direct_profile_update": false,
+        "member_direct_profile_update": true,
         "security_definer": true
       }
     }
@@ -347,6 +357,6 @@
     "expectedHistoricalControl": "Exact original helper permits untrusted promotion under unchanged PostgreSQL PUBLIC EXECUTE default",
     "controlConfirmed": true
   },
-  "finishedAt": "2026-10-15T17:41:14.569Z",
+  "finishedAt": "2026-10-16T15:25:06.614Z",
   "passed": true
 }

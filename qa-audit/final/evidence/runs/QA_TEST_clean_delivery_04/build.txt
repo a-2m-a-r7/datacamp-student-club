@@ -1,0 +1,88 @@
+[36mvite v6.4.4 [32mbuilding for qa...[36m[39m
+transforming...
+[32m✓[39m 3255 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[32mindex.html                              [39m[1m[2m  2.39 kB[22m[1m[22m[2m │ gzip:   0.92 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[35massets/index-V0ZUD1Ta.css               [39m[1m[2m142.79 kB[22m[1m[22m[2m │ gzip:  18.88 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/usePublicStats-DYi33UN1.js       [39m[1m[2m  0.28 kB[22m[1m[22m[2m │ gzip:   0.23 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/clipboard-BFn2N8Uj.js            [39m[1m[2m  0.28 kB[22m[1m[22m[2m │ gzip:   0.23 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/logger-BuDKw7Eg.js               [39m[1m[2m  0.32 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36mqa-entry.js                             [39m[1m[2m  0.51 kB[22m[1m[22m[2m │ gzip:   0.27 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/apiClient-CUompYdZ.js            [39m[1m[2m  0.62 kB[22m[1m[22m[2m │ gzip:   0.42 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/GoogleAccountModal-CrrfX7Fh.js   [39m[1m[2m  0.80 kB[22m[1m[22m[2m │ gzip:   0.54 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/CourseCover-DbZoiSI7.js          [39m[1m[2m  0.82 kB[22m[1m[22m[2m │ gzip:   0.48 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/quizLanguage-CLg_yp0A.js         [39m[1m[2m  0.90 kB[22m[1m[22m[2m │ gzip:   0.55 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/ContentPage-BFWD6RMf.js          [39m[1m[2m  0.95 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/NotFound-DrWYPdD2.js             [39m[1m[2m  1.15 kB[22m[1m[22m[2m │ gzip:   0.73 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/certificateService-BhDSmXW0.js   [39m[1m[2m  1.31 kB[22m[1m[22m[2m │ gzip:   0.64 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Dialog-DYkqvcDe.js               [39m[1m[2m  1.32 kB[22m[1m[22m[2m │ gzip:   0.70 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Card-CsB8i4v3.js                 [39m[1m[2m  1.35 kB[22m[1m[22m[2m │ gzip:   0.56 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-runtime-DdPMya_n.js       [39m[1m[2m  1.37 kB[22m[1m[22m[2m │ gzip:   0.77 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/VerifyMembership-Q6l_lSjp.js     [39m[1m[2m  1.41 kB[22m[1m[22m[2m │ gzip:   0.81 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/useCourseCatalog-Du4csdEE.js     [39m[1m[2m  1.42 kB[22m[1m[22m[2m │ gzip:   0.67 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Security-DSkFYq8j.js             [39m[1m[2m  2.13 kB[22m[1m[22m[2m │ gzip:   1.01 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/emailUtils-vv96xQ7g.js           [39m[1m[2m  2.15 kB[22m[1m[22m[2m │ gzip:   0.79 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/UserIdentityInput-eQPAvs16.js    [39m[1m[2m  2.54 kB[22m[1m[22m[2m │ gzip:   1.13 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/ImagePicker-BkYygr44.js          [39m[1m[2m  2.83 kB[22m[1m[22m[2m │ gzip:   1.31 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/AuthCallback-BEqCGVmc.js         [39m[1m[2m  2.96 kB[22m[1m[22m[2m │ gzip:   1.50 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/ForgotPassword-C6bWpkQZ.js       [39m[1m[2m  3.93 kB[22m[1m[22m[2m │ gzip:   1.80 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/ResetPassword-LHLUFXk-.js        [39m[1m[2m  4.15 kB[22m[1m[22m[2m │ gzip:   1.80 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/roleDefinitions-DqI6Fe4S.js      [39m[1m[2m  4.57 kB[22m[1m[22m[2m │ gzip:   1.84 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/AdminDashboard-D--wrUgP.js       [39m[1m[2m  4.73 kB[22m[1m[22m[2m │ gzip:   1.38 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Overview-_q5ZFJKV.js             [39m[1m[2m  4.94 kB[22m[1m[22m[2m │ gzip:   2.02 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/GalleryManagement-DkWu4Ld5.js    [39m[1m[2m  5.21 kB[22m[1m[22m[2m │ gzip:   2.14 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/MessageManagement-Bb_bl9Rv.js    [39m[1m[2m  5.43 kB[22m[1m[22m[2m │ gzip:   1.91 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/LinkedInShare-l6IWMCsz.js        [39m[1m[2m  5.50 kB[22m[1m[22m[2m │ gzip:   2.41 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/formService-CZI9MFUd.js          [39m[1m[2m  5.87 kB[22m[1m[22m[2m │ gzip:   1.87 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/VerifyEmail-DuncpQfm.js          [39m[1m[2m  5.93 kB[22m[1m[22m[2m │ gzip:   2.32 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/BlogManagement-CPIOyyTZ.js       [39m[1m[2m  6.03 kB[22m[1m[22m[2m │ gzip:   2.27 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Notifications-BEq4zKmb.js        [39m[1m[2m  6.18 kB[22m[1m[22m[2m │ gzip:   2.38 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/MyCourses-aJo2BxVa.js            [39m[1m[2m  6.97 kB[22m[1m[22m[2m │ gzip:   2.82 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/ProjectManagement-CqhTvCIN.js    [39m[1m[2m  7.33 kB[22m[1m[22m[2m │ gzip:   2.54 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/PointsManagement-C8AuFAaP.js     [39m[1m[2m  7.42 kB[22m[1m[22m[2m │ gzip:   2.48 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Contact-biUksuby.js              [39m[1m[2m  7.88 kB[22m[1m[22m[2m │ gzip:   2.82 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/StaffManagement-Bel_taT4.js      [39m[1m[2m  7.91 kB[22m[1m[22m[2m │ gzip:   2.78 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Gallery-hx35NjOS.js              [39m[1m[2m  8.13 kB[22m[1m[22m[2m │ gzip:   3.22 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Terms-Bp_4srOi.js                [39m[1m[2m  8.71 kB[22m[1m[22m[2m │ gzip:   3.24 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/ContentManagement-DSMWyx2O.js    [39m[1m[2m  8.77 kB[22m[1m[22m[2m │ gzip:   2.41 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Login-D9tW54YI.js                [39m[1m[2m  8.85 kB[22m[1m[22m[2m │ gzip:   3.53 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Settings--Ai7Qhbh.js             [39m[1m[2m  9.06 kB[22m[1m[22m[2m │ gzip:   2.59 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Home-Be30aoHi.js                 [39m[1m[2m  9.63 kB[22m[1m[22m[2m │ gzip:   3.71 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Privacy-C8SlN8VC.js              [39m[1m[2m  9.85 kB[22m[1m[22m[2m │ gzip:   3.89 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Register-C5hH4RDy.js             [39m[1m[2m  9.98 kB[22m[1m[22m[2m │ gzip:   3.69 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Events-KEjwwclU.js               [39m[1m[2m 10.01 kB[22m[1m[22m[2m │ gzip:   3.83 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Staff-DvQ3qngE.js                [39m[1m[2m 11.15 kB[22m[1m[22m[2m │ gzip:   4.29 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Blog-B6QRV4Xm.js                 [39m[1m[2m 11.28 kB[22m[1m[22m[2m │ gzip:   4.07 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Leaderboard-EEezYTcg.js          [39m[1m[2m 11.52 kB[22m[1m[22m[2m │ gzip:   3.72 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/CourseQuiz-TkoytYT_.js           [39m[1m[2m 11.89 kB[22m[1m[22m[2m │ gzip:   4.59 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/CourseDetail-Dm_8dnI_.js         [39m[1m[2m 12.61 kB[22m[1m[22m[2m │ gzip:   4.02 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/FAQ-DmaU1JlU.js                  [39m[1m[2m 13.71 kB[22m[1m[22m[2m │ gzip:   5.44 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/CompilerPlayground-B82N8wED.js   [39m[1m[2m 14.26 kB[22m[1m[22m[2m │ gzip:   4.78 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Courses-Df9Dp9V4.js              [39m[1m[2m 15.77 kB[22m[1m[22m[2m │ gzip:   5.69 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/universalRunner-EmxpEhqC.js      [39m[1m[2m 16.70 kB[22m[1m[22m[2m │ gzip:   5.87 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Projects-BtMINaaO.js             [39m[1m[2m 17.10 kB[22m[1m[22m[2m │ gzip:   5.31 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/About-B1QJCGr2.js                [39m[1m[2m 17.11 kB[22m[1m[22m[2m │ gzip:   6.10 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Dashboard-DZEm27SE.js            [39m[1m[2m 21.63 kB[22m[1m[22m[2m │ gzip:   6.57 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/PublicFormView-BM1HnXMZ.js       [39m[1m[2m 23.25 kB[22m[1m[22m[2m │ gzip:   6.98 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-ui-Ce1ZTWB2.js            [39m[1m[2m 26.65 kB[22m[1m[22m[2m │ gzip:   8.40 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/courseMediaService-BHODidnG.js   [39m[1m[2m 28.19 kB[22m[1m[22m[2m │ gzip:  11.33 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/purify.es-DBIK8olT.js            [39m[1m[2m 29.40 kB[22m[1m[22m[2m │ gzip:  11.31 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/CourseLearning-PQzId5xs.js       [39m[1m[2m 30.62 kB[22m[1m[22m[2m │ gzip:  10.17 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Certificates-C5eSBCSJ.js         [39m[1m[2m 35.45 kB[22m[1m[22m[2m │ gzip:  10.20 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/contentService-CuEom-wO.js       [39m[1m[2m 43.27 kB[22m[1m[22m[2m │ gzip:  13.22 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/CourseManagement-Zv5d1n83.js     [39m[1m[2m 52.03 kB[22m[1m[22m[2m │ gzip:  14.79 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/UserManagement-CgEeg8gq.js       [39m[1m[2m 53.71 kB[22m[1m[22m[2m │ gzip:  13.20 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/Profile-Dw-TRtue.js              [39m[1m[2m 79.48 kB[22m[1m[22m[2m │ gzip:  22.56 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/FormManagement-Do-nb5Nx.js       [39m[1m[2m 88.75 kB[22m[1m[22m[2m │ gzip:  21.65 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/index-mDNBQmoT.js                [39m[1m[2m114.83 kB[22m[1m[22m[2m │ gzip:  36.95 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-motion-K4iLQEPM.js        [39m[1m[2m127.89 kB[22m[1m[22m[2m │ gzip:  42.02 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/index.es-9YIo-F7L.js             [39m[1m[2m159.65 kB[22m[1m[22m[2m │ gzip:  53.54 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-canvas-QH1iLAAe.js        [39m[1m[2m202.38 kB[22m[1m[22m[2m │ gzip:  48.04 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-supabase-B12s50R_.js      [39m[1m[2m226.70 kB[22m[1m[22m[2m │ gzip:  58.90 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-react-B2DxsfUX.js         [39m[1m[2m310.72 kB[22m[1m[22m[2m │ gzip:  94.56 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-charts-B9sBR-do.js        [39m[1m[2m371.36 kB[22m[1m[22m[2m │ gzip: 109.12 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-pdf-BJAlLbS4.js           [39m[1m[2m390.16 kB[22m[1m[22m[2m │ gzip: 128.54 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/EventManagement-S7wk1-yJ.js      [39m[1m[2m390.37 kB[22m[1m[22m[2m │ gzip: 114.57 kB[22m
+[2mqa-audit/.runtime/QA_TEST_clean_delivery_04/build/[22m[36massets/vendor-spreadsheets-BLigKl4k.js  [39m[1m[2m492.34 kB[22m[1m[22m[2m │ gzip: 160.64 kB[22m
+[32m✓ built in 7.45s[39m

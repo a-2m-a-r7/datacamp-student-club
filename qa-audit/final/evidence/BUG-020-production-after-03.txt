@@ -1,0 +1,86 @@
+
+Running 3 tests using 1 worker
+
+(node:28456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 qa-audit\final\production-tests\lazy-features.spec.ts:21:1 › public pages defer PDF and chart packages (1.8s)
+(node:13968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 qa-audit\final\production-tests\lazy-features.spec.ts:30:1 › administrator loads real growth data and renders lazy chart (1.3s)
+(node:31612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 qa-audit\final\production-tests\lazy-features.spec.ts:37:1 › member downloads genuine PDF from automatically issued QA certificate (5.8s)
+
+
+  1) qa-audit\final\production-tests\lazy-features.spec.ts:21:1 › public pages defer PDF and chart packages 
+
+    Error: page.goto: net::ERR_CONNECTION_TIMED_OUT at http://127.0.0.1:3301/login
+    Call log:
+      - navigating to "http://127.0.0.1:3301/login", waiting until "load"
+
+
+      22 |  const scripts:string[]=[];const errors:string[]=[];
+      23 |  page.on('request',r=>{if(r.resourceType()==='script')scripts.push(new URL(r.url()).pathname);});page.on('pageerror',e=>errors.push(e.message));
+    > 24 |  await page.goto('/login');await expect(page.locator('form input[type=email]')).toBeVisible();
+         |             ^
+      25 |  await page.goto('/courses');await expect(page.getByRole('heading',{name:'MASTER DATA SCIENCE & AI',exact:true})).toBeVisible();
+      26 |  await expect(page.getByRole('alert')).toHaveCount(0);
+      27 |  expect(scripts.filter(p=>/vendor-(pdf|charts)-/.test(p))).toEqual([]);expect(errors).toEqual([]);
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\lazy-features.spec.ts:24:13
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-020-production-after-03\artifacts\lazy-features-public-pages-defer-PDF-and-chart-packages\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-020-production-after-03\artifacts\lazy-features-public-pages-defer-PDF-and-chart-packages\error-context.md
+
+  2) qa-audit\final\production-tests\lazy-features.spec.ts:30:1 › administrator loads real growth data and renders lazy chart 
+
+    Error: page.goto: net::ERR_CONNECTION_TIMED_OUT at http://127.0.0.1:3301/login
+    Call log:
+      - navigating to "http://127.0.0.1:3301/login", waiting until "load"
+
+
+      12 | async function login(page:Page,kind:string){
+      13 |  const account=cfg.accounts.find(a=>a.kind===kind);
+    > 14 |  await page.goto('/login');await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);
+         |             ^
+      15 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/dashboard$/);
+      16 | }
+      17 | test.beforeEach(async({page,context})=>{
+        at login (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\lazy-features.spec.ts:14:13)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\lazy-features.spec.ts:31:80
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-020-production-after-03\artifacts\lazy-features-administrato-6ca44-data-and-renders-lazy-chart\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-020-production-after-03\artifacts\lazy-features-administrato-6ca44-data-and-renders-lazy-chart\error-context.md
+
+  3) qa-audit\final\production-tests\lazy-features.spec.ts:37:1 › member downloads genuine PDF from automatically issued QA certificate 
+
+    Error: page.goto: net::ERR_CONNECTION_TIMED_OUT at http://127.0.0.1:3301/login
+    Call log:
+      - navigating to "http://127.0.0.1:3301/login", waiting until "load"
+
+
+      12 | async function login(page:Page,kind:string){
+      13 |  const account=cfg.accounts.find(a=>a.kind===kind);
+    > 14 |  await page.goto('/login');await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);
+         |             ^
+      15 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\/dashboard$/);
+      16 | }
+      17 | test.beforeEach(async({page,context})=>{
+        at login (C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\lazy-features.spec.ts:14:13)
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\lazy-features.spec.ts:46:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-020-production-after-03\artifacts\lazy-features-member-downl-44b1d-cally-issued-QA-certificate\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-020-production-after-03\artifacts\lazy-features-member-downl-44b1d-cally-issued-QA-certificate\error-context.md
+
+  3 failed
+    qa-audit\final\production-tests\lazy-features.spec.ts:21:1 › public pages defer PDF and chart packages 
+    qa-audit\final\production-tests\lazy-features.spec.ts:30:1 › administrator loads real growth data and renders lazy chart 
+    qa-audit\final\production-tests\lazy-features.spec.ts:37:1 › member downloads genuine PDF from automatically issued QA certificate 

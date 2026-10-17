@@ -1,0 +1,239 @@
+{
+  "target": "http://127.0.0.1:3300 with exact Supabase QA host; anonymous sessions",
+  "limitations": "One mobile simulated-throttling sample per route. Local static transport does not reproduce Vercel compression/CDN behavior. These scores are not production capacity or a 1000-user load test.",
+  "scores": [
+    {
+      "route": "/login",
+      "fetchTime": "2026-10-17T11:08:44.215Z",
+      "version": "13.5.0",
+      "formFactor": "mobile",
+      "categories": {
+        "performance": 67,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "score": 0.35
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.41
+        },
+        {
+          "id": "speed-index",
+          "title": "Speed Index",
+          "score": 0.62
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.75
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.49
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.84
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0
+        },
+        {
+          "id": "forced-reflow-insight",
+          "title": "Forced reflow",
+          "score": 0
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "route": "/courses",
+      "fetchTime": "2026-10-17T11:09:00.045Z",
+      "version": "13.5.0",
+      "formFactor": "mobile",
+      "categories": {
+        "performance": 72,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "score": 0.34
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.4
+        },
+        {
+          "id": "speed-index",
+          "title": "Speed Index",
+          "score": 0.63
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.91
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.76
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.84
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0
+        },
+        {
+          "id": "forced-reflow-insight",
+          "title": "Forced reflow",
+          "score": 0
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5
+        },
+        {
+          "id": "lcp-breakdown-insight",
+          "title": "LCP breakdown",
+          "score": 0
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "fetchTime": "2026-10-17T11:09:16.037Z",
+      "version": "13.5.0",
+      "formFactor": "mobile",
+      "categories": {
+        "performance": 71,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "warnings": [],
+      "runtimeError": null,
+      "failing": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "score": 0.35
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.36
+        },
+        {
+          "id": "speed-index",
+          "title": "Speed Index",
+          "score": 0.57
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.93
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.77
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.82
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0
+        },
+        {
+          "id": "forced-reflow-insight",
+          "title": "Forced reflow",
+          "score": 0
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-15T18:10:52.276Z",
+  "checkedAt": "2026-10-16T15:08:01.180Z",
   "environment": "Two independent in-memory PostgreSQL databases; no external services",
   "bootstrapSource": "qa-audit/final/tests/full-schema-security.mjs literal bootstrap, not imported/executed as a module",
   "bootstrapSha256": "b09bce45d44110719ec00d0fcf1f17a9bc102c450fb05bfaf14f5582af9c181c",
@@ -7816,7 +7816,7 @@
       }
     }
   ],
-  "finishedAt": "2026-10-15T18:10:55.988Z",
+  "finishedAt": "2026-10-16T15:08:03.707Z",
   "summary": {
     "contexts": [
       {

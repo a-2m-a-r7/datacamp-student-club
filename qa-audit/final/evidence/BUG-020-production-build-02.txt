@@ -1,0 +1,90 @@
+vite v6.4.4 building for production...
+transforming...
+✓ 3253 modules transformed.
+Circular chunk: index -> vendor-react -> index. Consider disabling the "output.onlyExplicitManualChunks" option, as enabling it causes the static dependencies of the manual chunk "vendor-react" to be bundled into the chunk "index".
+Circular chunk: index -> vendor-react -> index -> index. Consider disabling the "output.onlyExplicitManualChunks" option, as enabling it causes the static dependencies of the manual chunk "index" to be bundled into the chunk "index".
+Circular chunk: vendor-react -> index -> vendor-react. Consider disabling the "output.onlyExplicitManualChunks" option, as enabling it causes the static dependencies of the manual chunk "index" to be bundled into the chunk "vendor-react".
+Circular chunk: index -> vendor-supabase -> index. Consider disabling the "output.onlyExplicitManualChunks" option, as enabling it causes the static dependencies of the manual chunk "vendor-supabase" to be bundled into the chunk "index".
+Circular chunk: Certificates -> vendor-pdf -> Certificates. Consider disabling the "output.onlyExplicitManualChunks" option, as enabling it causes the static dependencies of the manual chunk "vendor-pdf" to be bundled into the chunk "Certificates".
+Circular chunk: FormManagement -> vendor-charts -> FormManagement. Consider disabling the "output.onlyExplicitManualChunks" option, as enabling it causes the static dependencies of the manual chunk "vendor-charts" to be bundled into the chunk "FormManagement".
+rendering chunks...
+computing gzip size...
+qa-audit/.runtime/BUG020_candidate_build/index.html                                2.27 kB │ gzip:   0.89 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/index-D4nGPTh4.css               140.68 kB │ gzip:  18.53 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/usePublicStats-bJlaA_w9.js         0.27 kB │ gzip:   0.23 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/clipboard-BBS4J4Mw.js              0.28 kB │ gzip:   0.23 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/logger-CtOdUZzz.js                 0.31 kB │ gzip:   0.25 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/quizLanguage-Ce2Zd6CW.js           0.33 kB │ gzip:   0.22 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/apiClient-DDoFdQC4.js              0.61 kB │ gzip:   0.42 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/GoogleAccountModal-BxwSzsxd.js     0.80 kB │ gzip:   0.54 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/CourseCover-BNkFby2H.js            0.82 kB │ gzip:   0.48 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/ContentPage-B6prv018.js            1.01 kB │ gzip:   0.49 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/NotFound-C8cDrJG7.js               1.07 kB │ gzip:   0.69 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Dialog-Bktsamdk.js                 1.32 kB │ gzip:   0.70 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/VerifyMembership-DBTD_hmy.js       1.32 kB │ gzip:   0.77 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Card-BcEj3Dbz.js                   1.35 kB │ gzip:   0.56 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/useCourseCatalog-J1q905mN.js       1.42 kB │ gzip:   0.67 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Security-l-7rYAdW.js               2.04 kB │ gzip:   0.98 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/emailUtils-vv96xQ7g.js             2.15 kB │ gzip:   0.79 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/UserIdentityInput-BiPD0_hX.js      2.50 kB │ gzip:   1.11 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/ImagePicker-X4x5R1yp.js            2.83 kB │ gzip:   1.31 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/AuthCallback-A_Rpftst.js           2.87 kB │ gzip:   1.46 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/ResetPassword-AFdjc959.js          3.82 kB │ gzip:   1.67 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/ForgotPassword-Co5gO9WG.js         3.85 kB │ gzip:   1.76 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/AdminDashboard-CUwfOhaa.js         4.54 kB │ gzip:   1.34 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/roleDefinitions-DqI6Fe4S.js        4.57 kB │ gzip:   1.84 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Overview-BJHPq8T_.js               5.03 kB │ gzip:   2.07 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/GalleryManagement-BlDpisZJ.js      5.16 kB │ gzip:   2.13 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/MessageManagement-DPsBH6Y1.js      5.35 kB │ gzip:   1.88 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/LinkedInShare-kdM7mXNg.js          5.50 kB │ gzip:   2.42 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/VerifyEmail-D-Lo5CKG.js            5.84 kB │ gzip:   2.29 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/formService-032U13wQ.js            5.87 kB │ gzip:   1.87 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/BlogManagement-BJ0gVdl_.js         5.95 kB │ gzip:   2.23 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Notifications-CW_ZF7Yw.js          6.10 kB │ gzip:   2.34 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/MyCourses-BNpTYZCg.js              6.89 kB │ gzip:   2.78 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/ProjectManagement-B_3B-DzB.js      7.26 kB │ gzip:   2.50 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/PointsManagement-CflUCn56.js       7.33 kB │ gzip:   2.45 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Contact-Bge3m_YG.js                7.79 kB │ gzip:   2.78 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/StaffManagement-BCgVIsZ0.js        7.86 kB │ gzip:   2.76 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Gallery-BbzeJAl6.js                8.05 kB │ gzip:   3.18 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Login-D9yYOR8a.js                  8.55 kB │ gzip:   3.42 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Terms-ZOR_eiGy.js                  8.63 kB │ gzip:   3.20 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/ContentManagement-d3RBhJXj.js      8.69 kB │ gzip:   2.37 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Settings-CuoQMTJy.js               8.99 kB │ gzip:   2.57 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Home-CQMI_UrI.js                   9.55 kB │ gzip:   3.68 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Register-CWfmC8WM.js               9.68 kB │ gzip:   3.57 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Privacy-CtnjzkKh.js                9.77 kB │ gzip:   3.85 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Events-BY2ZTjNG.js                 9.93 kB │ gzip:   3.80 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Staff-CoGMox89.js                 11.07 kB │ gzip:   4.25 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Blog-CKmtG5Va.js                  11.20 kB │ gzip:   4.04 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Leaderboard-BpV920lj.js           11.44 kB │ gzip:   3.68 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/CourseQuiz-qccWyRbR.js            11.77 kB │ gzip:   4.54 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/CourseDetail-CKGATElt.js          12.54 kB │ gzip:   3.99 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/FAQ-UrxhZWDG.js                   13.64 kB │ gzip:   5.41 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/CompilerPlayground-C2Jem_1I.js    14.18 kB │ gzip:   4.74 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Courses-BrE4YD2v.js               15.69 kB │ gzip:   5.65 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/universalRunner-hT6ism5U.js       16.70 kB │ gzip:   5.87 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Projects-DMYAA1fH.js              17.03 kB │ gzip:   5.27 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/About-Dvb37d6X.js                 17.04 kB │ gzip:   6.07 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Dashboard-DWR2ItfE.js             21.55 kB │ gzip:   6.54 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/PublicFormView-1kTT3ZbW.js        23.17 kB │ gzip:   6.95 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/courseMediaService-BvRU4QZd.js    28.18 kB │ gzip:  11.32 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/purify.es-DBIK8olT.js             29.40 kB │ gzip:  11.31 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/CourseLearning-Csh8icjn.js        29.70 kB │ gzip:   9.85 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/CourseManagement-DaDuWoH1.js      51.53 kB │ gzip:  14.56 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/UserManagement-NqhUPLx6.js        53.63 kB │ gzip:  13.16 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Profile-59_ba5NJ.js               79.39 kB │ gzip:  22.52 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/Certificates-Dizrc9YM.js          84.87 kB │ gzip:  27.02 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/FormManagement-nFOJBZ9K.js        90.92 kB │ gzip:  22.55 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/vendor-motion-BUbwAl2f.js        127.89 kB │ gzip:  42.02 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/index-DC71Muy1.js                136.78 kB │ gzip:  46.11 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/index.es-Z4T1Vahi.js             159.91 kB │ gzip:  53.67 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/index-JRl1P_1H.js                196.02 kB │ gzip:  62.22 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/vendor-canvas-QH1iLAAe.js        202.38 kB │ gzip:  48.04 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/vendor-supabase-v4Flt2ss.js      220.59 kB │ gzip:  57.45 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/vendor-charts-B0jfGpSa.js        233.91 kB │ gzip:  60.97 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/vendor-react-iCvR4Dx_.js         305.60 kB │ gzip:  92.76 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/vendor-pdf-ByuSsFXA.js           341.78 kB │ gzip: 112.38 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/EventManagement-BChYxg0B.js      390.28 kB │ gzip: 114.54 kB
+qa-audit/.runtime/BUG020_candidate_build/assets/vendor-spreadsheets-BLigKl4k.js  492.34 kB │ gzip: 160.64 kB
+✓ built in 7.12s

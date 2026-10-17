@@ -1,0 +1,86 @@
+[36mvite v6.4.4 [32mbuilding for qa...[36m[39m
+transforming...
+[32m✓[39m 3254 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mqa-audit/.runtime/final-hosted/build/[22m[32mindex.html                              [39m[1m[2m  2.39 kB[22m[1m[22m[2m │ gzip:   0.92 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[35massets/index-D4nGPTh4.css               [39m[1m[2m140.68 kB[22m[1m[22m[2m │ gzip:  18.53 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/usePublicStats-CeliiZUC.js       [39m[1m[2m  0.28 kB[22m[1m[22m[2m │ gzip:   0.23 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/clipboard-CdCwuUwC.js            [39m[1m[2m  0.28 kB[22m[1m[22m[2m │ gzip:   0.23 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/logger-D16WtM2L.js               [39m[1m[2m  0.32 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/quizLanguage-Ce2Zd6CW.js         [39m[1m[2m  0.33 kB[22m[1m[22m[2m │ gzip:   0.22 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36mqa-entry.js                             [39m[1m[2m  0.47 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/apiClient-D96-Xp_6.js            [39m[1m[2m  0.62 kB[22m[1m[22m[2m │ gzip:   0.42 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/GoogleAccountModal-CnKR1eDy.js   [39m[1m[2m  0.80 kB[22m[1m[22m[2m │ gzip:   0.54 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/CourseCover-gDc_Okni.js          [39m[1m[2m  0.82 kB[22m[1m[22m[2m │ gzip:   0.48 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/ContentPage-B6nHbLbS.js          [39m[1m[2m  0.91 kB[22m[1m[22m[2m │ gzip:   0.45 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/NotFound-DDGZLk2p.js             [39m[1m[2m  1.15 kB[22m[1m[22m[2m │ gzip:   0.73 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/certificateService-DzKkZ9EV.js   [39m[1m[2m  1.31 kB[22m[1m[22m[2m │ gzip:   0.64 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Dialog-B7tzDbik.js               [39m[1m[2m  1.32 kB[22m[1m[22m[2m │ gzip:   0.70 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Card-Ch6G0d-S.js                 [39m[1m[2m  1.35 kB[22m[1m[22m[2m │ gzip:   0.56 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/VerifyMembership-veq1oMUC.js     [39m[1m[2m  1.41 kB[22m[1m[22m[2m │ gzip:   0.81 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/useCourseCatalog-Dc7uDEW_.js     [39m[1m[2m  1.42 kB[22m[1m[22m[2m │ gzip:   0.67 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Security-YS8ArBr0.js             [39m[1m[2m  2.13 kB[22m[1m[22m[2m │ gzip:   1.02 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/emailUtils-vv96xQ7g.js           [39m[1m[2m  2.15 kB[22m[1m[22m[2m │ gzip:   0.79 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/UserIdentityInput-BWKq4By_.js    [39m[1m[2m  2.54 kB[22m[1m[22m[2m │ gzip:   1.13 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/ImagePicker-BF47Js97.js          [39m[1m[2m  2.83 kB[22m[1m[22m[2m │ gzip:   1.31 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/AuthCallback-Cl4QRTlW.js         [39m[1m[2m  2.96 kB[22m[1m[22m[2m │ gzip:   1.50 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/ResetPassword-C5rLnEVe.js        [39m[1m[2m  3.91 kB[22m[1m[22m[2m │ gzip:   1.71 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/ForgotPassword-vUp_QdDe.js       [39m[1m[2m  3.93 kB[22m[1m[22m[2m │ gzip:   1.80 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/roleDefinitions-DqI6Fe4S.js      [39m[1m[2m  4.57 kB[22m[1m[22m[2m │ gzip:   1.84 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/AdminDashboard-Dka6UoMm.js       [39m[1m[2m  4.69 kB[22m[1m[22m[2m │ gzip:   1.38 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Overview-B8sE_grw.js             [39m[1m[2m  4.90 kB[22m[1m[22m[2m │ gzip:   2.01 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/GalleryManagement-F-8fAm6x.js    [39m[1m[2m  5.17 kB[22m[1m[22m[2m │ gzip:   2.14 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/MessageManagement-s5E6Ce23.js    [39m[1m[2m  5.43 kB[22m[1m[22m[2m │ gzip:   1.91 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/LinkedInShare-CjlXAir8.js        [39m[1m[2m  5.50 kB[22m[1m[22m[2m │ gzip:   2.41 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/formService-FrOCI5OQ.js          [39m[1m[2m  5.87 kB[22m[1m[22m[2m │ gzip:   1.88 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/VerifyEmail-Dwp3G6HK.js          [39m[1m[2m  5.93 kB[22m[1m[22m[2m │ gzip:   2.32 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/BlogManagement-Clk7oMjy.js       [39m[1m[2m  6.03 kB[22m[1m[22m[2m │ gzip:   2.27 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Notifications-BwvoQAYR.js        [39m[1m[2m  6.18 kB[22m[1m[22m[2m │ gzip:   2.38 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/MyCourses-B2xhyuuI.js            [39m[1m[2m  6.97 kB[22m[1m[22m[2m │ gzip:   2.82 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/ProjectManagement-DXMosxZh.js    [39m[1m[2m  7.34 kB[22m[1m[22m[2m │ gzip:   2.54 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/PointsManagement-IXQgJYK5.js     [39m[1m[2m  7.42 kB[22m[1m[22m[2m │ gzip:   2.48 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/StaffManagement-Dq0uyAgQ.js      [39m[1m[2m  7.87 kB[22m[1m[22m[2m │ gzip:   2.78 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Contact-8Q7s174a.js              [39m[1m[2m  7.88 kB[22m[1m[22m[2m │ gzip:   2.82 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Gallery-D8-xP6Zn.js              [39m[1m[2m  8.13 kB[22m[1m[22m[2m │ gzip:   3.22 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Login-5lLMThYx.js                [39m[1m[2m  8.63 kB[22m[1m[22m[2m │ gzip:   3.46 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Terms-uDKcsmzs.js                [39m[1m[2m  8.71 kB[22m[1m[22m[2m │ gzip:   3.24 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/ContentManagement-DR0BQknL.js    [39m[1m[2m  8.77 kB[22m[1m[22m[2m │ gzip:   2.41 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Settings-BcSBnmTh.js             [39m[1m[2m  9.06 kB[22m[1m[22m[2m │ gzip:   2.60 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Home-qQhit-nc.js                 [39m[1m[2m  9.63 kB[22m[1m[22m[2m │ gzip:   3.71 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Register-DWXnQD0b.js             [39m[1m[2m  9.76 kB[22m[1m[22m[2m │ gzip:   3.61 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Privacy-NIgykoay.js              [39m[1m[2m  9.85 kB[22m[1m[22m[2m │ gzip:   3.89 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Events-DWAkmICM.js               [39m[1m[2m 10.01 kB[22m[1m[22m[2m │ gzip:   3.83 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Staff-BDGJvq8l.js                [39m[1m[2m 11.15 kB[22m[1m[22m[2m │ gzip:   4.29 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Blog-BQfCEZm0.js                 [39m[1m[2m 11.28 kB[22m[1m[22m[2m │ gzip:   4.07 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Leaderboard-DvkxRkaz.js          [39m[1m[2m 11.52 kB[22m[1m[22m[2m │ gzip:   3.72 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/CourseQuiz-CZGklE1H.js           [39m[1m[2m 11.85 kB[22m[1m[22m[2m │ gzip:   4.57 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/CourseDetail-pkVjTMX3.js         [39m[1m[2m 12.62 kB[22m[1m[22m[2m │ gzip:   4.02 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/FAQ-DUfktcGl.js                  [39m[1m[2m 13.71 kB[22m[1m[22m[2m │ gzip:   5.44 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/CompilerPlayground-pK8MI9vS.js   [39m[1m[2m 14.26 kB[22m[1m[22m[2m │ gzip:   4.78 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Courses-XSDXH6gU.js              [39m[1m[2m 15.77 kB[22m[1m[22m[2m │ gzip:   5.69 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/universalRunner-EmxpEhqC.js      [39m[1m[2m 16.70 kB[22m[1m[22m[2m │ gzip:   5.87 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Projects-DWl8A6Ef.js             [39m[1m[2m 17.10 kB[22m[1m[22m[2m │ gzip:   5.31 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/About-D_OwbCoD.js                [39m[1m[2m 17.11 kB[22m[1m[22m[2m │ gzip:   6.09 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Dashboard-DUUnslOq.js            [39m[1m[2m 21.63 kB[22m[1m[22m[2m │ gzip:   6.57 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/PublicFormView-Ds-Urayc.js       [39m[1m[2m 23.25 kB[22m[1m[22m[2m │ gzip:   6.98 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/courseMediaService-Bj1NWEN2.js   [39m[1m[2m 28.19 kB[22m[1m[22m[2m │ gzip:  11.33 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/purify.es-DBIK8olT.js            [39m[1m[2m 29.40 kB[22m[1m[22m[2m │ gzip:  11.31 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/CourseLearning-B8nkHqgv.js       [39m[1m[2m 29.79 kB[22m[1m[22m[2m │ gzip:   9.88 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Certificates-DHrHD36k.js         [39m[1m[2m 35.41 kB[22m[1m[22m[2m │ gzip:  10.19 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/contentService-CHeFEnkJ.js       [39m[1m[2m 43.32 kB[22m[1m[22m[2m │ gzip:  13.24 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/CourseManagement-BjFzwWo0.js     [39m[1m[2m 51.61 kB[22m[1m[22m[2m │ gzip:  14.59 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/UserManagement-B4yyYNgi.js       [39m[1m[2m 53.95 kB[22m[1m[22m[2m │ gzip:  13.31 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/Profile-BNoJ1O8u.js              [39m[1m[2m 79.48 kB[22m[1m[22m[2m │ gzip:  22.56 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/FormManagement-Dz_7tXzA.js       [39m[1m[2m 88.44 kB[22m[1m[22m[2m │ gzip:  21.49 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/vendor-motion-D-eu9Fv8.js        [39m[1m[2m127.89 kB[22m[1m[22m[2m │ gzip:  42.02 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/index-0aail2M4.js                [39m[1m[2m141.80 kB[22m[1m[22m[2m │ gzip:  45.96 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/index.es-1jEecwcJ.js             [39m[1m[2m159.64 kB[22m[1m[22m[2m │ gzip:  53.54 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/vendor-canvas-QH1iLAAe.js        [39m[1m[2m202.38 kB[22m[1m[22m[2m │ gzip:  48.04 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/vendor-supabase-B12s50R_.js      [39m[1m[2m226.70 kB[22m[1m[22m[2m │ gzip:  58.90 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/vendor-react-xIwCXbJ-.js         [39m[1m[2m310.90 kB[22m[1m[22m[2m │ gzip:  94.60 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/vendor-charts-WZBmRNlW.js        [39m[1m[2m371.64 kB[22m[1m[22m[2m │ gzip: 109.22 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/EventManagement-BIVap3eb.js      [39m[1m[2m390.37 kB[22m[1m[22m[2m │ gzip: 114.57 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/vendor-pdf-CRf0biuG.js           [39m[1m[2m391.25 kB[22m[1m[22m[2m │ gzip: 129.08 kB[22m
+[2mqa-audit/.runtime/final-hosted/build/[22m[36massets/vendor-spreadsheets-BLigKl4k.js  [39m[1m[2m492.34 kB[22m[1m[22m[2m │ gzip: 160.64 kB[22m
+[32m✓ built in 6.96s[39m

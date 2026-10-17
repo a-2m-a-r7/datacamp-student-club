@@ -5,15 +5,17 @@ import os from 'node:os';
 import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-const runtime = process.env.QA_POSTGRES_RUNTIME || path.resolve('qa-audit/.runtime');
+const runtime = process.argv[2] || process.env.QA_POSTGRES_RUNTIME || path.resolve('qa-audit/.runtime');
 const {default: EmbeddedPostgres} = await import(pathToFileURL(path.join(runtime,'node_modules/embedded-postgres/dist/index.js')).href);
 const {default: pg} = await import(pathToFileURL(path.join(runtime,'node_modules/pg/lib/index.js')).href);
-const root = path.resolve(os.tmpdir(), 'datacamp-qa-postgres');
+const root = path.resolve(runtime,'QA_TEST_final_databases');
+fs.mkdirSync(root,{recursive:true});
 const databaseDir = path.resolve(root, 'qa_run_' + crypto.randomUUID());
 if (!databaseDir.startsWith(root + path.sep)) throw Error('QA database path escapes its directory');
 const password = crypto.randomUUID(), port = 35432;
 const server = new EmbeddedPostgres({ databaseDir, user: 'qa_owner', password, port, persistent: true, initdbFlags: ['--encoding=UTF8'], postgresFlags: ['-h', '127.0.0.1', '-c', 'max_connections=80'], onLog: () => {}, onError: () => {} });
 let pool, owner, passed = 0;
+fs.mkdirSync('qa-audit/final/evidence/runs/'+process.env.QA_FINAL_RUN,{recursive:true});
 const metrics = {}, tests = [];
 async function check(name, run) { await run(); passed++; tests.push(name); console.log('PASS ' + name); }
 async function asUser(uid, sql, args = []) {
@@ -40,8 +42,8 @@ try {
    CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
    CREATE TABLE storage.objects(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),bucket_id text,name text); ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
    GRANT USAGE ON SCHEMA storage TO anon,authenticated; GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA storage TO anon,authenticated;`);
-  for (const file of fs.readdirSync('supabase/migrations').filter(file => /^202610(13|14|15)/.test(file)).sort()) await owner.query(fs.readFileSync('supabase/migrations/' + file, 'utf8'));
-  await owner.query('GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO anon,authenticated; REVOKE ALL ON course_request_windows FROM anon,authenticated;');
+  for (const file of fs.readdirSync('supabase/migrations').filter(file => /^\d{14}_.+\.sql$/.test(file)&&file>='20261013000000').sort()) await owner.query(fs.readFileSync('supabase/migrations/' + file, 'utf8'));
+  // Application privileges come from the actual migrations.
   await owner.query("INSERT INTO auth.users(id,email,email_confirmed_at,raw_user_meta_data) SELECT id, 'QA_TEST_'||id::text||'@example.invalid',now(),'{\"full_name\":\"QA_TEST_GROWTH_MEMBER\"}' FROM jsonb_to_recordset($1::jsonb) AS t(id uuid)", [JSON.stringify([admin,...members].map(id => ({id})))]);
   await owner.query("UPDATE profiles SET role='admin' WHERE id=$1", [admin]);
   await owner.query("INSERT INTO courses(id,title,slug,is_published,points_reward) VALUES($1,'QA_TEST_دورة مستقبلية','qa-test-future',true,0)", [course]);
@@ -138,7 +140,7 @@ try {
     const cert=(await owner.query('SELECT verification_code FROM certificates WHERE course_id=$1',[cid])).rows[0];await asUser(admin,'DELETE FROM courses WHERE id=$1',[cid]);
     const verified=(await asUser(members[2],'SELECT verify_certificate($1) AS value',[cert.verification_code])).rows[0].value;assert.equal(verified.course_title,'QA_TEST_ARCHIVED');
   });
-  fs.writeFileSync('qa-audit/course-growth-postgres-results.json',JSON.stringify({passed,failed:0,environment:'isolated real PostgreSQL 18, loopback, 20 simultaneous connections; NOT a production capacity benchmark',catalogCourses:1200,members:members.length,tests,metrics},null,2));
+  fs.writeFileSync('qa-audit/final/evidence/runs/'+process.env.QA_FINAL_RUN+'/course-growth-postgres-results.json',JSON.stringify({passed,failed:0,environment:'isolated real PostgreSQL 18, loopback, 20 simultaneous connections; NOT a production capacity benchmark',catalogCourses:1200,members:members.length,tests,metrics},null,2));
   console.log(JSON.stringify({passed,metrics}));
 } catch(error) { console.error(error); process.exitCode=1; }
 finally {owner?.release();await pool?.end();await server.stop();}

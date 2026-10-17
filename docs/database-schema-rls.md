@@ -1,6 +1,6 @@
 # Effective database and RLS
 
-The clean DataCamp schema has 33 public tables. The hosted QA catalog confirms RLS is enabled on all 33. Grants and RLS are distinct: explicit table privileges are declared by 20261016152338_explicit_datacamp_data_api_grants.sql. Do not re-grant all tables after applying migrations.
+The clean DataCamp schema has 34 public tables after the separately approved Sheets coordination migration. Hosted QA confirms RLS on all 34. Grants and RLS are distinct: explicit privileges are declared by 20261016152338_explicit_datacamp_data_api_grants.sql and the newer tables' own migrations. Do not re-grant all tables after applying migrations. form_sheet_sync_jobs and its queue/finish SECURITY INVOKER RPCs are service-role-only and excluded from Realtime; no client policy is intentional.
 
 | Domain | Tables |
 |---|---|

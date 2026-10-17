@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-17T11:12:04.877924+00:00",
+  "branch": "tester-final",
+  "reviewHead": "c64e711369df95352a2a9ff568bc6c5d7921bcac",
+  "sourceCommit": "c64e711",
+  "directProductionDependencies": 21,
+  "directDevelopmentDependencies": 13,
+  "buildFiles": 85,
+  "buildBytes": 3890672,
+  "trackedFiles": 776,
+  "trackedBytes": 48166024,
+  "fullBrowser": {
+    "status": "running"
+  },
+  "limitations": [
+    "Tracked bytes include accumulated audit evidence; ignored QA clones/runtimes are excluded.",
+    "A prior full run of 480 passed precedes BUG-024..029; the current run is separate.",
+    "npm ci has one transitive node-domexception deprecation, with zero reported vulnerabilities."
+  ]
+}

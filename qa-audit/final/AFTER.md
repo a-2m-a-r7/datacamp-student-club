@@ -1,46 +1,45 @@
-# Final State Report — tester-final
+# Current audit results - 17 October 2026
 
-**Recorded:** 2026-10-15  
-**Scope:** local isolated QA harness plus read-only staging smoke checks. No production database mutation, deployment, push, or external-provider write was performed.
+This report supersedes earlier completion statements. Branch: tester-final. Product changes through c64e711. No merge, push or deployment is authorized before final report approval; production has not been used for tests or schema changes.
 
-## Verified metrics
+| Layer | Actually observed result | Evidence / limitation |
+|---|---|---|
+| Complete current browser run | RUNNING - not counted as a completed pass | evidence/runs/QA_TEST_full_delivery_504; EN/AR x 1440/768/375; local migrated SQL with transport adapters |
+| Before footer-flow correction | 496/498 passed; 2 reproduced click failures | QA_TEST_full_final_498; BUG-030 fixes the shared layout cause; 18 targeted/related/loading cases pass |
+| Previous complete browser run | 480/480 passed | Historical run QA_TEST_full_final_480; not substituted for current-source results |
+| Node API/security contracts | 37/37 passed | QA_TEST_node_final.txt; no live provider claim |
+| Strict source-grant SQL feature suite | 61/61 passed | QA_TEST_final_sql_strict_03; blanket client grants removed from the old harness |
+| All-table CRUD | 816/816 passed | BUG-024-table-crud; 34 tables, source grants only, rolled-back local probes |
+| Clean schema | 5/5 passed | 34 tables with RLS, 16 Realtime publication entries; BUG-024-fresh-schema |
+| Sheet lease / ACL | 19/19 passed | BUG-024-coordination-local; local interleaved callers, not hosted capacity |
+| Actual hosted services | 12/12 passed | GoTrue, REST, Storage bytes/policies, Realtime delivery in isolated Supabase QA |
+| Actual hosted profile browser | 6/6 passed | QA_TEST_hosted_browser_03; EN/AR and three widths |
+| Actual Google sign-in | One owner identity completed | Supabase QA identity and return observed; second Google identity/inbox delivery not established |
+| Actual Drive | Three synthetic files uploaded, hashed, resumed and read back | 47,808,659-byte MP4, 335-byte material, 243-byte SRT; not a 2 GiB transfer |
+| Actual Gemini | Reviewed bilingual quiz + Python plan generated and applied | Supported model alias; synthetic video only, not the personal recording |
+| Actual complete learner flow | Passed on current UI | QA_TEST_actual_course_final_04; video, captions, watch bookmark, bilingual quiz, Python grading, 100% database completion, one certificate and downloaded PDF |
+| Actual file metadata UI | 6/6 passed | BUG-027-sizes-after; real saved files, both languages and all widths |
+| Actual Sheets | Retry/schema/parallel/failure/pagination passed | BUG-024-sheets-after; 1003 saved response IDs, 8 parallel callers; OAuth-only anonymous submission separately verified |
+| Clean clone | npm ci, build, lint/types, six browser cases passed | QA_TEST_fresh_clone_03 at d27eb58; 253 installed, 254 audited, 0 vulnerabilities, one transitive deprecation |
 
-| Metric | Result |
-|---|---:|
-| Branch | `tester-final` |
-| Declared dependencies | 21 production, 13 development |
-| Production build | Passed; 79 emitted files, 3,871,499 bytes |
-| TypeScript/lint | Passed (`npm run lint`) |
-| Explicit type-check | Passed (`tsc --noEmit -p tsconfig.json`) |
-| Local Playwright suite | 399/399 passed; final process result recorded in `evidence/browser-results.json` |
-| Form question regression | 9/9 passed across 1440/768/375 |
-| Database boundary suite | Passed: 118 assertions across migration-source and provider-default contexts |
-| Clean install | `npm ci` passed; 253 packages installed, npm audit found 0 vulnerabilities |
-| Authentication API suite | Passed: 1 test |
-| QA isolation suite | Passed: 4 tests |
-| Staging route smoke | 29 read-only routes returned HTTP 200 |
+All 30 reproduced bugs have separate fix commits. Source inventories and aggregate tests are not proof that every individual variant of every control has been executed; unverified variants remain explicit in the matrix.
 
-## Fix commits
+## Limits and owner decisions
 
-| Bug | Severity | Commit | Result |
-|---|---|---|---|
-| BUG-001 | High | `de400aa` | QA launcher no longer inherits provider credentials or production URLs |
-| BUG-002 | Critical | `e9d3c1a` | Legacy admin-promotion helper is callable only by `service_role` |
-| BUG-003 | Medium | `4de5701` | Derived fields in the legacy `users` mirror cannot be forged by untrusted callers |
-| BUG-004 | Low | `96eab2b` | Internal course-counter helper is no longer callable by anon/member |
-| BUG-005 | High | `d0942e5` | Public ranking renderer and go-to branching no longer crash or omit the target |
-| BUG-006 | High | `d2ee0e5` | Branch-aware submission validation accepts intentionally skipped required questions |
+- No 1000-user hosted capacity test or actual 2 GiB transfer was performed. The existing real PostgreSQL exercise used 1000 fixture members, 20 connections and 10,000 successful operations. Free provider quotas remain relevant.
+- C++/Java/Go/Rust require a separately hosted Piston-compatible executor, as previously accepted by the owner. Configure VITE_PISTON_API_URL and its CSP origin; apply isolation, quotas and timeouts there. Python/JavaScript/TypeScript/SQL browser execution is separate.
+- Actual email inbox delivery and switching between two Google identities remain external checks. Generated Auth links are not presented as delivered email.
+- Latest local mobile Lighthouse on the c64e711 build: login 67/100/100/100, courses 72/100/100/100, home 71/100/100/100. These are local uncompressed samples under concurrent QA work, not deployed capacity or a promise of 100 performance.
+- Supabase advisors retain intentional server-only tables without client policies, reviewed public SECURITY DEFINER projections/RPCs, and a leaked-password-protection warning. These are disclosed, not silently called zero warnings. The restricted new sync table/RPCs are not exposed to clients or Realtime.
+- Production migrations, final diff approval, push/deploy and a subsequent live smoke are pending. The existing public site does not contain these audit commits.
 
-Every fix commit was followed by targeted tests, related regression checks, build, lint and explicit type-check; all passed. The final main regression suite completed with 399/399 passing tests.
+## Retained resources / cleanup
 
-## Coverage and limits
+Cleanup state is tracked separately in CLEANUP.md. The real Google owner QA profile has been returned to role user. Preserve that identity and the user-selected personal recording/course. Synthetic QA_TEST_ fixtures may be cleaned by exact IDs only after their final provider checks. Do not delete credentials, QA clones or other runtime/download files as generic caches. Only the four explicitly approved filesystem folders may be removed after all tests stop.
 
-The local adapter suite exercised authentication flows, route guards, course/certificate flows, forms, users, profiles, uploads, exports, QR decoding, compiler behavior, admin tabs, role boundaries, error/retry behavior, Arabic/English UI paths, and 1440/768/375 viewport projects. The full matrix remains a catalog of individual controls and expected contracts; adapter coverage is not a claim that every real provider call passed.
+## Measured source/build size
 
-Real Google OAuth account switching, email delivery/OTP, Google Sheets/Drive, Gemini, Piston languages, Supabase hosted Realtime, Storage policy behavior on the deployed project, Lighthouse, and live authenticated staging writes remain **Blocked** without an isolated provider environment and disposable credentials. The supplied Google account addresses were not used to initiate an interactive OAuth session. The local adapter and migration replay do not substitute for hosted-provider authorization.
-
-## Cleanup and delivery state
-
-No destructive cleanup was performed. Existing generated QA artifacts and pre-existing worktree changes were preserved. No `QA_TEST_` data was created in a production system. `dist/`, caches, reports, and test outputs are not deleted because deletion requires an explicit itemized approval under the requested rules.
-
-Push, merge, deployment, and live post-deployment smoke testing remain pending explicit approval.
+- Production build: 85 files, 3,890,672 bytes.
+- Direct dependencies: 21 production, 13 development.
+- Tracked working files: 776, 48,166,024 bytes, including historical audit evidence and excluding ignored runtimes.
+- Full baseline and original Git status remain in BEFORE.md.

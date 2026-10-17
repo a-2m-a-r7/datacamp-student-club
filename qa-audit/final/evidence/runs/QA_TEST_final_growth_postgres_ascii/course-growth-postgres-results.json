@@ -1,0 +1,54 @@
+{
+  "passed": 11,
+  "failed": 0,
+  "environment": "isolated real PostgreSQL 18, loopback, 20 simultaneous connections; NOT a production capacity benchmark",
+  "catalogCourses": 1200,
+  "members": 1000,
+  "tests": [
+    "legacy Arabic repair is reversible and preserves valid/mixed text and ratings with actual reviews",
+    "new courses have genuine lesson counts and cannot publish an empty curriculum",
+    "member catalog uses keyset pages beyond 1000 rows without duplicates, including equal timestamps",
+    "Arabic search is generic; large limits are clamped and draft flags cannot bypass RLS",
+    "indexed catalog handles 1000 requests through 20 simultaneous real connections",
+    "concurrent enrollment retries create one enrollment/reward per member and accurate totals",
+    "concurrent lesson/quiz retries issue exactly one linked certificate and only persisted rewards",
+    "a later curriculum edit preserves historical certificates and requires new learners to finish new lessons",
+    "course request throttling is shared across connections, returns 429, and recovers next window",
+    "curriculum edits wait for a real completion transaction, with no mixed curriculum certificate",
+    "removing or renaming a course preserves earned public credentials"
+  ],
+  "metrics": {
+    "catalog": {
+      "requests": 1000,
+      "concurrentPool": 20,
+      "elapsedMs": 308,
+      "p50Ms": 192,
+      "p95Ms": 295,
+      "errors": 0
+    },
+    "enrollment": {
+      "requests": 3000,
+      "concurrentPool": 20,
+      "elapsedMs": 1070,
+      "p50Ms": 875,
+      "p95Ms": 1047,
+      "errors": 0
+    },
+    "lessonCompletion": {
+      "requests": 3000,
+      "concurrentPool": 20,
+      "elapsedMs": 440,
+      "p50Ms": 252,
+      "p95Ms": 419,
+      "errors": 0
+    },
+    "quizCompletion": {
+      "requests": 3000,
+      "concurrentPool": 20,
+      "elapsedMs": 2036,
+      "p50Ms": 1239,
+      "p95Ms": 1950,
+      "errors": 0
+    }
+  }
+}

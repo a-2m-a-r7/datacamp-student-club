@@ -1,0 +1,74 @@
+
+Running 1 test using 1 worker
+
+  x  1 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (20.5s)
+
+
+  1) [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census 
+
+    Error: [
+      {
+        "route": "/auth/callback",
+        "finalPath": "/auth/callback",
+        "locale": "en",
+        "role": "visitor",
+        "scroll": 375,
+        "width": 375,
+        "brokenImages": [],
+        "controls": 36,
+        "errors": [
+          "[AuthCallback] Verification error: Error: Authentication link is invalid or expired. Please sign in again.\n    at http://127.0.0.1:3100/assets/AuthCallback-CDV0I8b5.js:1:1220"
+        ],
+        "reason": "console-error"
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 17
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "brokenImages": Array [],
+    +     "controls": 36,
+    +     "errors": Array [
+    +       "[AuthCallback] Verification error: Error: Authentication link is invalid or expired. Please sign in again.
+    +     at http://127.0.0.1:3100/assets/AuthCallback-CDV0I8b5.js:1:1220",
+    +     ],
+    +     "finalPath": "/auth/callback",
+    +     "locale": "en",
+    +     "reason": "console-error",
+    +     "role": "visitor",
+    +     "route": "/auth/callback",
+    +     "scroll": 375,
+    +     "width": 375,
+    +   },
+    + ]
+
+      56 |    }
+      57 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});
+    > 58 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);
+         |                                                     ^
+      59 |   }finally{await app.db.close();}
+      60 |  });
+      61 | }
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\routes-locales.spec.ts:58:53
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-navigation-01\artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\20261016-navigation-01\artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\20261016-navigation-01\artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\20261016-navigation-01\artifacts\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census 

@@ -1,0 +1,11 @@
+
+Running 6 tests using 1 worker
+
+  ok 1 [1440] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en (9.0s)
+  ok 2 [1440] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar (8.3s)
+  ok 3 [768] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en (9.6s)
+  ok 4 [768] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar (8.8s)
+  ok 5 [375] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence en (7.6s)
+  ok 6 [375] › qa-audit\final\hosted-tests\auth-profile.spec.ts:6:33 › actual Auth and profile persistence ar (9.4s)
+
+  6 passed (1.1m)

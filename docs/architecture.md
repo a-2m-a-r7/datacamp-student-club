@@ -10,6 +10,8 @@ SQL RPCs perform enrollment, scoring, course completion, automatic certificate i
 
 Images use the configured Storage buckets. Profile images store avatar_url/photo_url references; file bytes remain in Storage. Large course files use the owner's separate Drive OAuth connection, resumable chunks and server-side job records. Gemini proposes bilingual quiz/coding stages for administrator review. PDF/PNG generation and LinkedIn preparation occur on demand; the learner confirms publication on LinkedIn.
 
+Form attachments use the private form-attachments bucket. Submission checks the matching Storage object's existence, allowed MIME metadata and nonzero size up to 10 MiB, then stores its canonical size. This does not inspect every byte for malware. Sheets synchronization uses the form owner's Drive connection, a service-only revision/lease table and canonical response-row replacement to avoid duplicates and obsolete columns. Pending work returns 202; after a failed/stopped invocation, the administrator can resync following lease expiry.
+
 watchQuery refreshes visible tabs with bounded polling and refreshes after writes. Optional Realtime subscribes only when VITE_ENABLE_REALTIME=true; subscribed tables must be in supabase_realtime. Consumers unsubscribe on teardown. This does not establish 1000 live-browser/video capacity.
 
 Vercel serves hashed assets and server functions. vercel.json contains security/cache headers and SPA rewrites. Tests serve local builds in a minimal environment; the real-service QA target is separately pinned and never uses production credentials. See qa-audit/final/QA-ENVIRONMENT.md and TEST-MATRIX.md for observed results and limits.

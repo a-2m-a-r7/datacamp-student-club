@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 const db = new PGlite();
 const member='00000000-0000-4000-8000-000000000001',admin='00000000-0000-4000-8000-000000000002';
 const course='00000000-0000-4000-8000-000000000003',lesson='00000000-0000-4000-8000-000000000004';
+fs.mkdirSync('qa-audit/final/evidence/runs/'+process.env.QA_FINAL_RUN,{recursive:true});
 let passed=0;
 async function check(name,fn){await fn();passed++;console.log('PASS '+name);}
 try {
@@ -15,16 +16,16 @@ try {
  await db.exec(`CREATE SCHEMA storage; CREATE TABLE storage.buckets(id text PRIMARY KEY,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  CREATE TABLE storage.objects(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),bucket_id text,name text); ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
  GRANT USAGE ON SCHEMA storage TO anon,authenticated; GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA storage TO anon,authenticated;`);
- for(const file of fs.readdirSync('supabase/migrations').filter(f=>/^202610(13|14|15)/.test(f)).sort()){
+ for(const file of fs.readdirSync('supabase/migrations').filter(f=>/^\d{14}_.+\.sql$/.test(f)&&f>='20261013000000').sort()){
   await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8')); console.log('APPLIED '+file);
  }
- await db.exec('GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO anon,authenticated;');
+ // Use source migration grants; never override server-only table ACLs.
  await db.query(`INSERT INTO auth.users(id,email,email_confirmed_at) VALUES ($1,'QA_TEST_member@example.invalid',now()),($2,'QA_TEST_admin@example.invalid',now())`,[member,admin]);
  await db.query("UPDATE profiles SET role='admin' WHERE id=$1",[admin]);
  await db.query("INSERT INTO courses(id,title,slug,is_published) VALUES($1,'QA_TEST_COURSE','qa-test-course',true)",[course]);
  await db.query("INSERT INTO lessons(id,course_id,title,points_reward) VALUES($1,$2,'QA_TEST_LESSON',10)",[lesson,course]);
  await check('SQL schema applies without seeds',async()=>assert.equal((await db.query('SELECT count(*)::int AS n FROM events')).rows[0].n,0));
- await check('anonymous profiles are private',async()=>{await db.exec('SET ROLE anon;');assert.equal((await db.query('SELECT * FROM profiles')).rows.length,0);await db.exec('RESET ROLE;');});
+ await check('anonymous profile reads are denied by source grants',async()=>{await db.exec('SET ROLE anon;');await assert.rejects(db.query('SELECT * FROM profiles'),e=>e.code==='42501');await db.exec('RESET ROLE;');});
  await db.query("SELECT set_config('qa.uid',$1,false)",[member]); await db.exec('SET ROLE authenticated;');
  await check('member reads only their own profile',async()=>{const rows=(await db.query('SELECT id FROM profiles')).rows;assert.deepEqual(rows.map(r=>r.id),[member]);});
  await check('member can persist own profile name',async()=>{await db.query("UPDATE profiles SET full_name='QA_TEST_UPDATED_MEMBER' WHERE id=$1",[member]);assert.equal((await db.query('SELECT full_name FROM profiles WHERE id=$1',[member])).rows[0].full_name,'QA_TEST_UPDATED_MEMBER');});
@@ -106,7 +107,7 @@ try {
  await check('member cannot query directory RPC directly',async()=>await assert.rejects(db.query('SELECT public_leaderboard()')));
  const card=(await db.query('SELECT get_own_member_card() AS r')).rows[0].r;
  await check('member card token persists and is idempotent',async()=>assert.equal((await db.query('SELECT get_own_member_card() AS r')).rows[0].r.token,card.token));
- await check('member cannot enumerate card tokens',async()=>assert.equal((await db.query('SELECT * FROM member_cards')).rows.length,0));
+ await check('member cannot enumerate card tokens',async()=>await assert.rejects(db.query('SELECT * FROM member_cards'),e=>e.code==='42501'));
  await check('member cannot resolve other membership cards for attendance',async()=>await assert.rejects(db.query('SELECT resolve_member_card_ticket($1)',[`https://example.invalid/verify-membership/${card.token}`])));
  await db.exec('RESET ROLE; SET ROLE anon;');
  await check('public card verification shows status and number without private profile',async()=>{const r=(await db.query('SELECT verify_member_card($1) AS r',[card.token])).rows[0].r;assert.equal(r.valid,true);assert.deepEqual(Object.keys(r).sort(),['member_id','valid']);});
@@ -130,6 +131,6 @@ try {
  await check('administrator can inspect avatar directory',async()=>assert.equal((await db.query("SELECT name FROM storage.objects WHERE bucket_id='avatars'")).rows.length,2));
  await db.exec('RESET ROLE;');
  await check('avatar bucket enforces 5 MB and raster types',async()=>{const b=(await db.query("SELECT * FROM storage.buckets WHERE id='avatars'")).rows[0];assert.equal(Number(b.file_size_limit),5242880);assert.deepEqual(b.allowed_mime_types,['image/png','image/jpeg','image/webp']);});
- fs.writeFileSync('qa-audit/postgres-results.json',JSON.stringify({passed,failed:0,environment:'isolated in-memory PostgreSQL'},null,2));
-} catch(error){console.error(error.message);process.exitCode=1;fs.writeFileSync('qa-audit/postgres-results.json',JSON.stringify({passed,failed:1,error:error.message},null,2));}
+ fs.writeFileSync('qa-audit/final/evidence/runs/'+process.env.QA_FINAL_RUN+'/postgres-results.json',JSON.stringify({passed,failed:0,environment:'isolated in-memory PostgreSQL'},null,2));
+} catch(error){console.error(error.message);process.exitCode=1;fs.writeFileSync('qa-audit/final/evidence/runs/'+process.env.QA_FINAL_RUN+'/postgres-results.json',JSON.stringify({passed,failed:1,error:error.message},null,2));}
 finally {await db.close();}

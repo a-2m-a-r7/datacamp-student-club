@@ -1,0 +1,5 @@
+{
+  "passed": 1,
+  "failed": 1,
+  "error": "permission denied for table profiles"
+}

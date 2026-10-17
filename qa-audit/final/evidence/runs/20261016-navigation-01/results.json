@@ -1,0 +1,237 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/active-server.config.ts",
+      "routes-locales.spec.ts",
+      "--project=375",
+      "--grep",
+      "visitor en"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\active-server.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/20261016-navigation-01/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/20261016-navigation-01/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/20261016-navigation-01/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\20261016-navigation-01\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "375",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3100",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 375,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "375"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\20261016-navigation-01\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "routes-locales.spec.ts",
+      "file": "routes-locales.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "visitor en: direct route, direction, console and overflow census",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 20523,
+                  "error": {
+                    "message": "Error: [\n  {\n    \"route\": \"/auth/callback\",\n    \"finalPath\": \"/auth/callback\",\n    \"locale\": \"en\",\n    \"role\": \"visitor\",\n    \"scroll\": 375,\n    \"width\": 375,\n    \"brokenImages\": [],\n    \"controls\": 36,\n    \"errors\": [\n      \"[AuthCallback] Verification error: Error: Authentication link is invalid or expired. Please sign in again.\\n    at http://127.0.0.1:3100/assets/AuthCallback-CDV0I8b5.js:1:1220\"\n    ],\n    \"reason\": \"console-error\"\n  }\n]\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 17\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"brokenImages\": Array [],\u001b[39m\n\u001b[31m+     \"controls\": 36,\u001b[39m\n\u001b[31m+     \"errors\": Array [\u001b[39m\n\u001b[31m+       \"[AuthCallback] Verification error: Error: Authentication link is invalid or expired. Please sign in again.\u001b[39m\n\u001b[31m+     at http://127.0.0.1:3100/assets/AuthCallback-CDV0I8b5.js:1:1220\",\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"finalPath\": \"/auth/callback\",\u001b[39m\n\u001b[31m+     \"locale\": \"en\",\u001b[39m\n\u001b[31m+     \"reason\": \"console-error\",\u001b[39m\n\u001b[31m+     \"role\": \"visitor\",\u001b[39m\n\u001b[31m+     \"route\": \"/auth/callback\",\u001b[39m\n\u001b[31m+     \"scroll\": 375,\u001b[39m\n\u001b[31m+     \"width\": 375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: [\n  {\n    \"route\": \"/auth/callback\",\n    \"finalPath\": \"/auth/callback\",\n    \"locale\": \"en\",\n    \"role\": \"visitor\",\n    \"scroll\": 375,\n    \"width\": 375,\n    \"brokenImages\": [],\n    \"controls\": 36,\n    \"errors\": [\n      \"[AuthCallback] Verification error: Error: Authentication link is invalid or expired. Please sign in again.\\n    at http://127.0.0.1:3100/assets/AuthCallback-CDV0I8b5.js:1:1220\"\n    ],\n    \"reason\": \"console-error\"\n  }\n]\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 17\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"brokenImages\": Array [],\u001b[39m\n\u001b[31m+     \"controls\": 36,\u001b[39m\n\u001b[31m+     \"errors\": Array [\u001b[39m\n\u001b[31m+       \"[AuthCallback] Verification error: Error: Authentication link is invalid or expired. Please sign in again.\u001b[39m\n\u001b[31m+     at http://127.0.0.1:3100/assets/AuthCallback-CDV0I8b5.js:1:1220\",\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"finalPath\": \"/auth/callback\",\u001b[39m\n\u001b[31m+     \"locale\": \"en\",\u001b[39m\n\u001b[31m+     \"reason\": \"console-error\",\u001b[39m\n\u001b[31m+     \"role\": \"visitor\",\u001b[39m\n\u001b[31m+     \"route\": \"/auth/callback\",\u001b[39m\n\u001b[31m+     \"scroll\": 375,\u001b[39m\n\u001b[31m+     \"width\": 375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\routes-locales.spec.ts:58:53",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\routes-locales.spec.ts",
+                      "column": 53,
+                      "line": 58
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 56 |\u001b[39m    }\n \u001b[90m 57 |\u001b[39m    \u001b[36mawait\u001b[39m info\u001b[33m.\u001b[39mattach(\u001b[32m'route-observations'\u001b[39m\u001b[33m,\u001b[39m{body\u001b[33m:\u001b[39m\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify({observations\u001b[33m,\u001b[39mfailures}\u001b[33m,\u001b[39m\u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m\u001b[35m2\u001b[39m)\u001b[33m,\u001b[39mcontentType\u001b[33m:\u001b[39m\u001b[32m'application/json'\u001b[39m})\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 58 |\u001b[39m    expect(failures\u001b[33m,\u001b[39m\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(failures\u001b[33m,\u001b[39m\u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m\u001b[35m2\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 59 |\u001b[39m   }\u001b[36mfinally\u001b[39m{\u001b[36mawait\u001b[39m app\u001b[33m.\u001b[39mdb\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m}\n \u001b[90m 60 |\u001b[39m  })\u001b[33m;\u001b[39m\n \u001b[90m 61 |\u001b[39m }\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\routes-locales.spec.ts",
+                        "column": 53,
+                        "line": 58
+                      },
+                      "message": "Error: [\n  {\n    \"route\": \"/auth/callback\",\n    \"finalPath\": \"/auth/callback\",\n    \"locale\": \"en\",\n    \"role\": \"visitor\",\n    \"scroll\": 375,\n    \"width\": 375,\n    \"brokenImages\": [],\n    \"controls\": 36,\n    \"errors\": [\n      \"[AuthCallback] Verification error: Error: Authentication link is invalid or expired. Please sign in again.\\n    at http://127.0.0.1:3100/assets/AuthCallback-CDV0I8b5.js:1:1220\"\n    ],\n    \"reason\": \"console-error\"\n  }\n]\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 17\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"brokenImages\": Array [],\u001b[39m\n\u001b[31m+     \"controls\": 36,\u001b[39m\n\u001b[31m+     \"errors\": Array [\u001b[39m\n\u001b[31m+       \"[AuthCallback] Verification error: Error: Authentication link is invalid or expired. Please sign in again.\u001b[39m\n\u001b[31m+     at http://127.0.0.1:3100/assets/AuthCallback-CDV0I8b5.js:1:1220\",\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"finalPath\": \"/auth/callback\",\u001b[39m\n\u001b[31m+     \"locale\": \"en\",\u001b[39m\n\u001b[31m+     \"reason\": \"console-error\",\u001b[39m\n\u001b[31m+     \"role\": \"visitor\",\u001b[39m\n\u001b[31m+     \"route\": \"/auth/callback\",\u001b[39m\n\u001b[31m+     \"scroll\": 375,\u001b[39m\n\u001b[31m+     \"width\": 375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  56 |    }\n  57 |    await info.attach('route-observations',{body:JSON.stringify({observations,failures},null,2),contentType:'application/json'});\n> 58 |    expect(failures,JSON.stringify(failures,null,2)).toEqual([]);\n     |                                                     ^\n  59 |   }finally{await app.db.close();}\n  60 |  });\n  61 | }\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\routes-locales.spec.ts:58:53"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T15:07:35.340Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "route-observations",
+                      "contentType": "application/json",
+                      "body": "ewogICJvYnNlcnZhdGlvbnMiOiBbCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvIiwKICAgICAgImZpbmFsUGF0aCI6ICIvIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogNDMsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9jb3Vyc2VzIiwKICAgICAgImZpbmFsUGF0aCI6ICIvY291cnNlcyIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDQ3LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvbXktY291cnNlcyIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xvZ2luIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9jb3Vyc2VzL3FhLXRlc3Qtcm91dGVzIiwKICAgICAgImZpbmFsUGF0aCI6ICIvY291cnNlcy9xYS10ZXN0LXJvdXRlcyIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM5LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvY291cnNlcy9xYS10ZXN0LXJvdXRlcy9sZWFybiIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xvZ2luIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9jb3Vyc2VzL3FhLXRlc3Qtcm91dGVzL3F1aXoiLAogICAgICAiZmluYWxQYXRoIjogIi9sb2dpbiIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM1LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvY291cnNlcy9xYS10ZXN0LXJvdXRlcy9xdWl6LzQwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwMyIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xvZ2luIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9jZXJ0aWZpY2F0ZXMiLAogICAgICAiZmluYWxQYXRoIjogIi9jZXJ0aWZpY2F0ZXMiLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzOSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL3ZlcmlmeS1jZXJ0aWZpY2F0ZSIsCiAgICAgICJmaW5hbFBhdGgiOiAiL3ZlcmlmeS1jZXJ0aWZpY2F0ZSIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM5LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvdmVyaWZ5LWNlcnRpZmljYXRlL1FBX1RFU1RfVU5LTk9XTiIsCiAgICAgICJmaW5hbFBhdGgiOiAiL3ZlcmlmeS1jZXJ0aWZpY2F0ZS9RQV9URVNUX1VOS05PV04iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzOSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL3ZlcmlmeS1tZW1iZXJzaGlwL1FBX1RFU1RfVU5LTk9XTiIsCiAgICAgICJmaW5hbFBhdGgiOiAiL3ZlcmlmeS1tZW1iZXJzaGlwL1FBX1RFU1RfVU5LTk9XTiIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM1LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvbm90aWZpY2F0aW9ucyIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xvZ2luIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9sZWFkZXJib2FyZCIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xlYWRlcmJvYXJkIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9jb21waWxlciIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2NvbXBpbGVyIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogNTQsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9hYm91dCIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2Fib3V0IiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogNDMsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9wcm9qZWN0cyIsCiAgICAgICJmaW5hbFBhdGgiOiAiL3Byb2plY3RzIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogNDMsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9ldmVudHMiLAogICAgICAiZmluYWxQYXRoIjogIi9ldmVudHMiLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiA0MCwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2Jsb2ciLAogICAgICAiZmluYWxQYXRoIjogIi9ibG9nIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogNDQsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9zdGFmZiIsCiAgICAgICJmaW5hbFBhdGgiOiAiL3N0YWZmIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9nYWxsZXJ5IiwKICAgICAgImZpbmFsUGF0aCI6ICIvZ2FsbGVyeSIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDQxLAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvY29udGFjdCIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2NvbnRhY3QiLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiA0MCwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2ZhcSIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2ZhcSIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDU1LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvcHJpdmFjeSIsCiAgICAgICJmaW5hbFBhdGgiOiAiL3ByaXZhY3kiLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNywKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL3Rlcm1zIiwKICAgICAgImZpbmFsUGF0aCI6ICIvdGVybXMiLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNiwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2xvZ2luIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiA0MiwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL3JlZ2lzdGVyIiwKICAgICAgImZpbmFsUGF0aCI6ICIvcmVnaXN0ZXIiLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiA0MywKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2ZvcmdvdC1wYXNzd29yZCIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2ZvcmdvdC1wYXNzd29yZCIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM4LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvcmVzZXQtcGFzc3dvcmQiLAogICAgICAiZmluYWxQYXRoIjogIi9yZXNldC1wYXNzd29yZCIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM2LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvdmVyaWZ5LWVtYWlsIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiA0MiwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2F1dGgvY2FsbGJhY2siLAogICAgICAiZmluYWxQYXRoIjogIi9hdXRoL2NhbGxiYWNrIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzYsCiAgICAgICJlcnJvcnMiOiBbCiAgICAgICAgIltBdXRoQ2FsbGJhY2tdIFZlcmlmaWNhdGlvbiBlcnJvcjogRXJyb3I6IEF1dGhlbnRpY2F0aW9uIGxpbmsgaXMgaW52YWxpZCBvciBleHBpcmVkLiBQbGVhc2Ugc2lnbiBpbiBhZ2Fpbi5cbiAgICBhdCBodHRwOi8vMTI3LjAuMC4xOjMxMDAvYXNzZXRzL0F1dGhDYWxsYmFjay1DRFYwSThiNS5qczoxOjEyMjAiCiAgICAgIF0KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvZGFzaGJvYXJkIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL3Byb2ZpbGUiLAogICAgICAiZmluYWxQYXRoIjogIi9sb2dpbiIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM1LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvYWRtaW4iLAogICAgICAiZmluYWxQYXRoIjogIi9sb2dpbiIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM1LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvYWRtaW4vdXNlcnMiLAogICAgICAiZmluYWxQYXRoIjogIi9sb2dpbiIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM1LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvYWRtaW4vZXZlbnRzIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2FkbWluL3N0YWZmIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2FkbWluL2dhbGxlcnkiLAogICAgICAiZmluYWxQYXRoIjogIi9sb2dpbiIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM1LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvYWRtaW4vY29udGVudCIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xvZ2luIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9hZG1pbi9wcm9qZWN0cyIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xvZ2luIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9hZG1pbi9ibG9nIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2FkbWluL21lc3NhZ2VzIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2FkbWluL2NvdXJzZXMiLAogICAgICAiZmluYWxQYXRoIjogIi9sb2dpbiIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM1LAogICAgICAiZXJyb3JzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJyb3V0ZSI6ICIvYWRtaW4vcG9pbnRzIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2FkbWluL2Zvcm1zIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2FkbWluL2Zvcm1zL25ldyIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xvZ2luIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9hZG1pbi9mb3Jtcy9idWlsZGVyLzQwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwNCIsCiAgICAgICJmaW5hbFBhdGgiOiAiL2xvZ2luIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogMzUsCiAgICAgICJlcnJvcnMiOiBbXQogICAgfSwKICAgIHsKICAgICAgInJvdXRlIjogIi9hZG1pbi9mb3Jtcy80MDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDQvcmVzcG9uc2VzIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2FkbWluL3NlY3VyaXR5IiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2FkbWluL3NldHRpbmdzIiwKICAgICAgImZpbmFsUGF0aCI6ICIvbG9naW4iLAogICAgICAibG9jYWxlIjogImVuIiwKICAgICAgInJvbGUiOiAidmlzaXRvciIsCiAgICAgICJzY3JvbGwiOiAzNzUsCiAgICAgICJ3aWR0aCI6IDM3NSwKICAgICAgImJyb2tlbkltYWdlcyI6IFtdLAogICAgICAiY29udHJvbHMiOiAzNSwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL2YvcWEtdGVzdC1yb3V0ZXMiLAogICAgICAiZmluYWxQYXRoIjogIi9mL3FhLXRlc3Qtcm91dGVzIiwKICAgICAgImxvY2FsZSI6ICJlbiIsCiAgICAgICJyb2xlIjogInZpc2l0b3IiLAogICAgICAic2Nyb2xsIjogMzc1LAogICAgICAid2lkdGgiOiAzNzUsCiAgICAgICJicm9rZW5JbWFnZXMiOiBbXSwKICAgICAgImNvbnRyb2xzIjogNCwKICAgICAgImVycm9ycyI6IFtdCiAgICB9LAogICAgewogICAgICAicm91dGUiOiAiL1FBX1RFU1RfbWlzc2luZ19yb3V0ZSIsCiAgICAgICJmaW5hbFBhdGgiOiAiL1FBX1RFU1RfbWlzc2luZ19yb3V0ZSIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM2LAogICAgICAiZXJyb3JzIjogW10KICAgIH0KICBdLAogICJmYWlsdXJlcyI6IFsKICAgIHsKICAgICAgInJvdXRlIjogIi9hdXRoL2NhbGxiYWNrIiwKICAgICAgImZpbmFsUGF0aCI6ICIvYXV0aC9jYWxsYmFjayIsCiAgICAgICJsb2NhbGUiOiAiZW4iLAogICAgICAicm9sZSI6ICJ2aXNpdG9yIiwKICAgICAgInNjcm9sbCI6IDM3NSwKICAgICAgIndpZHRoIjogMzc1LAogICAgICAiYnJva2VuSW1hZ2VzIjogW10sCiAgICAgICJjb250cm9scyI6IDM2LAogICAgICAiZXJyb3JzIjogWwogICAgICAgICJbQXV0aENhbGxiYWNrXSBWZXJpZmljYXRpb24gZXJyb3I6IEVycm9yOiBBdXRoZW50aWNhdGlvbiBsaW5rIGlzIGludmFsaWQgb3IgZXhwaXJlZC4gUGxlYXNlIHNpZ24gaW4gYWdhaW4uXG4gICAgYXQgaHR0cDovLzEyNy4wLjAuMTozMTAwL2Fzc2V0cy9BdXRoQ2FsbGJhY2stQ0RWMEk4YjUuanM6MToxMjIwIgogICAgICBdLAogICAgICAicmVhc29uIjogImNvbnNvbGUtZXJyb3IiCiAgICB9CiAgXQp9"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\20261016-navigation-01\\artifacts\\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\20261016-navigation-01\\artifacts\\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\20261016-navigation-01\\artifacts\\routes-locales-visitor-en--ae7d6-console-and-overflow-census-375\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\routes-locales.spec.ts",
+                    "column": 53,
+                    "line": 58
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "82f1ea748399a463f197-c97cbf102d846dec6d4e",
+          "file": "routes-locales.spec.ts",
+          "line": 23,
+          "column": 2
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-16T15:07:34.499Z",
+    "duration": 24313.523,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,41 @@
+
+Running 1 test using 1 worker
+
+(node:30312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 qa-audit\final\provider-browser\actual-course.spec.ts:14:1 › actual Drive video, bilingual Gemini quiz, Python practice and certificate (51.8s)
+
+
+  1) qa-audit\final\provider-browser\actual-course.spec.ts:14:1 › actual Drive video, bilingual Gemini quiz, Python practice and certificate 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "duration": 36,
+    +   "duration": 48,
+        "error": 0,
+      }
+
+    Call Log:
+    - Timeout 45000ms exceeded while waiting on the predicate
+
+      25 |   }
+      26 |   await page.goto('/courses/'+course.data!.slug+'/learn');const video=page.locator('video');await expect(video).toBeVisible();
+    > 27 |   await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>({duration:Math.round(v.duration||0),error:v.error?.code||0}))).toEqual({duration:36,error:0});
+         |                                                                                                                              ^
+      28 |   await video.focus();await video.press('Space');await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(1);await video.press('Space');
+      29 |   await expect.poll(async()=>{const r=await server.from('lesson_watch_progress').select('seconds').eq('user_id',student.id).eq('lesson_id',fixture.lessonId).maybeSingle();return Number(r.data?.seconds||0);}).toBeGreaterThan(0);
+      30 |   notes.nativeVideoPlayed=true;await expect(page.locator('track')).toHaveAttribute('src',/^blob:/);notes.captionsLoaded=true;
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\provider-browser\actual-course.spec.ts:27:126
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_actual_course_before\artifacts\actual-course-actual-Drive-e0f84-on-practice-and-certificate\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_actual_course_before\artifacts\actual-course-actual-Drive-e0f84-on-practice-and-certificate\error-context.md
+
+  1 failed
+    qa-audit\final\provider-browser\actual-course.spec.ts:14:1 › actual Drive video, bilingual Gemini quiz, Python practice and certificate 

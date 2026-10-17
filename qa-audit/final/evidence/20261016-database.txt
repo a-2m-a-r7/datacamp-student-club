@@ -1,0 +1,1 @@
+{"summary":{"contexts":[{"name":"migration-source-grants","status":"passed","passed":57,"failed":0,"observations":123},{"name":"simulated-provider-public-table-defaults","status":"passed","passed":61,"failed":0,"observations":119}],"failures":[]},"evidence":"qa-audit/final/evidence/database-boundaries.json"}

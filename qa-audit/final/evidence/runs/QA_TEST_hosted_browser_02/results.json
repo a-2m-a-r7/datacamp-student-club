@@ -1,0 +1,643 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/hosted.config.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/hosted-tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/QA_TEST_hosted_browser_02/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/hosted-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/QA_TEST_hosted_browser_02/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/hosted-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/QA_TEST_hosted_browser_02/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/hosted-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "1440",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3200",
+          "trace": "off",
+          "video": "off",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost, EXCLUDE kcqgnkfdpfibwkrghubl.supabase.co, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "1440"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "768",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3200",
+          "trace": "off",
+          "video": "off",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost, EXCLUDE kcqgnkfdpfibwkrghubl.supabase.co, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 768,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "768"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "375",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3200",
+          "trace": "off",
+          "video": "off",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost, EXCLUDE kcqgnkfdpfibwkrghubl.supabase.co, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 375,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "375"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node qa-audit/final/start-hosted.cjs",
+      "cwd": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp",
+      "url": "http://127.0.0.1:3200",
+      "reuseExistingServer": false,
+      "timeout": 90000
+    }
+  },
+  "suites": [
+    {
+      "title": "auth-profile.spec.ts",
+      "file": "auth-profile.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "actual Auth and profile persistence en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 23624,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                      "column": 49,
+                      "line": 10
+                    },
+                    "snippet": "   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login\\?redirect=/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                        "column": 49,
+                        "line": 10
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n\n   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login\\?redirect=/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:23:21.497Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-en-1440\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-en-1440\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                    "column": 49,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4f7c7bfdc375f677a226-6703d3eb9bd18ca8698a",
+          "file": "auth-profile.spec.ts",
+          "line": 6,
+          "column": 33
+        },
+        {
+          "title": "actual Auth and profile persistence ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 20948,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                      "column": 49,
+                      "line": 10
+                    },
+                    "snippet": "   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login\\?redirect=/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                        "column": 49,
+                        "line": 10
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n\n   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login\\?redirect=/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:23:47.284Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-ar-1440\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-ar-1440\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                    "column": 49,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4f7c7bfdc375f677a226-4fec2ed849101f347517",
+          "file": "auth-profile.spec.ts",
+          "line": 6,
+          "column": 33
+        },
+        {
+          "title": "actual Auth and profile persistence en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 20790,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                      "column": 49,
+                      "line": 10
+                    },
+                    "snippet": "   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login$/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                        "column": 49,
+                        "line": 10
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n\n   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login$/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:24:10.304Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-en-768\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-en-768\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                    "column": 49,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4f7c7bfdc375f677a226-b5af17158edf986eebce",
+          "file": "auth-profile.spec.ts",
+          "line": 6,
+          "column": 33
+        },
+        {
+          "title": "actual Auth and profile persistence ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 20703,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                      "column": 49,
+                      "line": 10
+                    },
+                    "snippet": "   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login$/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                        "column": 49,
+                        "line": 10
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    41 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n\n   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login$/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:24:33.162Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-ar-768\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-ar-768\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                    "column": 49,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4f7c7bfdc375f677a226-b0a590ceafada05c265f",
+          "file": "auth-profile.spec.ts",
+          "line": 6,
+          "column": 33
+        },
+        {
+          "title": "actual Auth and profile persistence en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 20614,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                      "column": 49,
+                      "line": 10
+                    },
+                    "snippet": "   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login$/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                        "column": 49,
+                        "line": 10
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"en\" dir=\"ltr\" class=\"lang-en\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n\n   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login$/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:24:56.045Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-en-375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-en-375\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                    "column": 49,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4f7c7bfdc375f677a226-1c3910badc6cb1c8fe87",
+          "file": "auth-profile.spec.ts",
+          "line": 6,
+          "column": 33
+        },
+        {
+          "title": "actual Auth and profile persistence ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 20589,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                      "column": 49,
+                      "line": 10
+                    },
+                    "snippet": "   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login$/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                        "column": 49,
+                        "line": 10
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/\\/login\\?redirect=/\u001b[39m\nReceived string:  \u001b[31m\"http://127.0.0.1:3200/login\"\u001b[39m\nTimeout: 20000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 20000ms\u001b[22m\n\u001b[2m    42 × locator resolved to <html lang=\"ar\" dir=\"rtl\" class=\"lang-ar\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://127.0.0.1:3200/login\"\u001b[22m\n\n\n   8 |  await context.route('**/*',route=>{const u=new URL(route.request().url());return ['127.0.0.1','localhost','kcqgnkfdpfibwkrghubl.supabase.co','cdn.jsdelivr.net','fonts.googleapis.com','fonts.gstatic.com'].includes(u.hostname)?route.continue():route.abort();});\n   9 |  await page.addInitScript(l=>localStorage.setItem('datacamp_language',l),locale);\n> 10 |  await page.goto('/profile');await expect(page).toHaveURL(/\\/login$/);\n     |                                                 ^\n  11 |  await page.locator('input[type=email]').fill(account.email);await page.locator('input[type=password]').fill(account.password);\n  12 |  await page.locator('form button[type=submit]').click();await expect(page).toHaveURL(/\\/profile$/);\n  13 |  const isAr=locale==='ar';\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts:10:49"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T16:25:17.692Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-ar-375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\QA_TEST_hosted_browser_02\\artifacts\\auth-profile-actual-Auth-and-profile-persistence-ar-375\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\hosted-tests\\auth-profile.spec.ts",
+                    "column": 49,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4f7c7bfdc375f677a226-fc3ca20a44f92d35628f",
+          "file": "auth-profile.spec.ts",
+          "line": 6,
+          "column": 33
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-16T16:23:04.878Z",
+    "duration": 154609.06999999998,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

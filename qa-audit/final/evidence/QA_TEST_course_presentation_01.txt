@@ -1,0 +1,7 @@
+
+Running 18 tests using 1 worker
+
+  ok  1 [1440] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (5.8s)
+  ok  2 [1440] › qa-audit\final\tests\course-presentation.spec.ts:67:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (3.3s)
+  ok  3 [1440] › qa-audit\final\tests\course-presentation.spec.ts:90:2 › organized course cards retain filtering, enrollment and saved progress (en) (5.8s)
+  x   4 [1440] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (1.0m)

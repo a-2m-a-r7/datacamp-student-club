@@ -1,0 +1,938 @@
+
+Running 498 tests using 1 worker
+
+  ok   1 [1440] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (9.3s)
+  ok   2 [1440] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (3.4s)
+  ok   3 [1440] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (en) (5.9s)
+  ok   4 [1440] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (10.9s)
+  ok   5 [1440] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (4.8s)
+  ok   6 [1440] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (ar) (7.8s)
+  ok   7 [1440] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults en (4.5s)
+  ok   8 [1440] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults ar (4.4s)
+  ok   9 [1440] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections en (4.9s)
+  ok  10 [1440] › qa-audit\final\tests\form-inputs.spec.ts:37:2 › choice and rating controls expose names and accept keyboard input en (3.9s)
+  ok  11 [1440] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections ar (4.6s)
+  ok  12 [1440] › qa-audit\final\tests\form-inputs.spec.ts:37:2 › choice and rating controls expose names and accept keyboard input ar (4.6s)
+  ok  13 [1440] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (4.5s)
+  ok  14 [1440] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (7.0s)
+  ok  15 [1440] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (7.2s)
+  ok  16 [1440] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question (3.5s)
+  ok  17 [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (5.5s)
+  ok  18 [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (4.1s)
+  ok  19 [1440] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media (4.8s)
+  ok  20 [1440] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /login en (3.5s)
+  ok  21 [1440] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /register en (3.6s)
+  ok  22 [1440] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /reset-password en (3.3s)
+  ok  23 [1440] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /login ar (3.7s)
+  ok  24 [1440] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /register ar (2.9s)
+  ok  25 [1440] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /reset-password ar (3.1s)
+  ok  26 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (5.6s)
+  ok  27 [1440] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (5.1s)
+  ok  28 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (25.0s)
+  ok  29 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor ar: direct route, direction, console and overflow census (38.1s)
+  ok  30 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census (26.6s)
+  ok  31 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census (36.5s)
+  ok  32 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin en: direct route, direction, console and overflow census (33.7s)
+  ok  33 [1440] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin ar: direct route, direction, console and overflow census (40.5s)
+  ok  34 [1440] › qa-audit\fix-tests\course-certificates.spec.ts:67:1 › last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course (12.3s)
+  ok  35 [1440] › qa-audit\fix-tests\course-certificates.spec.ts:97:1 › partial completion and failed inline assessment do not issue; passing final assessment does (6.7s)
+  ok  36 [1440] › qa-audit\fix-tests\course-certificates.spec.ts:107:1 › standalone final quiz creates and opens the matching persisted certificate (6.7s)
+  ok  37 [1440] › qa-audit\fix-tests\course-certificates.spec.ts:115:1 › database certificate failure rolls back the UI flow; storage and list retries recover honestly (12.6s)
+  ok  38 [1440] › qa-audit\fix-tests\course-growth.spec.ts:69:1 › admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate (9.6s)
+  ok  39 [1440] › qa-audit\fix-tests\course-growth.spec.ts:79:1 › duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data (4.8s)
+  ok  40 [1440] › qa-audit\fix-tests\course-growth.spec.ts:85:1 › catalog pages, debounced search, cancellation and honest retry use bounded database requests (5.1s)
+  ok  41 [1440] › qa-audit\fix-tests\course-growth.spec.ts:91:1 › future long Arabic course titles and member names export PNG/PDF with the correct verification QR (8.0s)
+  ok  42 [1440] › qa-audit\fix-tests\course-growth.spec.ts:99:1 › catalog displays actual Arabic text without invented population or unrated stars (3.6s)
+  ok  43 [1440] › qa-audit\fix-tests\course-growth.spec.ts:106:1 › lost course response retries the same draft and image tools never submit the form (4.1s)
+  ok  44 [1440] › qa-audit\fix-tests\course-growth.spec.ts:113:1 › administrator searches beyond 1000 actual member rows and enrollment counts are not truncated (4.3s)
+  ok  45 [1440] › qa-audit\fix-tests\course-media.spec.ts:7:1 › admin persists named units, reorders units and lessons, and sees an honest Drive setup state (5.3s)
+  ok  46 [1440] › qa-audit\fix-tests\course-media.spec.ts:17:1 › generated video quiz leads into runnable JavaScript practice and only persisted completion awards a certificate (4.3s)
+  ok  47 [1440] › qa-audit\fix-tests\course-media.spec.ts:25:1 › course practice carries its language and starter into the compiler and reset restores the assigned starter (2.8s)
+  ok  48 [1440] › qa-audit\fix-tests\course-media.spec.ts:28:1 › media playback restores a private bookmark and loads SRT captions and material links (4.5s)
+  ok  49 [1440] › qa-audit\fix-tests\course-media.spec.ts:37:1 › chunked admin upload recovers a lost final response and applies one reviewed AI plan (7.5s)
+  ok  50 [1440] › qa-audit\fix-tests\course-quiz-language.spec.ts:6:36 › quiz language switches without losing the chosen answer in learn (3.6s)
+  ok  51 [1440] › qa-audit\fix-tests\course-quiz-language.spec.ts:6:36 › quiz language switches without losing the chosen answer in quiz (3.5s)
+  ok  52 [1440] › qa-audit\fix-tests\course-quiz-language.spec.ts:20:36 › administrator previews a draft using profile permissions without enrollment or assessment writes in learn (2.0s)
+  ok  53 [1440] › qa-audit\fix-tests\course-quiz-language.spec.ts:20:36 › administrator previews a draft using profile permissions without enrollment or assessment writes in quiz (1.7s)
+  ok  54 [1440] › qa-audit\fix-tests\linkedin.spec.ts:32:1 › certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate (1.5s)
+  ok  55 [1440] › qa-audit\fix-tests\linkedin.spec.ts:66:1 › dashboard shares only persisted earned badges, without private directory or invented credential (1.5s)
+  ok  56 [1440] › qa-audit\fix-tests\linkedin.spec.ts:83:1 › Arabic sharing keeps data selectable when clipboard permission fails (1.5s)
+  ok  57 [1440] › qa-audit\fix-tests\login-final.spec.ts:29:1 › email login validates, retries wrong credentials, preserves intended member route and survives reload/logout (4.4s)
+  ok  58 [1440] › qa-audit\fix-tests\login-final.spec.ts:33:1 › admin email login returns to requested admin tab (3.1s)
+  ok  59 [1440] › qa-audit\fix-tests\login-final.spec.ts:36:1 › unconfirmed Auth identity cannot bypass verification using a verified profile flag (2.0s)
+  ok  60 [1440] › qa-audit\fix-tests\login-final.spec.ts:39:1 › registration without a session retains verification email, resends and offers login after confirmation (3.2s)
+  ok  61 [1440] › qa-audit\fix-tests\login-final.spec.ts:42:1 › recovery request surfaces provider failure, retries and sends the canonical reset redirect (1.3s)
+  ok  62 [1440] › qa-audit\fix-tests\login-final.spec.ts:45:1 › password recovery rejects weak/mismatched inputs, persists success and really ends its session (1.9s)
+  ok  63 [1440] › qa-audit\fix-tests\login-final.spec.ts:48:1 › expired recovery/callback links show actionable errors instead of false sign-in (1.8s)
+  ok  64 [1440] › qa-audit\fix-tests\login-final.spec.ts:51:1 › callback honors internal destinations, rejects external redirect and never manually exchanges twice (617ms)
+  ok  65 [1440] › qa-audit\fix-tests\login-final.spec.ts:54:1 › Google button requests canonical callback and account selection; cancellation is actionable (1.6s)
+  ok  66 [1440] › qa-audit\fix-tests\login-final.spec.ts:57:1 › expired refresh token returns to login without retaining administrative access (615ms)
+  ok  67 [1440] › qa-audit\fix-tests\login-final.spec.ts:60:1 › fresh server email confirmation refreshes the session instead of looping back to verification (1.4s)
+  ok  68 [1440] › qa-audit\fix-tests\login-final.spec.ts:63:1 › SDK exchanges a PKCE callback once and password visibility is keyboard accessible (3.1s)
+  ok  69 [1440] › qa-audit\fix-tests\platform-forms-users.spec.ts:11:1 › Forms: publish actual questions/theme/restrictions, submit through real API handler and export persisted responses, duplicate/close/delete (13.5s)
+  ok  70 [1440] › qa-audit\fix-tests\platform-forms-users.spec.ts:36:1 › Users: search, actual XLSX export/import, member detail, role confirmation/status persist, API failure never pretends to create an account (6.6s)
+  ok  71 [1440] › qa-audit\fix-tests\platform-forms-users.spec.ts:44:1 › Profile: member photo and fields persist in SQL and Storage; denied upload leaves existing profile untouched (5.0s)
+  ok  72 [1440] › qa-audit\fix-tests\platform-regressions.spec.ts:7:1 › session race never redirects an authenticated admin or destroys fast unsaved form edits (6.2s)
+  ok  73 [1440] › qa-audit\fix-tests\platform-regressions.spec.ts:14:1 › event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values (5.9s)
+  ok  74 [1440] › qa-audit\fix-tests\platform-regressions.spec.ts:19:1 › event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera (6.6s)
+  ok  75 [1440] › qa-audit\fix-tests\platform-regressions.spec.ts:24:1 › temporary content and notification failures display honest retry/error and preserve unread records (36.3s)
+  ok  76 [1440] › qa-audit\fix-tests\platform-regressions.spec.ts:31:1 › compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template (4.7s)
+  ok  77 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:12:1 › Staff: validates blank input, saves real roster, persists reload, filters admin directory and blocks members (7.2s)
+  ok  78 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:23:1 › Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists (6.9s)
+  x   79 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:31:1 › Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data (1.0m)
+  ok  80 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:41:1 › Contact/Messages: visitor submission saves SQL record, admin reads/marks read, cancel/delete work (4.9s)
+  ok  81 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:46:1 › Projects: member proposal stays private until admin approval, links/detail/search work and removal persists (9.1s)
+  ok  82 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:52:1 › Blog: create/read/share/edit/delete persist across administrator and member sessions without random covers (9.4s)
+  ok  83 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:58:1 › Points/Notifications/Leaderboard/Overview/Security: actual bonus updates own XP, read state is private, analytics/audit persist and forbidden access is rejected (7.9s)
+  ok  84 [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:65:1 › Events: administrator creates/edits event, member registration saves one ticket, public link resolves and deletion persists (8.1s)
+  ok  85 [1440] › qa-audit\fix-tests\profile-final.spec.ts:11:1 › Profile preserves legacy faculty/year and saves normalized fields without overwriting a newer picture (2.3s)
+  ok  86 [1440] › qa-audit\fix-tests\profile-final.spec.ts:14:1 › Profile validates before upload, freezes pending save, replaces and removes actual stored picture without Google fallback (5.6s)
+  ok  87 [1440] › qa-audit\fix-tests\profile-final.spec.ts:17:1 › Profile database rejection keeps existing picture and cleans the uncommitted upload; retry persists it (3.9s)
+  ok  88 [1440] › qa-audit\fix-tests\profile-final.spec.ts:20:1 › Profile background refresh preserves email draft; dialog Escape and member ID copy work (3.6s)
+  ok  89 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: / (754ms)
+  ok  90 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /about (665ms)
+  ok  91 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /courses (640ms)
+  ok  92 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /projects (668ms)
+  ok  93 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /events (672ms)
+  ok  94 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /blog (620ms)
+  ok  95 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /staff (600ms)
+  ok  96 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /gallery (672ms)
+  ok  97 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /contact (716ms)
+  ok  98 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /faq (685ms)
+  ok  99 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /privacy (607ms)
+  ok 100 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /terms (653ms)
+  ok 101 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /leaderboard (610ms)
+  ok 102 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /certificates (577ms)
+  ok 103 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /verify-certificate (633ms)
+  ok 104 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /compiler (647ms)
+  ok 105 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /login (651ms)
+  ok 106 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /register (567ms)
+  ok 107 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /forgot-password (629ms)
+  ok 108 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /reset-password (629ms)
+  ok 109 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /verify-email (644ms)
+  ok 110 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /f/qa-test-missing (284ms)
+  ok 111 [1440] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /not-a-real-page (644ms)
+  ok 112 [1440] › qa-audit\fix-tests\public.spec.ts:28:1 › a cached fabricated admin does not authenticate (598ms)
+  ok 113 [1440] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /dashboard (531ms)
+  ok 114 [1440] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /profile (502ms)
+  ok 115 [1440] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /my-courses (631ms)
+  ok 116 [1440] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /notifications (517ms)
+  ok 117 [1440] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /courses/qa-test/learn (607ms)
+  ok 118 [1440] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /courses/qa-test/quiz (570ms)
+  ok 119 [1440] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /admin/forms/new (531ms)
+  ok 120 [1440] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /admin/settings (579ms)
+  ok 121 [1440] › qa-audit\fix-tests\public.spec.ts:42:1 › sample controls and fabricated site metrics are absent (1.9s)
+  ok 122 [1440] › qa-audit\fix-tests\public.spec.ts:50:1 › language changes direction and mobile drawer navigates (1.2s)
+  ok 123 [1440] › qa-audit\fix-tests\public.spec.ts:61:1 › contact does not submit invalid or empty values (1.1s)
+  ok 124 [1440] › qa-audit\fix-tests\public.spec.ts:69:1 › JavaScript compiler actually executes and reports syntax errors (1.8s)
+  ok 125 [1440] › qa-audit\fix-tests\public.spec.ts:80:1 › compiled service outage reports failure rather than invented output (1.4s)
+  ok 126 [1440] › qa-audit\fix-tests\public.spec.ts:90:1 › form backend errors never replace results with sample records (7.6s)
+  ok 127 [1440] › qa-audit\fix-tests\public.spec.ts:101:1 › admin server rejects unauthenticated direct requests (3.7s)
+  ok 128 [1440] › qa-audit\fix-tests\public.spec.ts:109:1 › TypeScript compiles real types and runs the resulting code (2.1s)
+  ok 129 [1440] › qa-audit\fix-tests\public.spec.ts:116:1 › backend compilation failure is surfaced even when HTTP returns 200 (1.5s)
+  ok 130 [1440] › qa-audit\fix-tests\public.spec.ts:123:1 › nonzero runtime exit without stderr is treated as an error (1.4s)
+  ok 131 [1440] › qa-audit\fix-tests\roles.spec.ts:47:1 › member cannot search or download the club member directory (581ms)
+  ok 132 [1440] › qa-audit\fix-tests\roles.spec.ts:57:1 › profile saves edited name, rejects invalid phone and logs out (1.6s)
+  ok 133 [1440] › qa-audit\fix-tests\roles.spec.ts:73:1 › form publish waits for autosave and reuses the created ID (5.6s)
+  ok 134 [1440] › qa-audit\fix-tests\roles.spec.ts:96:1 › member direct admin URL stays outside admin controls (630ms)
+  ok 135 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin (649ms)
+  ok 136 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/users (587ms)
+  ok 137 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/events (649ms)
+  ok 138 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/staff (591ms)
+  ok 139 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/gallery (528ms)
+  ok 140 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/content (635ms)
+  ok 141 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/projects (604ms)
+  ok 142 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/blog (509ms)
+  ok 143 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/messages (554ms)
+  ok 144 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/courses (644ms)
+  ok 145 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/points (600ms)
+  ok 146 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/forms (516ms)
+  ok 147 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/forms/new (558ms)
+  ok 148 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/security (626ms)
+  ok 149 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/settings (600ms)
+  ok 150 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /dashboard (618ms)
+  ok 151 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /profile (554ms)
+  ok 152 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /my-courses (585ms)
+  ok 153 [1440] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /notifications (526ms)
+  ok 154 [1440] › qa-audit\fix-tests\roles.spec.ts:117:1 › blog edit opens, saves via PATCH and closes (1.7s)
+  ok 155 [1440] › qa-audit\fix-tests\roles.spec.ts:128:1 › modal Escape closes and restores trigger focus (1.4s)
+  ok 156 [1440] › qa-audit\fix-tests\roles.spec.ts:135:1 › record export downloads actual returned JSON and cache button clears browser cache (2.3s)
+  ok 157 [1440] › qa-audit\fix-tests\roles.spec.ts:163:1 › member card downloads a real PNG whose QR opens private-safe verification (9.4s)
+  ok 158 [1440] › qa-audit\fix-tests\roles.spec.ts:178:1 › profile security sends recovery link and requests email confirmation without profile overwrite (1.9s)
+  ok 159 [1440] › qa-audit\fix-tests\roles.spec.ts:193:1 › profile email-change rejection stays visible and does not claim success (1.6s)
+  ok 160 [1440] › qa-audit\fix-tests\roles.spec.ts:202:1 › form QR has correct URL and download is a decodable PNG (11.3s)
+  ok 161 [1440] › qa-audit\fix-tests\roles.spec.ts:225:1 › certificate SVG and canvas QR decode to the matching verification URL (7.5s)
+  ok 162 [1440] › qa-audit\fix-tests\roles.spec.ts:237:1 › card issuance failure disables download and retry recovers (1.4s)
+  ok 163 [1440] › qa-audit\fix-tests\roles.spec.ts:248:1 › password recovery rejection is visible and retry works (1.8s)
+  ok 164 [1440] › qa-audit\fix-tests\roles.spec.ts:257:1 › malformed membership URL is rejected without database lookup (620ms)
+  ok 165 [1440] › qa-audit\fix-tests\roles.spec.ts:263:1 › unknown membership token exposes no personal details (624ms)
+  ok 166 [1440] › qa-audit\fix-tests\roles.spec.ts:270:1 › password reset validates strength and surfaces authentication rejection (1.5s)
+  ok 167 [768] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (9.6s)
+  ok 168 [768] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (4.9s)
+  ok 169 [768] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (en) (6.9s)
+  ok 170 [768] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (11.1s)
+  ok 171 [768] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (4.6s)
+  ok 172 [768] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (ar) (7.8s)
+  ok 173 [768] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults en (4.5s)
+  ok 174 [768] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults ar (4.1s)
+  ok 175 [768] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections en (5.9s)
+  ok 176 [768] › qa-audit\final\tests\form-inputs.spec.ts:37:2 › choice and rating controls expose names and accept keyboard input en (4.2s)
+  ok 177 [768] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections ar (6.0s)
+  ok 178 [768] › qa-audit\final\tests\form-inputs.spec.ts:37:2 › choice and rating controls expose names and accept keyboard input ar (3.8s)
+  ok 179 [768] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (4.0s)
+  ok 180 [768] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (7.5s)
+  ok 181 [768] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (7.0s)
+  ok 182 [768] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question (3.4s)
+  ok 183 [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (3.9s)
+  ok 184 [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (3.9s)
+  ok 185 [768] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media (4.2s)
+  ok 186 [768] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /login en (1.6s)
+  ok 187 [768] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /register en (1.5s)
+  ok 188 [768] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /reset-password en (1.2s)
+  ok 189 [768] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /login ar (1.6s)
+  ok 190 [768] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /register ar (1.5s)
+  ok 191 [768] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /reset-password ar (1.3s)
+  ok 192 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (3.2s)
+  ok 193 [768] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (5.0s)
+  ok 194 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (19.9s)
+  ok 195 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor ar: direct route, direction, console and overflow census (28.1s)
+  ok 196 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census (23.3s)
+  ok 197 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census (31.0s)
+  ok 198 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin en: direct route, direction, console and overflow census (30.8s)
+  ok 199 [768] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin ar: direct route, direction, console and overflow census (34.3s)
+  ok 200 [768] › qa-audit\fix-tests\course-certificates.spec.ts:67:1 › last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course (11.3s)
+  ok 201 [768] › qa-audit\fix-tests\course-certificates.spec.ts:97:1 › partial completion and failed inline assessment do not issue; passing final assessment does (5.8s)
+  ok 202 [768] › qa-audit\fix-tests\course-certificates.spec.ts:107:1 › standalone final quiz creates and opens the matching persisted certificate (6.4s)
+  ok 203 [768] › qa-audit\fix-tests\course-certificates.spec.ts:115:1 › database certificate failure rolls back the UI flow; storage and list retries recover honestly (12.2s)
+  ok 204 [768] › qa-audit\fix-tests\course-growth.spec.ts:69:1 › admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate (13.3s)
+  ok 205 [768] › qa-audit\fix-tests\course-growth.spec.ts:79:1 › duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data (8.6s)
+  ok 206 [768] › qa-audit\fix-tests\course-growth.spec.ts:85:1 › catalog pages, debounced search, cancellation and honest retry use bounded database requests (4.4s)
+  ok 207 [768] › qa-audit\fix-tests\course-growth.spec.ts:91:1 › future long Arabic course titles and member names export PNG/PDF with the correct verification QR (7.6s)
+  ok 208 [768] › qa-audit\fix-tests\course-growth.spec.ts:99:1 › catalog displays actual Arabic text without invented population or unrated stars (3.4s)
+  ok 209 [768] › qa-audit\fix-tests\course-growth.spec.ts:106:1 › lost course response retries the same draft and image tools never submit the form (4.4s)
+  ok 210 [768] › qa-audit\fix-tests\course-growth.spec.ts:113:1 › administrator searches beyond 1000 actual member rows and enrollment counts are not truncated (4.4s)
+  ok 211 [768] › qa-audit\fix-tests\course-media.spec.ts:7:1 › admin persists named units, reorders units and lessons, and sees an honest Drive setup state (4.8s)
+  ok 212 [768] › qa-audit\fix-tests\course-media.spec.ts:17:1 › generated video quiz leads into runnable JavaScript practice and only persisted completion awards a certificate (4.8s)
+  ok 213 [768] › qa-audit\fix-tests\course-media.spec.ts:25:1 › course practice carries its language and starter into the compiler and reset restores the assigned starter (4.5s)
+  ok 214 [768] › qa-audit\fix-tests\course-media.spec.ts:28:1 › media playback restores a private bookmark and loads SRT captions and material links (5.0s)
+  ok 215 [768] › qa-audit\fix-tests\course-media.spec.ts:37:1 › chunked admin upload recovers a lost final response and applies one reviewed AI plan (7.8s)
+  ok 216 [768] › qa-audit\fix-tests\course-quiz-language.spec.ts:6:36 › quiz language switches without losing the chosen answer in learn (4.0s)
+  ok 217 [768] › qa-audit\fix-tests\course-quiz-language.spec.ts:6:36 › quiz language switches without losing the chosen answer in quiz (3.8s)
+  ok 218 [768] › qa-audit\fix-tests\course-quiz-language.spec.ts:20:36 › administrator previews a draft using profile permissions without enrollment or assessment writes in learn (3.4s)
+  ok 219 [768] › qa-audit\fix-tests\course-quiz-language.spec.ts:20:36 › administrator previews a draft using profile permissions without enrollment or assessment writes in quiz (3.7s)
+  ok 220 [768] › qa-audit\fix-tests\linkedin.spec.ts:32:1 › certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate (2.5s)
+  ok 221 [768] › qa-audit\fix-tests\linkedin.spec.ts:66:1 › dashboard shares only persisted earned badges, without private directory or invented credential (1.2s)
+  ok 222 [768] › qa-audit\fix-tests\linkedin.spec.ts:83:1 › Arabic sharing keeps data selectable when clipboard permission fails (1.9s)
+  ok 223 [768] › qa-audit\fix-tests\login-final.spec.ts:29:1 › email login validates, retries wrong credentials, preserves intended member route and survives reload/logout (4.0s)
+  ok 224 [768] › qa-audit\fix-tests\login-final.spec.ts:33:1 › admin email login returns to requested admin tab (2.8s)
+  ok 225 [768] › qa-audit\fix-tests\login-final.spec.ts:36:1 › unconfirmed Auth identity cannot bypass verification using a verified profile flag (1.6s)
+  ok 226 [768] › qa-audit\fix-tests\login-final.spec.ts:39:1 › registration without a session retains verification email, resends and offers login after confirmation (3.2s)
+  ok 227 [768] › qa-audit\fix-tests\login-final.spec.ts:42:1 › recovery request surfaces provider failure, retries and sends the canonical reset redirect (1.0s)
+  ok 228 [768] › qa-audit\fix-tests\login-final.spec.ts:45:1 › password recovery rejects weak/mismatched inputs, persists success and really ends its session (2.4s)
+  ok 229 [768] › qa-audit\fix-tests\login-final.spec.ts:48:1 › expired recovery/callback links show actionable errors instead of false sign-in (1.7s)
+  ok 230 [768] › qa-audit\fix-tests\login-final.spec.ts:51:1 › callback honors internal destinations, rejects external redirect and never manually exchanges twice (524ms)
+  ok 231 [768] › qa-audit\fix-tests\login-final.spec.ts:54:1 › Google button requests canonical callback and account selection; cancellation is actionable (2.1s)
+  ok 232 [768] › qa-audit\fix-tests\login-final.spec.ts:57:1 › expired refresh token returns to login without retaining administrative access (516ms)
+  ok 233 [768] › qa-audit\fix-tests\login-final.spec.ts:60:1 › fresh server email confirmation refreshes the session instead of looping back to verification (1.3s)
+  ok 234 [768] › qa-audit\fix-tests\login-final.spec.ts:63:1 › SDK exchanges a PKCE callback once and password visibility is keyboard accessible (3.0s)
+  ok 235 [768] › qa-audit\fix-tests\platform-forms-users.spec.ts:11:1 › Forms: publish actual questions/theme/restrictions, submit through real API handler and export persisted responses, duplicate/close/delete (14.2s)
+  ok 236 [768] › qa-audit\fix-tests\platform-forms-users.spec.ts:36:1 › Users: search, actual XLSX export/import, member detail, role confirmation/status persist, API failure never pretends to create an account (5.8s)
+  ok 237 [768] › qa-audit\fix-tests\platform-forms-users.spec.ts:44:1 › Profile: member photo and fields persist in SQL and Storage; denied upload leaves existing profile untouched (5.1s)
+  ok 238 [768] › qa-audit\fix-tests\platform-regressions.spec.ts:7:1 › session race never redirects an authenticated admin or destroys fast unsaved form edits (6.5s)
+  ok 239 [768] › qa-audit\fix-tests\platform-regressions.spec.ts:14:1 › event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values (5.5s)
+  ok 240 [768] › qa-audit\fix-tests\platform-regressions.spec.ts:19:1 › event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera (5.6s)
+  ok 241 [768] › qa-audit\fix-tests\platform-regressions.spec.ts:24:1 › temporary content and notification failures display honest retry/error and preserve unread records (35.3s)
+  ok 242 [768] › qa-audit\fix-tests\platform-regressions.spec.ts:31:1 › compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template (4.3s)
+  ok 243 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:12:1 › Staff: validates blank input, saves real roster, persists reload, filters admin directory and blocks members (7.5s)
+  ok 244 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:23:1 › Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists (7.1s)
+  ok 245 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:31:1 › Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data (5.3s)
+  ok 246 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:41:1 › Contact/Messages: visitor submission saves SQL record, admin reads/marks read, cancel/delete work (6.6s)
+  ok 247 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:46:1 › Projects: member proposal stays private until admin approval, links/detail/search work and removal persists (7.5s)
+  ok 248 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:52:1 › Blog: create/read/share/edit/delete persist across administrator and member sessions without random covers (7.0s)
+  ok 249 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:58:1 › Points/Notifications/Leaderboard/Overview/Security: actual bonus updates own XP, read state is private, analytics/audit persist and forbidden access is rejected (6.9s)
+  ok 250 [768] › qa-audit\fix-tests\platform-tabs.spec.ts:65:1 › Events: administrator creates/edits event, member registration saves one ticket, public link resolves and deletion persists (8.8s)
+  ok 251 [768] › qa-audit\fix-tests\profile-final.spec.ts:11:1 › Profile preserves legacy faculty/year and saves normalized fields without overwriting a newer picture (3.5s)
+  ok 252 [768] › qa-audit\fix-tests\profile-final.spec.ts:14:1 › Profile validates before upload, freezes pending save, replaces and removes actual stored picture without Google fallback (7.4s)
+  ok 253 [768] › qa-audit\fix-tests\profile-final.spec.ts:17:1 › Profile database rejection keeps existing picture and cleans the uncommitted upload; retry persists it (3.6s)
+  ok 254 [768] › qa-audit\fix-tests\profile-final.spec.ts:20:1 › Profile background refresh preserves email draft; dialog Escape and member ID copy work (3.4s)
+  ok 255 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: / (556ms)
+  ok 256 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /about (541ms)
+  ok 257 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /courses (487ms)
+  ok 258 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /projects (577ms)
+  ok 259 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /events (545ms)
+  ok 260 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /blog (502ms)
+  ok 261 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /staff (447ms)
+  ok 262 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /gallery (564ms)
+  ok 263 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /contact (475ms)
+  ok 264 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /faq (564ms)
+  ok 265 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /privacy (552ms)
+  ok 266 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /terms (522ms)
+  ok 267 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /leaderboard (465ms)
+  ok 268 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /certificates (521ms)
+  ok 269 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /verify-certificate (501ms)
+  ok 270 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /compiler (542ms)
+  ok 271 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /login (478ms)
+  ok 272 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /register (513ms)
+  ok 273 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /forgot-password (458ms)
+  ok 274 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /reset-password (508ms)
+  ok 275 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /verify-email (502ms)
+  ok 276 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /f/qa-test-missing (236ms)
+  ok 277 [768] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /not-a-real-page (514ms)
+  ok 278 [768] › qa-audit\fix-tests\public.spec.ts:28:1 › a cached fabricated admin does not authenticate (437ms)
+  ok 279 [768] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /dashboard (460ms)
+  ok 280 [768] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /profile (421ms)
+  ok 281 [768] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /my-courses (444ms)
+  ok 282 [768] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /notifications (455ms)
+  ok 283 [768] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /courses/qa-test/learn (439ms)
+  ok 284 [768] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /courses/qa-test/quiz (432ms)
+  ok 285 [768] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /admin/forms/new (434ms)
+  ok 286 [768] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /admin/settings (433ms)
+  ok 287 [768] › qa-audit\fix-tests\public.spec.ts:42:1 › sample controls and fabricated site metrics are absent (1.5s)
+  ok 288 [768] › qa-audit\fix-tests\public.spec.ts:50:1 › language changes direction and mobile drawer navigates (1.6s)
+  ok 289 [768] › qa-audit\fix-tests\public.spec.ts:61:1 › contact does not submit invalid or empty values (1.0s)
+  ok 290 [768] › qa-audit\fix-tests\public.spec.ts:69:1 › JavaScript compiler actually executes and reports syntax errors (1.5s)
+  ok 291 [768] › qa-audit\fix-tests\public.spec.ts:80:1 › compiled service outage reports failure rather than invented output (2.0s)
+  ok 292 [768] › qa-audit\fix-tests\public.spec.ts:90:1 › form backend errors never replace results with sample records (7.4s)
+  ok 293 [768] › qa-audit\fix-tests\public.spec.ts:101:1 › admin server rejects unauthenticated direct requests (135ms)
+  ok 294 [768] › qa-audit\fix-tests\public.spec.ts:109:1 › TypeScript compiles real types and runs the resulting code (1.9s)
+  ok 295 [768] › qa-audit\fix-tests\public.spec.ts:116:1 › backend compilation failure is surfaced even when HTTP returns 200 (2.0s)
+  ok 296 [768] › qa-audit\fix-tests\public.spec.ts:123:1 › nonzero runtime exit without stderr is treated as an error (1.3s)
+  ok 297 [768] › qa-audit\fix-tests\roles.spec.ts:47:1 › member cannot search or download the club member directory (457ms)
+  ok 298 [768] › qa-audit\fix-tests\roles.spec.ts:57:1 › profile saves edited name, rejects invalid phone and logs out (1.7s)
+  ok 299 [768] › qa-audit\fix-tests\roles.spec.ts:73:1 › form publish waits for autosave and reuses the created ID (5.3s)
+  ok 300 [768] › qa-audit\fix-tests\roles.spec.ts:96:1 › member direct admin URL stays outside admin controls (460ms)
+  ok 301 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin (473ms)
+  ok 302 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/users (486ms)
+  ok 303 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/events (461ms)
+  ok 304 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/staff (497ms)
+  ok 305 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/gallery (461ms)
+  ok 306 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/content (516ms)
+  ok 307 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/projects (495ms)
+  ok 308 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/blog (494ms)
+  ok 309 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/messages (474ms)
+  ok 310 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/courses (466ms)
+  ok 311 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/points (503ms)
+  ok 312 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/forms (540ms)
+  ok 313 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/forms/new (511ms)
+  ok 314 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/security (517ms)
+  ok 315 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/settings (454ms)
+  ok 316 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /dashboard (478ms)
+  ok 317 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /profile (452ms)
+  ok 318 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /my-courses (486ms)
+  ok 319 [768] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /notifications (444ms)
+  ok 320 [768] › qa-audit\fix-tests\roles.spec.ts:117:1 › blog edit opens, saves via PATCH and closes (1.5s)
+  ok 321 [768] › qa-audit\fix-tests\roles.spec.ts:128:1 › modal Escape closes and restores trigger focus (1.3s)
+  ok 322 [768] › qa-audit\fix-tests\roles.spec.ts:135:1 › record export downloads actual returned JSON and cache button clears browser cache (1.5s)
+  ok 323 [768] › qa-audit\fix-tests\roles.spec.ts:163:1 › member card downloads a real PNG whose QR opens private-safe verification (8.9s)
+  ok 324 [768] › qa-audit\fix-tests\roles.spec.ts:178:1 › profile security sends recovery link and requests email confirmation without profile overwrite (1.7s)
+  ok 325 [768] › qa-audit\fix-tests\roles.spec.ts:193:1 › profile email-change rejection stays visible and does not claim success (1.2s)
+  ok 326 [768] › qa-audit\fix-tests\roles.spec.ts:202:1 › form QR has correct URL and download is a decodable PNG (10.3s)
+  ok 327 [768] › qa-audit\fix-tests\roles.spec.ts:225:1 › certificate SVG and canvas QR decode to the matching verification URL (7.5s)
+  ok 328 [768] › qa-audit\fix-tests\roles.spec.ts:237:1 › card issuance failure disables download and retry recovers (942ms)
+  ok 329 [768] › qa-audit\fix-tests\roles.spec.ts:248:1 › password recovery rejection is visible and retry works (1.6s)
+  ok 330 [768] › qa-audit\fix-tests\roles.spec.ts:257:1 › malformed membership URL is rejected without database lookup (405ms)
+  ok 331 [768] › qa-audit\fix-tests\roles.spec.ts:263:1 › unknown membership token exposes no personal details (456ms)
+  ok 332 [768] › qa-audit\fix-tests\roles.spec.ts:270:1 › password reset validates strength and surfaces authentication rejection (1.2s)
+  ok 333 [375] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (en) (8.6s)
+  ok 334 [375] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (en) (3.7s)
+  ok 335 [375] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (en) (6.1s)
+  ok 336 [375] › qa-audit\final\tests\course-presentation.spec.ts:31:2 › course file zones select with mouse, keyboard and drop, then persist three assets (ar) (10.3s)
+  ok 337 [375] › qa-audit\final\tests\course-presentation.spec.ts:68:2 › course drop rejects invalid selection, blocks another upload while busy and pauses (ar) (4.2s)
+  ok 338 [375] › qa-audit\final\tests\course-presentation.spec.ts:91:2 › organized course cards retain filtering, enrollment and saved progress (ar) (6.3s)
+  ok 339 [375] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults en (3.7s)
+  ok 340 [375] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults ar (3.6s)
+  ok 341 [375] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections en (6.5s)
+  ok 342 [375] › qa-audit\final\tests\form-inputs.spec.ts:37:2 › choice and rating controls expose names and accept keyboard input en (3.6s)
+  ok 343 [375] › qa-audit\final\tests\form-inputs.spec.ts:13:2 › all 14 form types persist exact answers across sections ar (5.4s)
+  ok 344 [375] › qa-audit\final\tests\form-inputs.spec.ts:37:2 › choice and rating controls expose names and accept keyboard input ar (3.7s)
+  ok 345 [375] › qa-audit\final\tests\form-question-types.spec.ts:61:1 › ranking: public choices drag into a new order and persist the exact option IDs (3.6s)
+  ok 346 [375] › qa-audit\final\tests\form-question-types.spec.ts:142:1 › branching builder: explicit forward target survives autosave and editor reload (7.6s)
+  ok 347 [375] › qa-audit\final\tests\form-question-types.spec.ts:163:1 › configured-go-to contract: forward branch skips intermediate optional and required questions before saving (7.5s)
+  ok 348 [375] › qa-audit\final\tests\form-question-types.spec.ts:201:1 › changing an earlier branch ignores the answer of a now-hidden branch question (3.5s)
+  ok 349 [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (3.9s)
+  ok 350 [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (3.4s)
+  ok 351 [375] › qa-audit\final\tests\media-fallbacks.spec.ts:4:1 › optional course covers and account photos handle absent and failed media (4.6s)
+  ok 352 [375] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /login en (2.7s)
+  ok 353 [375] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /register en (2.9s)
+  ok 354 [375] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /reset-password en (3.1s)
+  ok 355 [375] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /login ar (3.2s)
+  ok 356 [375] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /register ar (2.9s)
+  ok 357 [375] › qa-audit\final\tests\password-touch.spec.ts:3:104 › password reveal has a usable touch area and keyboard toggle /reset-password ar (3.0s)
+  ok 358 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners en (4.2s)
+  ok 359 [375] › qa-audit\final\tests\quiz-code-layout.spec.ts:3:44 › bilingual fenced code stays readable and escaped in both quiz runners ar (4.8s)
+  ok 360 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor en: direct route, direction, console and overflow census (17.9s)
+  ok 361 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › visitor ar: direct route, direction, console and overflow census (22.0s)
+  ok 362 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member en: direct route, direction, console and overflow census (20.5s)
+  ok 363 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › member ar: direct route, direction, console and overflow census (24.2s)
+  ok 364 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin en: direct route, direction, console and overflow census (26.4s)
+  ok 365 [375] › qa-audit\final\tests\routes-locales.spec.ts:23:2 › admin ar: direct route, direction, console and overflow census (29.9s)
+  ok 366 [375] › qa-audit\fix-tests\course-certificates.spec.ts:67:1 › last lesson automatically issues one certificate, exports real PNG/PDF and verifies saved course (10.0s)
+  ok 367 [375] › qa-audit\fix-tests\course-certificates.spec.ts:97:1 › partial completion and failed inline assessment do not issue; passing final assessment does (6.8s)
+  ok 368 [375] › qa-audit\fix-tests\course-certificates.spec.ts:107:1 › standalone final quiz creates and opens the matching persisted certificate (6.1s)
+  ok 369 [375] › qa-audit\fix-tests\course-certificates.spec.ts:115:1 › database certificate failure rolls back the UI flow; storage and list retries recover honestly (12.4s)
+  ok 370 [375] › qa-audit\fix-tests\course-growth.spec.ts:69:1 › admin creates a future Arabic course and quiz; learner automatically earns and shares its own certificate (8.0s)
+  ok 371 [375] › qa-audit\fix-tests\course-growth.spec.ts:79:1 › duplicate slugs cannot overwrite another course and stale admin edits cannot overwrite newer data (4.6s)
+  ok 372 [375] › qa-audit\fix-tests\course-growth.spec.ts:85:1 › catalog pages, debounced search, cancellation and honest retry use bounded database requests (4.3s)
+  ok 373 [375] › qa-audit\fix-tests\course-growth.spec.ts:91:1 › future long Arabic course titles and member names export PNG/PDF with the correct verification QR (7.6s)
+  ok 374 [375] › qa-audit\fix-tests\course-growth.spec.ts:99:1 › catalog displays actual Arabic text without invented population or unrated stars (3.2s)
+  ok 375 [375] › qa-audit\fix-tests\course-growth.spec.ts:106:1 › lost course response retries the same draft and image tools never submit the form (3.4s)
+  ok 376 [375] › qa-audit\fix-tests\course-growth.spec.ts:113:1 › administrator searches beyond 1000 actual member rows and enrollment counts are not truncated (4.4s)
+  ok 377 [375] › qa-audit\fix-tests\course-media.spec.ts:7:1 › admin persists named units, reorders units and lessons, and sees an honest Drive setup state (3.8s)
+  ok 378 [375] › qa-audit\fix-tests\course-media.spec.ts:17:1 › generated video quiz leads into runnable JavaScript practice and only persisted completion awards a certificate (3.9s)
+  ok 379 [375] › qa-audit\fix-tests\course-media.spec.ts:25:1 › course practice carries its language and starter into the compiler and reset restores the assigned starter (4.0s)
+  ok 380 [375] › qa-audit\fix-tests\course-media.spec.ts:28:1 › media playback restores a private bookmark and loads SRT captions and material links (4.1s)
+  ok 381 [375] › qa-audit\fix-tests\course-media.spec.ts:37:1 › chunked admin upload recovers a lost final response and applies one reviewed AI plan (8.0s)
+  ok 382 [375] › qa-audit\fix-tests\course-quiz-language.spec.ts:6:36 › quiz language switches without losing the chosen answer in learn (3.6s)
+  ok 383 [375] › qa-audit\fix-tests\course-quiz-language.spec.ts:6:36 › quiz language switches without losing the chosen answer in quiz (3.0s)
+  ok 384 [375] › qa-audit\fix-tests\course-quiz-language.spec.ts:20:36 › administrator previews a draft using profile permissions without enrollment or assessment writes in learn (3.5s)
+  ok 385 [375] › qa-audit\fix-tests\course-quiz-language.spec.ts:20:36 › administrator previews a draft using profile permissions without enrollment or assessment writes in quiz (3.0s)
+  ok 386 [375] › qa-audit\fix-tests\linkedin.spec.ts:32:1 › certificate sharing copies actual fields and post, opens LinkedIn safely, and follows selected certificate (2.0s)
+  ok 387 [375] › qa-audit\fix-tests\linkedin.spec.ts:66:1 › dashboard shares only persisted earned badges, without private directory or invented credential (1.4s)
+  ok 388 [375] › qa-audit\fix-tests\linkedin.spec.ts:83:1 › Arabic sharing keeps data selectable when clipboard permission fails (1.1s)
+  ok 389 [375] › qa-audit\fix-tests\login-final.spec.ts:29:1 › email login validates, retries wrong credentials, preserves intended member route and survives reload/logout (3.7s)
+  ok 390 [375] › qa-audit\fix-tests\login-final.spec.ts:33:1 › admin email login returns to requested admin tab (2.7s)
+  ok 391 [375] › qa-audit\fix-tests\login-final.spec.ts:36:1 › unconfirmed Auth identity cannot bypass verification using a verified profile flag (2.2s)
+  ok 392 [375] › qa-audit\fix-tests\login-final.spec.ts:39:1 › registration without a session retains verification email, resends and offers login after confirmation (3.8s)
+  ok 393 [375] › qa-audit\fix-tests\login-final.spec.ts:42:1 › recovery request surfaces provider failure, retries and sends the canonical reset redirect (1.5s)
+  ok 394 [375] › qa-audit\fix-tests\login-final.spec.ts:45:1 › password recovery rejects weak/mismatched inputs, persists success and really ends its session (1.8s)
+  ok 395 [375] › qa-audit\fix-tests\login-final.spec.ts:48:1 › expired recovery/callback links show actionable errors instead of false sign-in (2.5s)
+  ok 396 [375] › qa-audit\fix-tests\login-final.spec.ts:51:1 › callback honors internal destinations, rejects external redirect and never manually exchanges twice (391ms)
+  ok 397 [375] › qa-audit\fix-tests\login-final.spec.ts:54:1 › Google button requests canonical callback and account selection; cancellation is actionable (1.9s)
+  ok 398 [375] › qa-audit\fix-tests\login-final.spec.ts:57:1 › expired refresh token returns to login without retaining administrative access (398ms)
+  ok 399 [375] › qa-audit\fix-tests\login-final.spec.ts:60:1 › fresh server email confirmation refreshes the session instead of looping back to verification (1.0s)
+  ok 400 [375] › qa-audit\fix-tests\login-final.spec.ts:63:1 › SDK exchanges a PKCE callback once and password visibility is keyboard accessible (2.9s)
+  ok 401 [375] › qa-audit\fix-tests\platform-forms-users.spec.ts:11:1 › Forms: publish actual questions/theme/restrictions, submit through real API handler and export persisted responses, duplicate/close/delete (13.8s)
+  ok 402 [375] › qa-audit\fix-tests\platform-forms-users.spec.ts:36:1 › Users: search, actual XLSX export/import, member detail, role confirmation/status persist, API failure never pretends to create an account (5.1s)
+  ok 403 [375] › qa-audit\fix-tests\platform-forms-users.spec.ts:44:1 › Profile: member photo and fields persist in SQL and Storage; denied upload leaves existing profile untouched (4.6s)
+  ok 404 [375] › qa-audit\fix-tests\platform-regressions.spec.ts:7:1 › session race never redirects an authenticated admin or destroys fast unsaved form edits (6.0s)
+  ok 405 [375] › qa-audit\fix-tests\platform-regressions.spec.ts:14:1 › event editor preserves concurrently saved registrations; organizer ID suggestions and filter controls persist actual values (4.9s)
+  ok 406 [375] › qa-audit\fix-tests\platform-regressions.spec.ts:19:1 › event QR scanner decodes an uploaded ticket and persists attendance without requesting a camera (4.7s)
+  ok 407 [375] › qa-audit\fix-tests\platform-regressions.spec.ts:24:1 › temporary content and notification failures display honest retry/error and preserve unread records (36.1s)
+  ok 408 [375] › qa-audit\fix-tests\platform-regressions.spec.ts:31:1 › compiler controls copy/download actual source, F5 executes instead of reloading, and reset restores its template (4.1s)
+  ok 409 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:12:1 › Staff: validates blank input, saves real roster, persists reload, filters admin directory and blocks members (6.3s)
+  x  410 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:23:1 › Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists (1.1m)
+  ok 411 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:31:1 › Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data (4.3s)
+  ok 412 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:41:1 › Contact/Messages: visitor submission saves SQL record, admin reads/marks read, cancel/delete work (5.8s)
+  ok 413 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:46:1 › Projects: member proposal stays private until admin approval, links/detail/search work and removal persists (8.2s)
+  ok 414 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:52:1 › Blog: create/read/share/edit/delete persist across administrator and member sessions without random covers (6.9s)
+  ok 415 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:58:1 › Points/Notifications/Leaderboard/Overview/Security: actual bonus updates own XP, read state is private, analytics/audit persist and forbidden access is rejected (6.5s)
+  ok 416 [375] › qa-audit\fix-tests\platform-tabs.spec.ts:65:1 › Events: administrator creates/edits event, member registration saves one ticket, public link resolves and deletion persists (8.3s)
+  ok 417 [375] › qa-audit\fix-tests\profile-final.spec.ts:11:1 › Profile preserves legacy faculty/year and saves normalized fields without overwriting a newer picture (3.8s)
+  ok 418 [375] › qa-audit\fix-tests\profile-final.spec.ts:14:1 › Profile validates before upload, freezes pending save, replaces and removes actual stored picture without Google fallback (6.8s)
+  ok 419 [375] › qa-audit\fix-tests\profile-final.spec.ts:17:1 › Profile database rejection keeps existing picture and cleans the uncommitted upload; retry persists it (3.3s)
+  ok 420 [375] › qa-audit\fix-tests\profile-final.spec.ts:20:1 › Profile background refresh preserves email draft; dialog Escape and member ID copy work (3.4s)
+  ok 421 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: / (453ms)
+  ok 422 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /about (462ms)
+  ok 423 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /courses (476ms)
+  ok 424 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /projects (448ms)
+  ok 425 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /events (415ms)
+  ok 426 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /blog (421ms)
+  ok 427 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /staff (424ms)
+  ok 428 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /gallery (447ms)
+  ok 429 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /contact (466ms)
+  ok 430 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /faq (449ms)
+  ok 431 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /privacy (451ms)
+  ok 432 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /terms (488ms)
+  ok 433 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /leaderboard (381ms)
+  ok 434 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /certificates (442ms)
+  ok 435 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /verify-certificate (415ms)
+  ok 436 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /compiler (480ms)
+  ok 437 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /login (380ms)
+  ok 438 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /register (413ms)
+  ok 439 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /forgot-password (442ms)
+  ok 440 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /reset-password (404ms)
+  ok 441 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /verify-email (441ms)
+  ok 442 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /f/qa-test-missing (248ms)
+  ok 443 [375] › qa-audit\fix-tests\public.spec.ts:16:3 › public route renders without exceptions: /not-a-real-page (428ms)
+  ok 444 [375] › qa-audit\fix-tests\public.spec.ts:28:1 › a cached fabricated admin does not authenticate (396ms)
+  ok 445 [375] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /dashboard (402ms)
+  ok 446 [375] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /profile (364ms)
+  ok 447 [375] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /my-courses (359ms)
+  ok 448 [375] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /notifications (355ms)
+  ok 449 [375] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /courses/qa-test/learn (387ms)
+  ok 450 [375] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /courses/qa-test/quiz (351ms)
+  ok 451 [375] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /admin/forms/new (367ms)
+  ok 452 [375] › qa-audit\fix-tests\public.spec.ts:37:3 › visitor guard redirects: /admin/settings (393ms)
+  ok 453 [375] › qa-audit\fix-tests\public.spec.ts:42:1 › sample controls and fabricated site metrics are absent (1.3s)
+  ok 454 [375] › qa-audit\fix-tests\public.spec.ts:50:1 › language changes direction and mobile drawer navigates (1.5s)
+  ok 455 [375] › qa-audit\fix-tests\public.spec.ts:61:1 › contact does not submit invalid or empty values (1.4s)
+  ok 456 [375] › qa-audit\fix-tests\public.spec.ts:69:1 › JavaScript compiler actually executes and reports syntax errors (1.1s)
+  ok 457 [375] › qa-audit\fix-tests\public.spec.ts:80:1 › compiled service outage reports failure rather than invented output (1.1s)
+  ok 458 [375] › qa-audit\fix-tests\public.spec.ts:90:1 › form backend errors never replace results with sample records (7.5s)
+  ok 459 [375] › qa-audit\fix-tests\public.spec.ts:101:1 › admin server rejects unauthenticated direct requests (116ms)
+  ok 460 [375] › qa-audit\fix-tests\public.spec.ts:109:1 › TypeScript compiles real types and runs the resulting code (1.1s)
+  ok 461 [375] › qa-audit\fix-tests\public.spec.ts:116:1 › backend compilation failure is surfaced even when HTTP returns 200 (1.0s)
+  ok 462 [375] › qa-audit\fix-tests\public.spec.ts:123:1 › nonzero runtime exit without stderr is treated as an error (1.0s)
+  ok 463 [375] › qa-audit\fix-tests\roles.spec.ts:47:1 › member cannot search or download the club member directory (401ms)
+  ok 464 [375] › qa-audit\fix-tests\roles.spec.ts:57:1 › profile saves edited name, rejects invalid phone and logs out (1.5s)
+  ok 465 [375] › qa-audit\fix-tests\roles.spec.ts:73:1 › form publish waits for autosave and reuses the created ID (5.1s)
+  ok 466 [375] › qa-audit\fix-tests\roles.spec.ts:96:1 › member direct admin URL stays outside admin controls (405ms)
+  ok 467 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin (434ms)
+  ok 468 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/users (470ms)
+  ok 469 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/events (405ms)
+  ok 470 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/staff (401ms)
+  ok 471 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/gallery (385ms)
+  ok 472 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/content (407ms)
+  ok 473 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/projects (404ms)
+  ok 474 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/blog (392ms)
+  ok 475 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/messages (414ms)
+  ok 476 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/courses (404ms)
+  ok 477 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/points (408ms)
+  ok 478 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/forms (451ms)
+  ok 479 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/forms/new (430ms)
+  ok 480 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/security (392ms)
+  ok 481 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /admin/settings (406ms)
+  ok 482 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /dashboard (416ms)
+  ok 483 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /profile (424ms)
+  ok 484 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /my-courses (413ms)
+  ok 485 [375] › qa-audit\fix-tests\roles.spec.ts:106:3 › authenticated fixture renders /notifications (419ms)
+  ok 486 [375] › qa-audit\fix-tests\roles.spec.ts:117:1 › blog edit opens, saves via PATCH and closes (1.3s)
+  ok 487 [375] › qa-audit\fix-tests\roles.spec.ts:128:1 › modal Escape closes and restores trigger focus (1.2s)
+  ok 488 [375] › qa-audit\fix-tests\roles.spec.ts:135:1 › record export downloads actual returned JSON and cache button clears browser cache (1.8s)
+  ok 489 [375] › qa-audit\fix-tests\roles.spec.ts:163:1 › member card downloads a real PNG whose QR opens private-safe verification (9.4s)
+  ok 490 [375] › qa-audit\fix-tests\roles.spec.ts:178:1 › profile security sends recovery link and requests email confirmation without profile overwrite (1.2s)
+  ok 491 [375] › qa-audit\fix-tests\roles.spec.ts:193:1 › profile email-change rejection stays visible and does not claim success (1.1s)
+  ok 492 [375] › qa-audit\fix-tests\roles.spec.ts:202:1 › form QR has correct URL and download is a decodable PNG (10.7s)
+  ok 493 [375] › qa-audit\fix-tests\roles.spec.ts:225:1 › certificate SVG and canvas QR decode to the matching verification URL (7.5s)
+  ok 494 [375] › qa-audit\fix-tests\roles.spec.ts:237:1 › card issuance failure disables download and retry recovers (896ms)
+  ok 495 [375] › qa-audit\fix-tests\roles.spec.ts:248:1 › password recovery rejection is visible and retry works (1.4s)
+  ok 496 [375] › qa-audit\fix-tests\roles.spec.ts:257:1 › malformed membership URL is rejected without database lookup (405ms)
+  ok 497 [375] › qa-audit\fix-tests\roles.spec.ts:263:1 › unknown membership token exposes no personal details (405ms)
+  ok 498 [375] › qa-audit\fix-tests\roles.spec.ts:270:1 › password reset validates strength and surfaces authentication rejection (1.5s)
+
+
+  1) [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:31:1 › Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Target page, context or browser has been closed
+    Call log:
+      - waiting for getByRole('button', { name: 'Commit Changes', exact: true })
+        - locator resolved to <button class="inline-flex items-center justify-center whitespace-nowrap font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 uppercase tracking-widest font-cyber group relative overflow-hidden bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-dark-navy shadow-[0_0_15px_rgba(57,255,20,0.3)] hover:shadow-[0_0_30px_rgba(57,255,20,0.6)] transition-all duration-300 h-14 rounded-md px-12 text-base">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+        7 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+        9 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+        3 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div class="fixed bottom-6 z-40 flex items-center group right-6">…</div> intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <span class="font-bold">العربية</span> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+
+
+      35 |  await page.getByRole('button',{name:'Discord & Social Links',exact:true}).click();await page.getByPlaceholder('https://discord.gg/your-club-invite').fill('https://discord.gg/QA_TEST');await page.getByPlaceholder('https://github.com/datacamp-club').fill('https://github.com/QA_TEST');await page.getByRole('button',{name:'Save All Changes',exact:true}).click();await expect(page.getByText('All content changes saved to database',{exact:true})).toBeVisible();
+      36 |  expect((await scalar("SELECT value FROM settings WHERE key='home_content'")).value.heroTitle).toBe('QA_TEST_HOME');expect((await scalar("SELECT value FROM settings WHERE key='about_data'")).value.history).toBe('QA_TEST_HISTORY');expect((await scalar("SELECT value FROM settings WHERE key='general'")).value).toMatchObject({siteName:'QA_TEST_BRAND',contactEmail:'QA_TEST_CONTACT@example.invalid',enableRegistration:false,discordUrl:'https://discord.gg/QA_TEST'});
+    > 37 |  await page.goto('/admin/settings');await expect(page.locator('main input').first()).toHaveValue('QA_TEST_BRAND');await page.locator('main input').first().fill('QA_TEST_UPDATED_BRAND');await page.getByRole('button',{name:'Commit Changes',exact:true}).click();await expect(page.getByText('System settings saved to Supabase',{exact:true})).toBeVisible();expect((await scalar("SELECT value FROM settings WHERE key='general'")).value.discordUrl).toBe('https://discord.gg/QA_TEST');
+         |                                                                                                                                                                                                                                                            ^
+      38 |  const visitor=await browser.newPage({viewport:test.info().project.use.viewport as any});await app.connect(visitor,null);await visitor.goto('/');await expect(visitor.getByText('QA_TEST_HOME',{exact:true})).toBeVisible();await visitor.goto('/about');await expect(visitor.getByText('QA_TEST_MISSION',{exact:true})).toBeVisible();await expect(visitor.getByText('QA_TEST_HISTORY',{exact:true})).toBeVisible();await visitor.goto('/contact');await expect(visitor.locator('a[href="https://discord.gg/QA_TEST"]')).toBeVisible();await expect(visitor.getByText('QA_TEST_CONTACT@example.invalid',{exact:true}).first()).toBeVisible();
+      39 | });
+      40 |
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\fix-tests\platform-tabs.spec.ts:37:252
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Co-5beb7-and-serve-actual-saved-data-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Co-5beb7-and-serve-actual-saved-data-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Co-5beb7-and-serve-actual-saved-data-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Co-5beb7-and-serve-actual-saved-data-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [375] › qa-audit\fix-tests\platform-tabs.spec.ts:23:1 › Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Target page, context or browser has been closed
+    Call log:
+      - waiting for getByRole('button', { name: 'Delete', exact: true })
+        - locator resolved to <button aria-label="Delete" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 uppercase tracking-widest font-cyber group relative overflow-hidden hover:text-primary transition-colors w-10 h-10 text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/20">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div title="Innovation University Crest" class="relative rounded-xl overflow-hidden bg-[#45287c] p-1.5 border border-purple-400/50 shadow-[0_0_16px_rgba(147,51,234,0.3)] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_24px_rgba(147,51,234,0.5)] hover:scale-105 shrink-0 ">…</div> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div title="Innovation University Crest" class="relative rounded-xl overflow-hidden bg-[#45287c] p-1.5 border border-purple-400/50 shadow-[0_0_16px_rgba(147,51,234,0.3)] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_24px_rgba(147,51,234,0.5)] hover:scale-105 shrink-0 ">…</div> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div title="DataCamp Official Emblem" class="relative rounded-xl overflow-hidden bg-white p-1.5 border border-[#03EF62]/50 shadow-[0_0_16px_rgba(3,239,98,0.25)] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_24px_rgba(3,239,98,0.45)] hover:scale-105 shrink-0 ">…</div> from <header class="lg:hidden h-16 glass border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-40 shrink-0">…</header> subtree intercepts pointer events
+      25 × retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div title="Innovation University Crest" class="relative rounded-xl overflow-hidden bg-[#45287c] p-1.5 border border-purple-400/50 shadow-[0_0_16px_rgba(147,51,234,0.3)] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_24px_rgba(147,51,234,0.5)] hover:scale-105 shrink-0 ">…</div> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div title="Innovation University Crest" class="relative rounded-xl overflow-hidden bg-[#45287c] p-1.5 border border-purple-400/50 shadow-[0_0_16px_rgba(147,51,234,0.3)] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_24px_rgba(147,51,234,0.5)] hover:scale-105 shrink-0 ">…</div> from <footer class="bg-dark-navy border-t border-white/10 pt-16 pb-8">…</footer> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div title="DataCamp Official Emblem" class="relative rounded-xl overflow-hidden bg-white p-1.5 border border-[#03EF62]/50 shadow-[0_0_16px_rgba(3,239,98,0.25)] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_24px_rgba(3,239,98,0.45)] hover:scale-105 shrink-0 ">…</div> from <header class="lg:hidden h-16 glass border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-40 shrink-0">…</header> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div title="DataCamp Official Emblem" class="relative rounded-xl overflow-hidden bg-white p-1.5 border border-[#03EF62]/50 shadow-[0_0_16px_rgba(3,239,98,0.25)] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_24px_rgba(3,239,98,0.45)] hover:scale-105 shrink-0 ">…</div> from <header class="lg:hidden h-16 glass border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-40 shrink-0">…</header> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+
+
+      26 |  const student=await browser.newPage({viewport:test.info().project.use.viewport as any});await app.connect(student,member);await student.goto('/gallery');await student.getByRole('button',{name:'Workshops',exact:true}).click();await student.getByPlaceholder('Search moments & events...').fill('QA_TEST_GALLERY');await student.getByRole('button',{name:'View image: QA_TEST_GALLERY',exact:true}).click();await expect(student.getByRole('dialog')).toBeVisible();await student.keyboard.press('Escape');await expect(student.getByRole('dialog')).toHaveCount(0);
+      27 |  await student.route('**/storage/v1/object/public/**',r=>r.fulfill({status:404,body:''}));await student.reload();await expect(student.getByRole('img',{name:'QA_TEST_GALLERY',exact:true})).toBeVisible();expect(await student.locator('img[src*="picsum"]').count()).toBe(0);
+    > 28 |  await page.getByRole('button',{name:'Delete',exact:true}).click();await page.getByRole('button',{name:'CONFIRM_PURGE',exact:true}).click();await expect.poll(async()=>Number((await scalar('SELECT count(*) n FROM gallery')).n)).toBe(0);
+         |                                                            ^
+      29 | });
+      30 |
+      31 | test('Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data',async({page,browser})=>{
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\fix-tests\platform-tabs.spec.ts:28:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Ga-88da5--fallback-deletion-persists-375\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Ga-88da5--fallback-deletion-persists-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Ga-88da5--fallback-deletion-persists-375\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Ga-88da5--fallback-deletion-persists-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\QA_TEST_full_final_498\artifacts\fix-tests-platform-tabs-Ga-88da5--fallback-deletion-persists-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [1440] › qa-audit\fix-tests\platform-tabs.spec.ts:31:1 › Content/Settings/Home/About/Contact: save every content tab, preserve branding fields, reload and serve actual saved data 
+    [375] › qa-audit\fix-tests\platform-tabs.spec.ts:23:1 › Gallery: image upload persists a Storage URL, member search/lightbox works, missing media has a neutral fallback, deletion persists 
+  496 passed (37.3m)

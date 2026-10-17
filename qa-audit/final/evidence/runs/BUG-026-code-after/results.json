@@ -1,0 +1,878 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/target-local.config.ts",
+      "quiz-code-layout.spec.ts",
+      "media-apply-state.spec.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\target-local.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-026-code-after/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-026-code-after/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-026-code-after/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "1440",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3302",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "1440"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "768",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3302",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 768,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "768"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "375",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3302",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 375,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "375"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "media-apply-state.spec.ts",
+      "file": "media-apply-state.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2814,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:24.172Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-d160555b4ec9cfa060e3",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5630,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:27.097Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-cdac528c113ed953b511",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2568,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:40.719Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-9f3ea2b8b77d05031351",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4204,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:43.373Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-24cf6476a904d4c6216b",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2483,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:55.165Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-7e6967ea6a920f48dad8",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4162,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:57.732Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-5422320bfb501d1b627d",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        }
+      ]
+    },
+    {
+      "title": "quiz-code-layout.spec.ts",
+      "file": "quiz-code-layout.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "bilingual fenced code stays readable and escaped in both quiz runners en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3843,
+                  "error": {
+                    "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n",
+                    "stack": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                      "column": 401,
+                      "line": 10
+                    },
+                    "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m  \u001b[36mawait\u001b[39m p\u001b[33m.\u001b[39mconnect(page\u001b[33m,\u001b[39mmember\u001b[33m,\u001b[39mlanguage)\u001b[33m;\u001b[39m\n \u001b[90m  9 |\u001b[39m  \u001b[36mfor\u001b[39m(\u001b[36mconst\u001b[39m route \u001b[36mof\u001b[39m [\u001b[32m'/courses/qa-test-code-layout/learn'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'/courses/qa-test-code-layout/quiz/'\u001b[39m\u001b[33m+\u001b[39mlid]){\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(route)\u001b[33m;\u001b[39m\u001b[36mconst\u001b[39m code\u001b[33m=\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'main code[data-quiz-code]'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveText(source)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'dir'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'ltr'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m code\u001b[33m.\u001b[39mevaluate(el\u001b[33m=>\u001b[39mgetComputedStyle(el)\u001b[33m.\u001b[39mwhiteSpace))\u001b[33m.\u001b[39mtoBe(\u001b[32m'pre-wrap'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39m(globalThis \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m\u001b[33mQA_TEST_INJECTED\u001b[39m))\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'main'\u001b[39m)\u001b[33m.\u001b[39minnerText())\u001b[33m.\u001b[39mtoContain(\u001b[32m'<script>globalThis.QA_TEST_INJECTED=true</script>'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mdocument\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth\u001b[33m<=\u001b[39minnerWidth))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                                                                                                                                                                                                                                                                                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_code_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'_'\u001b[39m\u001b[33m+\u001b[39m(route\u001b[33m.\u001b[39mendsWith(\u001b[32m'/learn'\u001b[39m)\u001b[33m?\u001b[39m\u001b[32m'inline'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'standalone'\u001b[39m)\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m  }\n \u001b[90m 13 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                        "column": 401,
+                        "line": 10
+                      },
+                      "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n\n   8 |  await p.connect(page,member,language);\n   9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){\n> 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);\n     |                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n  11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});\n  12 |  }\n  13 | });\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:32.791Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-1440\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                    "column": 401,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "757dd49057308123df16-b22b2d42ddc7312fa822",
+          "file": "quiz-code-layout.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "bilingual fenced code stays readable and escaped in both quiz runners ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2522,
+                  "error": {
+                    "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n",
+                    "stack": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                      "column": 401,
+                      "line": 10
+                    },
+                    "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m  \u001b[36mawait\u001b[39m p\u001b[33m.\u001b[39mconnect(page\u001b[33m,\u001b[39mmember\u001b[33m,\u001b[39mlanguage)\u001b[33m;\u001b[39m\n \u001b[90m  9 |\u001b[39m  \u001b[36mfor\u001b[39m(\u001b[36mconst\u001b[39m route \u001b[36mof\u001b[39m [\u001b[32m'/courses/qa-test-code-layout/learn'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'/courses/qa-test-code-layout/quiz/'\u001b[39m\u001b[33m+\u001b[39mlid]){\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(route)\u001b[33m;\u001b[39m\u001b[36mconst\u001b[39m code\u001b[33m=\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'main code[data-quiz-code]'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveText(source)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'dir'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'ltr'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m code\u001b[33m.\u001b[39mevaluate(el\u001b[33m=>\u001b[39mgetComputedStyle(el)\u001b[33m.\u001b[39mwhiteSpace))\u001b[33m.\u001b[39mtoBe(\u001b[32m'pre-wrap'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39m(globalThis \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m\u001b[33mQA_TEST_INJECTED\u001b[39m))\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'main'\u001b[39m)\u001b[33m.\u001b[39minnerText())\u001b[33m.\u001b[39mtoContain(\u001b[32m'<script>globalThis.QA_TEST_INJECTED=true</script>'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mdocument\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth\u001b[33m<=\u001b[39minnerWidth))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                                                                                                                                                                                                                                                                                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_code_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'_'\u001b[39m\u001b[33m+\u001b[39m(route\u001b[33m.\u001b[39mendsWith(\u001b[32m'/learn'\u001b[39m)\u001b[33m?\u001b[39m\u001b[32m'inline'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'standalone'\u001b[39m)\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m  }\n \u001b[90m 13 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                        "column": 401,
+                        "line": 10
+                      },
+                      "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n\n   8 |  await p.connect(page,member,language);\n   9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){\n> 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);\n     |                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n  11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});\n  12 |  }\n  13 | });\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:37.656Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-1440\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                    "column": 401,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "757dd49057308123df16-aa830d7b6d3965dfd8ef",
+          "file": "quiz-code-layout.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "bilingual fenced code stays readable and escaped in both quiz runners en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4101,
+                  "error": {
+                    "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n",
+                    "stack": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                      "column": 401,
+                      "line": 10
+                    },
+                    "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m  \u001b[36mawait\u001b[39m p\u001b[33m.\u001b[39mconnect(page\u001b[33m,\u001b[39mmember\u001b[33m,\u001b[39mlanguage)\u001b[33m;\u001b[39m\n \u001b[90m  9 |\u001b[39m  \u001b[36mfor\u001b[39m(\u001b[36mconst\u001b[39m route \u001b[36mof\u001b[39m [\u001b[32m'/courses/qa-test-code-layout/learn'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'/courses/qa-test-code-layout/quiz/'\u001b[39m\u001b[33m+\u001b[39mlid]){\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(route)\u001b[33m;\u001b[39m\u001b[36mconst\u001b[39m code\u001b[33m=\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'main code[data-quiz-code]'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveText(source)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'dir'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'ltr'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m code\u001b[33m.\u001b[39mevaluate(el\u001b[33m=>\u001b[39mgetComputedStyle(el)\u001b[33m.\u001b[39mwhiteSpace))\u001b[33m.\u001b[39mtoBe(\u001b[32m'pre-wrap'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39m(globalThis \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m\u001b[33mQA_TEST_INJECTED\u001b[39m))\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'main'\u001b[39m)\u001b[33m.\u001b[39minnerText())\u001b[33m.\u001b[39mtoContain(\u001b[32m'<script>globalThis.QA_TEST_INJECTED=true</script>'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mdocument\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth\u001b[33m<=\u001b[39minnerWidth))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                                                                                                                                                                                                                                                                                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_code_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'_'\u001b[39m\u001b[33m+\u001b[39m(route\u001b[33m.\u001b[39mendsWith(\u001b[32m'/learn'\u001b[39m)\u001b[33m?\u001b[39m\u001b[32m'inline'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'standalone'\u001b[39m)\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m  }\n \u001b[90m 13 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                        "column": 401,
+                        "line": 10
+                      },
+                      "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n\n   8 |  await p.connect(page,member,language);\n   9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){\n> 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);\n     |                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n  11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});\n  12 |  }\n  13 | });\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:47.621Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-768\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                    "column": 401,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "757dd49057308123df16-d48e86a134b5b01929c8",
+          "file": "quiz-code-layout.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "bilingual fenced code stays readable and escaped in both quiz runners ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2376,
+                  "error": {
+                    "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n",
+                    "stack": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                      "column": 401,
+                      "line": 10
+                    },
+                    "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m  \u001b[36mawait\u001b[39m p\u001b[33m.\u001b[39mconnect(page\u001b[33m,\u001b[39mmember\u001b[33m,\u001b[39mlanguage)\u001b[33m;\u001b[39m\n \u001b[90m  9 |\u001b[39m  \u001b[36mfor\u001b[39m(\u001b[36mconst\u001b[39m route \u001b[36mof\u001b[39m [\u001b[32m'/courses/qa-test-code-layout/learn'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'/courses/qa-test-code-layout/quiz/'\u001b[39m\u001b[33m+\u001b[39mlid]){\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(route)\u001b[33m;\u001b[39m\u001b[36mconst\u001b[39m code\u001b[33m=\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'main code[data-quiz-code]'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveText(source)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'dir'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'ltr'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m code\u001b[33m.\u001b[39mevaluate(el\u001b[33m=>\u001b[39mgetComputedStyle(el)\u001b[33m.\u001b[39mwhiteSpace))\u001b[33m.\u001b[39mtoBe(\u001b[32m'pre-wrap'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39m(globalThis \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m\u001b[33mQA_TEST_INJECTED\u001b[39m))\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'main'\u001b[39m)\u001b[33m.\u001b[39minnerText())\u001b[33m.\u001b[39mtoContain(\u001b[32m'<script>globalThis.QA_TEST_INJECTED=true</script>'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mdocument\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth\u001b[33m<=\u001b[39minnerWidth))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                                                                                                                                                                                                                                                                                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_code_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'_'\u001b[39m\u001b[33m+\u001b[39m(route\u001b[33m.\u001b[39mendsWith(\u001b[32m'/learn'\u001b[39m)\u001b[33m?\u001b[39m\u001b[32m'inline'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'standalone'\u001b[39m)\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m  }\n \u001b[90m 13 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                        "column": 401,
+                        "line": 10
+                      },
+                      "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n\n   8 |  await p.connect(page,member,language);\n   9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){\n> 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);\n     |                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n  11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});\n  12 |  }\n  13 | });\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:03:52.241Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-768\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                    "column": 401,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "757dd49057308123df16-7b2e85165a3f477fbaab",
+          "file": "quiz-code-layout.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "bilingual fenced code stays readable and escaped in both quiz runners en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4307,
+                  "error": {
+                    "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n",
+                    "stack": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                      "column": 401,
+                      "line": 10
+                    },
+                    "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m  \u001b[36mawait\u001b[39m p\u001b[33m.\u001b[39mconnect(page\u001b[33m,\u001b[39mmember\u001b[33m,\u001b[39mlanguage)\u001b[33m;\u001b[39m\n \u001b[90m  9 |\u001b[39m  \u001b[36mfor\u001b[39m(\u001b[36mconst\u001b[39m route \u001b[36mof\u001b[39m [\u001b[32m'/courses/qa-test-code-layout/learn'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'/courses/qa-test-code-layout/quiz/'\u001b[39m\u001b[33m+\u001b[39mlid]){\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(route)\u001b[33m;\u001b[39m\u001b[36mconst\u001b[39m code\u001b[33m=\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'main code[data-quiz-code]'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveText(source)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'dir'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'ltr'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m code\u001b[33m.\u001b[39mevaluate(el\u001b[33m=>\u001b[39mgetComputedStyle(el)\u001b[33m.\u001b[39mwhiteSpace))\u001b[33m.\u001b[39mtoBe(\u001b[32m'pre-wrap'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39m(globalThis \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m\u001b[33mQA_TEST_INJECTED\u001b[39m))\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'main'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m.\u001b[39minnerText())\u001b[33m.\u001b[39mtoContain(\u001b[32m'<script>globalThis.QA_TEST_INJECTED=true</script>'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mdocument\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth\u001b[33m<=\u001b[39minnerWidth))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                                                                                                                                                                                                                                                                                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_code_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'_'\u001b[39m\u001b[33m+\u001b[39m(route\u001b[33m.\u001b[39mendsWith(\u001b[32m'/learn'\u001b[39m)\u001b[33m?\u001b[39m\u001b[32m'inline'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'standalone'\u001b[39m)\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m  }\n \u001b[90m 13 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                        "column": 401,
+                        "line": 10
+                      },
+                      "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%LESSON 1 • QUIZQA_TEST_QUIZ+30' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n\n   8 |  await p.connect(page,member,language);\n   9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){\n> 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').first().innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);\n     |                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n  11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});\n  12 |  }\n  13 | });\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:04:01.920Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-5c5b1-ped-in-both-quiz-runners-en-375\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                    "column": 401,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "757dd49057308123df16-1ff4e50a09e5b1ecad08",
+          "file": "quiz-code-layout.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "bilingual fenced code stays readable and escaped in both quiz runners ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2371,
+                  "error": {
+                    "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n",
+                    "stack": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                      "column": 401,
+                      "line": 10
+                    },
+                    "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m  \u001b[36mawait\u001b[39m p\u001b[33m.\u001b[39mconnect(page\u001b[33m,\u001b[39mmember\u001b[33m,\u001b[39mlanguage)\u001b[33m;\u001b[39m\n \u001b[90m  9 |\u001b[39m  \u001b[36mfor\u001b[39m(\u001b[36mconst\u001b[39m route \u001b[36mof\u001b[39m [\u001b[32m'/courses/qa-test-code-layout/learn'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'/courses/qa-test-code-layout/quiz/'\u001b[39m\u001b[33m+\u001b[39mlid]){\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(route)\u001b[33m;\u001b[39m\u001b[36mconst\u001b[39m code\u001b[33m=\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'main code[data-quiz-code]'\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveText(source)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(code)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'dir'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'ltr'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m code\u001b[33m.\u001b[39mevaluate(el\u001b[33m=>\u001b[39mgetComputedStyle(el)\u001b[33m.\u001b[39mwhiteSpace))\u001b[33m.\u001b[39mtoBe(\u001b[32m'pre-wrap'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39m(globalThis \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m\u001b[33mQA_TEST_INJECTED\u001b[39m))\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'main'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m.\u001b[39minnerText())\u001b[33m.\u001b[39mtoContain(\u001b[32m'<script>globalThis.QA_TEST_INJECTED=true</script>'\u001b[39m)\u001b[33m;\u001b[39mexpect(\u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(()\u001b[33m=>\u001b[39mdocument\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollWidth\u001b[33m<=\u001b[39minnerWidth))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                                                                                                                                                                                                                                                                                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_code_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'_'\u001b[39m\u001b[33m+\u001b[39m(route\u001b[33m.\u001b[39mendsWith(\u001b[32m'/learn'\u001b[39m)\u001b[33m?\u001b[39m\u001b[32m'inline'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'standalone'\u001b[39m)\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m  }\n \u001b[90m 13 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                        "column": 401,
+                        "line": 10
+                      },
+                      "message": "Error: locator.innerText: Error: strict mode violation: locator('main') resolved to 2 elements:\n    1) <main class=\"flex-grow w-full min-h-screen\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' })\n    2) <main class=\"flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 custom-scrollbar\">…</main> aka getByRole('main').filter({ hasText: 'QA_TEST_CODE_LAYOUTQA_TEST_QUIZ0%الدرس 1 • QUIZQA_TEST_QUIZ+30 XP' }).getByRole('main')\n\nCall log:\n\u001b[2m  - waiting for locator('main')\u001b[22m\n\n\n   8 |  await p.connect(page,member,language);\n   9 |  for(const route of ['/courses/qa-test-code-layout/learn','/courses/qa-test-code-layout/quiz/'+lid]){\n> 10 |   await page.goto(route);const code=page.locator('main code[data-quiz-code]');await expect(code).toHaveCount(1);await expect(code).toHaveText(source);await expect(code).toHaveAttribute('dir','ltr');expect(await code.evaluate(el=>getComputedStyle(el).whiteSpace)).toBe('pre-wrap');expect(await page.evaluate(()=>(globalThis as any).QA_TEST_INJECTED)).toBeUndefined();expect(await page.locator('main').first().innerText()).toContain('<script>globalThis.QA_TEST_INJECTED=true</script>');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);\n     |                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n  11 |   await page.screenshot({path:test.info().outputPath('QA_TEST_code_'+language+'_'+(route.endsWith('/learn')?'inline':'standalone')+'.png')});\n  12 |  }\n  13 | });\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts:10:401"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T07:04:08.330Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-026-code-after\\artifacts\\quiz-code-layout-bilingual-73a38-ped-in-both-quiz-runners-ar-375\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\quiz-code-layout.spec.ts",
+                    "column": 401,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "757dd49057308123df16-d73ca6490e5ef9b719d8",
+          "file": "quiz-code-layout.spec.ts",
+          "line": 3,
+          "column": 44
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-17T07:03:23.790Z",
+    "duration": 47150.535,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

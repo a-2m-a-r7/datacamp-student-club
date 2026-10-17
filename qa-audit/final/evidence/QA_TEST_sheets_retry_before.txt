@@ -1,0 +1,6 @@
+{"name":"new response auto syncs exact Arabic value","passed":true,"actual":{"status":200,"sync":"synced","rows":2}}
+{"name":"retry same response does not duplicate","passed":false,"actual":{"http":200,"copies":2}}
+{"name":"question added after responses updates header","passed":false,"actual":{"columns":5,"lastHeader":"QA_TEST_Question"}}
+{"name":"resync 1 rebuilds exact response set","passed":true,"actual":{"http":200,"rows":3}}
+{"name":"resync 2 rebuilds exact response set","passed":true,"actual":{"http":200,"rows":3}}
+{"name":"more than 26 columns grows sheet and syncs","passed":true,"actual":{"http":200,"error":null,"columns":32}}

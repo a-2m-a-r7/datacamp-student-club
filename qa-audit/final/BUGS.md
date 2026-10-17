@@ -1,15 +1,6 @@
 # Confirmed bug log
 
-## BUG-030 — Footer overlaps long page content and blocks administrator actions
-
-- Severity: High. Layer: application layout / interaction regression.
-- Reproduce: the 498-case complete run ends with 496 passes and two real click failures: Settings save and mobile Gallery delete. The footer/header/floating control intercept clicks. Six focused EN/AR geometry cases reproduce the footer starting at y=397 while the save button extends to y=868.
-- Cause: the route wrapper's h-full resolves against the main area's reserved minimum height instead of growing with long content, while flex shrinking permits content to overflow into the footer.
-- Fix: let the route wrapper use its natural height and prevent main from shrinking; keep the loading minimum height that solved CLS. No branding or page content is changed.
-- Validation: build, configured lint and explicit type-check pass. Six EN/AR geometry-and-save/delete cases and all six original Gallery/Content/Settings regressions pass at 1440/768/375. Evidence: BUG-030-flow-before/after, BUG-030-related-after and their logs. The complete current-source rerun and loading-layout regression remain separate final gates.
-- Status: Fixed and targeted checks passed; complete rerun pending.
-
-Only reproduced failures are entered here. Source inventory concerns remain pending until triggered. Results distinguish isolated local SQL/browser adapters from real hosted QA providers. Production is excluded throughout.
+Only reproduced failures are entered here. Results distinguish isolated local SQL/browser adapters from real hosted QA providers. Production is excluded throughout.
 
 ## BUG-001 — QA launcher can inherit production integration configuration
 
@@ -288,3 +279,21 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Fix: confirm successful enrollment without inventing an XP number and refresh the saved profile. Enrollment remains server-authoritative.
 - Validation: build, configured lint and explicit type-check pass. Actual QA browser enrollment displays the corrected confirmation, records the database XP delta, then completes real Drive video, Arabic/English quiz and Python grading, persists 100% completion and one automatic certificate, and downloads a real PDF. Evidence: runs/QA_TEST_actual_course_after_03 and BUG-029 gate logs.
 - Status: Fixed and verified against isolated QA; no production write.
+
+## BUG-030 — Footer overlaps long page content and blocks administrator actions
+
+- Severity: High. Layer: application layout / interaction regression.
+- Reproduce: the 498-case complete run ends with 496 passes and two real click failures: Settings save and mobile Gallery delete. The footer/header/floating control intercept clicks. Six focused EN/AR geometry cases reproduce the footer starting at y=397 while the save button extends to y=868.
+- Cause: the route wrapper's h-full resolves against the main area's reserved minimum height instead of growing with long content, while flex shrinking permits content to overflow into the footer.
+- Fix: let the route wrapper use its natural height and prevent main from shrinking; keep the loading minimum height that solved CLS. No branding or page content is changed.
+- Validation: build, configured lint and explicit type-check pass. Six EN/AR geometry-and-save/delete cases and all six original Gallery/Content/Settings regressions pass at 1440/768/375. Evidence: BUG-030-flow-before/after, BUG-030-related-after and their logs. The complete current-source rerun and loading-layout regression remain separate final gates.
+- Status: Fixed and validated. The complete current-source browser rerun passed 504/504; the six focused geometry/save/delete checks also passed.
+
+## BUG-031 — Form responses accept nonexistent or empty attachment references
+
+- Severity: High. Layer: form submission / Storage integrity.
+- Reproduce: isolated SQL and actual Supabase QA accept a response referencing a nonexistent file, accept an existing zero-byte file, and store a forged client size of 999 for a real 48-byte upload. Private download/overwrite policies still work; the flaw is submission integrity.
+- Fix: validate the matching private Storage object's existence, allowed MIME metadata and nonzero size up to 10 MiB under a share lock. Store the size from Storage rather than trusting the response JSON. Preserve existing answers and grants. The owner approved local and QA application only.
+- Evidence: BUG-031-attachment-before.json, BUG-031-hosted-before-02.json, BUG-031-candidate-02.json, BUG-031-hosted-after.json. The first candidate had a SQL CASE-parenthesis syntax error; the corrected isolated replay passes all eight cases. The first hosted attempt failed sandbox DNS before creating any fixtures; its retry used the approved QA network target.
+- Validation: eight isolated SQL cases and ten actual Storage/REST checks pass, including exact Arabic UTF-8 bytes, administrator signed read, visitor/member read/sign/overwrite denial, missing/empty rejection and canonical size. Build, configured lint and explicit type-check pass with QA variables after retrying a sandbox EPERM failure. Advisor findings are retained in BUG-031-advisors.json; there is no zero-advisor or antivirus claim.
+- Status: Approved fix verified in isolated QA and committed as `58bcf90` (`fix(BUG-031): validate stored form attachments`). The canonical migration passed 8/8 local SQL cases; hosted QA passed 10/10 attachment checks; the complete current-source browser rerun passed 504/504.

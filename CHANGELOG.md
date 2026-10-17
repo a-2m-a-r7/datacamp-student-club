@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## Unreleased — final audit branch, 2026-10-16
+## Unreleased — final audit branch, 2026-10-17
 
 - Added accessible drop/click/keyboard file selection for lesson videos, materials and subtitles, retaining resumable uploads and existing server validation.
 - Organized course catalog and enrolled-course cards with consistent covers, readable titles, saved progress and clear actions. Missing media uses neutral graphics.
+- Fixed persisted-role and legacy user/RPC authorization, clean-install grants/RLS and Realtime setup through separately approved migrations.
+- Fixed live Gemini model selection, owner-authorized Sheets creation, serialized canonical Sheets resync, generated lesson save states, quiz code formatting, saved file sizes, stdin, enrollment confirmation and long-page footer overlap.
+- Validated real isolated QA providers: Supabase Auth/Storage/Realtime, Drive chunk resume/read-back, bilingual Gemini output, Sheets schema/retry synchronization, learning completion and one automatically issued downloadable certificate. Attachment integrity now rejects nonexistent/empty references and uses Storage size. Exact scope and remaining external limits are in the audit results; production was excluded.
 - These changes are local and have not been pushed or deployed. Detailed test evidence and external-service limitations are recorded in `qa-audit/final/COURSE-UI.md` and the final audit ledger. Historical release claims below are not verification of this branch.
 
 ## [1.0.0] - 2026-10-11

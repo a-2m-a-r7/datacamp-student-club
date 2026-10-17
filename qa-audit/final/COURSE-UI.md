@@ -1,5 +1,7 @@
 # Requested course upload and presentation update — 2026-10-16
 
+Current verification (17 October): actual QA Drive upload/hash/read-back succeeded for synthetic video, material and captions. A learner completed the generated bilingual quiz and Python exercise, persisted full completion/one certificate and downloaded PDF. Real saved-size UI checks passed in six language/width cases. These complement the local adapter tests below. Actual synthetic video transfer was 47,808,659 bytes; 2 GiB remains a declared-size boundary test. See RESULTS-20261017.md for current-source status and limits.
+
 The owner explicitly requested a drop area that also opens the file picker and a more professional course presentation. This is an authorized feature/layout change on the local `tester-final` branch, awaiting final-report approval before any publication.
 
 - Video, material and subtitle areas accept one dropped file or mouse/keyboard selection. Busy/disconnected states disable selection; file picker cancellation leaves the existing lesson intact. The existing chunked/resumable service still owns uploads and persistence.
