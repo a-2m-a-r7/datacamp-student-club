@@ -1,0 +1,665 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/target-local.config.ts",
+      "media-apply-state.spec.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\target-local.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-025-apply-before/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "1440",
+        "name": "1440",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-025-apply-before/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "768",
+        "name": "768",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-025-apply-before/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "375",
+        "name": "375",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "1440",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3302",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "1440"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "768",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3302",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 768,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "768"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "375",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3302",
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          },
+          "viewport": {
+            "width": 375,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "375"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "media-apply-state.spec.ts",
+      "file": "media-apply-state.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3616,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                      "column": 90,
+                      "line": 15
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 13 |\u001b[39m  \u001b[36mtry\u001b[39m{\n \u001b[90m 14 |\u001b[39m   \u001b[36mawait\u001b[39m apply\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(()\u001b[33m=>\u001b[39mcalls)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(apply)\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 15 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'progressbar'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Course upload progress'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 16 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'إيقاف مؤقت'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'Pause'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_applying_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 18 |\u001b[39m  }\u001b[36mfinally\u001b[39m{release()\u001b[33m;\u001b[39m\u001b[36mif\u001b[39m(calls)\u001b[36mawait\u001b[39m finished\u001b[33m;\u001b[39m}\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                        "column": 90,
+                        "line": 15
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n\n  13 |  try{\n  14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();\n> 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});\n     |                                                                                          ^\n  16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});\n  17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});\n  18 |  }finally{release();if(calls)await finished;}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:45:09.820Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-1440\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-1440\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-1440\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                    "column": 90,
+                    "line": 15
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-d160555b4ec9cfa060e3",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "1440",
+              "projectName": "1440",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3897,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                      "column": 90,
+                      "line": 15
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 13 |\u001b[39m  \u001b[36mtry\u001b[39m{\n \u001b[90m 14 |\u001b[39m   \u001b[36mawait\u001b[39m apply\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(()\u001b[33m=>\u001b[39mcalls)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(apply)\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 15 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'progressbar'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Course upload progress'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 16 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'إيقاف مؤقت'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'Pause'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_applying_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 18 |\u001b[39m  }\u001b[36mfinally\u001b[39m{release()\u001b[33m;\u001b[39m\u001b[36mif\u001b[39m(calls)\u001b[36mawait\u001b[39m finished\u001b[33m;\u001b[39m}\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                        "column": 90,
+                        "line": 15
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n\n  13 |  try{\n  14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();\n> 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});\n     |                                                                                          ^\n  16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});\n  17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});\n  18 |  }finally{release();if(calls)await finished;}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:45:14.037Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-1440\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-1440\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-1440\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                    "column": 90,
+                    "line": 15
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-cdac528c113ed953b511",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3602,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                      "column": 90,
+                      "line": 15
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 13 |\u001b[39m  \u001b[36mtry\u001b[39m{\n \u001b[90m 14 |\u001b[39m   \u001b[36mawait\u001b[39m apply\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(()\u001b[33m=>\u001b[39mcalls)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(apply)\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 15 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'progressbar'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Course upload progress'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 16 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'إيقاف مؤقت'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'Pause'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_applying_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 18 |\u001b[39m  }\u001b[36mfinally\u001b[39m{release()\u001b[33m;\u001b[39m\u001b[36mif\u001b[39m(calls)\u001b[36mawait\u001b[39m finished\u001b[33m;\u001b[39m}\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                        "column": 90,
+                        "line": 15
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n\n  13 |  try{\n  14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();\n> 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});\n     |                                                                                          ^\n  16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});\n  17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});\n  18 |  }finally{release();if(calls)await finished;}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:45:18.576Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-768\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-768\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-768\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                    "column": 90,
+                    "line": 15
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-9f3ea2b8b77d05031351",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "768",
+              "projectName": "768",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3746,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                      "column": 90,
+                      "line": 15
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 13 |\u001b[39m  \u001b[36mtry\u001b[39m{\n \u001b[90m 14 |\u001b[39m   \u001b[36mawait\u001b[39m apply\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(()\u001b[33m=>\u001b[39mcalls)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(apply)\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 15 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'progressbar'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Course upload progress'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 16 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'إيقاف مؤقت'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'Pause'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_applying_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 18 |\u001b[39m  }\u001b[36mfinally\u001b[39m{release()\u001b[33m;\u001b[39m\u001b[36mif\u001b[39m(calls)\u001b[36mawait\u001b[39m finished\u001b[33m;\u001b[39m}\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                        "column": 90,
+                        "line": 15
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n\n  13 |  try{\n  14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();\n> 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});\n     |                                                                                          ^\n  16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});\n  17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});\n  18 |  }finally{release();if(calls)await finished;}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:45:23.135Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-768\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-768\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-768\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                    "column": 90,
+                    "line": 15
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-24cf6476a904d4c6216b",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state en",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3624,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                      "column": 90,
+                      "line": 15
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 13 |\u001b[39m  \u001b[36mtry\u001b[39m{\n \u001b[90m 14 |\u001b[39m   \u001b[36mawait\u001b[39m apply\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(()\u001b[33m=>\u001b[39mcalls)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(apply)\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 15 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'progressbar'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Course upload progress'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 16 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'إيقاف مؤقت'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'Pause'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_applying_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 18 |\u001b[39m  }\u001b[36mfinally\u001b[39m{release()\u001b[33m;\u001b[39m\u001b[36mif\u001b[39m(calls)\u001b[36mawait\u001b[39m finished\u001b[33m;\u001b[39m}\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                        "column": 90,
+                        "line": 15
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n\n  13 |  try{\n  14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();\n> 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});\n     |                                                                                          ^\n  16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});\n  17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});\n  18 |  }finally{release();if(calls)await finished;}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:45:27.561Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-375\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-7ea46-oncancellable-save-state-en-375\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                    "column": 90,
+                    "line": 15
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-7e6967ea6a920f48dad8",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        },
+        {
+          "title": "applying a reviewed plan has an honest noncancellable save state ar",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "375",
+              "projectName": "375",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3596,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90",
+                    "location": {
+                      "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                      "column": 90,
+                      "line": 15
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 13 |\u001b[39m  \u001b[36mtry\u001b[39m{\n \u001b[90m 14 |\u001b[39m   \u001b[36mawait\u001b[39m apply\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(()\u001b[33m=>\u001b[39mcalls)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(apply)\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 15 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'progressbar'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Course upload progress'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 16 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39mlanguage\u001b[33m===\u001b[39m\u001b[32m'ar'\u001b[39m\u001b[33m?\u001b[39m\u001b[32m'إيقاف مؤقت'\u001b[39m\u001b[33m:\u001b[39m\u001b[32m'Pause'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m{timeout\u001b[33m:\u001b[39m\u001b[35m700\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({path\u001b[33m:\u001b[39mtest\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39moutputPath(\u001b[32m'QA_TEST_applying_'\u001b[39m\u001b[33m+\u001b[39mlanguage\u001b[33m+\u001b[39m\u001b[32m'.png'\u001b[39m)})\u001b[33m;\u001b[39m\n \u001b[90m 18 |\u001b[39m  }\u001b[36mfinally\u001b[39m{release()\u001b[33m;\u001b[39m\u001b[36mif\u001b[39m(calls)\u001b[36mawait\u001b[39m finished\u001b[33m;\u001b[39m}\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                        "column": 90,
+                        "line": 15
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  700ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })\u001b[22m\n\u001b[2m    8 × locator resolved to 1 element\u001b[22m\n\u001b[2m      - unexpected value \"1\"\u001b[22m\n\n\n  13 |  try{\n  14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();\n> 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});\n     |                                                                                          ^\n  16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});\n  17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});\n  18 |  }finally{release();if(calls)await finished;}\n    at C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts:15:90"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-17T06:45:31.894Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-375\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-375\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-025-apply-before\\artifacts\\media-apply-state-applying-edeba-oncancellable-save-state-ar-375\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\tests\\media-apply-state.spec.ts",
+                    "column": 90,
+                    "line": 15
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f9d9f5ae0f3caa994bc1-5422320bfb501d1b627d",
+          "file": "media-apply-state.spec.ts",
+          "line": 3,
+          "column": 44
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-17T06:45:09.423Z",
+    "duration": 26978.921,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

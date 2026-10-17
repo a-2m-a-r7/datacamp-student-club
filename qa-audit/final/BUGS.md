@@ -201,6 +201,14 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: append/retry/concurrent/resync scenarios are separate remaining provider tests; this entry proves creation and header read-back only.
 - Status: Fixed and verified with the isolated Google/Supabase QA services; production excluded.
 
+## BUG-025 — Applying a reviewed learning plan shows an ineffective Pause button
+
+- Severity: Medium. Layer: frontend lesson administration.
+- Reproduce: apply a reviewed AI plan; the editor displays upload progress at 0% and Pause even though the save operation has no upload controller to pause. Six before cases reproduce this in EN/AR at three widths.
+- Fix: distinguish the noncancellable save from an upload, show a saving status and disable repeat submission without displaying upload progress or Pause.
+- Validation: build, configured lint and explicit type-check passed. All 30 related browser cases pass: plan save state, real isolated SQL creation of two derived lessons, stdin grading and upload/card regressions in both languages at 1440/768/375. Evidence: BUG-025-apply-after.txt, runs/BUG-025-apply-after. No real provider inference is mocked as a pass here.
+- Status: Fixed and verified locally; production excluded.
+
 ## BUG-018 — Empty course and footer headings skip levels
 
 - Severity: Low. Layer: frontend accessibility.

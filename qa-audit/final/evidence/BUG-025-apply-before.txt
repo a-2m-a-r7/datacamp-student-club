@@ -1,0 +1,252 @@
+
+Running 6 tests using 1 worker
+
+  x  1 [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (3.6s)
+  x  2 [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (3.9s)
+  x  3 [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (3.6s)
+  x  4 [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (3.7s)
+  x  5 [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en (3.6s)
+  x  6 [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar (3.6s)
+
+
+  1) [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  700ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms
+      - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })
+        8 × locator resolved to 1 element
+          - unexpected value "1"
+
+
+      13 |  try{
+      14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();
+    > 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});
+         |                                                                                          ^
+      16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});
+      17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});
+      18 |  }finally{release();if(calls)await finished;}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-apply-state.spec.ts:15:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  700ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms
+      - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })
+        8 × locator resolved to 1 element
+          - unexpected value "1"
+
+
+      13 |  try{
+      14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();
+    > 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});
+         |                                                                                          ^
+      16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});
+      17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});
+      18 |  }finally{release();if(calls)await finished;}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-apply-state.spec.ts:15:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-1440\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-1440\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-1440\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  700ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms
+      - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })
+        8 × locator resolved to 1 element
+          - unexpected value "1"
+
+
+      13 |  try{
+      14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();
+    > 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});
+         |                                                                                          ^
+      16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});
+      17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});
+      18 |  }finally{release();if(calls)await finished;}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-apply-state.spec.ts:15:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  700ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms
+      - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })
+        8 × locator resolved to 1 element
+          - unexpected value "1"
+
+
+      13 |  try{
+      14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();
+    > 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});
+         |                                                                                          ^
+      16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});
+      17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});
+      18 |  }finally{release();if(calls)await finished;}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-apply-state.spec.ts:15:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-768\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-768\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-768\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  700ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms
+      - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })
+        8 × locator resolved to 1 element
+          - unexpected value "1"
+
+
+      13 |  try{
+      14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();
+    > 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});
+         |                                                                                          ^
+      16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});
+      17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});
+      18 |  }finally{release();if(calls)await finished;}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-apply-state.spec.ts:15:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-7ea46-oncancellable-save-state-en-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('progressbar', { name: 'Course upload progress', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  700ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('progressbar', { name: 'Course upload progress', exact: true }) with timeout 700ms
+      - waiting for getByRole('progressbar', { name: 'Course upload progress', exact: true })
+        8 × locator resolved to 1 element
+          - unexpected value "1"
+
+
+      13 |  try{
+      14 |   await apply.click();await expect.poll(()=>calls).toBe(1);await expect(apply).toBeDisabled();
+    > 15 |   await expect(page.getByRole('progressbar',{name:'Course upload progress',exact:true})).toHaveCount(0,{timeout:700});
+         |                                                                                          ^
+      16 |   await expect(page.getByRole('button',{name:language==='ar'?'إيقاف مؤقت':'Pause',exact:true})).toHaveCount(0,{timeout:700});
+      17 |   await page.screenshot({path:test.info().outputPath('QA_TEST_applying_'+language+'.png')});
+      18 |  }finally{release();if(calls)await finished;}
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\tests\media-apply-state.spec.ts:15:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-375\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-375\trace.zip
+    Usage:
+
+        npx playwright show-trace qa-audit\final\evidence\runs\BUG-025-apply-before\artifacts\media-apply-state-applying-edeba-oncancellable-save-state-ar-375\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en 
+    [1440] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar 
+    [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en 
+    [768] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar 
+    [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state en 
+    [375] › qa-audit\final\tests\media-apply-state.spec.ts:3:44 › applying a reviewed plan has an honest noncancellable save state ar 
