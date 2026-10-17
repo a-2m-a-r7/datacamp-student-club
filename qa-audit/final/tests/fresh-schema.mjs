@@ -11,7 +11,7 @@ try{
  const source=fs.readFileSync('qa-audit/final/tests/full-schema-security.mjs','utf8');const bootstrap=source.match(/^const bootstrap = `([\s\S]*?)`;/m)?.[1];if(!bootstrap||bootstrap.includes('${'))throw Error('Platform bootstrap missing');await db.exec(bootstrap);
  for(const file of fs.readdirSync('supabase/migrations').filter(f=>/^\d{14}_.+\.sql$/.test(f)&&f>='20261013000000').sort()){await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));report.migrations.push(file);}
  const tables=(await db.query("SELECT c.relname AS name,c.relrowsecurity AS rls FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relkind='r' ORDER BY c.relname")).rows;
- check('FRESH-33-TABLES-ALL-RLS',tables.length===33&&tables.every(t=>t.rls),{count:tables.length,withoutRls:tables.filter(t=>!t.rls).map(t=>t.name)});
+ check('FRESH-34-TABLES-ALL-RLS',tables.length===34&&tables.every(t=>t.rls),{count:tables.length,withoutRls:tables.filter(t=>!t.rls).map(t=>t.name)});
  const published=(await db.query("SELECT tablename FROM pg_publication_tables WHERE pubname='supabase_realtime' AND schemaname='public' ORDER BY tablename")).rows.map(r=>r.tablename);
  check('FRESH-REALTIME-SUBSCRIPTION-TABLES',published.length===16&&['profiles','notifications','notification_reads','form_responses','points_log','user_achievements'].every(t=>published.includes(t)),{published});
  const a=randomUUID(),b=randomUUID();

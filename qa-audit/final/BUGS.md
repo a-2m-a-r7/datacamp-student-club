@@ -201,6 +201,16 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: append/retry/concurrent/resync scenarios are separate remaining provider tests; this entry proves creation and header read-back only.
 - Status: Fixed and verified with the isolated Google/Supabase QA services; production excluded.
 
+## BUG-024 — Google Sheets retries duplicate responses and retain removed columns
+
+- Severity: High. Layer: real external sync / concurrent writes.
+- Reproduce: actual QA Sheet contains the same response twice after retry; removing 26 questions leaves 32 header cells instead of 6 because the old clear range ends at Z.
+- Fix: an explicitly approved server-only RLS job table and two SECURITY INVOKER RPCs serialize/coalesce requests per form. Sync replaces canonical saved rows and headers in one atomic Google batch, paginates database reads, keeps values as literal strings and reports queued requests honestly. Provider errors return a bounded generic message, never a credential-bearing request object. Failed/unfinished jobs retain pending work for the next retry/Resync all. The API runtime is bounded to 120 seconds and ownership leases to five minutes.
+- Validation: 19 isolated SQL coordination/ACL cases; fresh chain has 34 RLS tables and 16 Realtime tables; 816 CRUD probes pass using source grants only; four API boundary contracts pass. Actual Google tests pass: repeat response, 8 parallel callers, add/remove header, clear columns beyond Z, injected provider failure/retry and all 1003 persisted response IDs. QA grants deny anon/authenticated and do not publish the job table to Realtime. Build, configured lint and explicit type-check pass.
+- Evidence: BUG-024-coordination-local.json, BUG-024-sheets-after.json, BUG-024-table-crud.txt, BUG-024-fresh-schema.txt, BUG-024-api-contracts.txt and BUG-024 gate logs.
+- Limits: user approved migration locally and in Supabase QA only. No production application or 1000 simultaneous hosted-user claim. An interrupted request may need Resync all after lease expiry; no unapproved scheduler was introduced.
+- Status: Fixed and verified in local/real isolated QA.
+
 ## BUG-029 — Enrollment promises a different XP award from the saved result
 
 - Severity: Medium. Layer: course enrollment / profile data.

@@ -93,6 +93,7 @@ export const FormResponses: React.FC = () => {
  if (!form || isResyncing) return; setIsResyncing(true);
  try {
   const data = await authenticatedPost('/api/forms/sync-sheet', { formId: form.id, resyncAll: true });
+  if (data.pending) { toast.info(isArabic ? 'المزامنة جارية. أعد المزامنة إذا ظلت معلقة.' : 'Sync queued. Retry Resync all if it remains pending.'); return; }
   if (!data.spreadsheetUrl) throw new Error('Sync returned no spreadsheet');
   setForm(prev => prev ? { ...prev, spreadsheet_url: data.spreadsheetUrl, spreadsheet_id: data.spreadsheetId } : null);
   toast.success(isArabic ? 'تمت المزامنة' : 'Google Sheets synced');

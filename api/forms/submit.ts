@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import syncSheet, { internalSubmissionSync } from './sync-sheet.js';
+export const config={maxDuration:120};
 
 export default async function handler(req: any, res: any) {
   res.setHeader('Cache-Control', 'no-store');
@@ -27,7 +28,7 @@ export default async function handler(req: any, res: any) {
       ((process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) ||
        (process.env.GOOGLE_DRIVE_CLIENT_ID && process.env.GOOGLE_DRIVE_CLIENT_SECRET))) {
       const sink = { code: 200, setHeader() {}, status(code: number) { this.code = code; return this; }, json(result: any) {
-        syncStatus = this.code < 300 && result.success ? 'synced' : 'failed'; return result;
+        syncStatus = this.code < 300 && result.success ? (result.pending ? 'pending' : 'synced') : 'failed'; return result;
       } };
       try {
         await syncSheet({ method: 'POST', body: { formId, responseId: data.response_id }, [internalSubmissionSync]: true }, sink);

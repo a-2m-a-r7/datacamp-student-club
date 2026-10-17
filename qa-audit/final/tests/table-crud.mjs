@@ -41,7 +41,7 @@ async function probe(table,row,actor,operation,pk){
 }
 const publicRead=new Set(['courses','lessons','blog','gallery','forms','form_questions','course_modules']);
 const ownRead=new Set(['profiles','users','auth_events','enrollments','notifications','points_log','user_achievements','certificates','notification_reads','lesson_watch_progress','projects','course_assets']);
-const noAdmin=new Set(['member_cards','course_request_windows','course_drive_connections','course_upload_jobs','lesson_analysis_jobs','notification_reads','lesson_watch_progress']);
+const noAdmin=new Set(['member_cards','course_request_windows','course_drive_connections','course_upload_jobs','lesson_analysis_jobs','notification_reads','lesson_watch_progress','form_sheet_sync_jobs']);
 function allowed(table,actor,own,op){
  // The compatibility users mirror has no direct INSERT policy, including for
  // admins. Auth/profile triggers create it; preserving that denial is intended.
@@ -81,6 +81,7 @@ try{
   await put('user_achievements',{user_id:user,badge_id:title,badge_name:title},index);
   await put('certificates',{user_id:user,user_full_name:title,type:'achievement',verification_code:title},index);
   const form=await put('forms',{title,slug:'qa-test-crud-'+index,status:'published',created_by:user},index);
+  await put('form_sheet_sync_jobs',{form_id:form.id},index);
   const question=await put('form_questions',{form_id:form.id,title,type:'short_text'},index);
   const response=await put('form_responses',{form_id:form.id,respondent_id:user},index);
   await put('form_answers',{response_id:response.id,question_id:question.id,value:title},index);

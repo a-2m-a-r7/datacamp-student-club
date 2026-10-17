@@ -1,0 +1,113 @@
+{
+  "target": "kcqgnkfdpfibwkrghubl",
+  "checkedAt": "2026-10-17T06:56:39.228Z",
+  "cases": [
+    {
+      "name": "resync existing response set",
+      "passed": true,
+      "actual": 200
+    },
+    {
+      "name": "removed columns beyond Z cleared",
+      "passed": true,
+      "actual": 6
+    },
+    {
+      "name": "retry same response",
+      "passed": true,
+      "actual": 200
+    },
+    {
+      "name": "exact IDs without duplicates",
+      "passed": true,
+      "actual": [
+        "012d40ee-8091-44c2-a4ec-942380f65336",
+        "b59c7ff6-dc96-4ab0-a825-c66f3e009657"
+      ]
+    },
+    {
+      "name": "new question sync",
+      "passed": true,
+      "actual": 200
+    },
+    {
+      "name": "header follows current schema",
+      "passed": true,
+      "actual": "QA_TEST_After_Header_العربية"
+    },
+    {
+      "name": "8 callers return synced or honestly queued",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "name": "at least one caller finishes actual write",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "name": "final retry finishes any queued work",
+      "passed": true,
+      "actual": 200
+    },
+    {
+      "name": "parallel requests preserve unique response IDs",
+      "passed": true,
+      "actual": [
+        "012d40ee-8091-44c2-a4ec-942380f65336",
+        "b59c7ff6-dc96-4ab0-a825-c66f3e009657"
+      ]
+    },
+    {
+      "name": "deleted question column disappears",
+      "passed": true,
+      "actual": 6
+    },
+    {
+      "name": "provider failure is bounded and explicit",
+      "passed": true,
+      "actual": 502
+    },
+    {
+      "name": "failure response is generic and credential-free",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "name": "retry after provider failure succeeds",
+      "passed": true,
+      "actual": 200
+    },
+    {
+      "name": "sync crosses PostgREST 1000 row limit",
+      "passed": true,
+      "actual": 200
+    },
+    {
+      "name": "all 1000+ rows have exact unique IDs",
+      "passed": true,
+      "actual": 1003
+    },
+    {
+      "name": "last page response is present",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "name": "durable job catches up and releases owner",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "name": "anonymous table read denied",
+      "passed": true,
+      "actual": true
+    },
+    {
+      "name": "anonymous queue RPC denied",
+      "passed": true,
+      "actual": true
+    }
+  ],
+  "limits": "Actual synthetic QA Sheet and HTTP; 8 parallel callers and >1000 saved responses, not 1000 simultaneous site users."
+}

@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-10-17T06:37:25.761Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "http": 200,
+  "success": true,
+  "expectedColumns": 6,
+  "actualColumns": 32,
+  "staleHeader": "QA_TEST_Column_28",
+  "passed": false
+}
