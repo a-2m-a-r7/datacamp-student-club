@@ -1,0 +1,11 @@
+
+Running 6 tests using 1 worker
+
+  ok 1 [1440] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults en (2.9s)
+  ok 2 [1440] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults ar (4.6s)
+  ok 3 [768] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults en (2.8s)
+  ok 4 [768] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults ar (4.1s)
+  ok 5 [375] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults en (2.2s)
+  ok 6 [375] › qa-audit\final\tests\exercise-stdin.spec.ts:3:44 › manual input runs independently of grading and reset restores defaults ar (2.7s)
+
+  6 passed (21.8s)

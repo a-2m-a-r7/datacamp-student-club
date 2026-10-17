@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
+import {useLanguage} from '../../contexts/LanguageContext';
 import { TestCase } from '../../lib/pythonRunner';
 import { getLanguage, LanguageDefinition } from '../../lib/universalRunner';
 import { Button } from '../ui/Button';
@@ -38,6 +39,9 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
   onAskAI,
 }) => {
   const activeLang: LanguageDefinition = getLanguage(language);
+  const {isArabic} = useLanguage();
+  const stdinId = useId();
+  const [stdin, setStdin] = useState(testCases[0]?.input || '');
   const [code, setCode] = useState(starterCode);
   const [output, setOutput] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +56,7 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
     setIsRunning(true);
     setError(null);
     try {
-      const res = await activeLang.run(code);
+      const res = await activeLang.run(code, stdin);
       setOutput(res.output);
       setError(res.error || null);
       setExecutionTime(res.executionTimeMs);
@@ -87,6 +91,7 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
   const handleReset = () => {
     if(isRunning||isVerifying)return;
     setCode(starterCode);
+    setStdin(testCases[0]?.input || '');
     setOutput('');
     setError(null);
     setTestResults(null);
@@ -153,6 +158,16 @@ export const CodeExerciseRunner: React.FC<CodeExerciseRunnerProps> = ({
               placeholder="# Write your Python solution here..."
             />
           </div>
+          <label htmlFor={stdinId} className="block text-[11px] text-muted-foreground">
+            {isArabic ? 'المدخلات القياسية (stdin)' : 'Standard input (stdin)'}
+          </label>
+          <textarea id={stdinId} aria-label="Standard input (stdin)" value={stdin}
+            onChange={event => setStdin(event.target.value)} disabled={isRunning || isVerifying}
+            rows={3} maxLength={10000} spellCheck={false} dir="ltr"
+            className="w-full rounded-xl border border-white/15 bg-black/60 p-3 font-mono text-xs" />
+          <p className="text-[11px] text-muted-foreground">
+            {isArabic ? 'يستخدم التشغيل هذه المدخلات، بينما يختبر تسليم الحل جميع حالات المدرّس.' : 'Run uses this input. Submit checks all instructor test cases.'}
+          </p>
         </div>
 
         {/* Terminal Output */}

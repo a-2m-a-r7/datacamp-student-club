@@ -1,0 +1,39 @@
+
+Running 1 test using 1 worker
+
+(node:16724) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 qa-audit\final\provider-browser\actual-course.spec.ts:14:1 › actual Drive video, bilingual Gemini quiz, Python practice and certificate (1.8m)
+
+
+  1) qa-audit\final\provider-browser\actual-course.spec.ts:14:1 › actual Drive video, bilingual Gemini quiz, Python practice and certificate 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('main pre').filter({ hasText: /^14\s*$/ })
+    Expected: visible
+    Timeout: 90000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('main pre').filter({ hasText: /^14\s*$/ }) with timeout 90000ms
+      - waiting for locator('main pre').filter({ hasText: /^14\s*$/ })
+
+
+      39 |   const code=page.locator('main textarea').first();await expect(code).toHaveValue(analysis.plan.exercise.starterCode);await code.fill(analysis.plan.exercise.solution);
+      40 |   await page.getByRole('button',{name:'RUN_CODE',exact:true}).click();
+    > 41 |   await expect(page.locator('main pre').filter({hasText:/^14\s*$/})).toBeVisible({timeout:90000});notes.manualRunMatchesInput=true;
+         |                                                                      ^
+      42 |   await page.getByRole('button',{name:'SUBMIT_SOLUTION',exact:true}).click();await expect(page.getByRole('button',{name:'CHALLENGE_SOLVED',exact:true})).toBeVisible({timeout:90000});
+      43 |   const enrollment=await server.from('enrollments').select('is_completed,progress_percent,quiz_scores').eq('user_id',student.id).eq('course_id',fixture.courseId).single();expect(enrollment.error).toBeNull();expect(enrollment.data!.is_completed).toBe(true);expect(Number(enrollment.data!.progress_percent)).toBe(100);notes.completionPersisted=true;
+      44 |   const cert=await server.from('certificates').select('id').eq('user_id',student.id).eq('course_id',fixture.courseId);expect(cert.error).toBeNull();expect(cert.data).toHaveLength(1);notes.automaticCertificatePersisted=true;
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\provider-browser\actual-course.spec.ts:41:70
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\QA_TEST_actual_course_before_02\artifacts\actual-course-actual-Drive-e0f84-on-practice-and-certificate\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\QA_TEST_actual_course_before_02\artifacts\actual-course-actual-Drive-e0f84-on-practice-and-certificate\error-context.md
+
+  1 failed
+    qa-audit\final\provider-browser\actual-course.spec.ts:14:1 › actual Drive video, bilingual Gemini quiz, Python practice and certificate 

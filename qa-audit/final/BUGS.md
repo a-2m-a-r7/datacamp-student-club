@@ -182,6 +182,15 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Evidence: runs/BUG-023-loading-before, runs/BUG-023-loading-after and runs/BUG-023-lighthouse-after.
 - Status: Fixed and validated locally; no schema change or deployment.
 
+## BUG-028 — Embedded Run Code discards standard input
+
+- Severity: High. Layer: course coding runner.
+- Reproduce: the actual Gemini Python exercise calls input(). A real QA learner plays the Drive video, passes the bilingual quiz and opens Coding. Run Code invokes the language runner with no input; the correct solution raises ValueError from an empty input instead of printing 14. The enrollment correctly remains at 67%.
+- Evidence: runs/QA_TEST_actual_course_before_02 includes the actual video/quiz screenshots, terminal failure and persisted-state observations. The preceding run's 36s duration expectation was a QA fixture-oracle error; FFmpeg confirms the existing test video is 48s.
+- Fix: add an editable, labelled stdin field initialized from the instructor's first case; Run uses it, Reset restores it, and Submit continues to grade all configured cases independently.
+- Validation: all six EN/AR × 1440/768/375 browser/SQL regressions pass. Manual input 7 produces 14 without completing the lesson; reset restores input 3; Submit grades inputs 3 and 4, persists completion and automatically issues one certificate. Build/lint/explicit type-check pass. The actual Python provider flow remains a separate final gate.
+- Status: Fixed and validated locally; no database schema change.
+
 ## BUG-021 — Automatic Sheets creation fails with a consumer service-account setup
 
 - Severity: High. Layer: Google Sheets integration / setup compatibility.
