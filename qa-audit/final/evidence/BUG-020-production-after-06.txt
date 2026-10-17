@@ -1,0 +1,10 @@
+
+Running 3 tests using 1 worker
+
+(node:31640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 qa-audit\final\production-tests\lazy-features.spec.ts:21:1 › public pages defer PDF and chart packages (1.9s)
+  ok 2 qa-audit\final\production-tests\lazy-features.spec.ts:30:1 › administrator loads real growth data and renders lazy chart (5.8s)
+  ok 3 qa-audit\final\production-tests\lazy-features.spec.ts:39:1 › member downloads genuine PDF from automatically issued QA certificate (4.8s)
+
+  3 passed (13.7s)

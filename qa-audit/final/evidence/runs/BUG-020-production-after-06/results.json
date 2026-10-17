@@ -1,0 +1,231 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "qa-audit/final/production.config.ts"
+    ],
+    "configFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production.config.ts",
+    "rootDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/production-tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/evidence/runs/BUG-020-production-after-06/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/AMMAR/OneDrive/Desktop/data camp/داتا كامب الاربع/ref_datacamp_temp/qa-audit/final/production-tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-06\\artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests",
+        "snapshotDir": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\production-tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3301",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "trace": "off",
+          "video": "off",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "args": [
+              "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost, EXCLUDE kcqgnkfdpfibwkrghubl.supabase.co, EXCLUDE cdn.jsdelivr.net, EXCLUDE fonts.googleapis.com, EXCLUDE fonts.gstatic.com"
+            ]
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\AMMAR\\OneDrive\\Desktop\\data camp\\داتا كامب الاربع\\ref_datacamp_temp\\qa-audit\\final\\evidence\\runs\\BUG-020-production-after-06\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "lazy-features.spec.ts",
+      "file": "lazy-features.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "public pages defer PDF and chart packages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1855,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T21:25:00.126Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "loaded-scripts",
+                      "contentType": "application/json",
+                      "body": "WwogICIvYXNzZXRzL2luZGV4LUM0VjhSRkpxLmpzIiwKICAiL2Fzc2V0cy92ZW5kb3ItcnVudGltZS1EZFBNeWFfbi5qcyIsCiAgIi9hc3NldHMvdmVuZG9yLXJlYWN0LUJmRVNSUF9HLmpzIiwKICAiL2Fzc2V0cy92ZW5kb3Itc3VwYWJhc2UtQjEyczUwUl8uanMiLAogICIvYXNzZXRzL3ZlbmRvci11aS1DZTFaVFdCMi5qcyIsCiAgIi9hc3NldHMvdmVuZG9yLW1vdGlvbi1XZ1FLVmppYS5qcyIsCiAgIi9hc3NldHMvTG9naW4tRFhST3VoQV8uanMiLAogICIvYXNzZXRzL0NhcmQtQ3ItVzdXSkguanMiLAogICIvYXNzZXRzL2VtYWlsVXRpbHMtdnY5NnhRN2cuanMiLAogICIvYXNzZXRzL0dvb2dsZUFjY291bnRNb2RhbC1Dbm0xRVdoby5qcyIsCiAgIi9hc3NldHMvaW5kZXgtQzRWOFJGSnEuanMiLAogICIvYXNzZXRzL3ZlbmRvci1ydW50aW1lLURkUE15YV9uLmpzIiwKICAiL2Fzc2V0cy92ZW5kb3ItcmVhY3QtQmZFU1JQX0cuanMiLAogICIvYXNzZXRzL3ZlbmRvci1zdXBhYmFzZS1CMTJzNTBSXy5qcyIsCiAgIi9hc3NldHMvdmVuZG9yLXVpLUNlMVpUV0IyLmpzIiwKICAiL2Fzc2V0cy92ZW5kb3ItbW90aW9uLVdnUUtWamlhLmpzIiwKICAiL2Fzc2V0cy9Db3Vyc2VzLVVhWEoxanUyLmpzIiwKICAiL2Fzc2V0cy91c2VDb3Vyc2VDYXRhbG9nLVpzWFliVXVVLmpzIiwKICAiL2Fzc2V0cy9Db3Vyc2VDb3Zlci1DRmJraUNiTS5qcyIKXQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6665c6ab4be6767ae401-2a6c7ec7b983469ba711",
+          "file": "lazy-features.spec.ts",
+          "line": 21,
+          "column": 1
+        },
+        {
+          "title": "administrator loads real growth data and renders lazy chart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5794,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T21:25:02.086Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6665c6ab4be6767ae401-6924f74201f150703657",
+          "file": "lazy-features.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "member downloads genuine PDF from automatically issued QA certificate",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4756,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-16T21:25:07.891Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6665c6ab4be6767ae401-38fe50dfe4e56445873c",
+          "file": "lazy-features.spec.ts",
+          "line": 39,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-16T21:24:59.622Z",
+    "duration": 13686.770999999999,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

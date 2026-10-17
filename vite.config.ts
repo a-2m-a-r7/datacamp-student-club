@@ -58,6 +58,10 @@ export default defineConfig(({mode}) => {
         output: {
           entryFileNames: (chunk) => chunk.name === 'qa' ? 'qa-entry.js' : 'assets/[name]-[hash].js',
           manualChunks(id) {
+            // Shared helpers belong outside feature chunks: public pages also use
+            // them and must not download PDF or chart packages to obtain them.
+            if (id.includes('commonjsHelpers') || id.includes('vite/preload-helper')) return 'vendor-runtime';
+            if (id.includes('/node_modules/clsx/') || id.includes('/node_modules/tailwind-merge/')) return 'vendor-ui';
             if (id.includes('node_modules')) {
               if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
                 return 'vendor-react';

@@ -145,6 +145,16 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Validation: all six EN/AR × 1440/768/375 keyboard regressions pass, submit through the real migrated SQL and persist a response. Build, configured lint and explicit type-check passed.
 - Status: Fixed and validated locally; no schema change.
 
+## BUG-020 — Public routes eagerly download PDF and chart packages
+
+- Severity: Medium. Layer: frontend build / performance.
+- Reproduce: serve the fresh-clone production build and open Login or Courses. The entry imports Vite's preload helper from vendor-pdf and shared UI utilities from vendor-charts, fetching both feature packages before they are used.
+- Evidence: runs/QA_TEST_mobile_lighthouse_fresh_01 and the production bundle import inventory. The initial onlyExplicitManualChunks candidate produced circular chunks and failed real browser loading; it was rejected. Subsequent retained failures distinguish sandbox connectivity/setup and the one-month chart oracle from product failures.
+- Fix: assign CommonJS/Vite preload helpers to vendor-runtime and clsx/tailwind-merge to vendor-ui, retaining Rollup's normal dependency merging.
+- Validation: production-after-06 passes all three actual Chromium workflows: Login/Courses do not request PDF/chart packages, an administrator reads real hosted QA growth data and renders its month axis, and a member completes a real QA course then downloads a genuine PDF certificate. Synthetic course/certificate rows are removed in teardown. Final build, configured lint and explicit type-check pass; the final production build has no circular-chunk warnings.
+- Limits: the final 480-case regression and updated Lighthouse sample are separate remaining gates. No production deployment is claimed.
+- Status: Fixed and validated locally against the isolated QA backend.
+
 ## BUG-017 — Password visibility buttons have a 16px touch target
 
 - Severity: Medium. Layer: frontend accessibility / authentication controls.
