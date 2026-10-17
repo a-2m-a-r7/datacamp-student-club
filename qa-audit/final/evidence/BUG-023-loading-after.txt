@@ -1,0 +1,16 @@
+
+Running 9 tests using 1 worker
+
+(node:26364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 qa-audit\final\production-tests\lazy-features.spec.ts:21:1 › public pages defer PDF and chart packages (1.8s)
+  ok 2 qa-audit\final\production-tests\lazy-features.spec.ts:30:1 › administrator loads real growth data and renders lazy chart (4.3s)
+  ok 3 qa-audit\final\production-tests\lazy-features.spec.ts:39:1 › member downloads genuine PDF from automatically issued QA certificate (4.5s)
+  ok 4 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 1440 (1.0s)
+  ok 5 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 1440 (1.3s)
+  ok 6 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 768 (1.1s)
+  ok 7 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 768 (988ms)
+  ok 8 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 375 (882ms)
+  ok 9 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 375 (916ms)
+
+  9 passed (18.0s)

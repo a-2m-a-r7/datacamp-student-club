@@ -211,7 +211,7 @@ function AppContent() {
           <LanguageSwitcher variant="toggle" />
         </div>
 
-        <main className="flex-grow w-full">
+        <main className="flex-grow w-full min-h-screen">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}

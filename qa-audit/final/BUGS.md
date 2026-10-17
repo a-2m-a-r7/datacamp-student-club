@@ -173,6 +173,15 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: generated-lesson application and learner execution are separate end-to-end gates. Aliases and free quotas remain provider-managed; no billing was enabled and no production setting changed.
 - Status: Fixed and verified locally with the real isolated provider.
 
+## BUG-023 — Route loading moves the visible footer out from under the visitor
+
+- Severity: Medium. Layer: frontend loading / layout stability.
+- Reproduce: delay the Home chunk on the real production preview. The half-screen fallback places the footer around y=514 in a 900px viewport, then the loaded page moves it far below the viewport. Six EN/AR × 1440/768/375 cases reproduce it. The actual mobile sample records CLS 0.822 on Home.
+- Fix: reserve at least one viewport of main content while a route loads, preserving the loaded page's existing design and keeping the footer below the initial viewport.
+- Validation: all six loading cases plus real QA chart, public lazy bundles and PDF download regressions pass (9/9). Build/lint/explicit type-check pass. The repeated mobile Home sample no longer fails CLS, accessibility, best-practices or SEO; performance is 67 on the local uncompressed transport while other QA tasks run. This is not a production load-capacity score.
+- Evidence: runs/BUG-023-loading-before, runs/BUG-023-loading-after and runs/BUG-023-lighthouse-after.
+- Status: Fixed and validated locally; no schema change or deployment.
+
 ## BUG-021 — Automatic Sheets creation fails with a consumer service-account setup
 
 - Severity: High. Layer: Google Sheets integration / setup compatibility.

@@ -1,0 +1,162 @@
+
+Running 6 tests using 1 worker
+
+(node:10064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 1440 (4.1s)
+(node:6668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 1440 (935ms)
+(node:38700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 768 (851ms)
+(node:41280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 768 (822ms)
+(node:40172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 375 (774ms)
+(node:29552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 375 (771ms)
+
+
+  1) qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 1440 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 899
+    Received:    514
+
+       7 |  try{
+       8 |   await page.goto('/',{waitUntil:'domcontentloaded'});await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toBeVisible();
+    >  9 |   const footer=await page.getByRole('contentinfo').boundingBox();expect(footer).not.toBeNull();expect(footer!.y).toBeGreaterThanOrEqual(899);
+         |                                                                                                                  ^
+      10 |   await page.screenshot({path:test.info().outputPath('QA_TEST_loading_'+language+'_'+width+'.png')});
+      11 |  }finally{release();}
+      12 |  await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toHaveCount(0);await expect(page.getByRole('main')).toBeVisible();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\loading-layout.spec.ts:9:114
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-en-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-en-1440\error-context.md
+
+  2) qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 1440 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 899
+    Received:    514
+
+       7 |  try{
+       8 |   await page.goto('/',{waitUntil:'domcontentloaded'});await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toBeVisible();
+    >  9 |   const footer=await page.getByRole('contentinfo').boundingBox();expect(footer).not.toBeNull();expect(footer!.y).toBeGreaterThanOrEqual(899);
+         |                                                                                                                  ^
+      10 |   await page.screenshot({path:test.info().outputPath('QA_TEST_loading_'+language+'_'+width+'.png')});
+      11 |  }finally{release();}
+      12 |  await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toHaveCount(0);await expect(page.getByRole('main')).toBeVisible();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\loading-layout.spec.ts:9:114
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-ar-1440\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-ar-1440\error-context.md
+
+  3) qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 768 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 899
+    Received:    514
+
+       7 |  try{
+       8 |   await page.goto('/',{waitUntil:'domcontentloaded'});await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toBeVisible();
+    >  9 |   const footer=await page.getByRole('contentinfo').boundingBox();expect(footer).not.toBeNull();expect(footer!.y).toBeGreaterThanOrEqual(899);
+         |                                                                                                                  ^
+      10 |   await page.screenshot({path:test.info().outputPath('QA_TEST_loading_'+language+'_'+width+'.png')});
+      11 |  }finally{release();}
+      12 |  await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toHaveCount(0);await expect(page.getByRole('main')).toBeVisible();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\loading-layout.spec.ts:9:114
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-en-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-en-768\error-context.md
+
+  4) qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 768 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 899
+    Received:    514
+
+       7 |  try{
+       8 |   await page.goto('/',{waitUntil:'domcontentloaded'});await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toBeVisible();
+    >  9 |   const footer=await page.getByRole('contentinfo').boundingBox();expect(footer).not.toBeNull();expect(footer!.y).toBeGreaterThanOrEqual(899);
+         |                                                                                                                  ^
+      10 |   await page.screenshot({path:test.info().outputPath('QA_TEST_loading_'+language+'_'+width+'.png')});
+      11 |  }finally{release();}
+      12 |  await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toHaveCount(0);await expect(page.getByRole('main')).toBeVisible();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\loading-layout.spec.ts:9:114
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-ar-768\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-ar-768\error-context.md
+
+  5) qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 375 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 899
+    Received:    514
+
+       7 |  try{
+       8 |   await page.goto('/',{waitUntil:'domcontentloaded'});await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toBeVisible();
+    >  9 |   const footer=await page.getByRole('contentinfo').boundingBox();expect(footer).not.toBeNull();expect(footer!.y).toBeGreaterThanOrEqual(899);
+         |                                                                                                                  ^
+      10 |   await page.screenshot({path:test.info().outputPath('QA_TEST_loading_'+language+'_'+width+'.png')});
+      11 |  }finally{release();}
+      12 |  await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toHaveCount(0);await expect(page.getByRole('main')).toBeVisible();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\loading-layout.spec.ts:9:114
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-en-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-en-375\error-context.md
+
+  6) qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 375 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 899
+    Received:    514
+
+       7 |  try{
+       8 |   await page.goto('/',{waitUntil:'domcontentloaded'});await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toBeVisible();
+    >  9 |   const footer=await page.getByRole('contentinfo').boundingBox();expect(footer).not.toBeNull();expect(footer!.y).toBeGreaterThanOrEqual(899);
+         |                                                                                                                  ^
+      10 |   await page.screenshot({path:test.info().outputPath('QA_TEST_loading_'+language+'_'+width+'.png')});
+      11 |  }finally{release();}
+      12 |  await expect(page.getByText('SYNCING_NEURAL_INTERFACE...',{exact:true})).toHaveCount(0);await expect(page.getByRole('main')).toBeVisible();
+        at C:\Users\AMMAR\OneDrive\Desktop\data camp\داتا كامب الاربع\ref_datacamp_temp\qa-audit\final\production-tests\loading-layout.spec.ts:9:114
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-ar-375\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: qa-audit\final\evidence\runs\BUG-023-loading-before\artifacts\loading-layout-loading-route-reserves-footer-space-ar-375\error-context.md
+
+  6 failed
+    qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 1440 
+    qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 1440 
+    qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 768 
+    qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 768 
+    qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space en 375 
+    qa-audit\final\production-tests\loading-layout.spec.ts:2:69 › loading route reserves footer space ar 375 
