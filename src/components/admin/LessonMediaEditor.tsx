@@ -7,6 +7,10 @@ import {toast} from 'sonner';
 import {quizText} from '../../lib/quizLanguage';
 import {CourseFileDropzone} from './CourseFileDropzone';
 import {QuizText} from '../QuizText';
+function formatFileSize(bytes:number,isArabic:boolean){
+ const unit=bytes<1024?0:Math.min(3,Math.floor(Math.log(bytes)/Math.log(1024)));
+ return new Intl.NumberFormat(isArabic?'ar':'en',{maximumFractionDigits:unit?1:0}).format(bytes/1024**unit)+' '+['B','KiB','MiB','GiB'][unit];
+}
 export function LessonMediaEditor({lessonId,onSaved,onBusy}:{lessonId:string;onSaved:()=>Promise<void>;onBusy:(busy:boolean)=>void}){
  const {isArabic}=useLanguage();const [files,setFiles]=useState<CourseAsset[]>([]),[connection,setConnection]=useState<{configured:boolean;connected:boolean}|null>(null);
  const [busy,setBusy]=useState(false),[label,setLabel]=useState(''),[progress,setProgress]=useState(0),[error,setError]=useState(''),[autoAI,setAutoAI]=useState(true),[subtitleLanguage,setSubtitleLanguage]=useState('ar');
@@ -48,7 +52,7 @@ export function LessonMediaEditor({lessonId,onSaved,onBusy}:{lessonId:string;onS
   {busy&&!applying&&<div className="space-y-2" role="status"><p className="text-xs">{label}</p><progress aria-label="Course upload progress" max={100} value={progress} className="w-full"/><p className="text-xs">{Math.round(progress)}%</p><Button type="button" variant="outline" onClick={()=>controller.current?.abort()}>{isArabic?'إيقاف مؤقت':'Pause'}</Button></div>}
   {applying&&<p role="status" className="text-sm text-primary">{isArabic?'جارٍ حفظ خطة الدرس…':'Saving the reviewed lesson plan…'}</p>}
   {error&&<p role="alert" className="text-sm text-red-300">{error}</p>}
-  {files.map(f=><div key={f.id} className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2 text-xs"><span className="break-all">{f.name} · {Math.ceil(f.size_bytes/1024/1024)} MB · {f.kind}</span><a className="text-primary underline" href={f.url} target="_blank" rel="noopener noreferrer">{isArabic?'فتح الملف':'Open file'}</a></div>)}
+  {files.map(f=><div key={f.id} className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2 text-xs"><span className="break-all">{f.name} · {formatFileSize(f.size_bytes, isArabic)} · {f.kind}</span><a className="text-primary underline" href={f.url} target="_blank" rel="noopener noreferrer">{isArabic?'فتح الملف':'Open file'}</a></div>)}
   {plan&&<div className="space-y-3 border-t border-primary/30 pt-3"><h4 className="font-bold">{isArabic?'مراجعة ناتج تحليل الفيديو':'Review video analysis'}</h4><p className="whitespace-pre-wrap text-sm">{plan.summary}</p>{plan.questions.map((question,i)=>{const q={...question,...quizText(question,isArabic)};return <div key={q.id} className="p-3 bg-white/5 rounded text-sm"><strong>{i+1}. <QuizText text={q.question}/></strong><ol>{q.options.map((o,n)=><li key={n} className={q.correctIndex===n?'text-emerald-300':''}>{o}{q.correctIndex===n?' ✓':''}</li>)}</ol><p className="text-xs text-muted-foreground">{q.explanation}</p></div>;})}{plan.exercise?<div className="space-y-2"><strong>{isArabic?'تطبيق برمجي':'Coding practice'} · {plan.exercise.language}</strong><p className="text-sm whitespace-pre-wrap">{plan.exercise.prompt}</p><pre dir="ltr" className="max-h-64 overflow-auto bg-black/40 p-3 text-xs">{plan.exercise.starterCode}</pre></div>:<p className="text-sm">{isArabic?'لم يُكتشف محتوى برمجي يستدعي تمرين كود.':'No coding exercise is needed for the detected content.'}</p>}<p className="text-xs text-muted-foreground">{isArabic?'راجع صحة المحتوى قبل اعتماده. بعد الإضافة يمكن تعديل الأسئلة والتطبيق من محرر الدروس.':'Review accuracy before applying. Questions and practice remain editable in the lesson editor.'}</p><Button type="button" disabled={busy} onClick={apply}>{isArabic?'اعتماد الملخص وإضافة الكويز والتطبيق':'Apply summary, quiz and coding practice'}</Button></div>}
  </section>;
 }

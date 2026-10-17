@@ -201,6 +201,14 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: append/retry/concurrent/resync scenarios are separate remaining provider tests; this entry proves creation and header read-back only.
 - Status: Fixed and verified with the isolated Google/Supabase QA services; production excluded.
 
+## BUG-027 — Small saved materials and subtitles display as 1 MB
+
+- Severity: Low. Layer: course file metadata display.
+- Reproduce: the real saved 335-byte material and 243-byte captions both display 1 MB because the UI rounds every size upward to a whole megabyte. Actual QA browser before evidence confirms the wrong text.
+- Fix: select B/KiB/MiB/GiB from the saved byte count and format the value for the active language, without changing files or stored sizes.
+- Validation: build, configured lint and explicit type-check pass; all six actual QA admin browser cases pass in EN/AR at 1440/768/375, reading the same real saved files. Evidence: BUG-027-sizes-before.txt, BUG-027-sizes-after.txt and the matching browser runs.
+- Status: Fixed and verified on isolated QA.
+
 ## BUG-026 — Quiz code fences display as collapsed prose
 
 - Severity: Medium. Layer: educational content rendering.
