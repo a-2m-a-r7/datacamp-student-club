@@ -29,7 +29,7 @@ import { getCanonicalUrl } from '../lib/siteUrl';
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { user, isAdmin, isEditor } = useAuth();
+  const { user, isAdmin, isEditor, refreshProfile } = useAuth();
   const { isArabic } = useLanguage();
 
   const [course, setCourse] = useState<Course | null>(null);
@@ -89,7 +89,8 @@ const CourseDetail = () => {
       const currentUserId = user.id || (user as any).uid;
       const enr = await courseService.enrollCourse(currentUserId, course.id);
       setEnrollment(enr);
-      toast.success(isArabic ? `تم التسجيل بنجاح في ${course.title}! تم منح +50 XP.` : `Successfully enrolled in ${course.title}! +50 XP awarded.`);
+      await refreshProfile().catch(() => {});
+      toast.success(isArabic ? `تم التسجيل بنجاح في ${course.title}.` : `Successfully enrolled in ${course.title}.`);
     } catch {
       toast.error(isArabic ? 'فشل التسجيل في الدورة.' : 'Failed to enroll.');
     } finally {
@@ -232,7 +233,7 @@ const CourseDetail = () => {
                   >
                     {enrolling
                       ? (isArabic ? 'جاري تفعيل الحساب...' : 'INITIALIZING_ACCESS...')
-                      : (isArabic ? 'سجل في المسار (+5 XP)' : 'ENROLL_NOW (+5 XP)')
+                      : (isArabic ? 'سجل في المسار' : 'ENROLL_NOW')
                     }
                   </Button>
                 )}

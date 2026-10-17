@@ -201,6 +201,14 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: append/retry/concurrent/resync scenarios are separate remaining provider tests; this entry proves creation and header read-back only.
 - Status: Fixed and verified with the isolated Google/Supabase QA services; production excluded.
 
+## BUG-029 — Enrollment promises a different XP award from the saved result
+
+- Severity: Medium. Layer: course enrollment / profile data.
+- Reproduce: actual QA enrollment shows +50 XP in the toast while the persisted profile increases by 5. The CTA also assumes a fixed award although administrators can configure it.
+- Fix: confirm successful enrollment without inventing an XP number and refresh the saved profile. Enrollment remains server-authoritative.
+- Validation: build, configured lint and explicit type-check pass. Actual QA browser enrollment displays the corrected confirmation, records the database XP delta, then completes real Drive video, Arabic/English quiz and Python grading, persists 100% completion and one automatic certificate, and downloads a real PDF. Evidence: runs/QA_TEST_actual_course_after_03 and BUG-029 gate logs.
+- Status: Fixed and verified against isolated QA; no production write.
+
 ## BUG-025 — Applying a reviewed learning plan shows an ineffective Pause button
 
 - Severity: Medium. Layer: frontend lesson administration.
