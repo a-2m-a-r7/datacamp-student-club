@@ -145,6 +145,14 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Validation: all six EN/AR × 1440/768/375 keyboard regressions pass, submit through the real migrated SQL and persist a response. Build, configured lint and explicit type-check passed.
 - Status: Fixed and validated locally; no schema change.
 
+## BUG-019 — robots.txt resolves to the SPA HTML document
+
+- Severity: Low. Layer: deployment assets / SEO.
+- Reproduce: the fresh production build has no robots.txt, so the SPA fallback returns HTML. All three real mobile Lighthouse pages report robots syntax errors and SEO 92.
+- Fix: add a plain static robots.txt allowing public routes and excluding account/admin/API paths. No nonexistent sitemap is advertised. These crawler hints do not replace authorization or promise confidential URLs cannot be indexed.
+- Validation: build, configured lint and explicit type-check pass. An actual HTTP request against the built QA preview returns HTTP 200, text/plain and the expected rules, with no HTML. Evidence: BUG-019-http-after.json. Updated Lighthouse remains a separate final gate.
+- Status: Fixed and validated locally; deployment awaits final report approval.
+
 ## BUG-020 — Public routes eagerly download PDF and chart packages
 
 - Severity: Medium. Layer: frontend build / performance.

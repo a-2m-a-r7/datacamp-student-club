@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-10-17T09:09:40.2473349+03:00",
+  "target": "http://127.0.0.1:3302/robots.txt",
+  "status": 200,
+  "contentType": "text/plain",
+  "plainText": true,
+  "noHtml": true,
+  "adminRule": true
+}
