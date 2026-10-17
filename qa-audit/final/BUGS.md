@@ -173,6 +173,16 @@ Only reproduced failures are entered here. Source inventory concerns remain pend
 - Limits: generated-lesson application and learner execution are separate end-to-end gates. Aliases and free quotas remain provider-managed; no billing was enabled and no production setting changed.
 - Status: Fixed and verified locally with the real isolated provider.
 
+## BUG-021 — Automatic Sheets creation fails with a consumer service-account setup
+
+- Severity: High. Layer: Google Sheets integration / setup compatibility.
+- Reproduce: a real new QA service account, with Sheets and Drive APIs enabled and its private key configured, returns HTTP 500 from sync-sheet; Google reports the caller has no permission when creating the spreadsheet. Responses remain in Supabase.
+- Evidence: QA_TEST_actual_sheets_before.json. No successful sheet creation was inferred from configuration or mocks.
+- Fix: use the form creator's already-connected Drive OAuth account for app-owned Sheets when available; drive.file already covers these files. Retain service-account support for existing spreadsheet setups. The OAuth owner already owns the spreadsheet, so this path sends no sharing email. Update the setup guidance without adding scopes, IAM roles or database objects.
+- Validation: actual sync-sheet returns 200, persists its spreadsheet reference and writes a real QA_TEST spreadsheet; a separate Google Sheets read verifies the exact five-cell header. Build, configured lint, explicit type-check and four API boundary regressions pass. Evidence: BUG-021-sheets-after.json and BUG-021-api-contracts.txt.
+- Limits: append/retry/concurrent/resync scenarios are separate remaining provider tests; this entry proves creation and header read-back only.
+- Status: Fixed and verified with the isolated Google/Supabase QA services; production excluded.
+
 ## BUG-018 — Empty course and footer headings skip levels
 
 - Severity: Low. Layer: frontend accessibility.

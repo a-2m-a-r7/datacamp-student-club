@@ -221,8 +221,8 @@ export const FormSettingsModal: React.FC<FormSettingsModalProps> = ({
                   </p>
                   <p className="text-[11px] text-muted-foreground">
                     {isArabic
-                      ? 'يتطلب إعداد حساب خدمة Google وصلاحيات الجدول على الخادم. تُحفظ الردود في قاعدة البيانات حتى إن لم تُفعّل المزامنة.'
-                      : 'Requires a configured Google service account and spreadsheet access. Responses are saved in the database independently of sync.'}
+                      ? 'اربط Google Drive لحساب منشئ النموذج من إدارة الدورات، أو جهّز حساب خدمة بصلاحية الجدول. تُحفظ الردود في قاعدة البيانات حتى إن لم تُفعّل المزامنة.'
+                      : 'Connect the form owner’s Google Drive from course management, or configure a service account with spreadsheet access. Responses are saved in the database independently of sync.'}
                   </p>
                 </div>
               </div>

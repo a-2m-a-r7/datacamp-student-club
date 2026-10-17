@@ -23,7 +23,9 @@ export default async function handler(req: any, res: any) {
   let syncStatus = 'disabled';
   if (data.sheets_sync_enabled) {
     syncStatus = 'pending';
-    if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY &&
+      ((process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) ||
+       (process.env.GOOGLE_DRIVE_CLIENT_ID && process.env.GOOGLE_DRIVE_CLIENT_SECRET))) {
       const sink = { code: 200, setHeader() {}, status(code: number) { this.code = code; return this; }, json(result: any) {
         syncStatus = this.code < 300 && result.success ? 'synced' : 'failed'; return result;
       } };

@@ -1,0 +1,13 @@
+[api/ai/chat] Model gemini-flash-latest returned HTTP 403: {}
+✔ public TS compiler rejects malformed boundaries and never executes submitted code (24.1252ms)
+✔ forms routes enforce method, body size and untrusted sheet authorization before provider access (14.612ms)
+✔ AI validates input boundaries, handles provider failures and never returns server credentials (1.0751ms)
+✔ AI whitespace-only input is empty and must not consume provider calls (0.5057ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2425.4459

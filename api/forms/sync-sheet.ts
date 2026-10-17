@@ -14,6 +14,7 @@
 import { google } from 'googleapis';
 import { createClient } from '@supabase/supabase-js';
 import { authorizeAdmin } from '../_lib/authorize.js';
+import {driveToken} from '../../server/courseMedia.js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
@@ -43,17 +44,8 @@ export default async function handler(req: any, res: any) {
   let privateKey = process.env.GOOGLE_PRIVATE_KEY;
   const ownerEmail = process.env.GOOGLE_SPREADSHEET_OWNER_EMAIL || defaultAdminGmail;
 
-  if (!clientEmail || !privateKey || !ownerEmail) {
-    console.warn('[sync-sheet] Google Service Account credentials not found in env vars.');
-    return res.status(503).json({
-      success: false,
-      configured: false,
-      message: 'Google Service Account credentials not yet configured. Please set GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY in .env / Vercel.',
-    });
-  }
-
   // Handle multi-line private key correctly
-  privateKey = privateKey.replace(/\\n/g, '\n');
+  privateKey = privateKey?.replace(/\\n/g, '\n');
 
   // 2. Initialize Supabase Client
   const supabase = authorized?.client || createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY || '');
@@ -82,22 +74,27 @@ export default async function handler(req: any, res: any) {
 
   const activeQuestions = questions || [];
 
-  // 4. Initialize Google Auth & Clients
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: clientEmail,
-      private_key: privateKey,
-    },
-    scopes: [
-      'https://www.googleapis.com/auth/spreadsheets',
-      'https://www.googleapis.com/auth/drive',
-    ],
-  });
-
-  const sheets = google.sheets({ version: 'v4', auth });
-  const drive = google.drive({ version: 'v3', auth });
-
   try {
+    // The form owner's existing drive.file consent also permits Sheets created
+    // by this app. It gives new files real user-owned storage without expanding
+    // OAuth scopes or requiring a service account to own consumer Drive files.
+    let auth: any;
+    let userOwned = false;
+    if (form.created_by && process.env.GOOGLE_DRIVE_CLIENT_ID && process.env.GOOGLE_DRIVE_CLIENT_SECRET) {
+      const connection = await supabase.from('course_drive_connections').select('owner_id').eq('owner_id', form.created_by).maybeSingle();
+      if (connection.error) throw new Error('Unable to verify the form owner Google Drive connection.');
+      if (connection.data) {
+        auth = new google.auth.OAuth2();
+        auth.setCredentials({access_token: await driveToken(supabase, form.created_by)});
+        userOwned = true;
+      }
+    }
+    if (!auth && clientEmail && privateKey && ownerEmail) {
+      auth = new google.auth.GoogleAuth({credentials:{client_email:clientEmail,private_key:privateKey},scopes:['https://www.googleapis.com/auth/spreadsheets','https://www.googleapis.com/auth/drive']});
+    }
+    if (!auth) return res.status(503).json({success:false,configured:false,message:'Connect the form owner Google Drive account, or configure a service account with spreadsheet access.'});
+    const sheets = google.sheets({version:'v4',auth});
+    const drive = google.drive({version:'v3',auth});
     let spreadsheetId = form.spreadsheet_id;
     let spreadsheetUrl = form.spreadsheet_url;
 
@@ -184,6 +181,7 @@ export default async function handler(req: any, res: any) {
 
       // Share with Admin Gmail as Editor
       try {
+        if (!userOwned) {
         await drive.permissions.create({
           fileId: spreadsheetId,
           sendNotificationEmail: true,
@@ -194,6 +192,7 @@ export default async function handler(req: any, res: any) {
           },
         });
         console.log(`[sync-sheet] Shared spreadsheet ${spreadsheetId} with ${ownerEmail}`);
+        }
       } catch (shareErr) {
         console.warn('[sync-sheet] Drive permission share warning:', shareErr);
       }

@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-17T06:21:29.259Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "steps": [
+    {
+      "action": "create-and-resync",
+      "http": 200,
+      "success": true,
+      "message": null
+    }
+  ],
+  "limits": "Actual Sheets credential and create call. Synthetic QA form only; no existing sheets are modified.",
+  "spreadsheetCreated": true,
+  "actualHeaderReadBack": true,
+  "ownerDriveMode": true
+}

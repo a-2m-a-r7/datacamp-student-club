@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-17T06:12:31.972Z",
+  "target": "kcqgnkfdpfibwkrghubl",
+  "steps": [
+    {
+      "action": "create-and-resync",
+      "http": 500,
+      "success": false,
+      "message": "The caller does not have permission"
+    }
+  ],
+  "limits": "Actual Sheets credential and create call. Synthetic QA form only; no existing sheets are modified.",
+  "failure": "Actual Sheets create failed: The caller does not have permission\n\n500 !== 200\n"
+}
